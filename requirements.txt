@@ -1,0 +1,5 @@
+hbutils>=0.7.5
+tqdm>=4.0.0
+click>=7.0.0
+transliterate>=1.10.2
+unidecode
