@@ -4,3 +4,4 @@ click>=7.0.0
 transliterate>=1.10.2
 unidecode
 deepdanbooru-onnx>=0.0.8
+yolort>=0.6.3

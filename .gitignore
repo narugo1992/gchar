@@ -1211,3 +1211,5 @@ fabric.properties
 /gchar/**/*.yaml
 /gchar/**/*.yml
 /extra
+/resource/yolort/*
+!/resource/yolort/Makefile
