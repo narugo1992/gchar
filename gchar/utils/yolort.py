@@ -2,13 +2,13 @@ import os
 import tempfile
 from contextlib import contextmanager
 from functools import lru_cache
-from typing import List, Union, ContextManager, Optional, Dict
+from typing import List, Union, ContextManager, Optional, Dict, Iterator, Tuple
 
 import cv2
+import matplotlib
 import numpy as np
+import torch
 from PIL import Image
-from yolort.models import YOLOv5
-from yolort.utils import Visualizer
 
 from .resource import get_resource_file
 
@@ -16,14 +16,25 @@ _YOLO_MODEL = None
 _SCORE_THRESHOLD = 0.01
 
 
-def _get_yolo_model() -> YOLOv5:
+@contextmanager
+def _keep_matplotlib_backend():
+    backend = matplotlib.get_backend()
+    try:
+        yield
+    finally:
+        matplotlib.use(backend, force=True)
+
+
+def _get_yolo_model():
     global _YOLO_MODEL
     if _YOLO_MODEL is None:
-        _YOLO_MODEL = YOLOv5.load_from_yolov5(
-            get_resource_file('./yolort/yolov5s.pt'),
-            score_thresh=_SCORE_THRESHOLD,
-        )
-        _YOLO_MODEL.eval()
+        with _keep_matplotlib_backend():
+            from yolort.models import YOLOv5
+            _YOLO_MODEL = YOLOv5.load_from_yolov5(
+                get_resource_file('./yolort/yolov5s.pt'),
+                score_thresh=_SCORE_THRESHOLD,
+            )
+            _YOLO_MODEL.eval()
 
     return _YOLO_MODEL
 
@@ -103,6 +114,57 @@ def visual_detection_result(image: Union[Image.Image, str], pred: Dict, scale: f
             bytes_as_np_array = np.frombuffer(rf.read(), dtype=np.uint8)
             image = cv2.imdecode(bytes_as_np_array, flags)
 
-        v = Visualizer(image, metalabels=_LABEL_PATH)
-        v.draw_instance_predictions(pred)
-        v.imshow(scale=scale)
+        with _keep_matplotlib_backend():
+            from yolort.utils import Visualizer
+            v = Visualizer(image, metalabels=_LABEL_PATH)
+            v.draw_instance_predictions(pred)
+            v.imshow(scale=scale)
+
+
+def _rect_area(a: Tuple[float, float, float, float]) -> float:
+    ax0, ay0, ax1, ay1 = a
+    return abs(ax1 - ax0) * abs(ay1 - ay0)
+
+
+def _rect_overlap(a: Tuple[float, float, float, float], b: Tuple[float, float, float, float]) -> float:
+    ax0, ay0, ax1, ay1 = a
+    bx0, by0, bx1, by1 = b
+
+    x0, y0 = max(ax0, bx0), max(ay0, by0)
+    x1, y1 = min(ax1, bx1), min(ay1, by1)
+    width, height = x1 - x0, y1 - y0
+    if width >= 0.0 and height >= 0.0:
+        return width * height
+    else:
+        return 0.0
+
+
+def grab_objects_from_image(image: Union[Image.Image, str], threshold: float = 0.1,
+                            concerned_names: Optional[List[str]] = None, zoom: float = 1.1,
+                            max_cov: bool = 1.1) \
+        -> Iterator[Tuple[str, float, Image.Image]]:
+    pred = detect_object_in_image(image, threshold, concerned_names)
+    with _ensure_png_image(image) as image_filename:
+        img = Image.open(image_filename)
+        width, height = img.size
+
+        for i, (score, label, (x0, y0, x1, y1)) in enumerate(zip(pred['scores'], pred['labels'], pred['boxes'])):
+            score, label = map(torch.Tensor.tolist, (score, label))
+            x0, y0, x1, y1 = map(torch.Tensor.tolist, (x0, y0, x1, y1))
+
+            _area = _rect_area((x0, y0, x1, y1))
+            _covered = False
+            for j in range(i):
+                xx0, yy0, xx1, yy1 = map(torch.Tensor.tolist, pred['boxes'][j])
+                if _rect_overlap((xx0, yy0, xx1, yy1), (x0, y0, x1, y1)) > max_cov * _area:
+                    _covered = True
+                    break
+
+            if _covered:
+                continue
+
+            xm, ym = (x0 + x1) / 2, (y0 + y1) / 2
+            hx, hy = xm - x0, ym - y0
+            xx0, xx1 = max(xm - hx * zoom, 0.0), min(xm + hx * zoom, width)
+            yy0, yy1 = max(ym - hy * zoom, 0.0), min(ym + hy * zoom, height)
+            yield _get_names()[label], score, img.crop((xx0, yy0, xx1, yy1))

@@ -5,3 +5,8 @@ transliterate>=1.10.2
 unidecode
 deepdanbooru-onnx>=0.0.8
 yolort>=0.6.3
+opencv-python>=4.6.0
+numpy
+torch
+pillow
+torchvision>=0.14.0
