@@ -85,6 +85,10 @@ class PixivSession(CrawlerSession):
         else:
             return data
 
+    @func_retry((PixivError, _PixivReAuth, IOError, OSError), retries=3, delay=1.0)
+    def download(self, url, path, fname):
+        self.__api.download(url, path, fname)
+
     def iter_images(self, keywords, count: int = 100, use_original: bool = False,
                     allow_ai: bool = False, max_page_in_illust: int = 4, min_bookmarks: int = 100) \
             -> Iterator[Tuple[int, Tuple[int, int], str, Image.Image]]:
@@ -94,7 +98,11 @@ class PixivSession(CrawlerSession):
         page_progress = tqdm(leave=True)
         cnt_progress = tqdm(total=count if count > 0 else None, leave=True)
         while current_cnt < count or count < 0:
-            all_data = self.search(keywords, current_offset)
+            try:
+                all_data = self.search(keywords, current_offset)
+            except PixivError:
+                continue
+
             page_cnt += 1
             page_progress.set_description(f'Scanning {keywords!r} page {page_cnt} ...')
             page_progress.update()
@@ -127,7 +135,10 @@ class PixivSession(CrawlerSession):
                 with tempfile.TemporaryDirectory() as td:
                     for url in urls:
                         filename = os.path.basename(url)
-                        self.__api.download(url, path=td, fname=filename)
+                        try:
+                            self.download(url, path=td, fname=filename)
+                        except (PixivError, OSError, IOError):
+                            continue
 
                         current_cnt += 1
                         cnt_progress.set_description(f'{current_cnt} image(s) downloaded')

@@ -23,7 +23,7 @@ def recommend_pca_dims(df, n_features: int, thresholds: Tuple[float, ...]) -> Tu
 
 
 def cluster_images(images: List[Union[str, Image.Image]], pca_min_ratio: float = 0.9,
-                   dbscan_divs: float = 6.0, dbscan_min_samples: int = 8,
+                   dbscan_divs: float = 4, dbscan_min_samples: int = 6,
                    min_conf: float = 0.3, max_conf: float = 1.0):
     images_progress = tqdm(images)
     feats = []
