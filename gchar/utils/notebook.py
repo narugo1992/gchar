@@ -25,8 +25,20 @@ def is_notebook() -> bool:
         return False  # Probably standard Python interpreter
 
 
+_tqdm = None
+
+
 def import_tqdm() -> Type[std_tqdm]:
-    if is_notebook():
-        return nb_tqdm
-    else:
-        return std_tqdm
+    global _tqdm
+    if _tqdm is None:
+        if is_notebook():
+            _tqdm = nb_tqdm
+        else:
+            _tqdm = std_tqdm
+
+    return _tqdm
+
+
+def set_tqdm(tqdm: Type[std_tqdm]):
+    global _tqdm
+    _tqdm = tqdm
