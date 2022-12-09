@@ -13,3 +13,4 @@ torchvision>=0.14.0
 scikit-learn>=1.0.0
 pixivpy3>=3.7.2
 DI-toolkit
+ipyplot>=1.1.0
