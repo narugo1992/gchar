@@ -45,6 +45,10 @@ def _get_danbooru_model() -> DeepDanbooru:
     return _DEEPBOORU_MODEL
 
 
+def init_deepbooru():
+    _ = _get_danbooru_model()
+
+
 def _item_process(item: _SINGLE_IMAGE) -> np.ndarray:
     if isinstance(item, str):
         return process_image(Image.open(item))
