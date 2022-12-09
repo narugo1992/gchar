@@ -141,7 +141,7 @@ def _rect_overlap(a: Tuple[float, float, float, float], b: Tuple[float, float, f
 
 def grab_objects_from_image(image: Union[Image.Image, str], threshold: float = 0.1,
                             concerned_names: Optional[List[str]] = None, zoom: float = 1.1,
-                            max_cov: bool = 0.6) \
+                            max_cov: float = 0.6) \
         -> Iterator[Tuple[str, float, Image.Image]]:
     pred = detect_object_in_image(image, threshold, concerned_names)
     with _ensure_png_image(image) as image_filename:
