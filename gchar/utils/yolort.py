@@ -34,6 +34,8 @@ def _get_yolo_model():
                 get_resource_file('./yolort/yolov5s.pt'),
                 score_thresh=_SCORE_THRESHOLD,
             )
+            if torch.cuda.is_available():
+                _YOLO_MODEL = _YOLO_MODEL.cuda()
             _YOLO_MODEL.eval()
 
     return _YOLO_MODEL
