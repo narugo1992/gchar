@@ -14,7 +14,11 @@ def is_notebook() -> bool:
         return False
 
     try:
-        shell = get_ipython().__class__.__name__
+        ipy = get_ipython()
+        if 'google.colab' in str(ipy):
+            return True  # google colab
+
+        shell = ipy.__class__.__name__
         if shell == 'ZMQInteractiveShell':
             return True  # Jupyter notebook or qtconsole
         elif shell == 'TerminalInteractiveShell':
