@@ -79,4 +79,4 @@ def get_deepbooru_tags(image: _SINGLE_IMAGE, threshold: float = 0.7, no_characte
         if score >= threshold and (not no_character or not is_character_tag(tag)):
             image_tag[tag] = score
 
-    return {key: value for key, value in sorted(image_tag.items(), key=lambda x: (-x[1], x[0]))}
+    return {key: float(value) for key, value in sorted(image_tag.items(), key=lambda x: (-x[1], x[0]))}
