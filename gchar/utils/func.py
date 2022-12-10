@@ -25,7 +25,7 @@ def func_call_repr(func, *args, **kwargs):
                 _first = False
             else:
                 print(', ', end='', file=sio)
-            print(f'{k!r}: {v!r}', end='', file=sio)
+            print(f'{k}={v!r}', end='', file=sio)
         print(')', end='', file=sio)
 
         return sio.getvalue()
@@ -38,7 +38,7 @@ def func_retry(errors: Union[Type[Exception], Tuple[Type[Exception], ...]], retr
             _retry = 0
             while True:
                 try:
-                    return func(*args, *kwargs)
+                    return func(*args, **kwargs)
                 except errors as err:
                     if _retry > retries:
                         logging.error(f'Unable to call {func_call_repr(func, *args, **kwargs)}!')
@@ -46,6 +46,7 @@ def func_retry(errors: Union[Type[Exception], Tuple[Type[Exception], ...]], retr
                     else:
                         logging.warn(f'Call {func_call_repr(func, *args, **kwargs)} failed, '
                                      f'try again ({_retry}/{retries}) - {err!r} ...')
+                        _retry += 1
                         if delay:
                             time.sleep(delay)
 

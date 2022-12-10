@@ -5,6 +5,7 @@ from typing import Iterator, Tuple
 
 from PIL import Image
 from pixivpy3 import AppPixivAPI, PixivError
+from requests import RequestException
 
 from ..base import CrawlerSession
 from ...utils import func_retry, import_tqdm
@@ -85,12 +86,13 @@ class PixivSession(CrawlerSession):
         else:
             return data
 
-    @func_retry((PixivError, _PixivReAuth, IOError, OSError), retries=3, delay=1.0)
+    @func_retry((PixivError, _PixivReAuth, ConnectionError, RequestException), retries=3, delay=1.0)
     def download(self, url, path, fname):
-        self.__api.download(url, path, fname)
+        self.__api.download(url, path=path, fname=fname)
 
-    def iter_images(self, keywords, count: int = 100, use_original: bool = False,
-                    allow_ai: bool = False, max_page_in_illust: int = 4, min_bookmarks: int = 100) \
+    def iter_images(self, keywords, count: int = 100, use_original: bool = False, min_diff: float = 0.15,
+                    allow_ai: bool = False, max_page_in_illust: int = -1, max_page_when_grab: int = 1,
+                    min_bookmarks: int = 100) \
             -> Iterator[Tuple[int, Tuple[int, int], str, Image.Image]]:
         keywords = _to_pixiv_keywords(keywords)
 
@@ -115,7 +117,7 @@ class PixivSession(CrawlerSession):
                     continue
 
                 pages = illust['page_count']
-                if illust['page_count'] > max_page_in_illust:
+                if illust['page_count'] > max_page_in_illust > 0:
                     continue
                 marks = illust["total_bookmarks"]
                 if marks < min_bookmarks:
@@ -133,18 +135,24 @@ class PixivSession(CrawlerSession):
                         urls = [img["image_urls"]["large"] for img in illust["meta_pages"]]
 
                 with tempfile.TemporaryDirectory() as td:
-                    for url in urls:
+                    _last_image = None
+                    for url in urls[:max_page_when_grab]:
                         filename = os.path.basename(url)
                         try:
                             self.download(url, path=td, fname=filename)
-                        except (PixivError, OSError, IOError):
+                        except (PixivError, ConnectionError, RequestException):
                             continue
 
                         current_cnt += 1
                         cnt_progress.set_description(f'{current_cnt} image(s) downloaded')
                         cnt_progress.update()
-                        yield illust["id"], (illust["total_view"], marks), \
-                              filename, Image.open(os.path.join(td, filename))
+
+                        current_image = Image.open(os.path.join(td, filename))
+                        # if _last_image and image_diff_percent(_last_image, current_image) < min_diff:
+                        #     continue
+
+                        yield illust["id"], (illust["total_view"], marks), filename, current_image
+                        _last_image = current_image
 
                 if 0 <= count <= current_cnt:
                     break

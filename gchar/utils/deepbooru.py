@@ -33,6 +33,11 @@ def is_character_tag(tag: str):
     return tag in _get_character_tag_set()
 
 
+def get_all_tags() -> List[str]:
+    model = _get_danbooru_model()
+    return model.tags
+
+
 _SINGLE_IMAGE = Union[Image.Image, np.ndarray, str]
 _DEEPBOORU_MODEL = None
 
