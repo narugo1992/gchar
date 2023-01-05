@@ -1,9 +1,8 @@
-hbutils>=0.7.5
+hbutils>=0.8.0
 tqdm>=4.0.0
 click>=7.0.0
 transliterate>=1.10.2
 unidecode
-deepdanbooru-onnx>=0.0.8
 yolort>=0.6.3
 opencv-python>=4.6.0
 numpy
@@ -16,3 +15,5 @@ DI-toolkit
 ipyplot>=1.1.0
 imgcompare>=2.0
 pandas
+pyquery
+huggingface_hub>=0.10

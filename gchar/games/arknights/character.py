@@ -109,7 +109,7 @@ class Character(_BaseCharacter):
     @property
     def is_extra(self) -> bool:
         return (self.enname and 'the' in self.enname) or \
-               (self.enname == 'amiya' and self.cnname != '阿米娅')
+            (self.enname == 'amiya' and self.cnname != '阿米娅')
 
     def _names(self) -> List[Union[EnglishName, ChineseName, JapaneseName]]:
         return [name for name in [self.cnname, self.enname, self.jpname] if name]
@@ -123,12 +123,13 @@ class Character(_BaseCharacter):
             return self.index == other.index
         else:
             return (self.cnname and self.cnname == other) or \
-                   (self.enname and self.enname == other) or \
-                   (self.jpname and self.jpname == other)
+                (self.enname and self.enname == other) or \
+                (self.jpname and self.jpname == other)
 
     @classmethod
-    def all(cls, timeout: int = 5) -> List['Character']:
-        return [Character(data) for data in get_index(timeout=timeout)]
+    def all(cls, timeout: int = 5, contains_extra: bool = True, **kwargs) -> List['Character']:
+        chs = [Character(data) for data in get_index(timeout=timeout)]
+        return [ch for ch in chs if contains_extra or not ch.is_extra]
 
     @classmethod
     def get(cls, name, timeout: int = 5) -> Optional['Character']:

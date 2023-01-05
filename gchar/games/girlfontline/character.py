@@ -13,7 +13,6 @@ Skin = namedtuple('Skin', ['name', 'url'])
 class Character(_BaseCharacter):
     def __init__(self, raw_data: dict):
         self.__raw_data = raw_data
-        self.__is_extra = None
 
     def _index(self) -> int:
         return self.__raw_data['id']
@@ -57,11 +56,11 @@ class Character(_BaseCharacter):
             return self.index == other.index
         else:
             return (self.cnname and self.cnname == other) or \
-                   (self.enname and self.enname == other) or \
-                   (self.jpname and self.jpname == other)
+                (self.enname and self.enname == other) or \
+                (self.jpname and self.jpname == other)
 
     @classmethod
-    def all(cls, timeout: int = 5) -> List['Character']:
+    def all(cls, timeout: int = 5, **kwargs) -> List['Character']:
         return [Character(data) for data in get_index(timeout=timeout)]
 
     @classmethod

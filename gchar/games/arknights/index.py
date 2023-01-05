@@ -6,6 +6,7 @@ from urllib.parse import quote
 
 import requests
 from pyquery import PyQuery as pq
+from requests.adapters import HTTPAdapter
 from tqdm import tqdm
 
 _LOCAL_DIR, _ = os.path.split(os.path.abspath(__file__))
@@ -14,13 +15,7 @@ _INDEX_FILE = os.path.join(_LOCAL_DIR, 'index.json')
 _WEBSITE_ROOT = 'https://prts.wiki/'
 
 
-def _get_skins_of_op(op):
-    session = requests.session()
-    session.headers.update({
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-                      "(KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36",
-    })
-
+def _get_skins_of_op(op, session: requests.Session):
     search_content = quote(f"立绘 \"{op}\"")
     response = session.get(
         f'{_WEBSITE_ROOT}/index.php?title=%E7%89%B9%E6%AE%8A:%E6%90%9C%E7%B4%A2&profile=images'
@@ -116,8 +111,16 @@ _UNQUOTE_NEEDED_FIELDS = {
 }
 
 
-def _get_index_from_prts(timeout: int = 5):
-    response = requests.get(
+def _get_index_from_prts(timeout: int = 5, max_retries: int = 3):
+    session = requests.session()
+    session.mount('http://', HTTPAdapter(max_retries=max_retries))
+    session.mount('https://', HTTPAdapter(max_retries=max_retries))
+    session.headers.update({
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                      "(KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36",
+    })
+
+    response = session.get(
         f'{_WEBSITE_ROOT}/w/CHAR?filter=AAAAAAAggAAAAAAAAAAAAAAAAAAAAAAA',
         headers={
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
@@ -140,7 +143,7 @@ def _get_index_from_prts(timeout: int = 5):
 
         tqs.set_description(data['data-cn'])
 
-        skins = _get_skins_of_op(data['data-cn'])
+        skins = _get_skins_of_op(data['data-cn'], session)
         assert skins
         retval.append({
             'data': data,

@@ -29,12 +29,13 @@ def _remove_curve(s: str) -> str:
 
 def _get_index_from_biliwiki(timeout: int = 5):
     session = requests.Session()
+    session.headers.update({
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                      "(KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36",
+    })
+
     response = session.get(
         f'{ROOT_SITE}/blhx/%E8%88%B0%E8%88%B9%E5%9B%BE%E9%89%B4',
-        headers={
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-                          "(KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36",
-        },
         timeout=timeout
     )
     response.raise_for_status()

@@ -74,7 +74,7 @@ class TestGamesArknightsCharacter:
         assert repr(specter) == '<Character AA02 - 幽灵鲨/specter/スペクター, female, 5*****>'
         assert specter_extra == '归溟幽灵鲨'
         assert specter_extra.is_extra
-        assert repr(specter_extra) == '<Character CR02 - 归溟幽灵鲨/specter_the_unchained, female, 6******>'
+        assert repr(specter_extra) == '<Character CR02 - 归溟幽灵鲨/specter_the_unchained/帰溟スペクター, female, 6******>'
 
         assert silverash == '银灰'
         assert silverash.level == 6
