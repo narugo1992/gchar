@@ -1,6 +1,7 @@
 import pytest
 
 from gchar.games.arknights import Character
+from gchar.games.base import list_all_characters
 
 
 @pytest.fixture(scope='module')
@@ -56,6 +57,13 @@ class TestGamesArknightsCharacter:
         assert amiya == amiya_guard
         assert amiya.gender == 'female'
         assert not amiya.is_extra
+        assert amiya.cnname == '阿米娅'
+        assert amiya.cnnames == ['阿米娅']
+        assert amiya.enname == 'amiya'
+        assert amiya.ennames == ['amiya']
+        assert amiya.jpname == 'アーミヤ'
+        assert amiya.jpnames == ['アーミヤ']
+        assert amiya.names == ['amiya', 'アーミヤ', '阿米娅']
 
         assert amiya.level == 5
         assert amiya.clazz == 'caster'
@@ -111,3 +119,15 @@ class TestGamesArknightsCharacter:
         assert fang.clazz == 'vanguard'
         assert not fang.is_extra
         assert len(fang.skins) == 2
+        assert fang.skins[0].name == '立绘 芬 1'
+        assert fang.skins[1].name == '立绘 芬 skin1'
+
+    def test_chars_get(self):
+        assert Character.get('what_the_fxxk') is None
+
+    def test_list_all_characters(self):
+        actual_all = list_all_characters(Character)
+        standalone_all = list_all_characters(Character, contains_extra=False)
+        assert len(actual_all) > len(standalone_all)
+        assert all([not ch.is_extra for ch in standalone_all])
+        assert not all([not ch.is_extra for ch in actual_all])

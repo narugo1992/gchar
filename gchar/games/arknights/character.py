@@ -1,12 +1,10 @@
-from collections import namedtuple
-from typing import List, Optional, Union
+from typing import List
 
 from .index import _KNOWN_DATA_FIELDS, get_index, _refresh_index
 from .name import EnglishName, JapaneseName, ChineseName
 from .property import Gender, Level, Clazz
 from ..base import Character as _BaseCharacter
-
-Skin = namedtuple('Skin', ['name', 'url'])
+from ..base import Skin
 
 
 class Character(_BaseCharacter):
@@ -57,6 +55,9 @@ class Character(_BaseCharacter):
             "data-group": ""
         }
     """
+    __cnname_class__ = ChineseName
+    __enname_class__ = EnglishName
+    __jpname_class__ = JapaneseName
 
     def __init__(self, raw_data: dict):
         self.__origin_raw_data = raw_data
@@ -87,17 +88,14 @@ class Character(_BaseCharacter):
     def clazz(self) -> Clazz:
         return Clazz.loads(self.__raw_data['data-class'])
 
-    @property
-    def cnname(self) -> ChineseName:
-        return ChineseName(self.__raw_data['data-cn'])
+    def _cnname(self):
+        return self.__raw_data['data-cn']
 
-    @property
-    def enname(self) -> Optional[EnglishName]:
-        return EnglishName(self.__raw_data['data-en']) if self.__raw_data['data-en'] else None
+    def _enname(self):
+        return self.__raw_data.get('data-en', None)
 
-    @property
-    def jpname(self) -> Optional[JapaneseName]:
-        return JapaneseName(self.__raw_data['data-jp']) if self.__raw_data['data-jp'] else None
+    def _jpname(self):
+        return self.__raw_data.get('data-jp', None)
 
     def __getattr__(self, item: str):
         key = 'data-' + item.replace('_', '-')
@@ -110,9 +108,6 @@ class Character(_BaseCharacter):
     def is_extra(self) -> bool:
         return (self.enname and 'the' in self.enname) or \
             (self.enname == 'amiya' and self.cnname != '阿米娅')
-
-    def _names(self) -> List[Union[EnglishName, ChineseName, JapaneseName]]:
-        return [name for name in [self.cnname, self.enname, self.jpname] if name]
 
     def __repr__(self):
         return f'<{type(self).__name__} {self.index} - {"/".join(map(str, self._names()))}, ' \
@@ -130,14 +125,6 @@ class Character(_BaseCharacter):
     def all(cls, timeout: int = 5, contains_extra: bool = True, **kwargs) -> List['Character']:
         chs = [Character(data) for data in get_index(timeout=timeout)]
         return [ch for ch in chs if contains_extra or not ch.is_extra]
-
-    @classmethod
-    def get(cls, name, timeout: int = 5) -> Optional['Character']:
-        for item in cls.all(timeout):
-            if item == name:
-                return item
-
-        return None
 
     @classmethod
     def refresh_index(cls, timeout: int = 5):
