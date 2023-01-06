@@ -1,4 +1,5 @@
 from functools import partial
+from typing import Optional
 
 import click
 
@@ -21,11 +22,13 @@ def cli():
              context_settings={**GLOBAL_CONTEXT_SETTINGS})
 @click.option('--timeout', '-t', 'timeout', type=int, default=5,
               help='Timeout of this update.', show_default=True)
-def update(timeout: int):
+@click.option('--maxcnt', '-n', 'maxcnt', type=int, default=None,
+              help='Max count to crawler (only used for debugging and testing).', show_default=True)
+def update(timeout: int, maxcnt: Optional[int] = None):
     click.secho('Updating from prts.wiki ...', fg='yellow')
-    _refresh_index(timeout=timeout)
+    _refresh_index(timeout=timeout, maxcnt=maxcnt)
     click.secho('Completed!', fg='green')
 
 
 if __name__ == '__main__':
-    cli()
+    cli()  # pragma: no cover

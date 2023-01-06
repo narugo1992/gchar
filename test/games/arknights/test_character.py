@@ -9,6 +9,11 @@ def all_characters():
 
 
 @pytest.fixture(scope='module')
+def fang():
+    return Character.get('fang')
+
+
+@pytest.fixture(scope='module')
 def amiya():
     return Character.get('amiya')
 
@@ -45,7 +50,7 @@ def chen_extra():
 
 @pytest.mark.unittest
 class TestGamesArknightsCharacter:
-    def test_chars(self, no_index_json, amiya, amiya_guard, specter, specter_extra, silverash, chen, chen_extra):
+    def test_chars(self, no_index_json, amiya, amiya_guard, specter, specter_extra, silverash, chen, chen_extra, fang):
         assert amiya == 'amiya'
         assert amiya_guard == 'amiya'
         assert amiya == amiya_guard
@@ -97,3 +102,12 @@ class TestGamesArknightsCharacter:
         assert chen_extra.clazz == 'sniper'
         assert chen_extra.is_extra
         assert repr(chen_extra) == '<Character R112 - 假日威龙陈/chen_the_holungday/遊龍チェン, female, 6******>'
+
+        assert fang == 'fang'
+        assert fang == '芬'
+        assert fang == 'フェン'
+        assert fang.level == 3
+        assert fang.gender == 'female'
+        assert fang.clazz == 'vanguard'
+        assert not fang.is_extra
+        assert len(fang.skins) == 2

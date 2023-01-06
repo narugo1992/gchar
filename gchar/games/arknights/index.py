@@ -2,6 +2,8 @@ import json
 import os.path
 import re
 import time
+from itertools import islice
+from typing import Iterator, Optional
 from urllib.parse import quote
 
 import requests
@@ -111,7 +113,7 @@ _UNQUOTE_NEEDED_FIELDS = {
 }
 
 
-def _get_index_from_prts(timeout: int = 5, max_retries: int = 3):
+def _get_index_from_prts(timeout: int = 5, max_retries: int = 3) -> Iterator[dict]:
     session = requests.session()
     session.mount('http://', HTTPAdapter(max_retries=max_retries))
     session.mount('https://', HTTPAdapter(max_retries=max_retries))
@@ -131,7 +133,6 @@ def _get_index_from_prts(timeout: int = 5, max_retries: int = 3):
     response.raise_for_status()
 
     text = response.content.decode()
-    retval = []
     tqs = tqdm(list(pq(text)('.smwdata').items()))
     for item in tqs:
         data = {}
@@ -145,19 +146,20 @@ def _get_index_from_prts(timeout: int = 5, max_retries: int = 3):
 
         skins = _get_skins_of_op(data['data-cn'], session)
         assert skins
-        retval.append({
+        yield {
             'data': data,
             'skins': skins,
-        })
-
-    return retval
+        }
 
 
 _MIN_REFRESH_SPAN = 3 * 24 * 60 * 60  # 3 days
 
 
-def _refresh_index(timeout: int = 5):
-    data = _get_index_from_prts(timeout)
+def _refresh_index(timeout: int = 5, maxcnt: Optional[int] = None):
+    yielder = _get_index_from_prts(timeout)
+    if maxcnt:
+        yielder = islice(yielder, maxcnt)
+    data = list(yielder)
     with open(_INDEX_FILE, 'w') as f:
         tagged_data = {
             'data': data,

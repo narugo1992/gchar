@@ -10,8 +10,9 @@ from ...testings import LocalTemporaryDirectory
 @pytest.fixture
 def no_index_json():
     with LocalTemporaryDirectory() as td:
-        with patch('gchar.games.arknights.index._INDEX_FILE', os.path.join(td, 'index.json')):
-            yield
+        json_file = os.path.join(td, 'index.json')
+        with patch('gchar.games.arknights.index._INDEX_FILE', json_file):
+            yield json_file
 
 
 @pytest.fixture
