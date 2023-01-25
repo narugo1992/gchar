@@ -65,13 +65,13 @@ class TestGamesArknightsCharacter:
         assert amiya.jpnames == ['アーミヤ']
         assert amiya.names == ['amiya', 'アーミヤ', '阿米娅']
 
-        assert amiya.level == 5
+        assert amiya.rarity == 5
         assert amiya.clazz == 'caster'
         assert amiya.clazz != 'guard'
         assert amiya.clazz != 'specialist'
         assert repr(amiya) == '<Character R001 - 阿米娅/amiya/アーミヤ, female, 5*****>'
 
-        assert amiya_guard.level == 5
+        assert amiya_guard.rarity == 5
         assert amiya_guard.clazz == 'guard'
         assert amiya_guard.clazz != 'caster'
         assert amiya_guard.is_extra
@@ -90,14 +90,14 @@ class TestGamesArknightsCharacter:
         assert repr(specter_extra) == '<Character CR02 - 归溟幽灵鲨/specter_the_unchained/帰溟スペクター, female, 6******>'
 
         assert silverash == '银灰'
-        assert silverash.level == 6
+        assert silverash.rarity == 6
         assert silverash.gender == '男性'
         assert not silverash.is_extra
         assert repr(silverash) == '<Character JC01 - 银灰/silverash/シルバーアッシュ, male, 6******>'
 
         assert chen == 'chen'
         assert chen == '陈'
-        assert chen.level == 6
+        assert chen.rarity == 6
         assert chen.gender == 'female'
         assert chen.clazz == 'guard'
         assert not chen.is_extra
@@ -105,7 +105,7 @@ class TestGamesArknightsCharacter:
 
         assert chen_extra == 'chen_the_holungday'
         assert chen_extra == '假日威龙陈'
-        assert chen_extra.level == 6
+        assert chen_extra.rarity == 6
         assert chen_extra.gender == 'female'
         assert chen_extra.clazz == 'sniper'
         assert chen_extra.is_extra
@@ -114,7 +114,7 @@ class TestGamesArknightsCharacter:
         assert fang == 'fang'
         assert fang == '芬'
         assert fang == 'フェン'
-        assert fang.level == 3
+        assert fang.rarity == 3
         assert fang.gender == 'female'
         assert fang.clazz == 'vanguard'
         assert not fang.is_extra

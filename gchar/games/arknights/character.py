@@ -104,22 +104,13 @@ class Character(_BaseCharacter):
         else:
             return object.__getattribute__(self, item)
 
-    @property
-    def is_extra(self) -> bool:
+    def _is_extra(self) -> bool:
         return (self.enname and 'the' in self.enname) or \
             (self.enname == 'amiya' and self.cnname != '阿米娅')
 
     def __repr__(self):
         return f'<{type(self).__name__} {self.index} - {"/".join(map(str, self._names()))}, ' \
                f'{self.gender.name.lower()}, {self.level}{"*" * self.level}>'
-
-    def __eq__(self, other):
-        if isinstance(other, Character):
-            return self.index == other.index
-        else:
-            return (self.cnname and self.cnname == other) or \
-                (self.enname and self.enname == other) or \
-                (self.jpname and self.jpname == other)
 
     @classmethod
     def all(cls, timeout: int = 5, contains_extra: bool = True, **kwargs) -> List['Character']:

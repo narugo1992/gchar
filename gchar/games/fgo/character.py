@@ -1,8 +1,8 @@
 from collections import namedtuple
-from typing import List, Optional, Union
+from typing import List
 
 from .index import get_index, _refresh_index
-from .name import EnglishName, JapaneseName, ChineseName
+from .name import ChineseName, JapaneseName, EnglishName, ChineseAliasName
 from .property import Gender, Level, Clazz
 from ..base import Character as _BaseCharacter
 
@@ -10,6 +10,11 @@ Skin = namedtuple('Skin', ['name', 'url'])
 
 
 class Character(_BaseCharacter):
+    __cnname_class__ = ChineseName
+    __jpname_class__ = JapaneseName
+    __enname_class__ = EnglishName
+    __alias_name_class = ChineseAliasName
+
     def __init__(self, raw_data: dict):
         self.__raw_data = raw_data
 
@@ -25,7 +30,7 @@ class Character(_BaseCharacter):
         return Gender.loads(self.__raw_data['gender'])
 
     @property
-    def level(self) -> Level:
+    def rarity(self) -> Level:
         return Level.loads(int(self.__raw_data['rarity']))
 
     @property
@@ -36,48 +41,51 @@ class Character(_BaseCharacter):
     def clazz(self) -> Clazz:
         return Clazz.loads(self.__raw_data['class'])
 
-    @property
-    def cnname(self) -> ChineseName:
-        return ChineseName(self.__raw_data['cnname'])
+    def _cnname(self):
+        return self._cnnames()[0]
 
-    @property
-    def enname(self) -> Optional[EnglishName]:
-        return EnglishName(self.__raw_data['enname']) if self.__raw_data['enname'] else None
+    def _cnnames(self):
+        return self.__raw_data['cnnames']
 
-    @property
-    def jpname(self) -> Optional[JapaneseName]:
-        return JapaneseName(self.__raw_data['jpname']) if self.__raw_data['jpname'] else None
+    def _jpname(self):
+        return self._jpnames()[0]
 
-    def _names(self) -> List[Union[EnglishName, ChineseName, JapaneseName]]:
-        return [name for name in [self.cnname, self.enname, self.jpname] if name]
+    def _jpnames(self):
+        return self.__raw_data['jpnames']
+
+    def _enname(self):
+        return self._ennames()[0]
+
+    def _ennames(self):
+        return self.__raw_data['ennames']
+
+    def _alias_names(self):
+        return self.__raw_data['alias']
+
+    __NOT_EXTRA_IDS__ = [310, 311, 312]
+
+    def _is_extra(self) -> bool:
+        if self.index in self.__NOT_EXTRA_IDS__:
+            return False
+
+        for ch in self.__raw_data['similar']:
+            id_, name = ch['id'], ch['name']
+            if id_ < self.__raw_data['id'] and name in self._cnname():
+                return True
+
+        return False
 
     def __repr__(self):
         return f'<{type(self).__name__} {self.index} - {"/".join(map(str, self._names()))}, ' \
-               f'{self.gender.name.lower()}, {self.level}{"*" * self.level}>'
-
-    def __eq__(self, other):
-        if isinstance(other, Character):
-            return self.index == other.index
-        else:
-            return (self.cnname and self.cnname == other) or \
-                   (self.enname and self.enname == other) or \
-                   (self.jpname and self.jpname == other)
+               f'{self.gender.name.lower()}, {self.rarity}{"*" * self.rarity}>'
 
     @property
     def skins(self) -> List[Skin]:
         return [Skin(item['name'], item['url']) for item in self.__raw_data['skins']]
 
     @classmethod
-    def all(cls, timeout: int = 5) -> List['Character']:
+    def all(cls, timeout: int = 5, **kwargs) -> List['Character']:
         return [Character(data) for data in get_index(timeout=timeout)]
-
-    @classmethod
-    def get(cls, name, timeout: int = 5) -> Optional['Character']:
-        for item in cls.all(timeout):
-            if item == name:
-                return item
-
-        return None
 
     @classmethod
     def refresh_index(cls, timeout: int = 5):

@@ -2,24 +2,53 @@ import json
 import os
 import re
 import time
+from itertools import islice
+from typing import List, Optional, Iterator
 from urllib.parse import quote
 
 import requests
 from pyquery import PyQuery as pq
-from tqdm import tqdm
+
+from ..base import get_requests_session
+from ...utils import import_tqdm
+
+tqdm = import_tqdm()
 
 _LOCAL_DIR, _ = os.path.split(os.path.abspath(__file__))
 _INDEX_FILE = os.path.join(_LOCAL_DIR, 'index.json')
 
 _ROOT_WEBSITE = 'https://fgo.wiki/'
 
+SERVANT_ALT_PATTERN = re.compile(r'Servant (?P<id>\d+)\.[a-zA-Z\d]+')
+PAGE_REL_PATTERN = re.compile(r'var data_list\s*=\"(?P<ids>[\d,\s]*)\"')
 
-def _get_index_from_fgowiki(timeout: int = 5):
-    session = requests.session()
-    session.headers.update({
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-                      "(KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36",
-    })
+
+def _get_similar_lists(current_id: int, sim_table: pq, session: requests.Session = None) -> List[int]:
+    session = session or get_requests_session()
+    content_box = sim_table('td')
+    ids = []
+    if content_box('td a img'):
+        for image in content_box('td a img').items():
+            sid = int(SERVANT_ALT_PATTERN.fullmatch(image.attr('alt')).group('id').lstrip('0'))
+            ids.append(sid)
+
+    elif content_box('td a'):
+        sim_page_url = f"{_ROOT_WEBSITE}/{content_box('td a').attr('href')}"
+        resp = session.get(sim_page_url)
+        resp.raise_for_status()
+
+        for reltext in PAGE_REL_PATTERN.findall(resp.content.decode()):
+            for id_ in [int(item.strip()) for item in reltext.split(',')]:
+                ids.append(id_)
+
+    else:
+        raise ValueError(f'Unknown similar table content:{os.linesep}{content_box}.')
+
+    return sorted(set([id_ for id_ in ids if current_id != id_]))
+
+
+def _get_index_from_fgowiki(timeout: int = 5) -> Iterator[dict]:
+    session = get_requests_session()
 
     response = session.get(f'{_ROOT_WEBSITE}/w/SVT', timeout=timeout)
     response.raise_for_status()
@@ -39,11 +68,11 @@ def _get_index_from_fgowiki(timeout: int = 5):
     if curobj:
         fulllist.append(curobj)
 
-    fulllist = tqdm(fulllist[::-1])
-    retval = []
+    _id_to_name = {int(item['id']): item['name_cn'] for item in fulllist}
+    fulllist = tqdm(fulllist[::-1], leave=True)
     for item in fulllist:
         id_ = int(item['id'])
-        cnname = item['name_cn']
+        cnname = item['name_cn'].replace('・', '·')
         jpname = item['name_jp']
         enname = item['name_en']
         fulllist.set_description(cnname)
@@ -55,18 +84,53 @@ def _get_index_from_fgowiki(timeout: int = 5):
         resp.raise_for_status()
         page = pq(resp.text)
         main_table, *_other_tables = page('table.wikitable').items()
-        # sim_table = None
         if not main_table('tr:nth-child(7)'):
-            # sim_table = main_table
-            main_table, *_other_tables = _other_tables
+            sim_table = main_table
+            assert '快速跳转' in sim_table('th').text().strip()
 
+            simlist = _get_similar_lists(id_, sim_table, session)
+            main_table, *_other_tables = _other_tables
+        else:
+            simlist = []
+
+        row1 = main_table('tr:nth-child(1)')
+        row2 = main_table('tr:nth-child(2)')
         row3 = main_table('tr:nth-child(3)')
         row6 = main_table('tr:nth-child(6)')
         row7 = main_table('tr:nth-child(7)')
 
+        CN_ALIAS_PATTERN = re.compile('^(?P<cnalias>[^（]+)（(?P<cnname>[^）]+)）$')
+        if CN_ALIAS_PATTERN.fullmatch(row1('th:nth-child(1)').text()) and row1('th:nth-child(1) span'):
+            matching = CN_ALIAS_PATTERN.fullmatch(row1('th:nth-child(1)').text())
+            cn_alias = matching.group('cnalias')
+            if cn_alias not in alias:
+                alias.append(cn_alias)
+            all_cnnames = [matching.group('cnname')]
+            all_jpnames = [row2('td:nth-child(1)').text()]
+            all_ennames = [row3('td:nth-child(1)').text()]
+        else:
+            s_r1 = row1('th:nth-child(1)').text()
+            s_r2 = row2('td:nth-child(1)').text()
+            s_r3 = row3('td:nth-child(1)').text()
+            if '/' in s_r1 and '/' in s_r2 and '/' in s_r3:
+                all_cnnames = s_r1.split('/')
+                all_jpnames = s_r2.split('/')
+                all_ennames = s_r3.split('/')
+                assert len(all_cnnames) == len(all_jpnames) == len(all_ennames)
+            else:
+                all_cnnames = [s_r1]
+                all_jpnames = [s_r2]
+                all_ennames = [s_r3]
+
+        if cnname not in all_cnnames:
+            all_cnnames.append(cnname)
+        if jpname not in all_jpnames:
+            all_jpnames.append(jpname)
+        if enname not in all_ennames:
+            all_ennames.append(enname)
+
         if not row3('th > img').attr('alt'):
             accessible = False
-            row1 = main_table('tr:nth-child(1)')
             rarity, *_ = re.findall(r'\d+', row1('th:nth-child(2) a img').attr('alt'))
         else:
             accessible = True
@@ -76,7 +140,7 @@ def _get_index_from_fgowiki(timeout: int = 5):
 
         graphbox = row6('th:nth-child(7)')
         skins = []
-        img_items = tqdm(list(graphbox('.graphpicker a.image').items()))
+        img_items = tqdm(list(graphbox('.graphpicker a.image').items()), leave=True)
         for img in img_items:
             sp = session.get(f'{_ROOT_WEBSITE}/{img.attr("href")}')
             sp.raise_for_status()
@@ -93,11 +157,11 @@ def _get_index_from_fgowiki(timeout: int = 5):
                 'url': image_url
             })
 
-        retval.append({
+        yield {
             'id': id_,
-            'cnname': cnname,
-            'jpname': jpname,
-            'enname': enname,
+            'cnnames': all_cnnames,
+            'jpnames': all_jpnames,
+            'ennames': all_ennames,
             'alias': alias,
             'accessible': accessible,
             'rarity': rarity,
@@ -105,13 +169,15 @@ def _get_index_from_fgowiki(timeout: int = 5):
             'class': clazz,
             'gender': gender,
             'skins': skins,
-        })
+            'similar': [{'id': id_, 'name': _id_to_name[id_]} for id_ in simlist],
+        }
 
-    return retval
 
-
-def _refresh_index(timeout: int = 5):
-    data = _get_index_from_fgowiki(timeout)
+def _refresh_index(timeout: int = 5, maxcnt: Optional[int] = None):
+    yielder = _get_index_from_fgowiki(timeout)
+    if maxcnt:
+        yielder = islice(yielder, maxcnt)
+    data = list(yielder)
     with open(_INDEX_FILE, 'w') as f:
         tagged_data = {
             'data': data,

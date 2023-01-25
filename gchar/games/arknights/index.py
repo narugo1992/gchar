@@ -9,7 +9,10 @@ from urllib.parse import quote
 import requests
 from pyquery import PyQuery as pq
 from requests.adapters import HTTPAdapter
-from tqdm import tqdm
+
+from ...utils import import_tqdm
+
+tqdm = import_tqdm()
 
 _LOCAL_DIR, _ = os.path.split(os.path.abspath(__file__))
 _INDEX_FILE = os.path.join(_LOCAL_DIR, 'index.json')

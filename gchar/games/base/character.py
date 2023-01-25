@@ -1,4 +1,5 @@
-from typing import List, Union, Type, Iterator
+from itertools import chain
+from typing import List, Union, Type, Iterator, Optional
 
 from .name import _BaseName, ChineseName, EnglishName, JapaneseName
 
@@ -7,6 +8,7 @@ class Character:
     __cnname_class__: Type[ChineseName] = ChineseName
     __enname_class__: Type[EnglishName] = EnglishName
     __jpname_class__: Type[JapaneseName] = JapaneseName
+    __alias_name_class: Optional[Type[ChineseName]] = None
 
     def _index(self):
         raise NotImplementedError  # pragma: no cover
@@ -63,12 +65,38 @@ class Character:
     def ennames(self):
         return [self.__enname_class__(name) for name in self._ennames() if name]
 
+    def _alias_names(self):
+        return []
+
+    @property
+    def alias_names(self):
+        return [self.__alias_name_class(name) for name in self._alias_names()]
+
     def _names(self) -> List[_BaseName]:
         return [*self.cnnames, *self.ennames, *self.jpnames]
 
     @property
     def names(self) -> List[str]:
         return sorted(set(map(str, self._names())))
+
+    def _is_extra(self) -> bool:
+        return False
+
+    @property
+    def is_extra(self) -> bool:
+        return bool(self._is_extra())
+
+    def __eq__(self, other) -> bool:
+        if type(other) == type(self):
+            return self.index == other.index
+        else:
+            if self.index == other:
+                return True
+            for name in chain(self._names(), self.alias_names):
+                if name == other:
+                    return True
+
+            return False
 
     @classmethod
     def all(cls, timeout: int = 5, **kwargs):

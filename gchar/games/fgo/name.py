@@ -10,6 +10,12 @@ from ..base import SegmentName, TextName
 
 
 class ChineseName(_GenericChineseName):
+    @classmethod
+    def _preprocess(cls, name: str) -> str:
+        return _GenericChineseName._preprocess(name).replace('・', '·')
+
+
+class ChineseAliasName(_GenericChineseName):
     pass
 
 

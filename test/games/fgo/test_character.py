@@ -1,0 +1,46 @@
+import pytest
+
+from gchar.games.fgo import Character
+
+
+@pytest.fixture()
+def fgo_mashu():
+    return Character.get('学妹')
+
+
+@pytest.fixture()
+def fgo_saber():
+    return Character.get(2)
+
+
+@pytest.mark.unittest
+class TestGamesFgoCharacter:
+    def test_basic(self, fgo_saber: Character, fgo_mashu: Character):
+        assert fgo_mashu == "玛修·基列莱特"
+        assert fgo_mashu.index == 1
+        assert fgo_mashu == '盾娘'
+        assert fgo_mashu == "マシュ・キリエライト"
+        assert fgo_mashu == "Mash Kyrielight"
+        assert fgo_mashu.rarity == 4
+        assert fgo_mashu.clazz == 'shielder'
+        assert fgo_mashu.gender == 'female'
+        assert repr(fgo_mashu) == '<Character 1 - 玛修·基列莱特/mash_kyrielight/マシュ・キリエライト, female, 4****>'
+        assert fgo_mashu != fgo_saber
+
+        assert fgo_saber == 'saber'
+        assert fgo_saber == '呆毛'
+        assert fgo_saber.index == 2
+        assert fgo_saber == '阿尔托莉雅·潘德拉贡'
+        assert fgo_saber.cnname == '阿尔托莉雅·潘德拉贡'
+        assert fgo_saber == 'アルトリア・ペンドラゴン'
+        assert fgo_saber.jpname == 'アルトリア・ペンドラゴン'
+        assert fgo_saber == "Altria Pendragon"
+        assert fgo_saber.enname == "Altria Pendragon"
+        assert fgo_saber.gender == '女性'
+        assert fgo_saber.rarity == 5
+        assert fgo_saber.accessible
+        assert fgo_saber.clazz == 'saber'
+        assert not fgo_saber.is_extra
+        assert repr(fgo_saber) == '<Character 2 - 阿尔托莉雅·潘德拉贡/altria_pendragon/' \
+                                  'アルトリア・ペンドラゴン, female, 5*****>'
+        assert fgo_saber == fgo_saber
