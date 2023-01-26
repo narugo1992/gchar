@@ -90,7 +90,7 @@ class Character:
         if type(other) == type(self):
             return self.index == other.index
         else:
-            if self.index == other:
+            if self.index is not None and self.index == other:
                 return True
             for name in chain(self._names(), self.alias_names):
                 if name == other:

@@ -3,77 +3,71 @@ from typing import List, Optional
 
 from .index import get_index, _refresh_index
 from .name import EnglishName, JapaneseName, ChineseName
-from .property import Gender, Level
+from .property import Gender, Rarity, Weapon, Element
 from ..base import Character as _BaseCharacter
-from ..base.name import _BaseName
 
 Skin = namedtuple('Skin', ['name', 'url'])
 
 
 class Character(_BaseCharacter):
+    __cnname_class__ = ChineseName
+    __enname_class__ = EnglishName
+    __jpname_class__ = JapaneseName
+
     def __init__(self, raw_data: dict):
         self.__raw_data = raw_data
 
     def _index(self) -> str:
         return str(self.enname)
 
-    def __getattr__(self, item):
-        return self.__raw_data[item]
-
     @property
     def gender(self) -> Gender:
         return Gender.loads(self.__raw_data['gender'])
 
-    @property
-    def cnname(self) -> ChineseName:
-        return ChineseName(self.__raw_data['cnname'])
+    def _cnname(self):
+        return self.__raw_data['cnname']
+
+    def _enname(self):
+        return self.__raw_data['enname']
+
+    def _jpname(self):
+        _jpnames = self._jpnames()
+        if _jpnames:
+            return _jpnames[0]
+        else:
+            return None  # pragma: no cover
+
+    def _jpnames(self):
+        return self.__raw_data['jpnames']
 
     @property
-    def enname(self) -> EnglishName:
-        return EnglishName(self.__raw_data['enname'])
+    def rarity(self) -> Rarity:
+        return Rarity.loads(self.__raw_data['rarity'])
 
     @property
-    def jpnames(self) -> List[JapaneseName]:
-        return [JapaneseName(name) for name in self.__raw_data['jpnames']]
+    def weapon(self) -> Weapon:
+        return Weapon.loads(self.__raw_data['weapon'])
 
     @property
-    def jpname(self) -> Optional[JapaneseName]:
-        return JapaneseName(self.__raw_data['jpnames'][0])
-
-    @property
-    def level(self) -> Level:
-        return Level.loads(self.__raw_data['rarity'])
+    def element(self) -> Optional[Element]:
+        element = self.__raw_data['element']
+        if element:
+            return Element.loads(element)
+        else:
+            return None
 
     @property
     def skins(self) -> List[Skin]:
         return [Skin(item['name'], item['url']) for item in self.__raw_data['skins']]
 
-    def _names(self) -> List[_BaseName]:
-        return [self.cnname, self.enname, *self.jpnames]
-
     def __repr__(self):
         return f'<{type(self).__name__} {"/".join(map(str, self._names()))}, ' \
-               f'{self.level}{"*" * self.level}, weapon: {self.weapon}, element: {self.element}>'
-
-    def __eq__(self, other):
-        if isinstance(other, Character):
-            return self.index == other.index
-        else:
-            return (self.cnname and self.cnname == other) or \
-                (self.enname and self.enname == other) or \
-                any([jp == other for jp in self.jpnames])
+               f'{self.gender.name.lower()}, {self.rarity}{"*" * self.rarity}, ' \
+               f'weapon: {self.weapon}, element: {self.element}>'
 
     @classmethod
     def all(cls, timeout: int = 5, **kwargs) -> List['Character']:
         return [Character(data) for data in get_index(timeout=timeout)]
-
-    @classmethod
-    def get(cls, name, timeout: int = 5) -> Optional['Character']:
-        for item in cls.all(timeout):
-            if item == name:
-                return item
-
-        return None
 
     @classmethod
     def refresh_index(cls, timeout: int = 5):

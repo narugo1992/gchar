@@ -101,4 +101,21 @@ class JapaneseName(TextName):
 
 
 class EnglishName(SegmentName):
-    pass
+    @classmethod
+    def _word_trans(cls, name: str) -> str:
+        return name
+
+    @classmethod
+    def _preprocess(cls, name: Union[SegmentName, TextName, str, List[str]]) -> List[str]:
+        if isinstance(name, SegmentName):
+            return name[:]
+        elif isinstance(name, TextName):
+            return cls._preprocess(str(name))
+        elif isinstance(name, str):
+            name = cls._word_trans(name)
+        elif isinstance(name, list):
+            name = [cls._word_trans(wd) for wd in name]
+        else:
+            raise TypeError(f'Invalid name type - {name!r}.')
+
+        return SegmentName._preprocess(name)

@@ -2,10 +2,13 @@ import json
 import os
 import re
 import time
+from typing import Optional
 
 import requests
 from pyquery import PyQuery as pq
 from tqdm import tqdm
+
+from ..base.session import get_requests_session
 
 _LOCAL_DIR, _ = os.path.split(os.path.abspath(__file__))
 _INDEX_FILE = os.path.join(_LOCAL_DIR, 'index.json')
@@ -13,13 +16,8 @@ _INDEX_FILE = os.path.join(_LOCAL_DIR, 'index.json')
 _ROOT_WEBSITE = 'https://genshin-impact.fandom.com/'
 
 
-def _get_index_from_fandom(timeout: int = 5):
-    session = requests.session()
-    session.headers.update({
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-                      "(KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36",
-    })
-
+def _get_index_from_fandom(timeout: int = 5, maxcnt: Optional[int] = None):
+    session = get_requests_session()
     response = session.get(f'{_ROOT_WEBSITE}/wiki/Character/List', timeout=timeout)
     response.raise_for_status()
 
@@ -44,7 +42,7 @@ def _get_index_from_fandom(timeout: int = 5):
         if gother:
             gender = 'Others'
 
-        resp = session.get(page_url)
+        resp = session.get(page_url, timeout=timeout)
         resp.raise_for_status()
         page = pq(resp.text)
 
@@ -101,12 +99,14 @@ def _get_index_from_fandom(timeout: int = 5):
             'region': region,
             'skins': skins
         })
+        if maxcnt is not None and len(retval) >= maxcnt:
+            break
 
     return retval
 
 
-def _refresh_index(timeout: int = 5):
-    data = _get_index_from_fandom(timeout)
+def _refresh_index(timeout: int = 5, maxcnt: Optional[int] = None):
+    data = _get_index_from_fandom(timeout, maxcnt)
     with open(_INDEX_FILE, 'w') as f:
         tagged_data = {
             'data': data,
