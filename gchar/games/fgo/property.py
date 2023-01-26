@@ -35,7 +35,7 @@ class Gender(Enum):
 
 
 @unique
-class Level(IntEnum):
+class Rarity(IntEnum):
     ZERO = 0x0
     ONE = 0x1
     TWO = 0x2
@@ -44,7 +44,7 @@ class Level(IntEnum):
     FIVE = 0x5
 
     @classmethod
-    def loads(cls, val) -> 'Level':
+    def loads(cls, val) -> 'Rarity':
         if isinstance(val, cls):
             return val
         elif isinstance(val, int):
@@ -71,7 +71,7 @@ class Clazz(Enum):
     RULER = 0x9
     MOONCANCER = 0xa
     SHIELDER = 0xb
-    ALTERGO = 0xc
+    ALTEREGO = 0xc
     PRETENDER = 0xd
     FOREIGNER = 0xe
 

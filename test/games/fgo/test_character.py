@@ -3,16 +3,6 @@ import pytest
 from gchar.games.fgo import Character
 
 
-@pytest.fixture()
-def fgo_mashu():
-    return Character.get('学妹')
-
-
-@pytest.fixture()
-def fgo_saber():
-    return Character.get(2)
-
-
 @pytest.mark.unittest
 class TestGamesFgoCharacter:
     def test_basic(self, fgo_saber: Character, fgo_mashu: Character):
@@ -44,3 +34,14 @@ class TestGamesFgoCharacter:
         assert repr(fgo_saber) == '<Character 2 - 阿尔托莉雅·潘德拉贡/altria_pendragon/' \
                                   'アルトリア・ペンドラゴン, female, 5*****>'
         assert fgo_saber == fgo_saber
+
+    def test_extra(self, fgo_saber, fgo_mashu, fgo_saber_l, fgo_saber_a, fgo_altria_caster,
+                   fgo_elf_gawain, fgo_elf_tristan, fgo_elf_lancelot):
+        assert not fgo_saber.is_extra
+        assert not fgo_mashu.is_extra
+        assert fgo_saber_a.is_extra
+        assert fgo_saber_l.is_extra
+        assert not fgo_altria_caster.is_extra
+        assert not fgo_elf_gawain.is_extra
+        assert not fgo_elf_tristan.is_extra
+        assert not fgo_elf_lancelot.is_extra

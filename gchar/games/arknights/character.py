@@ -81,7 +81,7 @@ class Character(_BaseCharacter):
         return Gender.loads(self.__raw_data['data-sex'])
 
     @property
-    def level(self) -> Level:
+    def rarity(self) -> Level:
         return Level.loads(int(self.__raw_data['data-rarity']) + 1)
 
     @property
@@ -110,7 +110,7 @@ class Character(_BaseCharacter):
 
     def __repr__(self):
         return f'<{type(self).__name__} {self.index} - {"/".join(map(str, self._names()))}, ' \
-               f'{self.gender.name.lower()}, {self.level}{"*" * self.level}>'
+               f'{self.gender.name.lower()}, {self.rarity}{"*" * self.rarity}>'
 
     @classmethod
     def all(cls, timeout: int = 5, contains_extra: bool = True, **kwargs) -> List['Character']:

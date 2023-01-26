@@ -42,7 +42,7 @@ def _get_similar_lists(current_id: int, sim_table: pq, session: requests.Session
                 ids.append(id_)
 
     else:
-        raise ValueError(f'Unknown similar table content:{os.linesep}{content_box}.')
+        raise ValueError(f'Unknown similar table content:{os.linesep}{content_box}.')  # pragma: no cover
 
     return sorted(set([id_ for id_ in ids if current_id != id_]))
 

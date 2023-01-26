@@ -3,7 +3,7 @@ from typing import List
 
 from .index import get_index, _refresh_index
 from .name import ChineseName, JapaneseName, EnglishName, ChineseAliasName
-from .property import Gender, Level, Clazz
+from .property import Gender, Rarity, Clazz
 from ..base import Character as _BaseCharacter
 
 Skin = namedtuple('Skin', ['name', 'url'])
@@ -30,8 +30,8 @@ class Character(_BaseCharacter):
         return Gender.loads(self.__raw_data['gender'])
 
     @property
-    def rarity(self) -> Level:
-        return Level.loads(int(self.__raw_data['rarity']))
+    def rarity(self) -> Rarity:
+        return Rarity.loads(int(self.__raw_data['rarity']))
 
     @property
     def accessible(self) -> bool:
@@ -62,15 +62,10 @@ class Character(_BaseCharacter):
     def _alias_names(self):
         return self.__raw_data['alias']
 
-    __NOT_EXTRA_IDS__ = [310, 311, 312]
-
     def _is_extra(self) -> bool:
-        if self.index in self.__NOT_EXTRA_IDS__:
-            return False
-
         for ch in self.__raw_data['similar']:
             id_, name = ch['id'], ch['name']
-            if id_ < self.__raw_data['id'] and name in self._cnname():
+            if id_ < self.__raw_data['id'] and name == self.cnname:
                 return True
 
         return False
