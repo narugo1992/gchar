@@ -1,12 +1,10 @@
-from collections import namedtuple
 from typing import List, Optional
 
 from .index import get_index, _refresh_index
 from .name import EnglishName, JapaneseName, ChineseName
 from .property import Gender, Rarity, Weapon, Element
 from ..base import Character as _BaseCharacter
-
-Skin = namedtuple('Skin', ['name', 'url'])
+from ..base import Skin
 
 
 class Character(_BaseCharacter):

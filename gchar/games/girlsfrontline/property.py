@@ -2,7 +2,7 @@ from enum import Enum, unique
 
 
 @unique
-class Level(Enum):
+class Rarity(Enum):
     ONE = 1
     TWO = 2
     THREE = 3
@@ -11,8 +11,8 @@ class Level(Enum):
     EXTRA = 'EXTRA'
 
     @classmethod
-    def loads(cls, val) -> 'Level':
-        if isinstance(val, Level):
+    def loads(cls, val) -> 'Rarity':
+        if isinstance(val, Rarity):
             return val
         elif isinstance(val, (int, str)):
             if isinstance(val, str):
@@ -29,7 +29,7 @@ class Level(Enum):
             raise TypeError(f'Invalid level type - {val!r}.')
 
     def __eq__(self, other):
-        if isinstance(other, Level):
+        if isinstance(other, Rarity):
             return self.value == other.value
         else:
             try:
@@ -52,10 +52,24 @@ class Clazz(Enum):
         if isinstance(val, cls):
             return val
         elif isinstance(val, str):
-            try:
-                return cls.__members__[val.upper()]
-            except KeyError:
-                raise ValueError(f'Invalid class value - {val!r}.')
+            pval = val.upper()
+            if pval in cls.__members__:
+                return cls.__members__[pval]
+
+            if pval in {'手枪', '手'}:
+                return cls.HG
+            elif pval in {'突击步枪', '突'}:
+                return cls.AR
+            elif pval in {'步枪', '步'}:
+                return cls.RF
+            elif pval in {'冲锋枪', '冲'}:
+                return cls.SMG
+            elif pval in {'机枪', '机'}:
+                return cls.MG
+            elif pval in {'霰弹枪', '霰'}:
+                return cls.SG
+
+            raise ValueError(f'Invalid class value - {val!r}.')
         else:
             raise TypeError(f'Invalid class type - {val!r}.')
 
