@@ -1,6 +1,6 @@
 from typing import List
 
-from .index import get_index, _refresh_index
+from .index import _refresh_index, get_index
 from .name import ChineseName, JapaneseName, EnglishName, ChineseAliasName
 from .property import Gender, Rarity, Clazz
 from ..base import Character as _BaseCharacter
@@ -11,7 +11,8 @@ class Character(_BaseCharacter):
     __cnname_class__ = ChineseName
     __jpname_class__ = JapaneseName
     __enname_class__ = EnglishName
-    __alias_name_class = ChineseAliasName
+    __alias_name_class__ = ChineseAliasName
+    __index_func__ = get_index
 
     def __init__(self, raw_data: dict):
         self.__raw_data = raw_data
@@ -75,10 +76,6 @@ class Character(_BaseCharacter):
     @property
     def skins(self) -> List[Skin]:
         return [Skin(item['name'], item['url']) for item in self.__raw_data['skins']]
-
-    @classmethod
-    def all(cls, timeout: int = 5, **kwargs) -> List['Character']:
-        return [Character(data) for data in get_index(timeout=timeout)]
 
     @classmethod
     def refresh_index(cls, timeout: int = 5):

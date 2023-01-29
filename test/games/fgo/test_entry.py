@@ -10,7 +10,7 @@ from gchar.games.fgo.__main__ import cli
 
 
 @pytest.mark.unittest
-class TestGamesArknightsEntry:
+class TestGamesFgoEntry:
     def test_version(self):
         result = simulate_entry(cli, ['gchar.games.fgo', '-v'])
         assert result.exitcode == 0

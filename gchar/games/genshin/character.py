@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from .index import get_index, _refresh_index
+from .index import _refresh_index, get_index
 from .name import EnglishName, JapaneseName, ChineseName
 from .property import Gender, Rarity, Weapon, Element
 from ..base import Character as _BaseCharacter
@@ -11,6 +11,7 @@ class Character(_BaseCharacter):
     __cnname_class__ = ChineseName
     __enname_class__ = EnglishName
     __jpname_class__ = JapaneseName
+    __index_func__ = get_index
 
     def __init__(self, raw_data: dict):
         self.__raw_data = raw_data
@@ -62,10 +63,6 @@ class Character(_BaseCharacter):
         return f'<{type(self).__name__} {"/".join(map(str, self._names()))}, ' \
                f'{self.gender.name.lower()}, {self.rarity}{"*" * self.rarity}, ' \
                f'weapon: {self.weapon}, element: {self.element}>'
-
-    @classmethod
-    def all(cls, timeout: int = 5, **kwargs) -> List['Character']:
-        return [Character(data) for data in get_index(timeout=timeout)]
 
     @classmethod
     def refresh_index(cls, timeout: int = 5):

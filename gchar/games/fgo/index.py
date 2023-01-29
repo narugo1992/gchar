@@ -173,12 +173,12 @@ def _get_index_from_fgowiki(timeout: int = 5) -> Iterator[dict]:
         }
 
 
-def _refresh_index(timeout: int = 5, maxcnt: Optional[int] = None):
+def _refresh_index(timeout: int = 5, maxcnt: Optional[int] = None, index_file: Optional[str] = None):
     yielder = _get_index_from_fgowiki(timeout)
     if maxcnt:
         yielder = islice(yielder, maxcnt)
     data = list(yielder)
-    with open(_INDEX_FILE, 'w') as f:
+    with open(index_file or _INDEX_FILE, 'w') as f:
         tagged_data = {
             'data': data,
             'last_updated': time.time(),

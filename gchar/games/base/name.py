@@ -112,7 +112,7 @@ class EnglishName(SegmentName):
         elif isinstance(name, TextName):
             return cls._preprocess(str(name))
         elif isinstance(name, str):
-            name = cls._word_trans(name)
+            name = cls._word_trans(name).replace(chr(160), ' ')
         elif isinstance(name, list):
             name = [cls._word_trans(wd) for wd in name]
         else:

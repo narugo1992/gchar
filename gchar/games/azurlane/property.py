@@ -7,11 +7,20 @@ class Group(Enum):
     HMS = 0x2
     IJN = 0x3
     KMS = 0x4
-    ICN_ROC = 0x5
+    DE = 0x5
     RN = 0x6
     SN = 0x7
     FFNF = 0x8
     MNF = 0x9
+
+    def __eq__(self, other):
+        if isinstance(other, Group):
+            return self.value == other.value
+        else:
+            try:
+                return self == Group.loads(other)
+            except (TypeError, ValueError):
+                return False
 
     @classmethod
     def loads(cls, val) -> 'Group':
@@ -27,7 +36,7 @@ class Group(Enum):
             elif val == '铁血':
                 return cls.KMS
             elif val == '东煌':
-                return cls.ICN_ROC
+                return cls.DE
             elif val == '撒丁帝国':
                 return cls.RN
             elif val == '北方联合':
@@ -43,21 +52,48 @@ class Group(Enum):
 
 
 @unique
-class BasicLevel(IntEnum):
+class BasicRarity(IntEnum):
     COMMON = 0x1
     RARE = 0x2
     ELITE = 0x3
     ULTRA = 0x4
     EPIC = 0x5
 
+    @property
+    def label(self) -> str:
+        if self == self.COMMON:
+            return '普通'
+        elif self == self.RARE:
+            return '稀有'
+        elif self == self.ELITE:
+            return '精锐'
+        elif self == self.ULTRA:
+            return '超稀有'
+        elif self == self.EPIC:
+            return '海上传奇'
+        else:
+            raise ValueError(f'Unknown basic level - {self!r}.')  # pragma: no cover
+
+    def __eq__(self, other):
+        if isinstance(other, BasicRarity):
+            return self.value == other.value
+        else:
+            try:
+                return self == self.loads(other)
+            except (TypeError, ValueError):
+                return False
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
     @classmethod
-    def loads(cls, val) -> 'BasicLevel':
+    def loads(cls, val) -> 'BasicRarity':
         if isinstance(val, cls):
             return val
         elif isinstance(val, int):
             for name, item in cls.__members__.items():
                 if item.value == val:
-                    return item.value
+                    return item
 
             raise ValueError(f'Invalid level value - {val!r}.')
         elif isinstance(val, str):
@@ -78,18 +114,39 @@ class BasicLevel(IntEnum):
 
 
 @unique
-class ResearchLevel(IntEnum):
+class ResearchRarity(IntEnum):
     TOP = 0x4
     DECISIVE = 0x5
 
+    @property
+    def label(self) -> str:
+        if self == self.TOP:
+            return '最高方案'
+        elif self == self.DECISIVE:
+            return '决战方案'
+        else:
+            raise ValueError(f'Unknown research level - {self!r}.')  # pragma: no cover
+
+    def __eq__(self, other):
+        if isinstance(other, ResearchRarity):
+            return self.value == other.value
+        else:
+            try:
+                return self == self.loads(other)
+            except (TypeError, ValueError):
+                return False
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
     @classmethod
-    def loads(cls, val) -> 'ResearchLevel':
+    def loads(cls, val) -> 'ResearchRarity':
         if isinstance(val, cls):
             return val
         elif isinstance(val, int):
             for name, item in cls.__members__.items():
                 if item.value == val:
-                    return item.value
+                    return item
 
             raise ValueError(f'Invalid level value - {val!r}.')
         elif isinstance(val, str):

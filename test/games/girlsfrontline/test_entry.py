@@ -10,7 +10,7 @@ from gchar.games.girlsfrontline.__main__ import cli
 
 
 @pytest.mark.unittest
-class TestGamesArknightsEntry:
+class TestGamesGirlsfrontlineEntry:
     def test_version(self):
         result = simulate_entry(cli, ['gchar.games.girlsfrontline', '-v'])
         assert result.exitcode == 0

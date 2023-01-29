@@ -1,94 +1,85 @@
-from collections import namedtuple
 from typing import List, Optional, Union
 
-from .index import get_index, _refresh_index
-from .name import EnglishName, JapaneseName, ChineseName
-from .property import BasicLevel, ResearchLevel, Group
+from .index import _refresh_index, get_index
+from .name import EnglishName, JapaneseName, ChineseName, ChineseAliasName
+from .property import BasicRarity, ResearchRarity, Group
 from ..base import Character as _BaseCharacter
-from ..base.name import _BaseName
-
-Skin = namedtuple('Skin', ['name', 'url'])
+from ..base import Skin
 
 
 class Character(_BaseCharacter):
+    __cnname_class__ = ChineseName
+    __enname_class__ = EnglishName
+    __jpname_class__ = JapaneseName
+    __alias_name_class__ = ChineseAliasName
+    __index_func__ = get_index
+
     def __init__(self, raw_data: dict):
         self.__raw_data = raw_data
 
     def _index(self) -> str:
         return self.__raw_data['id']
 
-    @property
-    def cnname(self) -> ChineseName:
-        return ChineseName(self.__raw_data['cnname']['short'])
+    def _cnname(self):
+        return self.__raw_data['cnname']['short']
 
-    @property
-    def enname(self) -> EnglishName:
-        raw = EnglishName(self.__raw_data['enname'])
-        if self.group:
-            return EnglishName(raw[1:])
-        else:
-            return raw
+    def _enname(self):
+        return self.__raw_data['enname']['short']
 
-    @property
-    def jpnames(self) -> List[JapaneseName]:
-        return [JapaneseName(name) for name in self.__raw_data['jpnames']]
-
-    @property
-    def jpname(self) -> Optional[JapaneseName]:
-        jpnames = self.jpnames
-        if jpnames:
-            return jpnames[0]
+    def _jpname(self):
+        if self.__raw_data['jpnames']:
+            return self.__raw_data['jpnames'][0]
         else:
             return None
 
-    @property
-    def level(self) -> Optional[Union[BasicLevel, ResearchLevel]]:
-        val = self.__raw_data['rarity']
-        try:
-            return BasicLevel.loads(val)
-        except (ValueError, TypeError):
-            try:
-                return ResearchLevel.loads(val)
-            except (ValueError, TypeError):
-                return None
+    def _jpnames(self):
+        return self.__raw_data['jpnames']
+
+    def _alias_names(self):
+        return self.__raw_data['alias']
 
     @property
-    def group(self) -> Optional[Group]:
+    def rarity(self) -> Optional[Union[BasicRarity, ResearchRarity]]:
+        val = self.__raw_data['rarity']
+        try:
+            return BasicRarity.loads(val)
+        except (ValueError, TypeError):
+            return ResearchRarity.loads(val)
+
+    @property
+    def group(self) -> Union[Group, str]:
         try:
             return Group.loads(self.__raw_data['group'])
         except (TypeError, ValueError):
-            return None
+            return self.__raw_data['group']
+
+    @property
+    def is_meta(self) -> bool:
+        return self.__raw_data['is_meta']
+
+    @property
+    def is_refit(self) -> bool:
+        return self.__raw_data['is_refit']
+
+    @property
+    def is_mu(self) -> bool:
+        return self.__raw_data['is_mu']
+
+    @property
+    def is_chibi(self) -> bool:
+        return self.__raw_data['is_chibi']
+
+    def _is_extra(self) -> bool:
+        return self.is_meta or self.is_refit or self.is_mu or self.is_chibi
 
     @property
     def skins(self) -> List[Skin]:
         return [Skin(item['name'], item['url']) for item in self.__raw_data['skins']]
 
-    def _names(self) -> List[_BaseName]:
-        return [self.cnname, self.enname, *self.jpnames]
-
     def __repr__(self):
         return f'<{type(self).__name__} {self.index} - {"/".join(map(str, self._names()))}, ' \
-               f'{self.level}{"*" * self.level}, group: {self.group.name if self.group else "<none>"}>'
-
-    def __eq__(self, other):
-        if isinstance(other, Character):
-            return self.index == other.index
-        else:
-            return (self.cnname and self.cnname == other) or \
-                (self.enname and self.enname == other) or \
-                any([jp == other for jp in self.jpnames])
-
-    @classmethod
-    def all(cls, timeout: int = 5, **kwargs) -> List['Character']:
-        return [Character(data) for data in get_index(timeout=timeout)]
-
-    @classmethod
-    def get(cls, name, timeout: int = 5) -> Optional['Character']:
-        for item in cls.all(timeout):
-            if item == name:
-                return item
-
-        return None
+               f'{self.rarity.label}({int(self.rarity)}{"*" * self.rarity}), ' \
+               f'group: {self.group if isinstance(self.group, Group) else self.group}>'
 
     @classmethod
     def refresh_index(cls, timeout: int = 5):

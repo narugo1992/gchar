@@ -158,12 +158,12 @@ def _get_index_from_prts(timeout: int = 5, max_retries: int = 3) -> Iterator[dic
 _MIN_REFRESH_SPAN = 3 * 24 * 60 * 60  # 3 days
 
 
-def _refresh_index(timeout: int = 5, maxcnt: Optional[int] = None):
+def _refresh_index(timeout: int = 5, maxcnt: Optional[int] = None, index_file: Optional[str] = None):
     yielder = _get_index_from_prts(timeout)
     if maxcnt:
         yielder = islice(yielder, maxcnt)
     data = list(yielder)
-    with open(_INDEX_FILE, 'w') as f:
+    with open(index_file or _INDEX_FILE, 'w') as f:
         tagged_data = {
             'data': data,
             'last_updated': time.time(),

@@ -1,5 +1,5 @@
 from itertools import chain
-from typing import List, Union, Type, Iterator, Optional
+from typing import List, Union, Type, Iterator, Optional, Callable
 
 from .name import _BaseName, ChineseName, EnglishName, JapaneseName
 
@@ -8,7 +8,8 @@ class Character:
     __cnname_class__: Type[ChineseName] = ChineseName
     __enname_class__: Type[EnglishName] = EnglishName
     __jpname_class__: Type[JapaneseName] = JapaneseName
-    __alias_name_class: Optional[Type[ChineseName]] = None
+    __alias_name_class__: Optional[Type[ChineseName]] = None
+    __index_func__: Optional[Callable] = None
 
     def _index(self):
         raise NotImplementedError  # pragma: no cover
@@ -70,7 +71,7 @@ class Character:
 
     @property
     def alias_names(self):
-        return [self.__alias_name_class(name) for name in self._alias_names()]
+        return [self.__alias_name_class__(name) for name in self._alias_names()]
 
     def _names(self) -> List[_BaseName]:
         return [*self.cnnames, *self.ennames, *self.jpnames]
@@ -99,8 +100,10 @@ class Character:
             return False
 
     @classmethod
-    def all(cls, timeout: int = 5, **kwargs):
-        raise NotImplementedError  # pragma: no cover
+    def all(cls, timeout: int = 5, contains_extra: bool = True, **kwargs):
+        all_chs = [cls(data) for data in cls.__index_func__(timeout=timeout)]
+        chs = [ch for ch in all_chs if contains_extra or not ch.is_extra]
+        return chs
 
     @classmethod
     def get(cls, name, **kwargs):

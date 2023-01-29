@@ -1,6 +1,6 @@
 from typing import List
 
-from .index import _KNOWN_DATA_FIELDS, get_index, _refresh_index
+from .index import _KNOWN_DATA_FIELDS, _refresh_index, get_index
 from .name import EnglishName, JapaneseName, ChineseName
 from .property import Gender, Level, Clazz
 from ..base import Character as _BaseCharacter
@@ -58,6 +58,7 @@ class Character(_BaseCharacter):
     __cnname_class__ = ChineseName
     __enname_class__ = EnglishName
     __jpname_class__ = JapaneseName
+    __index_func__ = get_index
 
     def __init__(self, raw_data: dict):
         self.__origin_raw_data = raw_data
@@ -111,11 +112,6 @@ class Character(_BaseCharacter):
     def __repr__(self):
         return f'<{type(self).__name__} {self.index} - {"/".join(map(str, self._names()))}, ' \
                f'{self.gender.name.lower()}, {self.rarity}{"*" * self.rarity}>'
-
-    @classmethod
-    def all(cls, timeout: int = 5, contains_extra: bool = True, **kwargs) -> List['Character']:
-        chs = [Character(data) for data in get_index(timeout=timeout)]
-        return [ch for ch in chs if contains_extra or not ch.is_extra]
 
     @classmethod
     def refresh_index(cls, timeout: int = 5):
