@@ -7,21 +7,21 @@ on:
 
 jobs:
   data_crawl:
-    name: Data Crawler From Wiki
+    name: Data Crawl
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os:
-          - 'ubuntu-latest'
-        python-version:
-          - '3.8'
         game:
           - 'arknights'
           - 'fgo'
           - 'azurlane'
           - 'girlsfrontline'
           - 'genshin'
+        os:
+          - 'ubuntu-latest'
+        python-version:
+          - '3.8'
 
     steps:
       - name: Get system version for Linux
