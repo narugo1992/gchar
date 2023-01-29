@@ -7,6 +7,7 @@ from typing import Optional, Tuple
 
 import requests
 from pyquery import PyQuery as pq
+from requests.exceptions import ConnectionError
 from tqdm import tqdm
 
 from ..base import get_requests_session
@@ -61,7 +62,15 @@ def _get_index_from_biliwiki(timeout: int = 20, maxcnt: Optional[int] = None):
         group, *_ = [g.strip() for g in item.attr('data-param3').split(',') if g]
         page_url = f"{ROOT_SITE}{item('.jntj-4 a').attr('href')}"
 
-        resp = session.get(page_url)
+        resp = None
+        for i in range(5):
+            try:
+                resp = session.get(page_url, timeout=timeout)
+            except ConnectionError:
+                time.sleep(3.0)
+            else:
+                break
+        assert resp is not None
         resp.raise_for_status()
 
         full = pq(resp.text)
