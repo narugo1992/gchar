@@ -153,7 +153,7 @@ def _refresh_index(timeout: int = 5, maxcnt: Optional[int] = None, index_file: O
 
 
 def _get_index_from_local():
-    with open(_INDEX_FILE, 'r') as f:
+    with open(_INDEX_FILE, 'r', encoding='utf-8') as f:
         return json.load(f)['data']
 
 
