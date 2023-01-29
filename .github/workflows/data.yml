@@ -14,7 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         game:
-#          - 'arknights'
+          - 'arknights'
 #          - 'fgo'
           - 'azurlane'
           - 'girlsfrontline'
@@ -95,14 +95,14 @@ jobs:
           pip list
           tree .
           python -m gchar.games.${{ matrix.game }} --help
-      - name: Run unittest
+      - name: Run Crawler Code
         env:
           CI: 'true'
-          WORKERS: ''
+          TIMEOUT: '30'
         shell: bash
         run: |
           mkdir -p ${{ matrix.game }}
-          python -m gchar.games.${{ matrix.game }} update -o ${{ matrix.game }}/index.json
+          python -m gchar.games.${{ matrix.game }} update -o ${{ matrix.game }}/index.json --timeout $TIMEOUT
           zip -r ${{ matrix.game }}.zip ${{ matrix.game }}
       - name: Upload the character databases
         uses: actions/upload-artifact@v3
