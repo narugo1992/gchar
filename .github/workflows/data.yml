@@ -1,10 +1,10 @@
 name: Data Publish
 
 on:
-  push:
+#  push:
   workflow_dispatch:
-#  schedule:
-#    - cron: '0 1 * * *'
+  schedule:
+    - cron: '0 1 * * *'
 
 jobs:
   data_crawl:
