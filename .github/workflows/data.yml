@@ -126,7 +126,8 @@ jobs:
         shell: bash
         run: |
           sudo apt-get install -y tree
-          mkdir -p game_characters
+          git clone https://huggingface.co/datasets/deepghs/game_characters
+          ls -al game_characters
       - name: Download from artifact
         uses: actions/download-artifact@v3
         with:
@@ -138,3 +139,12 @@ jobs:
           cd game_characters
           for zfile in *.zip; do unzip $zfile && rm $zfile; done
           tree .
+      - name: Push models to hugging face repostory
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          cd game_characters
+          git config user.name 'narugo1992'
+          git config user.email 'narugo@126.com'
+          git add -A && git commit -a -m "dev(narugo): auto sync $(date -R)"
+          git push https://narugo:$HF_TOKEN@huggingface.co/deepghs/game_characters main
