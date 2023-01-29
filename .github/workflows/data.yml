@@ -15,7 +15,7 @@ jobs:
       matrix:
         game:
           - 'arknights'
-#          - 'fgo'
+          - 'fgo'
           - 'azurlane'
           - 'girlsfrontline'
           - 'genshin'
