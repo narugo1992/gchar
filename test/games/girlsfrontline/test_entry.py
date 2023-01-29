@@ -3,7 +3,7 @@ import os
 from unittest import skipUnless
 
 import pytest
-from hbutils.testing import simulate_entry
+from hbutils.testing import simulate_entry, OS
 
 from gchar.config.meta import __VERSION__
 from gchar.games.girlsfrontline.__main__ import cli
@@ -17,6 +17,7 @@ class TestGamesGirlsfrontlineEntry:
         assert __VERSION__ in result.stdout
         assert 'girlsfrontline' in result.stdout
 
+    @skipUnless(not OS.windows, 'Non-windows required.')
     def test_update_full_5(self, no_index_json):
         result = simulate_entry(cli, ['gchar.games.girlsfrontline', 'update', '-n', '5'])
         assert result.exitcode == 0, f'Exitcode is {result.exitcode}.{os.linesep}' \
@@ -30,6 +31,7 @@ class TestGamesGirlsfrontlineEntry:
             assert len(data['data']) == 5
 
     @skipUnless(os.environ.get('RUN_CRAWLER'), 'Env \'RUN_CRAWLER\' required.')
+    @skipUnless(not OS.windows, 'Non-windows required.')
     @pytest.mark.timeout(1800)
     def test_update_full(self, no_index_json):
         result = simulate_entry(cli, ['gchar.games.girlsfrontline', 'update'])
