@@ -137,7 +137,8 @@ jobs:
         shell: bash
         run: |
           cd game_characters
-          for zfile in *.zip; do unzip $zfile && rm $zfile; done
+          for zfile in *.zip; do unzip -o $zfile; done
+          rm -rf *.zip
           tree .
       - name: Push models to hugging face repostory
         env:
