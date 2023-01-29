@@ -14,7 +14,7 @@ jobs:
       matrix:
         game:
           - 'arknights'
-          - 'fgo'
+          #          - 'fgo'
           - 'azurlane'
           - 'girlsfrontline'
           - 'genshin'
@@ -93,8 +93,7 @@ jobs:
           pip --version
           pip list
           tree .
-          cloc gchar
-          cloc test
+          python -m gchar.games.${{ matrix.game }} --help
       - name: Run unittest
         env:
           CI: 'true'
@@ -107,4 +106,32 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: character-database
-          path: ${{ matrix.game }}/index.json
+          path: ${{ matrix.game }}/*
+
+  data_upload:
+    name: Data Upload
+    runs-on: ${{ matrix.os }}
+    needs: [ data_crawl ]
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - 'ubuntu-latest'
+        python-version:
+          - '3.8'
+
+    steps:
+      - name: Prepare the repository
+        shell: bash
+        run: |
+          mkdir -p game_characters
+      - name: Download from artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: character-database
+          path: game_characters
+      - name: See what is in this path
+        shell: bash
+        run: |
+          sudo apt-get install -y tree
+          tree game_characters
