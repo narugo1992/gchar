@@ -7,6 +7,7 @@ from typing import Optional, Tuple
 
 import requests
 from pyquery import PyQuery as pq
+from requests.exceptions import ConnectionError
 from tqdm import tqdm
 
 from ..base import get_requests_session
@@ -36,7 +37,7 @@ def _process_cnname(s: str) -> Tuple[str, str, str]:
         return matching.group('name'), matching.group('alias'), ''
 
 
-def _get_index_from_biliwiki(timeout: int = 20, maxcnt: Optional[int] = None):
+def _get_index_from_biliwiki(timeout: int = 5, maxcnt: Optional[int] = None):
     session = get_requests_session(timeout=timeout)
 
     response = session.get(f'{ROOT_SITE}/blhx/%E8%88%B0%E8%88%B9%E5%9B%BE%E9%89%B4')
@@ -61,7 +62,15 @@ def _get_index_from_biliwiki(timeout: int = 20, maxcnt: Optional[int] = None):
         group, *_ = [g.strip() for g in item.attr('data-param3').split(',') if g]
         page_url = f"{ROOT_SITE}{item('.jntj-4 a').attr('href')}"
 
-        resp = session.get(page_url)
+        resp = None
+        for _ in range(5):
+            try:
+                resp = session.get(page_url)
+            except ConnectionError:
+                time.sleep(5.0)
+            else:
+                break
+        assert resp is not None
         resp.raise_for_status()
 
         full = pq(resp.text)
@@ -132,7 +141,7 @@ def _get_index_from_biliwiki(timeout: int = 20, maxcnt: Optional[int] = None):
     return retval
 
 
-def _refresh_index(timeout: int = 20, maxcnt: Optional[int] = None, index_file: Optional[str] = None):
+def _refresh_index(timeout: int = 5, maxcnt: Optional[int] = None, index_file: Optional[str] = None):
     data = _get_index_from_biliwiki(timeout, maxcnt)
     with open(index_file or _INDEX_FILE, 'w') as f:
         tagged_data = {
@@ -151,7 +160,7 @@ def _local_is_ready() -> bool:
     return os.path.exists(_INDEX_FILE)
 
 
-def get_index(force_refresh: bool = False, timeout: int = 20):
+def get_index(force_refresh: bool = False, timeout: int = 5):
     if force_refresh or not _local_is_ready():
         try:
             _refresh_index(timeout=timeout)

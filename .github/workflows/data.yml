@@ -98,11 +98,10 @@ jobs:
       - name: Run Crawler Code
         env:
           CI: 'true'
-          TIMEOUT: '30'
         shell: bash
         run: |
           mkdir -p ${{ matrix.game }}
-          python -m gchar.games.${{ matrix.game }} update -o ${{ matrix.game }}/index.json --timeout $TIMEOUT
+          python -m gchar.games.${{ matrix.game }} update -o ${{ matrix.game }}/index.json
           zip -r ${{ matrix.game }}.zip ${{ matrix.game }}
       - name: Upload the character databases
         uses: actions/upload-artifact@v3
