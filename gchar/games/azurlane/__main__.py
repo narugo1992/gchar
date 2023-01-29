@@ -19,7 +19,7 @@ def cli():
 
 @cli.command('update', help='Update the local index of characters.',
              context_settings={**GLOBAL_CONTEXT_SETTINGS})
-@click.option('--timeout', '-t', 'timeout', type=int, default=5,
+@click.option('--timeout', '-t', 'timeout', type=int, default=20,
               help='Timeout of this update.', show_default=True)
 @click.option('--maxcnt', '-n', 'maxcnt', type=int, default=None,
               help='Max count to crawler (only used for debugging and testing).', show_default=True)
