@@ -14,10 +14,10 @@ jobs:
       fail-fast: false
       matrix:
         game:
-          #          - 'arknights'
-          #          - 'fgo'
-          #          - 'azurlane'
-          #          - 'girlsfrontline'
+          - 'arknights'
+#          - 'fgo'
+          - 'azurlane'
+          - 'girlsfrontline'
           - 'genshin'
         os:
           - 'ubuntu-latest'
