@@ -178,7 +178,7 @@ def _refresh_index(timeout: int = 5, maxcnt: Optional[int] = None, index_file: O
     if maxcnt:
         yielder = islice(yielder, maxcnt)
     data = list(yielder)
-    with open(index_file or _INDEX_FILE, 'w') as f:
+    with open(index_file or _INDEX_FILE, 'w', encoding='utf-8') as f:
         tagged_data = {
             'data': data,
             'last_updated': time.time(),

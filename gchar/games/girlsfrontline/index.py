@@ -93,7 +93,7 @@ def _get_index_from_iopwiki(timeout: int = 5, maxcnt: Optional[int] = None):
 
 def _refresh_index(timeout: int = 5, maxcnt: Optional[int] = None, index_file: Optional[str] = None):
     data = _get_index_from_iopwiki(timeout, maxcnt)
-    with open(index_file or _INDEX_FILE, 'w') as f:
+    with open(index_file or _INDEX_FILE, 'w', encoding='utf-8') as f:
         tagged_data = {
             'data': data,
             'last_updated': time.time(),
