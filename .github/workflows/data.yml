@@ -13,10 +13,10 @@ jobs:
       fail-fast: false
       matrix:
         game:
-          - 'arknights'
+          #          - 'arknights'
           #          - 'fgo'
-          - 'azurlane'
-          - 'girlsfrontline'
+          #          - 'azurlane'
+          #          - 'girlsfrontline'
           - 'genshin'
         os:
           - 'ubuntu-latest'
@@ -102,11 +102,12 @@ jobs:
         run: |
           mkdir -p ${{ matrix.game }}
           python -m gchar.games.${{ matrix.game }} update -o ${{ matrix.game }}/index.json
+          zip -r ${{ matrix.game }}.zip ${{ matrix.game }}
       - name: Upload the character databases
         uses: actions/upload-artifact@v3
         with:
           name: character-database
-          path: ${{ matrix.game }}/*
+          path: ${{ matrix.game }}.zip
 
   data_upload:
     name: Data Upload
@@ -124,6 +125,7 @@ jobs:
       - name: Prepare the repository
         shell: bash
         run: |
+          sudo apt-get install -y tree
           mkdir -p game_characters
       - name: Download from artifact
         uses: actions/download-artifact@v3
@@ -133,5 +135,6 @@ jobs:
       - name: See what is in this path
         shell: bash
         run: |
-          sudo apt-get install -y tree
-          tree game_characters
+          cd game_characters
+          for zfile in *.zip; do unzip $zfile && rm $zfile; done
+          tree .
