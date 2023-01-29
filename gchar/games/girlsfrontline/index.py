@@ -9,6 +9,7 @@ from pyquery import PyQuery as pq
 from tqdm import tqdm
 
 from ..base import get_requests_session
+from ...utils import download_file
 
 _LOCAL_DIR, _ = os.path.split(os.path.abspath(__file__))
 _INDEX_FILE = os.path.join(_LOCAL_DIR, 'index.json')
@@ -109,10 +110,20 @@ def _local_is_ready() -> bool:
     return os.path.exists(_INDEX_FILE)
 
 
-def get_index(force_refresh: bool = False, timeout: int = 5):
+ONLINE_INDEX_URL = 'https://huggingface.co/datasets/deepghs/game_characters/resolve/main/girlsfrontline/index.json'
+
+
+def _download_from_huggingface():
+    download_file(ONLINE_INDEX_URL, _INDEX_FILE)
+
+
+def get_index(crawl: bool = False, force_refresh: bool = False, timeout: int = 5):
     if force_refresh or not _local_is_ready():
         try:
-            _refresh_index(timeout=timeout)
+            if crawl:
+                _refresh_index(timeout=timeout)
+            else:
+                _download_from_huggingface()
         except requests.exceptions.RequestException:
             if not _local_is_ready():
                 raise FileNotFoundError('Unable to prepare for local datafile.')

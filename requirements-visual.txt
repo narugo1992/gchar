@@ -1,3 +1,0 @@
-ipyplot
-ipython
-jupyter
