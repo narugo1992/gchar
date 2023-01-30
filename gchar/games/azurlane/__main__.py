@@ -2,7 +2,7 @@ from functools import partial
 
 import click
 
-from .index import _refresh_index, ROOT_SITE, _INDEX_FILE
+from .index import _refresh_index, ROOT_SITE, _INDEX_FILE, _download_from_huggingface, ONLINE_INDEX_URL
 from ...utils import GLOBAL_CONTEXT_SETTINGS
 from ...utils import print_version as _origin_print_version
 
@@ -29,6 +29,13 @@ def update(timeout: int, maxcnt: int, output: str):
     click.secho(f'Updating from {ROOT_SITE} ...', fg='yellow')
     _refresh_index(timeout=timeout, maxcnt=maxcnt, index_file=output)
     click.secho('Completed!', fg='green')
+
+
+@cli.command('download', help='Download the index of characters from huggingface.')
+def download():
+    click.echo(click.style(f'Downloading from {ONLINE_INDEX_URL} ...', fg='yellow'))
+    _download_from_huggingface()
+    click.echo(click.style('Completed!', fg='green'))
 
 
 if __name__ == '__main__':

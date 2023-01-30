@@ -16,6 +16,8 @@ RANGE_DIR      ?= .
 RANGE_TEST_DIR := ${TEST_DIR}/${RANGE_DIR}
 RANGE_SRC_DIR  := ${SRC_DIR}/${RANGE_DIR}
 
+GAMES ?= arknights fgo genshin girlsfrontline azurlane
+
 COV_TYPES ?= xml term-missing
 
 package:
@@ -38,5 +40,10 @@ docs:
 pdocs:
 	$(MAKE) -C "${DOC_DIR}" prod
 
-resource:
-	$(MAKE) -C "${RESOURCE_DIR}" all
+download:
+	for g in ${GAMES}; do \
+  		$(PYTHON) -m gchar.games.$$g download; \
+  	done
+
+package:
+	$(PYTHON) -m build --sdist --wheel --outdir ${DIST_DIR}

@@ -3,7 +3,7 @@ from typing import Optional
 
 import click
 
-from .index import _refresh_index, _INDEX_FILE
+from .index import _refresh_index, _INDEX_FILE, _download_from_huggingface, ONLINE_INDEX_URL
 from ...utils import GLOBAL_CONTEXT_SETTINGS
 from ...utils import print_version as _origin_print_version
 
@@ -30,6 +30,13 @@ def update(timeout: int, maxcnt: Optional[int] = None, output: Optional[str] = N
     click.secho('Updating from fgo.wiki ...', fg='yellow')
     _refresh_index(timeout=timeout, maxcnt=maxcnt, index_file=output)
     click.secho('Completed!', fg='green')
+
+
+@cli.command('download', help='Download the index of characters from huggingface.')
+def download():
+    click.echo(click.style(f'Downloading from {ONLINE_INDEX_URL} ...', fg='yellow'))
+    _download_from_huggingface()
+    click.echo(click.style('Completed!', fg='green'))
 
 
 if __name__ == '__main__':
