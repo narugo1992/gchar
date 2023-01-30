@@ -4,3 +4,5 @@ click>=7.0.0
 transliterate>=1.10.2
 unidecode
 pyquery
+thefuzz
+editdistance
