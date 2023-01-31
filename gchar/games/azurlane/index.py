@@ -7,10 +7,9 @@ from typing import Optional, Tuple
 
 import requests
 from pyquery import PyQuery as pq
-from requests.exceptions import ConnectionError
 from tqdm import tqdm
 
-from ..base import get_requests_session
+from ..base import get_requests_session, sget
 from ...utils import download_file
 
 _LOCAL_DIR, _ = os.path.split(os.path.abspath(__file__))
@@ -40,9 +39,7 @@ def _process_cnname(s: str) -> Tuple[str, str, str]:
 
 def _get_index_from_biliwiki(timeout: int = 5, maxcnt: Optional[int] = None):
     session = get_requests_session(timeout=timeout)
-
-    response = session.get(f'{ROOT_SITE}/blhx/%E8%88%B0%E8%88%B9%E5%9B%BE%E9%89%B4')
-    response.raise_for_status()
+    response = sget(session, f'{ROOT_SITE}/blhx/%E8%88%B0%E8%88%B9%E5%9B%BE%E9%89%B4')
 
     items = list(pq(response.text)('.jntj-1').items())
     items_tqdm = tqdm(items, total=maxcnt)
@@ -63,17 +60,7 @@ def _get_index_from_biliwiki(timeout: int = 5, maxcnt: Optional[int] = None):
         group, *_ = [g.strip() for g in item.attr('data-param3').split(',') if g]
         page_url = f"{ROOT_SITE}{item('.jntj-4 a').attr('href')}"
 
-        resp = None
-        for _ in range(5):
-            try:
-                resp = session.get(page_url)
-            except ConnectionError:
-                time.sleep(5.0)
-            else:
-                break
-        assert resp is not None
-        resp.raise_for_status()
-
+        resp = sget(session, page_url)
         full = pq(resp.text)
         table = full('table.wikitable.sv-general')
         target, l2 = islice(table('tr').items(), 2)

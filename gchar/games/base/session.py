@@ -1,3 +1,4 @@
+import time
 from typing import Optional, Dict
 
 import requests
@@ -40,3 +41,19 @@ def get_requests_session(max_retries: int = 5, timeout: int = DEFAULT_TIMEOUT,
     })
 
     return session
+
+
+def sget(session: requests.Session, url, *, max_retries: int = 5,
+         sleep_time: float = 5.0, **kwargs) -> requests.Response:
+    resp = None
+    for _ in range(max_retries):
+        try:
+            resp = session.get(url, **kwargs)
+        except ConnectionError:
+            time.sleep(sleep_time)
+        else:
+            break
+    assert resp is not None
+    resp.raise_for_status()
+
+    return resp

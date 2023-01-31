@@ -10,6 +10,7 @@ import requests
 from pyquery import PyQuery as pq
 from requests.adapters import HTTPAdapter
 
+from ..base import sget
 from ...utils import import_tqdm, download_file
 
 tqdm = import_tqdm()
@@ -22,11 +23,11 @@ _WEBSITE_ROOT = 'https://prts.wiki/'
 
 def _get_skins_of_op(op, session: requests.Session):
     search_content = quote(f"立绘 \"{op}\"")
-    response = session.get(
+    response = sget(
+        session,
         f'{_WEBSITE_ROOT}/index.php?title=%E7%89%B9%E6%AE%8A:%E6%90%9C%E7%B4%A2&profile=images'
         f'&search={search_content}&fulltext=1'
     )
-    response.raise_for_status()
 
     text = response.content.decode()
     full = pq(text)
@@ -58,9 +59,7 @@ def _get_skins_of_op(op, session: requests.Session):
         if not re.fullmatch(r'^(skin\d+|\d+|\d+\+)$', sign):
             continue
 
-        resp = session.get(resource_url)
-        resp.raise_for_status()
-
+        resp = sget(session, resource_url)
         page = pq(resp.text)
         media_url = f"{_WEBSITE_ROOT}/{page('.fullMedia a').attr('href')}"
 
@@ -125,16 +124,10 @@ def _get_index_from_prts(timeout: int = 5, max_retries: int = 3) -> Iterator[dic
                       "(KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36",
     })
 
-    response = session.get(
+    response = sget(
+        session,
         f'{_WEBSITE_ROOT}/w/CHAR?filter=AAAAAAAggAAAAAAAAAAAAAAAAAAAAAAA',
-        headers={
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-                          "(KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36",
-        },
-        timeout=timeout
     )
-    response.raise_for_status()
-
     text = response.content.decode()
     tqs = tqdm(list(pq(text)('.smwdata').items()))
     for item in tqs:

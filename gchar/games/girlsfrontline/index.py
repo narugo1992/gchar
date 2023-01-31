@@ -8,7 +8,7 @@ import requests
 from pyquery import PyQuery as pq
 from tqdm import tqdm
 
-from ..base import get_requests_session
+from ..base import get_requests_session, sget
 from ...utils import download_file
 
 _LOCAL_DIR, _ = os.path.split(os.path.abspath(__file__))
@@ -21,17 +21,13 @@ _CLASS_PATTERN = re.compile(r'_(?P<class>SMG|MG|RF|HG|AR|SG)_')
 
 
 def _get_index_from_iopwiki(timeout: int = 5, maxcnt: Optional[int] = None):
-    session = get_requests_session()
+    session = get_requests_session(timeout=timeout)
 
     def _get_media_url(purl: str) -> str:
-        resp_ = session.get(purl, timeout=timeout)
-        resp_.raise_for_status()
-
+        resp_ = sget(session, purl)
         return pq(resp_.text)(".fullMedia a").attr("href")
 
-    response = session.get(f'{_ROOT_SITE}/wiki/T-Doll_Index')
-    response.raise_for_status()
-
+    response = sget(session, f'{_ROOT_SITE}/wiki/T-Doll_Index')
     full = pq(response.text)
 
     retval = []
@@ -57,9 +53,7 @@ def _get_index_from_iopwiki(timeout: int = 5, maxcnt: Optional[int] = None):
         jpname = _get_name_with_lang('JP')
         all_items_tqdm.set_description(f'{cnname}/{enname}/{jpname}')
 
-        resp = session.get(f"{_ROOT_SITE}/{item('.pad a').attr('href')}")
-        resp.raise_for_status()
-
+        resp = sget(session, f"{_ROOT_SITE}/{item('.pad a').attr('href')}")
         ch_page = pq(resp.text)
         _first, *_ = ch_page('a.image').parents('ul').items()
         img_items = list(_first('li').items())

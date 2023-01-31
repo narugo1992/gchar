@@ -9,7 +9,7 @@ from urllib.parse import quote
 import requests
 from pyquery import PyQuery as pq
 
-from ..base import get_requests_session
+from ..base import get_requests_session, sget
 from ...utils import import_tqdm, download_file
 
 tqdm = import_tqdm()
@@ -34,8 +34,7 @@ def _get_similar_lists(current_id: int, sim_table: pq, session: requests.Session
 
     elif content_box('td a'):
         sim_page_url = f"{_ROOT_WEBSITE}/{content_box('td a').attr('href')}"
-        resp = session.get(sim_page_url)
-        resp.raise_for_status()
+        resp = sget(session, sim_page_url)
 
         for reltext in PAGE_REL_PATTERN.findall(resp.content.decode()):
             for id_ in [int(item.strip()) for item in reltext.split(',')]:
@@ -48,10 +47,9 @@ def _get_similar_lists(current_id: int, sim_table: pq, session: requests.Session
 
 
 def _get_index_from_fgowiki(timeout: int = 5) -> Iterator[dict]:
-    session = get_requests_session()
+    session = get_requests_session(timeout=timeout)
 
-    response = session.get(f'{_ROOT_WEBSITE}/w/SVT', timeout=timeout)
-    response.raise_for_status()
+    response = sget(session, f'{_ROOT_WEBSITE}/w/SVT')
     (raw_text, *_), *_ = re.findall(r'override_data\s*=\s*(?P<str>"(\\"|[^"])+")', response.text)
     raw_text: str = eval(raw_text)
 
@@ -80,8 +78,7 @@ def _get_index_from_fgowiki(timeout: int = 5) -> Iterator[dict]:
         alias = [name.strip() for name in item['name_other'].split('&') if name.strip()]
         get_method = item['method']
 
-        resp = session.get(f'{_ROOT_WEBSITE}/w/{quote(item["name_link"])}')
-        resp.raise_for_status()
+        resp = sget(session, f'{_ROOT_WEBSITE}/w/{quote(item["name_link"])}')
         page = pq(resp.text)
         main_table, *_other_tables = page('table.wikitable').items()
         if not main_table('tr:nth-child(7)'):
@@ -142,8 +139,7 @@ def _get_index_from_fgowiki(timeout: int = 5) -> Iterator[dict]:
         skins = []
         img_items = tqdm(list(graphbox('.graphpicker a.image').items()), leave=True)
         for img in img_items:
-            sp = session.get(f'{_ROOT_WEBSITE}/{img.attr("href")}')
-            sp.raise_for_status()
+            sp = sget(session, f'{_ROOT_WEBSITE}/{img.attr("href")}')
             sp_page = pq(sp.text)
             heading = sp_page('#firstHeading').text()
             img_items.set_description(heading)

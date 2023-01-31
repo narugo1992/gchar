@@ -8,7 +8,7 @@ import requests
 from pyquery import PyQuery as pq
 from tqdm import tqdm
 
-from ..base.session import get_requests_session
+from ..base.session import get_requests_session, sget
 from ...utils import download_file
 
 _LOCAL_DIR, _ = os.path.split(os.path.abspath(__file__))
@@ -18,9 +18,8 @@ _ROOT_WEBSITE = 'https://genshin-impact.fandom.com/'
 
 
 def _get_index_from_fandom(timeout: int = 5, maxcnt: Optional[int] = None):
-    session = get_requests_session()
-    response = session.get(f'{_ROOT_WEBSITE}/wiki/Character/List', timeout=timeout)
-    response.raise_for_status()
+    session = get_requests_session(timeout=timeout)
+    response = sget(session, f'{_ROOT_WEBSITE}/wiki/Character/List')
 
     full = pq(response.text)
     table, *_ = full('table.article-table').items()
@@ -43,8 +42,7 @@ def _get_index_from_fandom(timeout: int = 5, maxcnt: Optional[int] = None):
         if gother:
             gender = 'Others'
 
-        resp = session.get(page_url, timeout=timeout)
-        resp.raise_for_status()
+        resp = sget(session, page_url)
         page = pq(resp.text)
 
         images_tab = page('.pi-image-collection.wds-tabber')
