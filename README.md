@@ -4,6 +4,7 @@
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/gchar)
 ![Loc](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/narugo1992/254442dea2e77cf46366df97f499242f/raw/loc.json)
 ![Comments](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/narugo1992/254442dea2e77cf46366df97f499242f/raw/comments.json)
+![Last Updated](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/narugo1992/254442dea2e77cf46366df97f499242f/raw/data_last_update.json)
 
 [![Code Test](https://github.com/narugo1992/gchar/workflows/Code%20Test/badge.svg)](https://github.com/narugo1992/gchar/actions?query=workflow%3A%22Code+Test%22)
 [![Data Publish](https://github.com/narugo1992/gchar/actions/workflows/data.yml/badge.svg)](https://github.com/narugo1992/gchar/actions/workflows/data.yml)
