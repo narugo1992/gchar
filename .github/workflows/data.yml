@@ -149,3 +149,15 @@ jobs:
           git config user.email 'narugo@126.com'
           git add -A && git commit -a -m "dev(narugo): auto sync $(date -R)"
           git push https://narugo:$HF_TOKEN@huggingface.co/datasets/deepghs/game_characters main
+      - name: Get the Numbers
+        run: |
+          echo "UPDATE_DATE=$(date +'%Y-%m-%d %H:%M %Z')" >> $GITHUB_ENV
+      - name: Create Update Time Badge
+        uses: schneegans/dynamic-badges-action@v1.0.0
+        with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: ${{ secrets.BADGE_GIST_ID }}
+          filename: data_last_update.json
+          label: Data Updated
+          message: ${{ env.UPDATE_DATE }}
+          color: yellowgreen
