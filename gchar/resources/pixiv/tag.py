@@ -12,7 +12,7 @@ def _yield_tags(tags: Union[Tuple[str], List[str], str]) -> Iterator[str]:
         for item in re.split(r'\s+', tags):
             if item:
                 yield item
-    elif isinstance(tags, (list, tuple)):
+    elif isinstance(tags, (list, tuple, set)):
         for item in tags:
             yield from _yield_tags(item)
 
@@ -27,6 +27,13 @@ def _format_tags(positive, negative, or_clause=None):
             positive_tags.append(or_tag)
         or_clause_tags = []
 
+    positive_tags = set(positive_tags)
+    or_clause_tags = set(or_clause_tags)
+    negative_tags = set(negative_tags) - positive_tags - or_clause_tags
+    positive_tags = sorted(positive_tags)
+    negative_tags = sorted(negative_tags)
+    or_clause_tags = sorted(or_clause_tags)
+
     all_phrases = [*positive_tags]
     if or_clause_tags:
         all_phrases.append(f'({" OR ".join(or_clause_tags)})')
@@ -40,27 +47,16 @@ class PixivCharPool:
     def __init__(self, chars: Iterable[Character]):
         self.__chars = list(chars)
 
-    def _find_char(self, item):
-        for ch in self.__chars:
-            if ch == item:
-                return ch
-        return None
-
-    def __contains__(self, item):
-        return bool(self._find_char(item))
-
     def _iter_dup_names(self, name: str) -> Iterator[str]:
         for ch in self.__chars:
             for sname in map(str, ch.names):
                 if name != sname and name in sname:
                     yield sname
 
-    def get_tag(self, char, use_english: bool = False, positive=None, negative=None,
+    def get_tag(self, char: Character, use_english: bool = False, positive=None, negative=None,
                 max_exclude_per_word: int = 20):
         if not isinstance(char, Character):
-            char = self._find_char(char)
-        if not char:
-            raise ValueError(f'Unknown character - {char!r}.')
+            raise TypeError(f'Invalid character type - {char!r}.')
 
         char_names = [*char.cnnames, *char.jpnames]
         if use_english:
@@ -80,12 +76,6 @@ class PixivCharPool:
                 if exname not in positive and exname not in or_clause:
                     negative.add(exname)
 
-        negative -= positive
-        negative -= or_clause
-        positive = sorted(positive)
-        negative = sorted(negative)
-        or_clause = sorted(or_clause)
-
         return _format_tags(positive, negative, or_clause)
 
     def _iter_end_dup_names(self, name: str) -> Iterator[str]:
@@ -94,29 +84,25 @@ class PixivCharPool:
                 if name != sname and sname.endswith(name):
                     yield sname
 
-    def get_simple_tag(self, char, base_tag: str):
+    def get_simple_tag(self, char: Character, base_tag: str):
         if not isinstance(char, Character):
-            char = self._find_char(char)
-        if not char:
-            raise ValueError(f'Unknown character - {char!r}.')
+            raise TypeError(f'Invalid character type - {char!r}.')
 
         positive = set()
         negative = set()
         or_clause = set()
-        for jpname in char.jpnames:
-            or_clause.add(f'{jpname}({base_tag})')
-            for exname in self._iter_end_dup_names(str(jpname)):
+        if char.jpname:
+            positive.add(f'{char.jpname}({base_tag})')
+            for exname in self._iter_end_dup_names(str(char.jpname)):
                 negative.add(exname)
 
-        negative -= positive
-        negative -= or_clause
-        positive = sorted(positive)
-        negative = sorted(negative)
-        or_clause = sorted(or_clause)
+        else:
+            raise ValueError(f'Japanese name not found for character - {char!r}.')
 
         return _format_tags(positive, negative, or_clause)
 
 
+@lru_cache()
 def _get_items(cls: Type[Character]) -> Tuple[str, str]:
     for item in _GAMES:
         if len(item) == 2:
@@ -125,12 +111,12 @@ def _get_items(cls: Type[Character]) -> Tuple[str, str]:
         elif len(item) == 3:
             _cls, game_tag, base_tag = item
         else:
-            assert False, f'Invalid games item - {item!r}.'
+            assert False, f'Invalid games item - {item!r}.'  # pragma: no cover
 
         if cls == _cls:
             return game_tag, base_tag
 
-    raise TypeError(f'Unknown character type - {cls}.')
+    raise TypeError(f'Unknown character type - {cls}.')  # pragma: no cover
 
 
 @lru_cache()
@@ -138,13 +124,13 @@ def _get_char_pool(cls: Type[Character], **kwargs):
     return PixivCharPool(cls.all(**kwargs))
 
 
-def get_pixiv_keywords(char, simple: bool = False, use_english: bool = False, includes=None, exclude=None,
-                       allow_fuzzy: bool = True, fuzzy_threshold: int = 80, contains_extra: bool = False, **kwargs):
+def get_pixiv_keywords(char, simple: bool = False, use_english: bool = True, includes=None, exclude=None,
+                       allow_fuzzy: bool = True, fuzzy_threshold: int = 70, **kwargs):
+    kwargs = {**kwargs, 'contains_extra': False}
     if not isinstance(char, Character):
-        char = get_character(char, allow_fuzzy, fuzzy_threshold,
-                             contains_extra=contains_extra, **kwargs)
+        char = get_character(char, allow_fuzzy, fuzzy_threshold, **kwargs)
 
-    pool = _get_char_pool(type(char), contains_extra=contains_extra, **kwargs)
+    pool = _get_char_pool(type(char), **kwargs)
     game_tag, base_tag = _get_items(type(char))
 
     if simple:
