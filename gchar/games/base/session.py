@@ -3,6 +3,7 @@ from typing import Optional, Dict
 
 import requests
 from requests.adapters import HTTPAdapter, Retry
+from requests.exceptions import RequestException
 
 DEFAULT_TIMEOUT = 10  # seconds
 
@@ -49,7 +50,7 @@ def sget(session: requests.Session, url, *, max_retries: int = 5,
     for _ in range(max_retries):
         try:
             resp = session.get(url, **kwargs)
-        except ConnectionError:
+        except RequestException:
             time.sleep(sleep_time)
         else:
             break
