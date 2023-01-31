@@ -1,1 +1,1 @@
-from .tag import PixivCharPool
+from .tag import PixivCharPool, get_pixiv_keywords
