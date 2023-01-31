@@ -44,6 +44,3 @@ download:
 	for g in ${GAMES}; do \
   		$(PYTHON) -m gchar.games.$$g download; \
   	done
-
-package:
-	$(PYTHON) -m build --sdist --wheel --outdir ${DIST_DIR}
