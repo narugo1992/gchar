@@ -14,7 +14,7 @@ from ...utils import download_file
 _LOCAL_DIR, _ = os.path.split(os.path.abspath(__file__))
 _INDEX_FILE = os.path.join(_LOCAL_DIR, 'index.json')
 
-_ROOT_SITE = 'https://iopwiki.com'
+_WEBSITE_ROOT = 'https://iopwiki.com'
 
 _STAR_PATTERN = re.compile(r'(?P<rarity>\d|EXTRA)star\.png')
 _CLASS_PATTERN = re.compile(r'_(?P<class>SMG|MG|RF|HG|AR|SG)_')
@@ -27,7 +27,7 @@ def _get_index_from_iopwiki(timeout: int = 5, maxcnt: Optional[int] = None):
         resp_ = sget(session, purl)
         return pq(resp_.text)(".fullMedia a").attr("href")
 
-    response = sget(session, f'{_ROOT_SITE}/wiki/T-Doll_Index')
+    response = sget(session, f'{_WEBSITE_ROOT}/wiki/T-Doll_Index')
     full = pq(response.text)
 
     retval = []
@@ -53,7 +53,7 @@ def _get_index_from_iopwiki(timeout: int = 5, maxcnt: Optional[int] = None):
         jpname = _get_name_with_lang('JP')
         all_items_tqdm.set_description(f'{cnname}/{enname}/{jpname}')
 
-        resp = sget(session, f"{_ROOT_SITE}/{item('.pad a').attr('href')}")
+        resp = sget(session, f"{_WEBSITE_ROOT}/{item('.pad a').attr('href')}")
         ch_page = pq(resp.text)
         _first, *_ = ch_page('a.image').parents('ul').items()
         img_items = list(_first('li').items())
@@ -62,10 +62,10 @@ def _get_index_from_iopwiki(timeout: int = 5, maxcnt: Optional[int] = None):
         for fn in img_items_tqdm:
             img_name = fn('.gallerytext').text()
             img_items_tqdm.set_description(img_name)
-            img_url = _get_media_url(f"{_ROOT_SITE}/{fn('a.image').attr('href')}")
+            img_url = _get_media_url(f"{_WEBSITE_ROOT}/{fn('a.image').attr('href')}")
             skins.append({
                 'desc': img_name,
-                'url': f"{_ROOT_SITE}/{img_url}",
+                'url': f"{_WEBSITE_ROOT}/{img_url}",
             })
 
         retval.append({

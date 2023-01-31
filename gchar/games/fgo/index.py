@@ -17,7 +17,7 @@ tqdm = import_tqdm()
 _LOCAL_DIR, _ = os.path.split(os.path.abspath(__file__))
 _INDEX_FILE = os.path.join(_LOCAL_DIR, 'index.json')
 
-_ROOT_WEBSITE = 'https://fgo.wiki/'
+_WEBSITE_ROOT = 'https://fgo.wiki/'
 
 SERVANT_ALT_PATTERN = re.compile(r'Servant (?P<id>\d+)\.[a-zA-Z\d]+')
 PAGE_REL_PATTERN = re.compile(r'var data_list\s*=\"(?P<ids>[\d,\s]*)\"')
@@ -33,7 +33,7 @@ def _get_similar_lists(current_id: int, sim_table: pq, session: requests.Session
             ids.append(sid)
 
     elif content_box('td a'):
-        sim_page_url = f"{_ROOT_WEBSITE}/{content_box('td a').attr('href')}"
+        sim_page_url = f"{_WEBSITE_ROOT}/{content_box('td a').attr('href')}"
         resp = sget(session, sim_page_url)
 
         for reltext in PAGE_REL_PATTERN.findall(resp.content.decode()):
@@ -49,7 +49,7 @@ def _get_similar_lists(current_id: int, sim_table: pq, session: requests.Session
 def _get_index_from_fgowiki(timeout: int = 5) -> Iterator[dict]:
     session = get_requests_session(timeout=timeout)
 
-    response = sget(session, f'{_ROOT_WEBSITE}/w/SVT')
+    response = sget(session, f'{_WEBSITE_ROOT}/w/SVT')
     (raw_text, *_), *_ = re.findall(r'override_data\s*=\s*(?P<str>"(\\"|[^"])+")', response.text)
     raw_text: str = eval(raw_text)
 
@@ -78,7 +78,7 @@ def _get_index_from_fgowiki(timeout: int = 5) -> Iterator[dict]:
         alias = [name.strip() for name in item['name_other'].split('&') if name.strip()]
         get_method = item['method']
 
-        resp = sget(session, f'{_ROOT_WEBSITE}/w/{quote(item["name_link"])}')
+        resp = sget(session, f'{_WEBSITE_ROOT}/w/{quote(item["name_link"])}')
         page = pq(resp.text)
         main_table, *_other_tables = page('table.wikitable').items()
         if not main_table('tr:nth-child(7)'):
@@ -139,14 +139,14 @@ def _get_index_from_fgowiki(timeout: int = 5) -> Iterator[dict]:
         skins = []
         img_items = tqdm(list(graphbox('.graphpicker a.image').items()), leave=True)
         for img in img_items:
-            sp = sget(session, f'{_ROOT_WEBSITE}/{img.attr("href")}')
+            sp = sget(session, f'{_WEBSITE_ROOT}/{img.attr("href")}')
             sp_page = pq(sp.text)
             heading = sp_page('#firstHeading').text()
             img_items.set_description(heading)
 
             _, resource_filename = heading.split(':', maxsplit=1)
             image_name, _ = os.path.splitext(resource_filename)
-            image_url = f"{_ROOT_WEBSITE}/{sp_page('.fullMedia a').attr('href')}"
+            image_url = f"{_WEBSITE_ROOT}/{sp_page('.fullMedia a').attr('href')}"
 
             skins.append({
                 'name': image_name,
