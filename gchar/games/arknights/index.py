@@ -3,14 +3,13 @@ import os.path
 import re
 import time
 from itertools import islice
-from typing import Iterator, Optional
+from typing import Iterator, Optional, List
 from urllib.parse import quote
 
 import requests
 from pyquery import PyQuery as pq
-from requests.adapters import HTTPAdapter
 
-from ..base import sget
+from ..base import sget, get_requests_session
 from ...utils import import_tqdm, download_file
 
 tqdm = import_tqdm()
@@ -19,6 +18,23 @@ _LOCAL_DIR, _ = os.path.split(os.path.abspath(__file__))
 _INDEX_FILE = os.path.join(_LOCAL_DIR, 'index.json')
 
 _WEBSITE_ROOT = 'https://prts.wiki/'
+
+
+def _get_alias_of_op(op, session: requests.Session, names: List[str]) -> List[str]:
+    response = sget(
+        session,
+        f'{_WEBSITE_ROOT}/api.php?action=query&prop=redirects&titles={quote(op)}&format=json',
+    )
+    response.raise_for_status()
+
+    alias_names = []
+    pages = response.json()['query']['pages']
+    for _, data in pages.items():
+        for item in data['redirects']:
+            if item['title'] not in names:
+                alias_names.append(item['title'])
+
+    return alias_names
 
 
 def _get_skins_of_op(op, session: requests.Session):
@@ -116,14 +132,7 @@ _UNQUOTE_NEEDED_FIELDS = {
 
 
 def _get_index_from_prts(timeout: int = 5, max_retries: int = 3) -> Iterator[dict]:
-    session = requests.session()
-    session.mount('http://', HTTPAdapter(max_retries=max_retries))
-    session.mount('https://', HTTPAdapter(max_retries=max_retries))
-    session.headers.update({
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-                      "(KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36",
-    })
-
+    session = get_requests_session(timeout=timeout, max_retries=max_retries)
     response = sget(
         session,
         f'{_WEBSITE_ROOT}/w/CHAR?filter=AAAAAAAggAAAAAAAAAAAAAAAAAAAAAAA',
@@ -144,6 +153,14 @@ def _get_index_from_prts(timeout: int = 5, max_retries: int = 3) -> Iterator[dic
         assert skins
         yield {
             'data': data,
+            'alias': _get_alias_of_op(
+                data['data-cn'], session,
+                [
+                    data['data-cn'],
+                    data.get('data-en', None),
+                    data.get('data-jp', None),
+                ]
+            ),
             'skins': skins,
         }
 

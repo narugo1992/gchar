@@ -6,7 +6,15 @@ from ..base import JapaneseName as _GenericJapaneseName
 
 
 class ChineseName(_GenericChineseName):
-    pass
+    @classmethod
+    def _preprocess(cls, name: str) -> str:
+        return _GenericChineseName._preprocess(name).replace('・', '·')
+
+
+class ChineseAliasName(_GenericChineseName):
+    @classmethod
+    def _preprocess(cls, name: str) -> str:
+        return _GenericChineseName._preprocess(name).replace('・', '·')
 
 
 class JapaneseName(_GenericJapaneseName):

@@ -76,6 +76,7 @@ class TestGamesArknightsCharacter:
         assert amiya_guard.clazz != 'caster'
         assert amiya_guard.is_extra
         assert repr(amiya_guard) == '<Character R001 - 阿米娅(近卫)/amiya/アーミヤ, female, 5*****>'
+        assert amiya_guard == '剑兔'
 
         assert amiya.approach == '主线剧情'
         assert amiya_guard.approach == '主线剧情'
@@ -88,12 +89,14 @@ class TestGamesArknightsCharacter:
         assert specter_extra == '归溟幽灵鲨'
         assert specter_extra.is_extra
         assert repr(specter_extra) == '<Character CR02 - 归溟幽灵鲨/specter_the_unchained/帰溟スペクター, female, 6******>'
+        assert specter == 'yls'
 
         assert silverash == '银灰'
         assert silverash.rarity == 6
         assert silverash.gender == '男性'
         assert not silverash.is_extra
         assert repr(silverash) == '<Character JC01 - 银灰/silverash/シルバーアッシュ, male, 6******>'
+        assert silverash == '银老板'
 
         assert chen == 'chen'
         assert chen == '陈'

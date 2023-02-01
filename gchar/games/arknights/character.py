@@ -2,7 +2,7 @@ from functools import lru_cache
 from typing import List
 
 from .index import _KNOWN_DATA_FIELDS, _refresh_index, get_index
-from .name import EnglishName, JapaneseName, ChineseName
+from .name import EnglishName, JapaneseName, ChineseName, ChineseAliasName
 from .property import Gender, Level, Clazz
 from ..base import Character as _BaseCharacter
 from ..base import Skin
@@ -59,6 +59,7 @@ class Character(_BaseCharacter):
     __cnname_class__ = ChineseName
     __enname_class__ = EnglishName
     __jpname_class__ = JapaneseName
+    __alias_name_class__ = ChineseAliasName
     __index_func__ = lru_cache()(get_index)
 
     def __init__(self, raw_data: dict):
@@ -70,10 +71,6 @@ class Character(_BaseCharacter):
     @property
     def skins(self) -> List[Skin]:
         return [Skin(item['name'], item['url']) for item in self.__skins]
-
-    @property
-    def raw_data(self) -> dict:
-        return dict(self.__raw_data)
 
     def _index(self):
         return self.__raw_data['data-index']
@@ -98,6 +95,9 @@ class Character(_BaseCharacter):
 
     def _jpname(self):
         return self.__raw_data.get('data-jp', None)
+
+    def _alias_names(self):
+        return list(self.__origin_raw_data.get('alias', []) or [])
 
     def __getattr__(self, item: str):
         key = 'data-' + item.replace('_', '-')
