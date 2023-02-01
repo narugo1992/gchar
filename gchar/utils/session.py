@@ -30,7 +30,7 @@ def get_requests_session(max_retries: int = 5, timeout: int = DEFAULT_TIMEOUT,
         total=max_retries, backoff_factor=1,
         # status_forcelist=[500, 501, 502, 503, 504, 505, 506, 507, 509, 510, 511],
         status_forcelist=[429, 500, 502, 503, 504],
-        method_whitelist=["HEAD", "GET", "OPTIONS"],
+        allowed_methods=["HEAD", "GET", "OPTIONS"],
     )
     adapter = TimeoutHTTPAdapter(max_retries=retries, timeout=timeout)
     session.mount('http://', adapter)

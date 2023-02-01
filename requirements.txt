@@ -6,3 +6,4 @@ unidecode
 pyquery
 thefuzz
 editdistance
+requests

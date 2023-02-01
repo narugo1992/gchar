@@ -9,8 +9,7 @@ from urllib.parse import quote
 import requests
 from pyquery import PyQuery as pq
 
-from ..base import get_requests_session, sget
-from ...utils import import_tqdm, download_file
+from ...utils import import_tqdm, download_file, get_requests_session, sget
 
 tqdm = import_tqdm()
 

@@ -1,8 +1,7 @@
 import os.path
 from dataclasses import dataclass
 
-from .session import get_requests_session
-from ...utils import download_file
+from ...utils import download_file, get_requests_session
 
 
 @dataclass

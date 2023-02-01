@@ -8,8 +8,7 @@ import requests
 from pyquery import PyQuery as pq
 from tqdm import tqdm
 
-from ..base.session import get_requests_session, sget
-from ...utils import download_file
+from ...utils import download_file, get_requests_session, sget
 
 _LOCAL_DIR, _ = os.path.split(os.path.abspath(__file__))
 _INDEX_FILE = os.path.join(_LOCAL_DIR, 'index.json')

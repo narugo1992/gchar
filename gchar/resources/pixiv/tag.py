@@ -127,8 +127,11 @@ def _get_char_pool(cls: Type[Character], **kwargs):
 def get_pixiv_keywords(char, simple: bool = False, use_english: bool = True, includes=None, exclude=None,
                        allow_fuzzy: bool = True, fuzzy_threshold: int = 70, **kwargs):
     kwargs = {**kwargs, 'contains_extra': False}
+    original_char = char
     if not isinstance(char, Character):
         char = get_character(char, allow_fuzzy, fuzzy_threshold, **kwargs)
+    if not char:
+        raise ValueError(f'Unknown character - {original_char!r}.')
 
     pool = _get_char_pool(type(char), **kwargs)
     game_tag, base_tag = _get_items(type(char))
