@@ -14,7 +14,9 @@ class ChineseName(_GenericChineseName):
 
 
 class ChineseAliasName(_GenericChineseName):
-    pass
+    @classmethod
+    def _preprocess(cls, name: str) -> str:
+        return _GenericChineseName._preprocess(name).replace('・', '·')
 
 
 class JapaneseName(_GenericJapaneseName):

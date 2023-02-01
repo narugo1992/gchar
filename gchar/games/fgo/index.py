@@ -23,6 +23,23 @@ SERVANT_ALT_PATTERN = re.compile(r'Servant (?P<id>\d+)\.[a-zA-Z\d]+')
 PAGE_REL_PATTERN = re.compile(r'var data_list\s*=\"(?P<ids>[\d,\s]*)\"')
 
 
+def _get_alias_of_op(op, session: requests.Session, names: List[str]) -> List[str]:
+    response = sget(
+        session,
+        f'{_WEBSITE_ROOT}/api.php?action=query&prop=redirects&titles={quote(op)}&format=json',
+    )
+    response.raise_for_status()
+
+    alias_names = []
+    pages = response.json()['query']['pages']
+    for _, data in pages.items():
+        for item in data['redirects']:
+            if item['title'] not in names:
+                alias_names.append(item['title'])
+
+    return alias_names
+
+
 def _get_similar_lists(current_id: int, sim_table: pq, session: requests.Session = None) -> List[int]:
     session = session or get_requests_session()
     content_box = sim_table('td')
@@ -153,6 +170,7 @@ def _get_index_from_fgowiki(timeout: int = 5) -> Iterator[dict]:
                 'url': image_url
             })
 
+        alias.extend(_get_alias_of_op(item["name_link"], session, [*all_cnnames, *all_ennames, *all_jpnames, *alias]))
         yield {
             'id': id_,
             'cnnames': all_cnnames,
