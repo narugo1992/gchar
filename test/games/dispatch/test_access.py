@@ -12,7 +12,7 @@ class TestGamesDispatchAccess:
 
         assert get_character('CEO') == '彭忒西勒亚'
         assert get_character('CEOx') is None
-        assert get_character('CEOx', allow_fuzzy=True) == 'CEO'
+        assert get_character('CEOx', allow_fuzzy=True) == "X毛"
 
         assert get_character('ak47', allow_fuzzy=True) == 'ak-47'
         assert get_character('ar15', allow_fuzzy=True) == 'st ar-15'

@@ -102,6 +102,7 @@ jobs:
         run: |
           mkdir -p ${{ matrix.game }}
           python -m gchar.games.${{ matrix.game }} update -o ${{ matrix.game }}/index.json
+          python -m gchar.resources.danbooru update -g ${{ matrix.game }} -o ${{ matrix.game }}/danbooru_tags.json
           zip -r ${{ matrix.game }}.zip ${{ matrix.game }}
       - name: Upload the character databases
         uses: actions/upload-artifact@v3
