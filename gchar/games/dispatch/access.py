@@ -10,8 +10,6 @@ from gchar.games.fgo import Character as FateGrandOrderCharacter
 from gchar.games.genshin import Character as GenshinImpactCharacter
 from gchar.games.girlsfrontline import Character as GirlsFrontLineCharacter
 
-
-
 CHARS = [
     ArknightsCharacter,
     FateGrandOrderCharacter,
@@ -75,7 +73,8 @@ def _yield_characters(name: str, allow_fuzzy: bool = False, fuzzy_threshold: int
 
 def list_character(name: str, limit: Optional[int] = None, allow_fuzzy: bool = False,
                    fuzzy_threshold: int = 80, **kwargs) -> List[Character]:
-    ordered = sorted(_yield_characters(name, allow_fuzzy, fuzzy_threshold, **kwargs), key=lambda x: (-x[1], str(x[0])))
+    ordered = sorted(_yield_characters(name, allow_fuzzy, fuzzy_threshold, **kwargs),
+                     key=lambda x: (-x[1], str(x[0])))
     if limit is not None:
         ordered = ordered[:limit]
 
@@ -83,8 +82,10 @@ def list_character(name: str, limit: Optional[int] = None, allow_fuzzy: bool = F
     return ordered
 
 
-def get_character(name: str, allow_fuzzy: bool = False, fuzzy_threshold: int = 80, **kwargs) -> Optional[Character]:
-    _items = list_character(name, limit=1, allow_fuzzy=allow_fuzzy, fuzzy_threshold=fuzzy_threshold, **kwargs)
+def get_character(name: str, allow_fuzzy: bool = False, fuzzy_threshold: int = 80,
+                  contains_extra: bool = False, **kwargs) -> Optional[Character]:
+    _items = list_character(name, limit=1, allow_fuzzy=allow_fuzzy, fuzzy_threshold=fuzzy_threshold,
+                            contains_extra=contains_extra, **kwargs)
     if _items:
         return _items[0]
     else:
