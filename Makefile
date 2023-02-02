@@ -30,7 +30,8 @@ clean:
 test: unittest
 
 unittest:
-	pytest "${RANGE_TEST_DIR}" \
+	UNITTEST=1 \
+		pytest "${RANGE_TEST_DIR}" \
 		-sv -m unittest \
 		$(shell for type in ${COV_TYPES}; do echo "--cov-report=$$type"; done) \
 		--cov="${RANGE_SRC_DIR}" \

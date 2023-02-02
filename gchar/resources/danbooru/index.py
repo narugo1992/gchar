@@ -2,6 +2,7 @@ import json
 import os.path
 import re
 import time
+from functools import lru_cache
 from typing import List, Tuple, Iterator, Dict, Union, Type, Optional
 
 import requests
@@ -143,6 +144,7 @@ def _download_from_huggingface(name: str):
     download_file(_online_tags_url(name), _local_file(name))
 
 
+@lru_cache()
 def get_lookup(cls: Type[Character], crawl: bool = False) -> Tuple[List[Dict], Dict[str, List[int]]]:
     if not _is_lookup_local_ready(cls):
         if crawl:

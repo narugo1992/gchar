@@ -1,4 +1,5 @@
 import re
+import warnings
 from functools import lru_cache
 from typing import Iterable, Iterator, Union, List, Tuple, Type
 
@@ -56,7 +57,7 @@ class PixivCharPool:
     def get_tag(self, char: Character, use_english: bool = False, positive=None, negative=None,
                 max_exclude_per_word: int = 20):
         if not isinstance(char, Character):
-            raise TypeError(f'Invalid character type - {char!r}.')
+            raise TypeError(f'Invalid character type - {char!r}.')  # pragma: no cover
 
         char_names = [*char.cnnames, *char.jpnames]
         if use_english:
@@ -86,15 +87,16 @@ class PixivCharPool:
 
     def get_simple_tag(self, char: Character, base_tag: str):
         if not isinstance(char, Character):
-            raise TypeError(f'Invalid character type - {char!r}.')
+            raise TypeError(f'Invalid character type - {char!r}.')  # pragma: no cover
 
         positive = set()
         negative = set()
         or_clause = set()
-        if char.jpname:
-            positive.add(f'{char.jpname}({base_tag})')
-            for exname in self._iter_end_dup_names(str(char.jpname)):
-                negative.add(exname)
+        if char.jpnames:
+            for jpname in char.jpnames:
+                positive.add(f'{jpname}({base_tag})')
+                for exname in self._iter_end_dup_names(str(jpname)):
+                    negative.add(exname)
 
         else:
             raise ValueError(f'Japanese name not found for character - {char!r}.')
@@ -136,7 +138,10 @@ def get_pixiv_keywords(char, simple: bool = False, use_english: bool = True, inc
     pool = _get_char_pool(type(char), **kwargs)
     game_tag, base_tag = _get_items(type(char))
 
-    if simple:
-        return pool.get_simple_tag(char, base_tag)
-    else:
-        return pool.get_tag(char, use_english, positive=[includes, game_tag], negative=exclude)
+    try:
+        if simple:
+            return pool.get_simple_tag(char, base_tag)
+    except ValueError:
+        warnings.warn(UserWarning(f'No japanese name for {char!r}, falling back to full tag.'), stacklevel=2)
+
+    return pool.get_tag(char, use_english, positive=[includes, game_tag], negative=exclude)

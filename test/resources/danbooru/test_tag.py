@@ -1,7 +1,7 @@
 import pytest
 from hbutils.testing import disable_output
 
-from gchar.resources.danbooru.tags import get_danbooru_tag
+from gchar.resources.danbooru import get_danbooru_tag
 
 
 @pytest.mark.unittest

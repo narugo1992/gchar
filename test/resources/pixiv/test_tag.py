@@ -17,19 +17,21 @@ class TestResourcesPixivTag:
         ('aak', 'アークナイツ (aak OR 阿) -阿消 -阿米娅'),
         ('CEO', 'Fate/GrandOrder (berserker_of_el_dorado OR penthesilea OR エルドラドのバーサーカー '
                 'OR ペンテシレイア OR 彭忒西勒亚 OR 黄金国的berserker)'),
+        ('character_not_found_hahahaha', None)
     ])
     def test_get_pixiv_keywords(self, ch, keyword):
-        assert get_pixiv_keywords(ch, ) == keyword
-
-    @pytest.mark.parametrize(['ch', 'keyword'], [
-        ('lin', None),
-        ('ling', 'リィン(アークナイツ)'),
-        ('dusk', 'シー(アークナイツ) -ケルシー'),
-        ('CEO', 'ペンテシレイア(Fate)'),
-    ])
-    def test_get_pixiv_keywords_simple(self, ch, keyword):
-        if keyword:
-            assert get_pixiv_keywords(ch, simple=True) == keyword
-        else:
+        if keyword is None:
             with pytest.raises(ValueError):
-                _ = get_pixiv_keywords(ch, simple=True)
+                _ = get_pixiv_keywords(ch)
+        else:
+            assert get_pixiv_keywords(ch, ) == keyword
+
+    @pytest.mark.parametrize(['ch', 'keyword', 'warn'], [
+        ('lin', 'アークナイツ (lin OR 林) -angelina -flint -folinic -ling -守林人 -巡林者 -杜林', True),
+        ('ling', 'リィン(アークナイツ)', False),
+        ('dusk', 'シー(アークナイツ) -ケルシー', False),
+        ('CEO', 'エルドラドのバーサーカー(Fate) ペンテシレイア(Fate)', False),
+    ])
+    def test_get_pixiv_keywords_simple(self, ch, keyword, warn):
+        with pytest.warns(UserWarning if warn else None):
+            assert get_pixiv_keywords(ch, simple=True) == keyword
