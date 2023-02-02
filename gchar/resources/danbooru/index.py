@@ -10,7 +10,7 @@ from tqdm.auto import tqdm
 from .games import _get_info_by_cls
 from ...games import __file__ as __games_file__
 from ...games.base import Character
-from ...utils import sget, get_requests_session
+from ...utils import sget, get_requests_session, download_file
 
 
 def _get_danbooru_tags(session: requests.Session, game: str) -> Iterator[Tuple[int, str, int]]:
@@ -139,8 +139,16 @@ def _online_tags_url(name: str) -> str:
     return f'https://huggingface.co/datasets/deepghs/game_characters/resolve/main/{name}/danbooru_tags.json'
 
 
-def get_lookup(cls: Type[Character]) -> Tuple[List[Dict], Dict[str, List[int]]]:
+def _download_from_huggingface(name: str):
+    download_file(_online_tags_url(name), _local_file(name))
+
+
+def get_lookup(cls: Type[Character], crawl: bool = False) -> Tuple[List[Dict], Dict[str, List[int]]]:
     if not _is_lookup_local_ready(cls):
-        _save_tags_to_local(cls)
+        if crawl:
+            _save_tags_to_local(cls)
+        else:
+            name, _ = _get_info_by_cls(cls)
+            _download_from_huggingface(name)
 
     return _load_lookup_from_local(cls)

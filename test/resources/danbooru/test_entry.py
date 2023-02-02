@@ -18,10 +18,14 @@ class TestResourcesDanbooruMain:
         assert 'danbooru' in result.stdout
 
     @skipUnless(not OS.windows, 'Non-windows required.')
-    @pytest.mark.parametrize(['game'], [
-        ('fgo',),
+    @pytest.mark.parametrize(['game', 'cnt'], [
+        ('arknights', 878),
+        ('fgo', 2011),
+        ('azurlane', 1799),
+        ('genshin', 472),
+        ('girlsfrontline', 1113),
     ])
-    def test_update(self, no_tags_json, game):
+    def test_update(self, no_tags_json, game, cnt):
         result = simulate_entry(cli, ['gchar.resources.danbooru', 'update', '-g', game])
         assert result.exitcode == 0, f'Exitcode is {result.exitcode}.{os.linesep}' \
                                      f'This is stdout:{os.linesep}{result.stdout}{os.linesep}' \
@@ -31,4 +35,24 @@ class TestResourcesDanbooruMain:
             data = json.load(f)
             assert 'tags' in data
             assert isinstance(data['tags'], list)
-            assert len(data['tags']) >= 5
+            assert len(data['tags']) >= cnt
+
+    @skipUnless(not OS.windows, 'Non-windows required.')
+    @pytest.mark.parametrize(['game', 'cnt'], [
+        ('arknights', 878),
+        ('fgo', 2011),
+        ('azurlane', 1799),
+        ('genshin', 472),
+        ('girlsfrontline', 1113),
+    ])
+    def test_download(self, no_tags_json, game, cnt):
+        result = simulate_entry(cli, ['gchar.resources.danbooru', 'download', '-g', game])
+        assert result.exitcode == 0, f'Exitcode is {result.exitcode}.{os.linesep}' \
+                                     f'This is stdout:{os.linesep}{result.stdout}{os.linesep}' \
+                                     f'This is stderr:{os.linesep}{result.stderr}{os.linesep}'
+        assert os.path.exists(os.path.join(no_tags_json, game, 'danbooru_tags.json'))
+        with open(os.path.join(no_tags_json, game, 'danbooru_tags.json'), 'r') as f:
+            data = json.load(f)
+            assert 'tags' in data
+            assert isinstance(data['tags'], list)
+            assert len(data['tags']) >= cnt

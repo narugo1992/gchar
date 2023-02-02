@@ -23,7 +23,9 @@ COV_TYPES ?= xml term-missing
 package:
 	$(PYTHON) -m build --sdist --wheel --outdir ${DIST_DIR}
 clean:
-	rm -rf ${DIST_DIR} ${BUILD_DIR} *.egg-info
+	rm -rf ${DIST_DIR} ${BUILD_DIR} *.egg-info \
+		$(shell find ${SRC_DIR}/games -name index.json -type f) \
+		$(shell find ${SRC_DIR}/games -name danbooru_tags.json -type f)
 
 test: unittest
 
@@ -43,4 +45,5 @@ pdocs:
 download:
 	for g in ${GAMES}; do \
   		$(PYTHON) -m gchar.games.$$g download; \
+  		$(PYTHON) -m gchar.resources.danbooru download -g $$g; \
   	done

@@ -4,7 +4,7 @@ from typing import Optional
 import click
 
 from .games import _GAMES
-from .index import _local_file, _save_tags_to_local, _online_tags_url
+from .index import _local_file, _save_tags_to_local, _online_tags_url, _download_from_huggingface
 from ...utils import GLOBAL_CONTEXT_SETTINGS
 from ...utils import print_version as _origin_print_version
 
@@ -37,7 +37,7 @@ def update(game, output: Optional[str]):
               help='Game to crawl danbooru tags.')
 def download(game):
     click.echo(click.style(f'Downloading from {_online_tags_url(game)} ...', fg='yellow'))
-    print('The data should be downloaded here. TODO: implement this feature.')
+    _download_from_huggingface(game)
     click.echo(click.style('Completed!', fg='green'))
 
 
