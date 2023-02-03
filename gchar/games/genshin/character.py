@@ -3,7 +3,7 @@ from typing import List, Optional
 
 from .index import _refresh_index, get_index
 from .name import EnglishName, JapaneseName, ChineseName
-from .property import Gender, Rarity, Weapon, Element
+from .property import Rarity, Weapon, Element
 from ..base import Character as _BaseCharacter
 from ..base import Skin
 
@@ -20,9 +20,8 @@ class Character(_BaseCharacter):
     def _index(self) -> str:
         return str(self.enname)
 
-    @property
-    def gender(self) -> Gender:
-        return Gender.loads(self.__raw_data['gender'])
+    def _gender(self):
+        return self.__raw_data['gender']
 
     def _cnname(self):
         return self.__raw_data['cnname']

@@ -3,7 +3,7 @@ from typing import List
 
 from .index import _refresh_index, get_index
 from .name import ChineseName, JapaneseName, EnglishName, ChineseAliasName
-from .property import Gender, Rarity, Clazz
+from .property import Rarity, Clazz
 from ..base import Character as _BaseCharacter
 from ..base import Skin
 
@@ -25,9 +25,8 @@ class Character(_BaseCharacter):
     def _index(self) -> int:
         return self.__raw_data['id']
 
-    @property
-    def gender(self) -> Gender:
-        return Gender.loads(self.__raw_data['gender'])
+    def _gender(self):
+        return self.__raw_data['gender']
 
     @property
     def rarity(self) -> Rarity:

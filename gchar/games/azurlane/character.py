@@ -39,6 +39,9 @@ class Character(_BaseCharacter):
     def _alias_names(self):
         return self.__raw_data['alias']
 
+    def _gender(self):
+        return 'female'
+
     @property
     def rarity(self) -> Optional[Union[BasicRarity, ResearchRarity]]:
         val = self.__raw_data['rarity']

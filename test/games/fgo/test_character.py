@@ -1,11 +1,12 @@
 import pytest
 
+from gchar.games.base import Gender
 from gchar.games.fgo import Character
 
 
 @pytest.mark.unittest
 class TestGamesFgoCharacter:
-    def test_basic(self, fgo_saber: Character, fgo_mashu: Character):
+    def test_basic(self, fgo_saber: Character, fgo_mashu: Character, fgo_shihuangdi):
         assert fgo_mashu == "玛修·基列莱特"
         assert fgo_mashu.index == 1
         assert fgo_mashu == '盾娘'
@@ -34,6 +35,9 @@ class TestGamesFgoCharacter:
         assert repr(fgo_saber) == '<Character 2 - 阿尔托莉雅·潘德拉贡/altria_pendragon/' \
                                   'アルトリア・ペンドラゴン, female, 5*****>'
         assert fgo_saber == fgo_saber
+
+        assert fgo_shihuangdi == '始皇帝'
+        assert fgo_shihuangdi.gender == Gender.OTHER
 
     def test_extra(self, fgo_saber, fgo_mashu, fgo_saber_l, fgo_saber_a, fgo_altria_caster,
                    fgo_elf_gawain, fgo_elf_tristan, fgo_elf_lancelot):

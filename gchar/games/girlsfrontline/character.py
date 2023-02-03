@@ -29,6 +29,9 @@ class Character(_BaseCharacter):
     def _jpname(self):
         return self.__raw_data['jpname']
 
+    def _gender(self):
+        return 'female'
+
     @property
     def rarity(self) -> Rarity:
         return Rarity.loads(self.__raw_data['rarity'])

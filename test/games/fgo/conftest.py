@@ -65,3 +65,8 @@ def fgo_elf_tristan():
 @pytest.fixture()
 def fgo_elf_lancelot():
     return Character.get(312)
+
+
+@pytest.fixture()
+def fgo_shihuangdi():
+    return Character.get('始皇帝')

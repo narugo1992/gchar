@@ -15,6 +15,7 @@ class TestGamesAzurlaneCharacter:
         assert azl_new_jersey.enname == 'new_jersey'
         assert azl_new_jersey == 'ニュージャージー'
         assert azl_new_jersey.jpname == 'ニュージャージー'
+        assert azl_new_jersey.gender == 'female'
         assert azl_new_jersey.rarity == 5
         assert azl_new_jersey.group == Group.USS
         assert not azl_new_jersey.is_meta
@@ -34,6 +35,7 @@ class TestGamesAzurlaneCharacter:
         assert azl_maury.jpname == 'モーリー'
         assert azl_maury.rarity == 3
         assert azl_maury.group == Group.USS
+        assert azl_maury.gender == 'female'
         assert not azl_maury.is_meta
         assert not azl_maury.is_refit
         assert not azl_maury.is_mu
@@ -51,6 +53,7 @@ class TestGamesAzurlaneCharacter:
         assert azl_fuso_meta.rarity == 3
         assert azl_fuso_meta.group == '其他'
         assert azl_fuso_meta.is_meta
+        assert azl_fuso_meta.gender == 'female'
         assert not azl_fuso_meta.is_refit
         assert not azl_fuso_meta.is_mu
         assert not azl_fuso_meta.is_chibi

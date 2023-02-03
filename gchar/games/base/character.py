@@ -2,6 +2,7 @@ from itertools import chain
 from typing import List, Union, Type, Iterator, Optional, Callable
 
 from .name import _BaseName, ChineseName, EnglishName, JapaneseName
+from .property import Gender
 
 
 class Character:
@@ -79,6 +80,13 @@ class Character:
     @property
     def names(self) -> List[str]:
         return sorted(set(map(str, self._names())))
+
+    def _gender(self):
+        raise NotImplementedError  # pragma: no cover
+
+    @property
+    def gender(self) -> Gender:
+        return Gender.loads(self._gender())
 
     def _is_extra(self) -> bool:
         return False

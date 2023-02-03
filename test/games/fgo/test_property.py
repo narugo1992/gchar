@@ -1,25 +1,10 @@
 import pytest
 
-from gchar.games.fgo import Gender, Rarity, Clazz
+from gchar.games.fgo import Rarity, Clazz
 
 
 @pytest.mark.unittest
 class TestGamesFgoProperty:
-    def test_gender(self):
-        assert Gender.loads('male') == Gender.MALE
-        assert Gender.loads('Female') == Gender.FEMALE
-        assert Gender.loads('男性') == Gender.MALE
-        assert Gender.loads('女') == Gender.FEMALE
-        assert Gender.loads(Gender.MALE) == Gender.MALE
-        assert Gender.loads(Gender.FEMALE) == Gender.FEMALE
-        assert Gender.loads('未知') == Gender.OTHER
-
-        assert Gender.MALE == '男性'
-        assert Gender.FEMALE == 'female'
-        assert Gender.MALE != None
-        with pytest.raises(TypeError):
-            _ = Gender.loads(None)
-
     def test_rarity(self):
         assert Rarity.loads(0) == Rarity.ZERO
         assert Rarity.loads(1) == Rarity.ONE
