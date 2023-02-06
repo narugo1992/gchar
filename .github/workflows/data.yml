@@ -113,6 +113,7 @@ jobs:
       - name: Run Pixiv Names Crawler
         env:
           CI: 'true'
+          REMOTE_PIXIV_SESSION_URL: ${{ secrets.REMOTE_PIXIV_SESSION_URL }}
         shell: bash
         run: |
           python -m gchar.resources.pixiv names -g ${{ matrix.game }} -o ${{ matrix.game }}/pixiv_names.json
