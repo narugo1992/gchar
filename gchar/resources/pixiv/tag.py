@@ -3,7 +3,7 @@ import warnings
 from functools import lru_cache
 from typing import Iterable, Iterator, Union, List, Tuple, Type
 
-from .games import _GAMES
+from .games import _get_items_from_ch_type
 from ...games import get_character
 from ...games.base import Character
 
@@ -105,23 +105,6 @@ class PixivCharPool:
 
 
 @lru_cache()
-def _get_items(cls: Type[Character]) -> Tuple[str, str]:
-    for item in _GAMES:
-        if len(item) == 2:
-            _cls, game_tag = item
-            base_tag = game_tag
-        elif len(item) == 3:
-            _cls, game_tag, base_tag = item
-        else:
-            assert False, f'Invalid games item - {item!r}.'  # pragma: no cover
-
-        if cls == _cls:
-            return game_tag, base_tag
-
-    raise TypeError(f'Unknown character type - {cls}.')  # pragma: no cover
-
-
-@lru_cache()
 def _get_char_pool(cls: Type[Character], **kwargs):
     return PixivCharPool(cls.all(**kwargs))
 
@@ -136,7 +119,7 @@ def get_pixiv_keywords(char, simple: bool = False, use_english: bool = True, inc
         raise ValueError(f'Unknown character - {original_char!r}.')
 
     pool = _get_char_pool(type(char), **kwargs)
-    game_tag, base_tag = _get_items(type(char))
+    _, game_tag, base_tag = _get_items_from_ch_type(type(char))
 
     try:
         if simple:

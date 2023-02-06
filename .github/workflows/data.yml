@@ -14,10 +14,10 @@ jobs:
       fail-fast: false
       matrix:
         game:
-          - 'arknights'
-          - 'fgo'
-          - 'azurlane'
-          - 'girlsfrontline'
+#          - 'arknights'
+#          - 'fgo'
+#          - 'azurlane'
+#          - 'girlsfrontline'
           - 'genshin'
         os:
           - 'ubuntu-latest'
@@ -95,14 +95,33 @@ jobs:
           pip list
           tree .
           python -m gchar.games.${{ matrix.game }} --help
-      - name: Run Crawler Code
+      - name: Run Game Crawler
         env:
           CI: 'true'
         shell: bash
         run: |
           mkdir -p ${{ matrix.game }}
           python -m gchar.games.${{ matrix.game }} update -o ${{ matrix.game }}/index.json
+          cp ${{ matrix.game }}/index.json gchar/games/${{ matrix.game }}/index.json
+      - name: Run Danbooru Tags Crawler
+        env:
+          CI: 'true'
+        shell: bash
+        run: |
           python -m gchar.resources.danbooru update -g ${{ matrix.game }} -o ${{ matrix.game }}/danbooru_tags.json
+          cp ${{ matrix.game }}/danbooru_tags.json gchar/games/${{ matrix.game }}/danbooru_tags.json
+      - name: Run Pixiv Names Crawler
+        env:
+          CI: 'true'
+        shell: bash
+        run: |
+          python -m gchar.resources.pixiv names -g ${{ matrix.game }} -o ${{ matrix.game }}/pixiv_names.json
+          cp ${{ matrix.game }}/pixiv_names.json gchar/games/${{ matrix.game }}/pixiv_names.json
+      - name: Package The Data
+        env:
+          CI: 'true'
+        shell: bash
+        run: |
           zip -r ${{ matrix.game }}.zip ${{ matrix.game }}
       - name: Upload the character databases
         uses: actions/upload-artifact@v3
