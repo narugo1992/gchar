@@ -66,13 +66,13 @@ jobs:
           pip --version
           pip list
           tree .
+          mkdir -p ${{ matrix.game }}
       - name: Run Game Crawler
         if: ${{ !contains(github.event.head_commit.message, 'crawl skip') }}
         env:
           CI: 'true'
         shell: bash
         run: |
-          mkdir -p ${{ matrix.game }}
           python -m gchar.games.${{ matrix.game }} --help
           python -m gchar.games.${{ matrix.game }} update -o ${{ matrix.game }}/index.json
           cp ${{ matrix.game }}/index.json gchar/games/${{ matrix.game }}/index.json
