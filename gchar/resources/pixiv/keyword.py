@@ -1,12 +1,15 @@
+import json
+import os.path
 import time
-from typing import Type, List
+from typing import Type, List, Union, Dict
 from urllib.parse import quote
 
 from tqdm.auto import tqdm
 
-from .games import _get_items_from_ch_type
+from .games import _get_items_from_ch_type, _local_names_file
 from .session import get_pixiv_session
 from ...games.base import Character
+from ...utils import download_file
 
 
 def get_pixiv_illustration_count(keyword, session=None, **kwargs) -> int:
@@ -27,7 +30,7 @@ def get_pixiv_illustration_count(keyword, session=None, **kwargs) -> int:
 def get_pixiv_name_search_count(cls: Type[Character], session=None,
                                 interval: float = 0.2, sleep_every: int = 70, sleep_time: float = 20,
                                 ensure_times: int = 3, **kwargs):
-    cls, base_tag, _ = _get_items_from_ch_type(cls)
+    (cls, _), base_tag, _ = _get_items_from_ch_type(cls)
     session = session or get_pixiv_session(**kwargs)
 
     _all_names_set = set()
@@ -67,3 +70,25 @@ def get_pixiv_name_search_count(cls: Type[Character], session=None,
             break
 
     return sorted(retval)
+
+
+def _download_pixiv_names_for_game(game: Union[Type[Character], str]):
+    (cls, game_name), base_tag, _ = _get_items_from_ch_type(game)
+    pixiv_names_file = _local_names_file(game_name)
+    download_file(
+        f'https://huggingface.co/datasets/deepghs/game_characters/resolve/main/{game_name}/pixiv_names.json',
+        pixiv_names_file
+    )
+
+
+def _load_pixiv_names_for_game(game: Union[Type[Character], str]) -> Dict[str, int]:
+    (cls, game_name), base_tag, _ = _get_items_from_ch_type(game)
+    pixiv_names_file = _local_names_file(game_name)
+    if not os.path.exists(pixiv_names_file):
+        _download_pixiv_names_for_game(game)
+
+    with open(pixiv_names_file, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+        names = data['names']
+
+    return {item['name']: item['count'] for item in names}

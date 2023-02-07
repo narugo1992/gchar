@@ -17,6 +17,8 @@ class TestResourcesPixivTag:
         ('aak', 'アークナイツ (aak OR 阿) -阿消 -阿米娅'),
         ('CEO', 'Fate/GrandOrder (berserker_of_el_dorado OR penthesilea OR エルドラドのバーサーカー '
                 'OR ペンテシレイア OR 彭忒西勒亚 OR 黄金国的berserker)'),
+        ('saber', 'Fate/GrandOrder (altria_pendragon OR アルトリア・ペンドラゴン OR 阿尔托莉雅·潘德拉贡) '
+                  '-アルトリア・ペンドラゴン〔オルタ〕 -アルトリア・ペンドラゴン〔サンタオルタ〕 -アルトリア・ペンドラゴン〔リリィ〕'),
         ('character_not_found_hahahaha', None)
     ])
     def test_get_pixiv_keywords(self, ch, keyword):

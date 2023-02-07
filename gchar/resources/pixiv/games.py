@@ -20,7 +20,7 @@ _GAMES = [
 
 
 @lru_cache()
-def _get_items_from_ch_type(cls: Union[Type[Character], str]) -> Tuple[Type[Character], str, str]:
+def _get_items_from_ch_type(cls: Union[Type[Character], str]) -> Tuple[Tuple[Type[Character], str], str, str]:
     for item in _GAMES:
         if len(item) == 3:
             _cls, game_name, game_tag = item
@@ -31,7 +31,7 @@ def _get_items_from_ch_type(cls: Union[Type[Character], str]) -> Tuple[Type[Char
             assert False, f'Invalid games item - {item!r}.'  # pragma: no cover
 
         if cls == _cls or cls == game_name:
-            return _cls, game_tag, base_tag
+            return (_cls, game_name), game_tag, base_tag
 
     raise TypeError(f'Unknown character type - {cls}.')  # pragma: no cover
 

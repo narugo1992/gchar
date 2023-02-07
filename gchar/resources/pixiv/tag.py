@@ -1,9 +1,10 @@
 import re
 import warnings
 from functools import lru_cache
-from typing import Iterable, Iterator, Union, List, Tuple, Type
+from typing import Iterable, Iterator, Union, List, Tuple, Type, Mapping
 
 from .games import _get_items_from_ch_type
+from .keyword import _load_pixiv_names_for_game
 from ...games import get_character
 from ...games.base import Character
 
@@ -45,17 +46,21 @@ def _format_tags(positive, negative, or_clause=None):
 
 
 class PixivCharPool:
-    def __init__(self, chars: Iterable[Character]):
+    def __init__(self, chars: Iterable[Character], names_dict: Mapping[str, int]):
         self.__chars = list(chars)
+        self.__names = {
+            name: count
+            for name, count in names_dict.items()
+            if count >= 0
+        }
 
     def _iter_dup_names(self, name: str) -> Iterator[str]:
-        for ch in self.__chars:
-            for sname in map(str, ch.names):
-                if name != sname and name in sname:
-                    yield sname
+        for sname in self.__names.keys():
+            if name != sname and name in sname:
+                yield sname
 
     def get_tag(self, char: Character, use_english: bool = False, positive=None, negative=None,
-                max_exclude_per_word: int = 20):
+                max_exclude_per_word: int = 20, max_exclude: int = 20):
         if not isinstance(char, Character):
             raise TypeError(f'Invalid character type - {char!r}.')  # pragma: no cover
 
@@ -67,6 +72,7 @@ class PixivCharPool:
         negative = set(_yield_tags(negative or [])) - positive
         or_clause = set()
 
+        exclude_names = set()
         for chname in char_names:
             all_exnames = list(self._iter_dup_names(str(chname)))
             if len(all_exnames) >= max_exclude_per_word:
@@ -75,17 +81,19 @@ class PixivCharPool:
             or_clause.add(str(chname))
             for exname in all_exnames:
                 if exname not in positive and exname not in or_clause:
-                    negative.add(exname)
+                    exclude_names.add(exname)
+
+        for exname in sorted(exclude_names, key=lambda x: self.__names.get(x, 0), reverse=True)[:max_exclude]:
+            negative.add(exname)
 
         return _format_tags(positive, negative, or_clause)
 
     def _iter_end_dup_names(self, name: str) -> Iterator[str]:
-        for ch in self.__chars:
-            for sname in map(str, ch.names):
-                if name != sname and sname.endswith(name):
-                    yield sname
+        for sname in self.__names.keys():
+            if name != sname and sname.endswith(name):
+                yield sname
 
-    def get_simple_tag(self, char: Character, base_tag: str):
+    def get_simple_tag(self, char: Character, base_tag: str, max_exclude: int = 20):
         if not isinstance(char, Character):
             raise TypeError(f'Invalid character type - {char!r}.')  # pragma: no cover
 
@@ -93,10 +101,14 @@ class PixivCharPool:
         negative = set()
         or_clause = set()
         if char.jpnames:
+            exclude_names = set()
             for jpname in char.jpnames:
                 positive.add(f'{jpname}({base_tag})')
                 for exname in self._iter_end_dup_names(str(jpname)):
-                    negative.add(exname)
+                    exclude_names.add(exname)
+
+            for exname in sorted(exclude_names, key=lambda x: self.__names.get(x, 0), reverse=True)[:max_exclude]:
+                negative.add(exname)
 
         else:
             raise ValueError(f'Japanese name not found for character - {char!r}.')
@@ -106,11 +118,12 @@ class PixivCharPool:
 
 @lru_cache()
 def _get_char_pool(cls: Type[Character], **kwargs):
-    return PixivCharPool(cls.all(**kwargs))
+    names_dict = _load_pixiv_names_for_game(cls)
+    return PixivCharPool(cls.all(**kwargs), names_dict)
 
 
 def get_pixiv_keywords(char, simple: bool = False, use_english: bool = True, includes=None, exclude=None,
-                       allow_fuzzy: bool = True, fuzzy_threshold: int = 70, **kwargs):
+                       allow_fuzzy: bool = True, fuzzy_threshold: int = 70, max_exclude: int = 20, **kwargs):
     kwargs = {**kwargs, 'contains_extra': False}
     original_char = char
     if not isinstance(char, Character):
@@ -123,8 +136,8 @@ def get_pixiv_keywords(char, simple: bool = False, use_english: bool = True, inc
 
     try:
         if simple:
-            return pool.get_simple_tag(char, base_tag)
+            return pool.get_simple_tag(char, base_tag, max_exclude=max_exclude)
     except ValueError:
         warnings.warn(UserWarning(f'No japanese name for {char!r}, falling back to full tag.'), stacklevel=2)
 
-    return pool.get_tag(char, use_english, positive=[includes, game_tag], negative=exclude)
+    return pool.get_tag(char, use_english, positive=[includes, game_tag], negative=exclude, max_exclude=max_exclude)

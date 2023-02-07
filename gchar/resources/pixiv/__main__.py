@@ -8,6 +8,7 @@ import click
 
 from .games import _GAMES, _local_names_file
 from .keyword import get_pixiv_name_search_count
+from .session import is_pixiv_session_okay, get_pixiv_session
 from ...utils import GLOBAL_CONTEXT_SETTINGS
 from ...utils import print_version as _origin_print_version
 
@@ -38,12 +39,15 @@ def cli():
               help='Output path of names\' data file.', show_default=None)
 def names(game, output: Optional[str], interval: float, sleep_every: int, sleep_time: float, ensure_times: int):
     output = output or _local_names_file(game)
+    session = get_pixiv_session()
+    if not is_pixiv_session_okay(session):
+        raise ValueError('Pixiv session is down! Please use new cookies.')
     click.secho('Updating from pixiv.net web ajax ...', fg='yellow')
 
     data = get_pixiv_name_search_count(
-        game, interval=interval,
-        sleep_every=sleep_every, sleep_time=sleep_time,
-        ensure_times=ensure_times,
+        game, session,
+        interval=interval, sleep_every=sleep_every,
+        sleep_time=sleep_time, ensure_times=ensure_times,
     )
     output_dir = os.path.dirname(output)
     if output_dir:

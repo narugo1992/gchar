@@ -9,6 +9,7 @@ from .games.fgo.index import _download_from_huggingface as _fgo_download
 from .games.genshin.index import _download_from_huggingface as _genshin_download
 from .games.girlsfrontline.index import _download_from_huggingface as _girlsfrontline_download
 from .resources.danbooru.index import _download_from_huggingface as _download_danbooru_tags
+from .resources.pixiv.keyword import _download_pixiv_names_for_game
 from .utils import GLOBAL_CONTEXT_SETTINGS
 from .utils import print_version as _origin_print_version
 
@@ -50,6 +51,8 @@ def update(game):
         DOWNLOAD_FUNCS[_gitem]()
         click.echo(click.style(f'Downloading danbooru tags of {_gitem} ...', fg='yellow'))
         _download_danbooru_tags(_gitem)
+        click.echo(click.style(f'Downloading pixiv names of {_gitem} ...', fg='yellow'))
+        _download_pixiv_names_for_game(_gitem)
 
     click.echo(click.style('Completed!', fg='green'))
 
