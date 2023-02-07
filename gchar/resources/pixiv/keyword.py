@@ -172,7 +172,6 @@ def _load_pixiv_characters_for_game(game: Union[Type[Character], str]) -> Dict[s
 
 def get_pixiv_illustration_count_by_character(char, allow_fuzzy: bool = True, fuzzy_threshold: int = 70,
                                               **kwargs) -> Optional[Tuple[int, int]]:
-    kwargs = {**kwargs, 'contains_extra': False}
     original_char = char
     if not isinstance(char, Character):
         char = get_character(char, allow_fuzzy, fuzzy_threshold, **kwargs)

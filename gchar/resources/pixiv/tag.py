@@ -124,7 +124,6 @@ def _get_char_pool(cls: Type[Character], **kwargs):
 
 def get_pixiv_keywords(char, simple: bool = False, use_english: bool = True, includes=None, exclude=None,
                        allow_fuzzy: bool = True, fuzzy_threshold: int = 70, max_exclude: int = 20, **kwargs):
-    kwargs = {**kwargs, 'contains_extra': False}
     original_char = char
     if not isinstance(char, Character):
         char = get_character(char, allow_fuzzy, fuzzy_threshold, **kwargs)

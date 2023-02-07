@@ -16,3 +16,23 @@ class TestGamesDispatchAccess:
 
         assert get_character('ak47', allow_fuzzy=True) == 'ak-47'
         assert get_character('ar15', allow_fuzzy=True) == 'st ar-15'
+
+        saber = get_character('saber')
+        assert saber.index == 2
+        assert repr(saber) == '<Character 2 - 阿尔托莉雅·潘德拉贡/altria_pendragon/アルトリア・ペンドラゴン, female, 5*****>'
+
+        amiya = get_character('amiya')
+        assert amiya.index == 'R001'
+        assert repr(amiya) == '<Character R001 - 阿米娅/amiya/アーミヤ, female, 5*****>'
+
+        cba = get_character('cba')
+        assert cba.index == 215
+        assert repr(cba) == '<Character 215 - 斯卡哈·斯卡蒂/scathach_skadi/スカサハ＝スカディ, female, 5*****>'
+
+        rba = get_character('rba')
+        assert rba.index == 357
+        assert repr(rba) == '<Character 357 - 斯卡哈·斯卡蒂/scathach_skadi/スカサハ＝スカディ, female, 5*****>'
+
+        ls = get_character('白枪呆')
+        assert ls.index == 119
+        assert repr(ls) == '<Character 119 - 阿尔托莉雅·潘德拉贡/altria_pendragon/アルトリア・ペンドラゴン, female, 5*****>'
