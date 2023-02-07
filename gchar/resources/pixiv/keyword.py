@@ -1,7 +1,7 @@
 import json
 import os.path
 import time
-from typing import Type, List, Union, Dict
+from typing import Type, List, Union, Dict, Tuple, Iterable
 from urllib.parse import quote
 
 from tqdm.auto import tqdm
@@ -27,6 +27,45 @@ def get_pixiv_illustration_count(keyword, session=None, **kwargs) -> int:
     return body["illustManga"]["total"]
 
 
+def _names_search_count(keywords: Iterable[str], session=None,
+                        interval: float = 0.2, sleep_every: int = 70, sleep_time: float = 20,
+                        ensure_times: int = 3, **kwargs) -> List[int]:
+    session = session or get_pixiv_session(**kwargs)
+    # noinspection PyTypeChecker
+    all_keywords: List[Tuple[int, str]] = list(enumerate(keywords))
+    total = len(all_keywords)
+
+    ret_counts = {}
+    last_sizes = tuple((*([None] * (ensure_times - 1)), total))
+    round = 0
+    while all_keywords:
+        new_round_names: List[Tuple[int, str]] = []
+        all_names_tqdm = tqdm(all_keywords)
+        for i, (kid, keyword) in enumerate(all_names_tqdm):
+            all_names_tqdm.set_description(f'R{round + 1}/{i + 1} - {keyword}')
+            count = get_pixiv_illustration_count(keyword, session)
+            if count:
+                ret_counts[kid] = count
+            else:
+                new_round_names.append((kid, keyword))
+
+            if (i + 1) % sleep_every == 0:
+                time.sleep(sleep_time)
+            else:
+                time.sleep(interval)
+
+        if len(all_keywords) % sleep_every != 0:
+            time.sleep(sleep_time)
+
+        all_keywords = new_round_names
+        round += 1
+        last_sizes = tuple((*last_sizes[1:], len(all_keywords)))
+        if all([last_sizes[i] == last_sizes[i + 1] for i in range(ensure_times - 1)]):
+            break
+
+    return [ret_counts.get(i, 0) for i in range(total)]
+
+
 def get_pixiv_name_search_count(cls: Type[Character], session=None,
                                 interval: float = 0.2, sleep_every: int = 70, sleep_time: float = 20,
                                 ensure_times: int = 3, **kwargs):
@@ -38,38 +77,10 @@ def get_pixiv_name_search_count(cls: Type[Character], session=None,
         for name in ch.names:
             _all_names_set.add(name)
     all_names: List[str] = sorted(_all_names_set)
+    all_keywords = [f'{base_tag} {name}' for name in all_names]
+    all_counts = _names_search_count(all_keywords, session, interval, sleep_every, sleep_time, ensure_times, **kwargs)
 
-    retval = []
-    nts = tuple([None] * ensure_times)
-    round = 0
-    while all_names:
-        new_round_names = []
-        all_names_tqdm = tqdm(all_names)
-        for i, name in enumerate(all_names_tqdm):
-            all_names_tqdm.set_description(f'R{round + 1}/{i + 1} - {name}')
-            keyword = f'{base_tag} {name}'
-            count = get_pixiv_illustration_count(keyword, session)
-            if count:
-                retval.append((name, count))
-            else:
-                new_round_names.append(name)
-
-            if (i + 1) % sleep_every == 0:
-                time.sleep(sleep_time)
-            else:
-                time.sleep(interval)
-
-        if len(all_names) % sleep_every != 0:
-            time.sleep(sleep_time)
-
-        all_names = new_round_names
-        round += 1
-        _, *_old_nts = nts
-        nts = tuple((*_old_nts, len(all_names)))
-        if all([nts[i] == nts[i + 1] for i in range(len(nts) - 1)]):
-            break
-
-    return sorted(retval)
+    return sorted([(name, count) for name, count in zip(all_names, all_counts) if count > 0])
 
 
 def _download_pixiv_names_for_game(game: Union[Type[Character], str]):
