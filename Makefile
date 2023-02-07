@@ -44,7 +44,4 @@ pdocs:
 	$(MAKE) -C "${DOC_DIR}" prod
 
 download:
-	for g in ${GAMES}; do \
-  		$(PYTHON) -m gchar.games.$$g download; \
-  		$(PYTHON) -m gchar.resources.danbooru download -g $$g; \
-  	done
+	$(PYTHON) -m gchar update
