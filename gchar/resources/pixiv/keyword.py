@@ -26,7 +26,7 @@ def get_pixiv_illustration_count(keyword, session=None, **kwargs) -> int:
 
 def get_pixiv_name_search_count(cls: Type[Character], session=None,
                                 interval: float = 0.2, sleep_every: int = 70, sleep_time: float = 20,
-                                **kwargs):
+                                ensure_times: int = 3, **kwargs):
     cls, base_tag, _ = _get_items_from_ch_type(cls)
     session = session or get_pixiv_session(**kwargs)
 
@@ -37,7 +37,7 @@ def get_pixiv_name_search_count(cls: Type[Character], session=None,
     all_names: List[str] = sorted(_all_names_set)
 
     retval = []
-    nts = (None, None)
+    nts = tuple([None] * ensure_times)
     cnt, round = 0, 0
     while all_names:
         new_round_names = []

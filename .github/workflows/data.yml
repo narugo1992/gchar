@@ -1,7 +1,7 @@
 name: Data Publish
 
 on:
-#  push:
+  #  push:
   workflow_dispatch:
   schedule:
     - cron: '0 17 * * *'
@@ -32,30 +32,11 @@ jobs:
           echo "OS_NAME=Linux" >> $GITHUB_ENV
           echo "IS_WIN=" >> $GITHUB_ENV
           echo "IS_MAC=" >> $GITHUB_ENV
-      - name: Get system version for Windows
-        if: ${{ contains(matrix.os, 'windows') }}
-        shell: bash
-        run: |
-          echo "OS_NAME=Windows" >> $GITHUB_ENV
-          echo "IS_WIN=1" >> $GITHUB_ENV
-          echo "IS_MAC=" >> $GITHUB_ENV
-      - name: Get system version for MacOS
-        if: ${{ contains(matrix.os, 'macos') }}
-        shell: bash
-        run: |
-          echo "OS_NAME=MacOS" >> $GITHUB_ENV
-          echo "IS_WIN=" >> $GITHUB_ENV
-          echo "IS_MAC=1" >> $GITHUB_ENV
       - name: Set environment for Cpython
         if: ${{ !contains(matrix.python-version, 'pypy') }}
         shell: bash
         run: |
           echo "IS_PYPY=" >> $GITHUB_ENV
-      - name: Set environment for PyPy
-        if: ${{ contains(matrix.python-version, 'pypy') }}
-        shell: bash
-        run: |
-          echo "IS_PYPY=1" >> $GITHUB_ENV
       - name: Checkout code
         uses: actions/checkout@v2
         with:
@@ -67,15 +48,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y tree cloc wget curl make zip
-      - name: Set up system dependences on Windows
-        if: ${{ env.OS_NAME == 'Windows' }}
-        shell: bash
-        run: |
-          choco install tree cloc wget curl make zip
-      - name: Set up system dependences on MacOS
-        if: ${{ env.OS_NAME == 'MacOS' }}
-        run: |
-          brew install tree cloc wget curl make zip
       - name: Set up python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
@@ -94,13 +66,13 @@ jobs:
           pip --version
           pip list
           tree .
-          python -m gchar.games.${{ matrix.game }} --help
       - name: Run Game Crawler
         env:
           CI: 'true'
         shell: bash
         run: |
           mkdir -p ${{ matrix.game }}
+          python -m gchar.games.${{ matrix.game }} --help
           python -m gchar.games.${{ matrix.game }} update -o ${{ matrix.game }}/index.json
           cp ${{ matrix.game }}/index.json gchar/games/${{ matrix.game }}/index.json
       - name: Run Danbooru Tags Crawler
@@ -110,6 +82,92 @@ jobs:
         run: |
           python -m gchar.resources.danbooru update -g ${{ matrix.game }} -o ${{ matrix.game }}/danbooru_tags.json
           cp ${{ matrix.game }}/danbooru_tags.json gchar/games/${{ matrix.game }}/danbooru_tags.json
+      - name: Package The Data
+        env:
+          CI: 'true'
+        shell: bash
+        run: |
+          zip -r ${{ matrix.game }}.zip ${{ matrix.game }}
+      - name: Upload the character databases
+        uses: actions/upload-artifact@v3
+        with:
+          name: character-database
+          path: ${{ matrix.game }}.zip
+
+  names_crawl:
+    name: Names Crawl
+    runs-on: ${{ matrix.os }}
+    needs:
+      - data_crawl
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        game:
+          - 'arknights'
+          - 'fgo'
+          - 'azurlane'
+          - 'girlsfrontline'
+          - 'genshin'
+        os:
+          - 'ubuntu-latest'
+        python-version:
+          - '3.8'
+
+    steps:
+      - name: Get system version for Linux
+        if: ${{ contains(matrix.os, 'ubuntu') }}
+        shell: bash
+        run: |
+          echo "OS_NAME=Linux" >> $GITHUB_ENV
+          echo "IS_WIN=" >> $GITHUB_ENV
+          echo "IS_MAC=" >> $GITHUB_ENV
+      - name: Set environment for Cpython
+        if: ${{ !contains(matrix.python-version, 'pypy') }}
+        shell: bash
+        run: |
+          echo "IS_PYPY=" >> $GITHUB_ENV
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 20
+          submodules: 'recursive'
+      - name: Set up system dependences on Linux
+        if: ${{ env.OS_NAME == 'Linux' }}
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y tree cloc wget curl make zip
+      - name: Set up python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          pip install --upgrade flake8 setuptools wheel twine
+          pip install -r requirements.txt
+          pip install -r requirements-test.txt
+      - name: Download from artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: character-database
+      - name: Load Index file from upstream
+        shell: bash
+        run: |
+          ls -al ${{ matrix.game }}.zip
+          unzip -o ${{ matrix.game }}.zip
+          tree ${{ matrix.game }}
+          cp ${{ matrix.game }}/* gchar/games/${{ matrix.game }}
+          ls -al gchar/games/${{ matrix.game }}
+      - name: Test the basic environment
+        shell: bash
+        run: |
+          python -V
+          pip --version
+          pip list
+          tree .
       - name: Run Pixiv Names Crawler
         env:
           CI: 'true'
@@ -133,7 +191,9 @@ jobs:
   data_upload:
     name: Data Upload
     runs-on: ${{ matrix.os }}
-    needs: [ data_crawl ]
+    needs:
+      - data_crawl
+      - names_crawl
     strategy:
       fail-fast: false
       matrix:
