@@ -1,12 +1,12 @@
 import re
 import warnings
-from functools import lru_cache
 from typing import Iterable, Iterator, Union, List, Tuple, Type, Mapping
 
 from .games import _get_items_from_ch_type
 from .keyword import _load_pixiv_names_for_game
 from ...games import get_character
 from ...games.base import Character
+from ...utils import optional_lru_cache
 
 
 def _yield_tags(tags: Union[Tuple[str], List[str], str]) -> Iterator[str]:
@@ -116,7 +116,7 @@ class PixivCharPool:
         return _format_tags(positive, negative, or_clause)
 
 
-@lru_cache()
+@optional_lru_cache()
 def _get_char_pool(cls: Type[Character], **kwargs):
     names_dict = _load_pixiv_names_for_game(cls)
     return PixivCharPool(cls.all(**kwargs), names_dict)

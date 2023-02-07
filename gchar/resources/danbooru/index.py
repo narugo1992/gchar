@@ -2,7 +2,6 @@ import json
 import os.path
 import re
 import time
-from functools import lru_cache
 from typing import List, Tuple, Iterator, Dict, Union, Type, Optional
 
 import requests
@@ -11,7 +10,7 @@ from tqdm.auto import tqdm
 from .games import _get_info_by_cls
 from ...games import __file__ as __games_file__
 from ...games.base import Character
-from ...utils import sget, get_requests_session, download_file
+from ...utils import sget, get_requests_session, download_file, optional_lru_cache
 
 
 def _get_danbooru_tags(session: requests.Session, game: str) -> Iterator[Tuple[int, str, int]]:
@@ -144,7 +143,7 @@ def _download_from_huggingface(name: str):
     download_file(_online_tags_url(name), _local_file(name))
 
 
-@lru_cache()
+@optional_lru_cache()
 def get_lookup(cls: Type[Character], crawl: bool = False) -> Tuple[List[Dict], Dict[str, List[int]]]:
     if not _is_lookup_local_ready(cls):
         if crawl:

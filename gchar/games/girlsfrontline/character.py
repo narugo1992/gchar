@@ -1,4 +1,3 @@
-from functools import lru_cache
 from typing import List
 
 from .index import _refresh_index, get_index
@@ -6,13 +5,14 @@ from .name import EnglishName, JapaneseName, ChineseName
 from .property import Rarity, Clazz
 from ..base import Character as _BaseCharacter
 from ..base import Skin
+from ...utils import optional_lru_cache
 
 
 class Character(_BaseCharacter):
     __enname_class__ = EnglishName
     __cnname_class__ = ChineseName
     __jpname_class__ = JapaneseName
-    __index_func__ = lru_cache()(get_index)
+    __index_func__ = optional_lru_cache()(get_index)
 
     def __init__(self, raw_data: dict):
         self.__raw_data = raw_data
