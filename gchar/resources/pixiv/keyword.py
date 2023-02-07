@@ -38,26 +38,25 @@ def get_pixiv_name_search_count(cls: Type[Character], session=None,
 
     retval = []
     nts = tuple([None] * ensure_times)
-    cnt, round = 0, 0
+    round = 0
     while all_names:
         new_round_names = []
         all_names_tqdm = tqdm(all_names)
-        for name in all_names_tqdm:
-            all_names_tqdm.set_description(f'R{round + 1}/{cnt + 1} - {name}')
+        for i, name in enumerate(all_names_tqdm):
+            all_names_tqdm.set_description(f'R{round + 1}/{i + 1} - {name}')
             keyword = f'{base_tag} {name}'
             count = get_pixiv_illustration_count(keyword, session)
-            cnt += 1
             if count:
                 retval.append((name, count))
             else:
                 new_round_names.append(name)
 
-            if cnt % sleep_every == 0:
+            if (i + 1) % sleep_every == 0:
                 time.sleep(sleep_time)
             else:
                 time.sleep(interval)
 
-        if cnt % sleep_every != 0:
+        if len(all_names) % sleep_every != 0:
             time.sleep(sleep_time)
 
         all_names = new_round_names
