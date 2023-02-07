@@ -14,7 +14,7 @@ from ...games.base import Character
 from ...utils import download_file
 
 
-def get_pixiv_illustration_count(keyword, session=None, **kwargs) -> int:
+def get_pixiv_illustration_count_by_keyword(keyword, session=None, **kwargs) -> int:
     session = session or get_pixiv_session(**kwargs)
     url = f'https://www.pixiv.net/ajax/search/artworks/{quote(keyword, safe="()")}?' \
           f'word={quote(keyword, safe="")}' \
@@ -45,7 +45,7 @@ def _names_search_count(keywords: Iterable[str], session=None,
         all_names_tqdm = tqdm(all_keywords)
         for i, (kid, keyword) in enumerate(all_names_tqdm):
             all_names_tqdm.set_description(f'R{round + 1}/{i + 1} - {keyword}')
-            count = get_pixiv_illustration_count(keyword, session)
+            count = get_pixiv_illustration_count_by_keyword(keyword, session)
             if count:
                 ret_counts[kid] = count
             else:
@@ -170,8 +170,8 @@ def _load_pixiv_characters_for_game(game: Union[Type[Character], str]) -> Dict[s
     return {item['index']: (item["illustrations"]["all"], item["illustrations"]["r18"]) for item in chs}
 
 
-def get_character_pixiv_illustration_count(char, allow_fuzzy: bool = True, fuzzy_threshold: int = 70,
-                                           **kwargs) -> Optional[Tuple[int, int]]:
+def get_pixiv_illustration_count_by_character(char, allow_fuzzy: bool = True, fuzzy_threshold: int = 70,
+                                              **kwargs) -> Optional[Tuple[int, int]]:
     kwargs = {**kwargs, 'contains_extra': False}
     original_char = char
     if not isinstance(char, Character):

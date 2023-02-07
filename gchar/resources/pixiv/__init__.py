@@ -1,2 +1,2 @@
-from .keyword import get_pixiv_illustration_count, get_pixiv_character_search_count
+from .keyword import get_pixiv_illustration_count_by_keyword, get_pixiv_illustration_count_by_character
 from .tag import get_pixiv_keywords
