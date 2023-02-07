@@ -76,6 +76,13 @@ jobs:
           pip list
           tree .
           mkdir -p ${{ matrix.game }}
+      - name: Clone from huggingface
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.skip_crawl }}
+        shell: bash
+        run: |
+          git clone https://huggingface.co/datasets/deepghs/game_characters
+          ls -al game_characters
+          cp -rf game_characters/${{ matrix.game }}/* ${{ matrix.game }}
       - name: Run Game Crawler
         if: ${{ github.event_name != 'workflow_dispatch' || !github.event.inputs.skip_crawl }}
         env:
@@ -93,13 +100,6 @@ jobs:
         run: |
           python -m gchar.resources.danbooru update -g ${{ matrix.game }} -o ${{ matrix.game }}/danbooru_tags.json
           cp ${{ matrix.game }}/danbooru_tags.json gchar/games/${{ matrix.game }}/danbooru_tags.json
-      - name: Clone from huggingface
-        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.skip_crawl }}
-        shell: bash
-        run: |
-          git clone https://huggingface.co/datasets/deepghs/game_characters
-          ls -al game_characters
-          cp -rf game_characters/${{ matrix.game }}/* ${{ matrix.game }}
       - name: Package The Data
         env:
           CI: 'true'
@@ -186,8 +186,16 @@ jobs:
           pip --version
           pip list
           tree .
+          mkdir -p ${{ matrix.game }}
+      - name: Clone from huggingface
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.skip_pixiv }}
+        shell: bash
+        run: |
+          git clone https://huggingface.co/datasets/deepghs/game_characters
+          ls -al game_characters
+          cp -rf game_characters/${{ matrix.game }}/* ${{ matrix.game }}
       - name: Run Pixiv Names Crawler
-        if: ${{ github.event_name != 'workflow_dispatch' || !github.event.inputs.skip_crawl }}
+        if: ${{ github.event_name != 'workflow_dispatch' || !github.event.inputs.skip_pixiv }}
         env:
           CI: 'true'
           REMOTE_PIXIV_SESSION_URL: ${{ secrets.REMOTE_PIXIV_SESSION_URL }}
@@ -196,6 +204,7 @@ jobs:
           python -m gchar.resources.pixiv names -g ${{ matrix.game }} -o ${{ matrix.game }}/pixiv_names.json
           cp ${{ matrix.game }}/pixiv_names.json gchar/games/${{ matrix.game }}/pixiv_names.json
       - name: Run Pixiv Characters Crawler
+        if: ${{ github.event_name != 'workflow_dispatch' || !github.event.inputs.skip_pixiv }}
         env:
           CI: 'true'
           REMOTE_PIXIV_SESSION_URL: ${{ secrets.REMOTE_PIXIV_SESSION_URL }}
@@ -203,13 +212,6 @@ jobs:
         run: |
           python -m gchar.resources.pixiv characters -g ${{ matrix.game }} -o ${{ matrix.game }}/pixiv_characters.json
           cp ${{ matrix.game }}/pixiv_characters.json gchar/games/${{ matrix.game }}/pixiv_characters.json
-      - name: Clone from huggingface
-        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.skip_crawl }}
-        shell: bash
-        run: |
-          git clone https://huggingface.co/datasets/deepghs/game_characters
-          ls -al game_characters
-          cp -rf game_characters/${{ matrix.game }}/* ${{ matrix.game }}
       - name: Package The Data
         env:
           CI: 'true'
