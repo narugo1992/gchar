@@ -1,13 +1,15 @@
 import json
 import os.path
 import time
-from typing import Type, List, Union, Dict, Tuple, Iterable
+from functools import lru_cache
+from typing import Type, List, Union, Dict, Tuple, Iterable, Optional
 from urllib.parse import quote
 
 from tqdm.auto import tqdm
 
-from .games import _get_items_from_ch_type, _local_names_file
+from .games import _get_items_from_ch_type, _local_names_file, _local_characters_file
 from .session import get_pixiv_session
+from ...games import get_character
 from ...games.base import Character
 from ...utils import download_file
 
@@ -143,3 +145,39 @@ def get_pixiv_character_search_count(cls: Type[Character], session=None,
         })
 
     return retval
+
+
+def _download_pixiv_characters_for_game(game: Union[Type[Character], str]):
+    (cls, game_name), base_tag, _ = _get_items_from_ch_type(game)
+    pixiv_names_file = _local_characters_file(game_name)
+    download_file(
+        f'https://huggingface.co/datasets/deepghs/game_characters/resolve/main/{game_name}/pixiv_characters.json',
+        pixiv_names_file
+    )
+
+
+@lru_cache()
+def _load_pixiv_characters_for_game(game: Union[Type[Character], str]) -> Dict[str, Tuple[int, int]]:
+    (cls, game_name), base_tag, _ = _get_items_from_ch_type(game)
+    pixiv_names_file = _local_characters_file(game_name)
+    if not os.path.exists(pixiv_names_file):
+        _download_pixiv_characters_for_game(game)
+
+    with open(pixiv_names_file, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+        chs = data['characters']
+
+    return {item['index']: (item["illustrations"]["all"], item["illustrations"]["r18"]) for item in chs}
+
+
+def get_character_pixiv_illustration_count(char, allow_fuzzy: bool = True, fuzzy_threshold: int = 70,
+                                           **kwargs) -> Optional[Tuple[int, int]]:
+    kwargs = {**kwargs, 'contains_extra': False}
+    original_char = char
+    if not isinstance(char, Character):
+        char = get_character(char, allow_fuzzy, fuzzy_threshold, **kwargs)
+    if not char:
+        raise ValueError(f'Unknown character - {original_char!r}.')
+
+    all_data = _load_pixiv_characters_for_game(type(char))
+    return all_data.get(char.index, None)
