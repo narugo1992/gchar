@@ -25,7 +25,8 @@ package:
 clean:
 	rm -rf ${DIST_DIR} ${BUILD_DIR} *.egg-info \
 		$(shell find ${SRC_DIR}/games -name index.json -type f) \
-		$(shell find ${SRC_DIR}/games -name danbooru_tags.json -type f)
+		$(shell find ${SRC_DIR}/games -name danbooru_tags.json -type f) \
+		$(shell find ${SRC_DIR}/games -name pixiv_names.json -type f)
 
 test: unittest
 
