@@ -67,6 +67,7 @@ jobs:
           pip list
           tree .
       - name: Run Game Crawler
+        if: ${{ !contains(github.event.head_commit.message, 'crawl skip') }}
         env:
           CI: 'true'
         shell: bash
@@ -76,12 +77,20 @@ jobs:
           python -m gchar.games.${{ matrix.game }} update -o ${{ matrix.game }}/index.json
           cp ${{ matrix.game }}/index.json gchar/games/${{ matrix.game }}/index.json
       - name: Run Danbooru Tags Crawler
+        if: ${{ !contains(github.event.head_commit.message, 'crawl skip') }}
         env:
           CI: 'true'
         shell: bash
         run: |
           python -m gchar.resources.danbooru update -g ${{ matrix.game }} -o ${{ matrix.game }}/danbooru_tags.json
           cp ${{ matrix.game }}/danbooru_tags.json gchar/games/${{ matrix.game }}/danbooru_tags.json
+      - name: Clone from huggingface
+        if: ${{ contains(github.event.head_commit.message, 'crawl skip') }}
+        shell: bash
+        run: |
+          git clone https://huggingface.co/datasets/deepghs/game_characters
+          ls -al game_characters
+          cp -rf game_characters/${{ matrix.game }}/* ${{ matrix.game }}
       - name: Package The Data
         env:
           CI: 'true'
@@ -169,6 +178,7 @@ jobs:
           pip list
           tree .
       - name: Run Pixiv Names Crawler
+        if: ${{ !contains(github.event.head_commit.message, 'crawl skip') }}
         env:
           CI: 'true'
           REMOTE_PIXIV_SESSION_URL: ${{ secrets.REMOTE_PIXIV_SESSION_URL }}
@@ -184,6 +194,13 @@ jobs:
         run: |
           python -m gchar.resources.pixiv characters -g ${{ matrix.game }} -o ${{ matrix.game }}/pixiv_characters.json
           cp ${{ matrix.game }}/pixiv_characters.json gchar/games/${{ matrix.game }}/pixiv_characters.json
+      - name: Clone from huggingface
+        if: ${{ contains(github.event.head_commit.message, 'crawl skip') }}
+        shell: bash
+        run: |
+          git clone https://huggingface.co/datasets/deepghs/game_characters
+          ls -al game_characters
+          cp -rf game_characters/${{ matrix.game }}/* ${{ matrix.game }}
       - name: Package The Data
         env:
           CI: 'true'
