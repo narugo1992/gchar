@@ -67,4 +67,4 @@ def get_pixiv_name_search_count(cls: Type[Character], session=None,
         if all([nts[i] == nts[i + 1] for i in range(len(nts) - 1)]):
             break
 
-    return retval
+    return sorted(retval)
