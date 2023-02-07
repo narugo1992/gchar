@@ -30,7 +30,8 @@ def _get_remote_refresh_token():
 
 
 def get_pixiv_session(max_retries: int = 5, timeout: int = DEFAULT_TIMEOUT,
-                      headers: Optional[Dict[str, str]] = None) -> requests.Session:
+                      headers: Optional[Dict[str, str]] = None, **kwargs) -> requests.Session:
+    _ = kwargs
     session = get_requests_session(max_retries, timeout, headers)
     session.cookies.update(_get_remote_session_cookies())
 

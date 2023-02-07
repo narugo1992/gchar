@@ -103,3 +103,43 @@ def _load_pixiv_names_for_game(game: Union[Type[Character], str]) -> Dict[str, i
         names = data['names']
 
     return {item['name']: item['count'] for item in names}
+
+
+def get_pixiv_character_search_count(cls: Type[Character], session=None,
+                                     interval: float = 0.2, sleep_every: int = 70, sleep_time: float = 20,
+                                     ensure_times: int = 3, **kwargs):
+    (cls, _), base_tag, _ = _get_items_from_ch_type(cls)
+    session = session or get_pixiv_session(**kwargs)
+
+    chs = cls.all(**kwargs)
+    _all_ids = {}
+    for ch in chs:
+        _all_ids[ch.index] = _all_ids.get(ch.index, 0) + 1
+
+    from .tag import get_pixiv_keywords
+
+    all_characters, all_keywords, all_unsafe_keywords = [], [], []
+    for ch in chs:
+        if ch.is_extra and _all_ids.get(ch.index, 0) > 1:
+            continue
+
+        all_characters.append(ch)
+        all_keywords.append(get_pixiv_keywords(ch))
+        all_unsafe_keywords.append(get_pixiv_keywords(ch, includes=['R-18']))
+
+    _all = _names_search_count([*all_keywords, *all_unsafe_keywords], session,
+                               interval, sleep_every, sleep_time, ensure_times, **kwargs)
+    all_counts = _all[:len(all_keywords)]
+    all_unsafe_counts = _all[len(all_keywords):]
+
+    retval = []
+    for ch, count, unsafe_count in zip(all_characters, all_counts, all_unsafe_counts):
+        retval.append({
+            'index': ch.index,
+            'illustrations': {
+                'all': count,
+                'r18': unsafe_count,
+            }
+        })
+
+    return retval

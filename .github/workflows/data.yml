@@ -176,6 +176,14 @@ jobs:
         run: |
           python -m gchar.resources.pixiv names -g ${{ matrix.game }} -o ${{ matrix.game }}/pixiv_names.json
           cp ${{ matrix.game }}/pixiv_names.json gchar/games/${{ matrix.game }}/pixiv_names.json
+      - name: Run Pixiv Characters Crawler
+        env:
+          CI: 'true'
+          REMOTE_PIXIV_SESSION_URL: ${{ secrets.REMOTE_PIXIV_SESSION_URL }}
+        shell: bash
+        run: |
+          python -m gchar.resources.pixiv characters -g ${{ matrix.game }} -o ${{ matrix.game }}/pixiv_characters.json
+          cp ${{ matrix.game }}/pixiv_characters.json gchar/games/${{ matrix.game }}/pixiv_characters.json
       - name: Package The Data
         env:
           CI: 'true'
