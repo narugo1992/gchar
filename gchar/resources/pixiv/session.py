@@ -1,6 +1,7 @@
 import json
 import os
 from functools import lru_cache
+from json import JSONDecodeError
 from typing import Optional, Dict
 
 import requests
@@ -46,4 +47,12 @@ def is_pixiv_session_okay(session: requests.Session) -> bool:
             'Referer': f'https://www.pixiv.net/dashboard/works',
         }
     )
-    return resp.ok
+    if resp.ok:
+        try:
+            _ = resp.json()['popboard']
+        except (JSONDecodeError, KeyError):
+            return False
+        else:
+            return True
+    else:
+        return False
