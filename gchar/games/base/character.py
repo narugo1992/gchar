@@ -33,7 +33,8 @@ class Character:
 
     @property
     def cnnames(self):
-        return [self.__cnname_class__(name) for name in self._cnnames() if name]
+        names = [self.__cnname_class__(name) for name in self._cnnames() if name]
+        return [name for name in names if name]
 
     def _jpname(self):
         raise NotImplementedError  # pragma: no cover
@@ -49,7 +50,8 @@ class Character:
 
     @property
     def jpnames(self):
-        return [self.__jpname_class__(name) for name in self._jpnames() if name]
+        names = [self.__jpname_class__(name) for name in self._jpnames() if name]
+        return [name for name in names if name]
 
     def _enname(self):
         raise NotImplementedError  # pragma: no cover
@@ -65,7 +67,8 @@ class Character:
 
     @property
     def ennames(self):
-        return [self.__enname_class__(name) for name in self._ennames() if name]
+        names = [self.__enname_class__(name) for name in self._ennames() if name]
+        return [name for name in names if name]
 
     def _alias_names(self):
         return []

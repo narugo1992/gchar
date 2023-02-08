@@ -26,6 +26,9 @@ class _BaseName(Comparable):
     def __repr__(self):
         return f'<{type(self).__name__} {self._repr()!r}>'
 
+    def __bool__(self):
+        return bool(self._repr())
+
 
 class TextName(_BaseName):
     def __init__(self, name: str):
