@@ -85,13 +85,18 @@ jobs:
           cp -rf game_characters/${{ matrix.game }}/* ${{ matrix.game }}
       - name: Run Game Crawler
         if: ${{ github.event_name != 'workflow_dispatch' || !github.event.inputs.skip_crawl }}
+        uses: nick-fields/retry@v2
         env:
           CI: 'true'
-        shell: bash
-        run: |
-          python -m gchar.games.${{ matrix.game }} --help
-          python -m gchar.games.${{ matrix.game }} update -o ${{ matrix.game }}/index.json
-          cp ${{ matrix.game }}/index.json gchar/games/${{ matrix.game }}/index.json
+        with:
+          shell: bash
+          timeout_minutes: 180
+          max_attempts: 5
+          retry_on: any
+          command: |
+            python -m gchar.games.${{ matrix.game }} --help
+            python -m gchar.games.${{ matrix.game }} update -o ${{ matrix.game }}/index.json
+            cp ${{ matrix.game }}/index.json gchar/games/${{ matrix.game }}/index.json
       - name: Run Danbooru Tags Crawler
         if: ${{ github.event_name != 'workflow_dispatch' || !github.event.inputs.skip_crawl }}
         env:
