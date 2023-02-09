@@ -83,7 +83,7 @@ class PixivCharPool:
                 yield sname
 
     def get_tag(self, char: Character, use_english: bool = False, positive=None, negative=None,
-                max_exclude_per_word: int = 20, max_exclude: int = 20, max_pollution_ratio: float = 0.65):
+                max_exclude_per_word: int = 20, max_exclude: int = 20, max_pollution_ratio: float = 0.8):
         if not isinstance(char, Character):
             raise TypeError(f'Invalid character type - {char!r}.')  # pragma: no cover
 
@@ -165,7 +165,8 @@ def _get_char_pool(cls: Type[Character], **kwargs):
 
 
 def get_pixiv_keywords(char, simple: bool = False, use_english: bool = True, includes=None, exclude=None,
-                       allow_fuzzy: bool = True, fuzzy_threshold: int = 70, max_exclude: int = 20, **kwargs):
+                       allow_fuzzy: bool = True, fuzzy_threshold: int = 70, max_exclude: int = 20,
+                       max_pollution_ratio: float = 0.8, **kwargs):
     original_char = char
     if not isinstance(char, Character):
         char = get_character(char, allow_fuzzy, fuzzy_threshold, **kwargs)
@@ -181,4 +182,5 @@ def get_pixiv_keywords(char, simple: bool = False, use_english: bool = True, inc
     except ValueError:
         warnings.warn(UserWarning(f'No japanese name for {char!r}, falling back to full tag.'), stacklevel=2)
 
-    return pool.get_tag(char, use_english, positive=[includes, game_tag], negative=exclude, max_exclude=max_exclude)
+    return pool.get_tag(char, use_english, positive=[includes, game_tag], negative=exclude,
+                        max_exclude=max_exclude, max_pollution_ratio=max_pollution_ratio)

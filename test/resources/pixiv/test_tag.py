@@ -18,7 +18,8 @@ class TestResourcesPixivTag:
         ('シー', 'アークナイツ (dusk OR シー OR 夕) -ケルシー -シージ -シースルー -シートベルト -シーン '
                '-セクシー -センターシーム -ドロシー -七夕 -博夕 -夕暮れ -明日方舟夕'),
         ('多萝西', 'アークナイツ (dorothy OR 多萝西)'),
-        ('aak', 'aak アークナイツ'),
+        ('aak', 'アークナイツ (aak OR 阿) -博阿 -吽阿 -阿丝忒菈 -阿丽娜 -阿咬 -阿波尼亚 -阿消 -阿米亚 '
+                '-阿米娅 -阿米婭 -阿米驴 -阿芙茉妮 -阿赫茉妮 -阿陈 -阿黑颜'),
         ('CEO', 'Fate/GrandOrder (berserker_of_el_dorado OR penthesilea OR エルドラドのバーサーカー '
                 'OR ペンテシレイア OR 彭忒西勒亚 OR 黄金国的berserker)'),
         ('saber', 'Fate/GrandOrder (altria_pendragon OR アルトリア・ペンドラゴン OR 阿尔托莉雅·潘德拉贡) '
