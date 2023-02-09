@@ -192,6 +192,14 @@ jobs:
           pip list
           tree .
           mkdir -p ${{ matrix.game }}
+      - name: Clone from huggingface
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.skip_pixiv }}
+        shell: bash
+        run: |
+          git clone https://huggingface.co/datasets/deepghs/game_characters
+          ls -al game_characters
+          cp -rf game_characters/${{ matrix.game }}/pixiv_names.json ${{ matrix.game }}
+          cp -rf game_characters/${{ matrix.game }}/pixiv_characters.json ${{ matrix.game }}
       - name: Run Pixiv Names Crawler
         if: ${{ github.event_name != 'workflow_dispatch' || !github.event.inputs.skip_pixiv }}
         env:
