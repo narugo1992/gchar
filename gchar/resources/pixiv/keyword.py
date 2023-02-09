@@ -147,7 +147,7 @@ def get_pixiv_name_search_count(cls: Type[Character], session=None,
                     new_groups.append(group)
             groups = new_groups
 
-        all_pollution = {name: cnt for name, cnt in all_pollution.items() if cnt >= 0}
+        all_pollution = {name: cnt for name, cnt in all_pollution.items() if cnt > 0}
         assert sum(all_pollution.values()) == word_polluted_cnt
         retval.append({
             'name': name,
@@ -174,7 +174,8 @@ def _download_pixiv_names_for_game(game: Union[Type[Character], str]):
     )
 
 
-def _load_pixiv_names_for_game(game: Union[Type[Character], str]) -> Dict[str, int]:
+def _load_pixiv_names_for_game(game: Union[Type[Character], str]) \
+        -> Dict[str, Tuple[int, float, List[Tuple[str, int]]]]:
     (cls, game_name), base_tag, _ = _get_items_from_ch_type(game)
     pixiv_names_file = _local_names_file(game_name)
     if not os.path.exists(pixiv_names_file):
@@ -184,7 +185,38 @@ def _load_pixiv_names_for_game(game: Union[Type[Character], str]) -> Dict[str, i
         data = json.load(f)
         names = data['names']
 
-    return {item['name']: item['count'] for item in names}
+    all_dict = {item['name']: item for item in names}
+    all_counts = {}
+
+    def _get_count(name):
+        if name in all_counts:
+            return all_counts[name]
+        elif name not in all_dict:
+            return 0
+        else:
+            item = all_dict[name]
+            cnt = item['count']
+            for ex in item['keyword']['excluded']:
+                cnt += _get_count(ex)
+
+            all_counts[name] = cnt
+            return cnt
+
+    retval = {}
+    for item in names:
+        name = item['name']
+        count = _get_count(name)
+        kwinfo = item['keyword']
+
+        p_total = kwinfo['items']
+        p_polluted = kwinfo['polluted']
+        pollution_ratio = (p_polluted / p_total) if p_polluted else 0.0
+        pollition_words = [(word, int(pcnt / p_total * count))
+                           for word, pcnt in kwinfo['pollution'].items() if pcnt > 0]
+
+        retval[name] = (count, pollution_ratio, pollition_words)
+
+    return retval
 
 
 def get_pixiv_character_search_count(cls: Type[Character], session=None,

@@ -1,6 +1,6 @@
 import re
 import warnings
-from typing import Iterable, Iterator, Union, List, Tuple, Type, Mapping
+from typing import Iterable, Iterator, Union, List, Tuple, Type, Mapping, Optional
 
 from .games import _get_items_from_ch_type
 from .keyword import _load_pixiv_names_for_game
@@ -46,21 +46,44 @@ def _format_tags(positive, negative, or_clause=None):
 
 
 class PixivCharPool:
-    def __init__(self, chars: Iterable[Character], names_dict: Mapping[str, int]):
+    def __init__(self, chars: Iterable[Character], names_dict: Mapping[str, Tuple[int, float, List[Tuple[str, int]]]]):
         self.__chars = list(chars)
-        self.__names = {
-            name: count
-            for name, count in names_dict.items()
-            if count >= 0
-        }
+        self.__names_dict = names_dict
+
+    def __get_name_item(self, name) -> Optional[Tuple[int, float, List[Tuple[str, int]]]]:
+        return self.__names_dict.get(name, None)
+
+    def __get_name_count(self, name) -> int:
+        tpl = self.__get_name_item(name)
+        if tpl:
+            count, _, _ = tpl
+            return count
+        else:
+            return 0
+
+    def __get_name_pollution_ratio(self, name) -> float:
+        tpl = self.__get_name_item(name)
+        if tpl:
+            _, ratio, _ = tpl
+            return ratio
+        else:
+            return 0.0
+
+    def __get_name_pollution_words(self, name) -> List[Tuple[str, int]]:
+        tpl = self.__get_name_item(name)
+        if tpl:
+            _, _, pollution = tpl
+            return pollution
+        else:
+            return []
 
     def _iter_dup_names(self, name: str) -> Iterator[str]:
-        for sname in self.__names.keys():
+        for sname in self.__names_dict.keys():
             if name != sname and name in sname:
                 yield sname
 
     def get_tag(self, char: Character, use_english: bool = False, positive=None, negative=None,
-                max_exclude_per_word: int = 20, max_exclude: int = 20):
+                max_exclude_per_word: int = 20, max_exclude: int = 20, max_pollution_ratio: float = 0.65):
         if not isinstance(char, Character):
             raise TypeError(f'Invalid character type - {char!r}.')  # pragma: no cover
 
@@ -73,23 +96,42 @@ class PixivCharPool:
         or_clause = set()
 
         exclude_names = set()
+        exclude_name_pairs = []
+        min_pollution = 1.0
         for chname in char_names:
-            all_exnames = list(self._iter_dup_names(str(chname)))
-            if len(all_exnames) >= max_exclude_per_word:
-                continue
+            s_chname = str(chname)
+            name_pollution_ratio = self.__get_name_pollution_ratio(s_chname)
+            min_pollution = min(name_pollution_ratio, min_pollution)
+            if name_pollution_ratio <= max_pollution_ratio:
+                or_clause.add(s_chname)
 
-            or_clause.add(str(chname))
-            for exname in all_exnames:
-                if exname not in positive and exname not in or_clause:
-                    exclude_names.add(exname)
+                for pword, pcnt in self.__get_name_pollution_words(s_chname):
+                    if pword not in positive and pword not in or_clause and \
+                            pword != char and pword not in exclude_names:
+                        exclude_names.add(pword)
+                        exclude_name_pairs.append((pword, pcnt, 1))
 
-        for exname in sorted(exclude_names, key=lambda x: self.__names.get(x, 0), reverse=True)[:max_exclude]:
+                all_exnames = list(self._iter_dup_names(s_chname))
+                if len(all_exnames) >= max_exclude_per_word:
+                    continue
+
+                for exname in all_exnames:
+                    if exname not in positive and exname not in or_clause and \
+                            exname != char and exname not in exclude_names:
+                        exclude_names.add(exname)
+                        exclude_name_pairs.append((exname, self.__get_name_count(exname), 0))
+
+        for exname, _, _ in sorted(exclude_name_pairs, key=lambda x: (x[2], -x[1], x[0]))[:max_exclude]:
             negative.add(exname)
 
-        return _format_tags(positive, negative, or_clause)
+        if or_clause:
+            return _format_tags(positive, negative, or_clause)
+        else:
+            return self.get_tag(char, use_english, positive, negative,
+                                max_exclude_per_word, max_exclude, max_pollution_ratio=min_pollution + 0.015)
 
     def _iter_end_dup_names(self, name: str) -> Iterator[str]:
-        for sname in self.__names.keys():
+        for sname in self.__names_dict.keys():
             if name != sname and sname.endswith(name):
                 yield sname
 
@@ -107,7 +149,7 @@ class PixivCharPool:
                 for exname in self._iter_end_dup_names(str(jpname)):
                     exclude_names.add(exname)
 
-            for exname in sorted(exclude_names, key=lambda x: self.__names.get(x, 0), reverse=True)[:max_exclude]:
+            for exname in sorted(exclude_names, key=lambda x: self.__get_name_count(x), reverse=True)[:max_exclude]:
                 negative.add(exname)
 
         else:
