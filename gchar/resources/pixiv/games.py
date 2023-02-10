@@ -45,3 +45,7 @@ def _local_names_file(name: str) -> str:
 
 def _local_characters_file(name: str) -> str:
     return os.path.join(_GAMES_DIRECTORY, name, 'pixiv_characters.json')
+
+
+def _local_alias_file(name: str) -> str:
+    return os.path.join(_GAMES_DIRECTORY, name, 'pixiv_alias.yaml')

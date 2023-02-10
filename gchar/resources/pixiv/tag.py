@@ -3,7 +3,7 @@ import warnings
 from typing import Iterable, Iterator, Union, List, Tuple, Type, Mapping, Optional
 
 from .games import _get_items_from_ch_type
-from .keyword import _load_pixiv_names_for_game
+from .keyword import _load_pixiv_names_for_game, _load_pixiv_alias_for_game
 from ...games import get_character
 from ...games.base import Character
 from ...utils import optional_lru_cache
@@ -46,9 +46,12 @@ def _format_tags(positive, negative, or_clause=None):
 
 
 class PixivCharPool:
-    def __init__(self, chars: Iterable[Character], names_dict: Mapping[str, Tuple[int, float, List[Tuple[str, int]]]]):
+    def __init__(self, chars: Iterable[Character],
+                 names_dict: Mapping[str, Tuple[int, float, List[Tuple[str, int]]]],
+                 names_alias: Mapping[Union[str, int], List[str]]):
         self.__chars = list(chars)
         self.__names_dict = names_dict
+        self.__names_alias = names_alias
 
     def __get_name_item(self, name) -> Optional[Tuple[int, float, List[Tuple[str, int]]]]:
         return self.__names_dict.get(name, None)
@@ -90,6 +93,8 @@ class PixivCharPool:
         char_names = [*char.cnnames, *char.jpnames]
         if use_english:
             char_names.extend(char.ennames)
+        if char.index in self.__names_alias:
+            char_names.extend(self.__names_alias[char.index])
 
         positive = set(_yield_tags(positive or []))
         negative = set(_yield_tags(negative or [])) - positive
@@ -158,7 +163,8 @@ class PixivCharPool:
 @optional_lru_cache()
 def _get_char_pool(cls: Type[Character], **kwargs):
     names_dict = _load_pixiv_names_for_game(cls)
-    return PixivCharPool(cls.all(**kwargs), names_dict)
+    names_alias = _load_pixiv_alias_for_game(cls)
+    return PixivCharPool(cls.all(**kwargs), names_dict, names_alias)
 
 
 def get_pixiv_keywords(char, simple: bool = False, use_english: bool = True, includes=None, exclude=None,

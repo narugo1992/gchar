@@ -4,12 +4,18 @@ import re
 import time
 import warnings
 from functools import lru_cache
+from itertools import chain
 from typing import Type, List, Union, Dict, Tuple, Iterable, Optional
 from urllib.parse import quote
 
+try:
+    from yaml import CLoader as Loader, CDumper as Dumper
+except ImportError:
+    from yaml import Loader, Dumper
+import yaml
 from tqdm.auto import tqdm
 
-from .games import _get_items_from_ch_type, _local_names_file, _local_characters_file
+from .games import _get_items_from_ch_type, _local_names_file, _local_characters_file, _local_alias_file
 from .session import get_pixiv_session
 from ...games import get_character
 from ...games.base import Character
@@ -93,6 +99,28 @@ def _names_search_count(keywords: Iterable[str], session=None,
     return final_retval
 
 
+def _download_pixiv_alias_for_game(game: Union[Type[Character], str]):
+    (cls, game_name), base_tag, _ = _get_items_from_ch_type(game)
+    _alias_filename = _local_alias_file(game_name)
+    download_file(
+        f'https://huggingface.co/datasets/deepghs/game_characters/resolve/main/{game_name}/pixiv_alias.yaml',
+        _alias_filename,
+    )
+
+
+def _load_pixiv_alias_for_game(cls: Type[Character]) -> Dict[Union[int, str], List[str]]:
+    (_, game_name), _, _ = _get_items_from_ch_type(cls)
+    _alias_filename = _local_alias_file(game_name)
+    if not os.path.exists(_alias_filename):
+        _download_pixiv_alias_for_game(game_name)
+
+    with open(_alias_filename, 'r', encoding='utf-8') as f:
+        data = yaml.load(f, Loader)
+
+    alias = data['alias']
+    return {item['id']: item['alias'] for item in alias}
+
+
 def _get_pixiv_search_count_by_name(cls: Type[Character], session=None,
                                     interval: float = 0.2, sleep_every: int = 70, sleep_time: float = 20,
                                     ensure_times: int = 3, maxcnt: Optional[int] = None, **kwargs):
@@ -103,6 +131,10 @@ def _get_pixiv_search_count_by_name(cls: Type[Character], session=None,
     for ch in cls.all(contains_extra=True):
         for name in ch.names:
             _all_names_set.add(name)
+
+    _alias_data = _load_pixiv_alias_for_game(cls)
+    _all_names_set |= set(chain(*[alias_item['alias'] for alias_item in _alias_data['alias']]))
+
     all_names: List[str] = sorted(_all_names_set)
     if maxcnt is not None:
         all_names = all_names[-maxcnt:]

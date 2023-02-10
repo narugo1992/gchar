@@ -7,3 +7,4 @@ pyquery
 thefuzz
 editdistance
 requests
+pyyaml

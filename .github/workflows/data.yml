@@ -218,6 +218,12 @@ jobs:
         run: |
           python -m gchar.resources.pixiv characters -g ${{ matrix.game }} -o ${{ matrix.game }}/pixiv_characters.json
           cp ${{ matrix.game }}/pixiv_characters.json gchar/games/${{ matrix.game }}/pixiv_characters.json
+      - name: Try Add Pixiv Alias File
+        env:
+          CI: 'true'
+        shell: bash
+        run: |
+          if [ ! -f ${{ matrix.game }}/pixiv_alias.yaml ]; then echo "alias: []" > ${{ matrix.game }}/pixiv_alias.yaml; fi
       - name: Package The Data
         env:
           CI: 'true'
