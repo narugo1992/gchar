@@ -37,7 +37,10 @@ def cli():
               help='Ensure times at the end of crawler.', show_default=True)
 @click.option('--output', '-o', 'output', type=click.Path(dir_okay=False), default=None,
               help='Output path of names\' data file.', show_default=None)
-def names(game, output: Optional[str], interval: float, sleep_every: int, sleep_time: float, ensure_times: int):
+@click.option('--maxcnt', '-n', 'maxcnt', type=int, default=None,
+              help='Max count to crawler (only used for debugging and testing).', show_default=True)
+def names(game, output: Optional[str], interval: float, sleep_every: int, sleep_time: float,
+          ensure_times: int, maxcnt: Optional[int]):
     output = output or _local_names_file(game)
     session = get_pixiv_session()
     if not is_pixiv_session_okay(session):
@@ -48,6 +51,7 @@ def names(game, output: Optional[str], interval: float, sleep_every: int, sleep_
         game, session,
         interval=interval, sleep_every=sleep_every,
         sleep_time=sleep_time, ensure_times=ensure_times,
+        maxcnt=maxcnt,
     )
     output_dir = os.path.dirname(output)
     if output_dir:
@@ -75,7 +79,10 @@ def names(game, output: Optional[str], interval: float, sleep_every: int, sleep_
               help='Ensure times at the end of crawler.', show_default=True)
 @click.option('--output', '-o', 'output', type=click.Path(dir_okay=False), default=None,
               help='Output path of names\' data file.', show_default=None)
-def characters(game, output: Optional[str], interval: float, sleep_every: int, sleep_time: float, ensure_times: int):
+@click.option('--maxcnt', '-n', 'maxcnt', type=int, default=None,
+              help='Max count to crawler (only used for debugging and testing).', show_default=True)
+def characters(game, output: Optional[str], interval: float, sleep_every: int, sleep_time: float, ensure_times: int,
+               maxcnt: Optional[int]):
     output = output or _local_characters_file(game)
     session = get_pixiv_session()
     if not is_pixiv_session_okay(session):
@@ -86,6 +93,7 @@ def characters(game, output: Optional[str], interval: float, sleep_every: int, s
         game, session,
         interval=interval, sleep_every=sleep_every,
         sleep_time=sleep_time, ensure_times=ensure_times,
+        maxcnt=maxcnt,
     )
     output_dir = os.path.dirname(output)
     if output_dir:

@@ -95,7 +95,7 @@ def _names_search_count(keywords: Iterable[str], session=None,
 
 def _get_pixiv_search_count_by_name(cls: Type[Character], session=None,
                                     interval: float = 0.2, sleep_every: int = 70, sleep_time: float = 20,
-                                    ensure_times: int = 3, **kwargs):
+                                    ensure_times: int = 3, maxcnt: Optional[int] = None, **kwargs):
     (cls, _), base_tag, _ = _get_items_from_ch_type(cls)
     session = session or get_pixiv_session(**kwargs)
 
@@ -104,6 +104,8 @@ def _get_pixiv_search_count_by_name(cls: Type[Character], session=None,
         for name in ch.names:
             _all_names_set.add(name)
     all_names: List[str] = sorted(_all_names_set)
+    if maxcnt is not None:
+        all_names = all_names[-maxcnt:]
     all_keywords = []
     all_excluded = []
     for name in all_names:
@@ -234,7 +236,7 @@ def _load_pixiv_names_for_game(game: Union[Type[Character], str]) \
 
 def _get_pixiv_character_search_counts_by_game(cls: Type[Character], session=None,
                                                interval: float = 0.2, sleep_every: int = 70, sleep_time: float = 20,
-                                               ensure_times: int = 3, **kwargs):
+                                               ensure_times: int = 3, maxcnt: Optional[int] = None, **kwargs):
     (cls, _), base_tag, _ = _get_items_from_ch_type(cls)
     session = session or get_pixiv_session(**kwargs)
 
@@ -253,6 +255,9 @@ def _get_pixiv_character_search_counts_by_game(cls: Type[Character], session=Non
         all_characters.append(ch)
         all_keywords.append(get_pixiv_keywords(ch))
         all_unsafe_keywords.append(get_pixiv_keywords(ch, includes=['R-18']))
+
+        if maxcnt is not None and len(all_characters) >= maxcnt:
+            break
 
     _all = _names_search_count([*all_keywords, *all_unsafe_keywords], session,
                                interval, sleep_every, sleep_time, ensure_times, **kwargs)

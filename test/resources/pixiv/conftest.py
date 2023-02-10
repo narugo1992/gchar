@@ -1,6 +1,16 @@
+from unittest.mock import patch
+
 import pytest
 
 from gchar.games import get_character
+from ...testings import LocalTemporaryDirectory
+
+
+@pytest.fixture
+def no_tags_json():
+    with LocalTemporaryDirectory() as td:
+        with patch('gchar.resources.pixiv.games._GAMES_DIRECTORY', td):
+            yield td
 
 
 @pytest.fixture()
