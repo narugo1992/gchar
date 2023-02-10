@@ -20,6 +20,7 @@ class TestResourcesPixivMain:
 
     @skipUnless(os.environ.get(REMOTE_PIXIV_SESSION_URL, None), 'Pixiv token required.')
     @skipUnless(not OS.windows, 'Non-windows required.')
+    @pytest.mark.flaky(reruns=5, reruns_delay=10)
     @pytest.mark.parametrize(['game', 'min_cnt', 'max_cnt'], [
         ('arknights', 3, 5),
         ('fgo', 2, 5),
