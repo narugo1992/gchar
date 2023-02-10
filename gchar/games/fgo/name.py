@@ -10,7 +10,8 @@ from ..base import JapaneseName as _GenericJapaneseName
 class ChineseName(_GenericChineseName):
     @classmethod
     def _preprocess(cls, name: str) -> str:
-        return _GenericChineseName._preprocess(name).replace('・', '·')
+        return _GenericChineseName._preprocess(name).replace('・', '·').replace("\"", '') \
+            .replace("“", '').replace("”", '')
 
 
 class ChineseAliasName(_GenericChineseName):
@@ -20,7 +21,10 @@ class ChineseAliasName(_GenericChineseName):
 
 
 class JapaneseName(_GenericJapaneseName):
-    pass
+    @classmethod
+    def _preprocess(cls, name: str) -> str:
+        return _GenericJapaneseName._preprocess(name).replace("\"", '') \
+            .replace("“", '').replace("”", '')
 
 
 class EnglishName(_GenericEnglishName):
