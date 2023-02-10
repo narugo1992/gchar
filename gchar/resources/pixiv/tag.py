@@ -1,5 +1,6 @@
 import re
 import warnings
+from itertools import chain
 from typing import Iterable, Iterator, Union, List, Tuple, Type, Mapping, Optional
 
 from .games import _get_items_from_ch_type
@@ -52,6 +53,10 @@ class PixivCharPool:
         self.__chars = list(chars)
         self.__names_dict = names_dict
         self.__names_alias = names_alias
+        self.__all_names = sorted(
+            set(self.__names_dict.keys()) |
+            set(chain(*self.__names_alias.values()))
+        )
 
     def __get_name_item(self, name) -> Optional[Tuple[int, float, List[Tuple[str, int]]]]:
         return self.__names_dict.get(name, None)
@@ -81,7 +86,7 @@ class PixivCharPool:
             return []
 
     def _iter_dup_names(self, name: str) -> Iterator[str]:
-        for sname in self.__names_dict.keys():
+        for sname in self.__all_names:
             if name != sname and name in sname:
                 yield sname
 
@@ -133,7 +138,7 @@ class PixivCharPool:
                                 max_exclude_per_word, max_exclude, max_pollution_ratio=min_pollution + 0.015)
 
     def _iter_end_dup_names(self, name: str) -> Iterator[str]:
-        for sname in self.__names_dict.keys():
+        for sname in self.__all_names:
             if name != sname and sname.endswith(name):
                 yield sname
 

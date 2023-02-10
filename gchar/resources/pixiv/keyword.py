@@ -133,7 +133,7 @@ def _get_pixiv_search_count_by_name(cls: Type[Character], session=None,
             _all_names_set.add(name)
 
     _alias_data = _load_pixiv_alias_for_game(cls)
-    _all_names_set |= set(chain(*[alias_item['alias'] for alias_item in _alias_data['alias']]))
+    _all_names_set |= set(chain(*_alias_data.values()))
 
     all_names: List[str] = sorted(_all_names_set)
     if maxcnt is not None:
