@@ -7,7 +7,7 @@ from typing import Optional
 import click
 
 from .games import _GAMES, _local_names_file, _local_characters_file
-from .keyword import get_pixiv_name_search_count, get_pixiv_character_search_count
+from .keyword import _get_pixiv_search_count_by_name, _get_pixiv_character_search_counts_by_game
 from .session import is_pixiv_session_okay, get_pixiv_session
 from ...utils import GLOBAL_CONTEXT_SETTINGS
 from ...utils import print_version as _origin_print_version
@@ -44,7 +44,7 @@ def names(game, output: Optional[str], interval: float, sleep_every: int, sleep_
         raise ValueError('Pixiv session is down! Please use new cookies.')
     click.secho('Updating from pixiv.net web ajax ...', fg='yellow')
 
-    data = get_pixiv_name_search_count(
+    data = _get_pixiv_search_count_by_name(
         game, session,
         interval=interval, sleep_every=sleep_every,
         sleep_time=sleep_time, ensure_times=ensure_times,
@@ -82,7 +82,7 @@ def characters(game, output: Optional[str], interval: float, sleep_every: int, s
         raise ValueError('Pixiv session is down! Please use new cookies.')
     click.secho('Updating from pixiv.net web ajax ...', fg='yellow')
 
-    data = get_pixiv_character_search_count(
+    data = _get_pixiv_character_search_counts_by_game(
         game, session,
         interval=interval, sleep_every=sleep_every,
         sleep_time=sleep_time, ensure_times=ensure_times,

@@ -80,9 +80,9 @@ def _names_search_count(keywords: Iterable[str], session=None,
     return final_retval
 
 
-def get_pixiv_name_search_count(cls: Type[Character], session=None,
-                                interval: float = 0.2, sleep_every: int = 70, sleep_time: float = 20,
-                                ensure_times: int = 3, **kwargs):
+def _get_pixiv_search_count_by_name(cls: Type[Character], session=None,
+                                    interval: float = 0.2, sleep_every: int = 70, sleep_time: float = 20,
+                                    ensure_times: int = 3, **kwargs):
     (cls, _), base_tag, _ = _get_items_from_ch_type(cls)
     session = session or get_pixiv_session(**kwargs)
 
@@ -219,9 +219,9 @@ def _load_pixiv_names_for_game(game: Union[Type[Character], str]) \
     return retval
 
 
-def get_pixiv_character_search_count(cls: Type[Character], session=None,
-                                     interval: float = 0.2, sleep_every: int = 70, sleep_time: float = 20,
-                                     ensure_times: int = 3, **kwargs):
+def _get_pixiv_character_search_counts_by_game(cls: Type[Character], session=None,
+                                               interval: float = 0.2, sleep_every: int = 70, sleep_time: float = 20,
+                                               ensure_times: int = 3, **kwargs):
     (cls, _), base_tag, _ = _get_items_from_ch_type(cls)
     session = session or get_pixiv_session(**kwargs)
 

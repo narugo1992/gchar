@@ -77,12 +77,12 @@ jobs:
           tree .
           mkdir -p ${{ matrix.game }}
       - name: Clone from huggingface
-        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.skip_crawl }}
         shell: bash
         run: |
           git clone https://huggingface.co/datasets/deepghs/game_characters
           ls -al game_characters
           cp -rf game_characters/${{ matrix.game }}/* ${{ matrix.game }}
+          cp -rf game_characters/${{ matrix.game }}/* gchar/games/${{ matrix.game }}
       - name: Run Game Crawler
         if: ${{ github.event_name != 'workflow_dispatch' || !github.event.inputs.skip_crawl }}
         uses: nick-fields/retry@v2
