@@ -102,7 +102,8 @@ class PixivCharPool:
             s_chname = str(chname)
             name_pollution_ratio = self.__get_name_pollution_ratio(s_chname)
             min_pollution = min(name_pollution_ratio, min_pollution)
-            if name_pollution_ratio <= max_pollution_ratio:
+            all_exnames = list(self._iter_dup_names(s_chname))
+            if name_pollution_ratio <= max_pollution_ratio and len(all_exnames) <= max_exclude_per_word:
                 or_clause.add(s_chname)
 
                 for pword, pcnt in self.__get_name_pollution_words(s_chname):
@@ -110,10 +111,6 @@ class PixivCharPool:
                             pword != char and pword not in exclude_names:
                         exclude_names.add(pword)
                         exclude_name_pairs.append((pword, pcnt, 1))
-
-                all_exnames = list(self._iter_dup_names(s_chname))
-                if len(all_exnames) >= max_exclude_per_word:
-                    continue
 
                 for exname in all_exnames:
                     if exname not in positive and exname not in or_clause and \

@@ -2,6 +2,7 @@ import json
 import os.path
 import re
 import time
+import warnings
 from functools import lru_cache
 from typing import Type, List, Union, Dict, Tuple, Iterable, Optional
 from urllib.parse import quote
@@ -15,7 +16,7 @@ from ...games.base import Character
 from ...utils import download_file
 
 
-def get_pixiv_illustration_count_by_keyword(keyword, session=None, order='popular_d', **kwargs) \
+def _native_pixiv_illustration_info(keyword, session=None, order='popular_d', **kwargs) \
         -> Tuple[int, List[List[str]]]:
     session = session or get_pixiv_session(**kwargs)
     url = f'https://www.pixiv.net/ajax/search/artworks/{quote(keyword, safe="()")}?' \
@@ -34,6 +35,18 @@ def get_pixiv_illustration_count_by_keyword(keyword, session=None, order='popula
     return total_count, all_tags
 
 
+def get_pixiv_illustration_count_by_keyword(keyword, session=None, order='popular_d', **kwargs) -> int:
+    if isinstance(keyword, Character):
+        from .tag import get_pixiv_keywords
+        char = keyword
+        keyword = get_pixiv_keywords(keyword, **kwargs)
+        warnings.warn(UserWarning(f'Character {char!r} detected, '
+                                  f'auto-generated keyword {keyword!r} will be used.'), stacklevel=2)
+
+    retval, _ = _native_pixiv_illustration_info(keyword, session, order=order, **kwargs)
+    return retval
+
+
 def _names_search_count(keywords: Iterable[str], session=None,
                         interval: float = 0.2, sleep_every: int = 70, sleep_time: float = 20,
                         ensure_times: int = 3, **kwargs) -> List[Tuple[int, List[List[str]]]]:
@@ -50,7 +63,7 @@ def _names_search_count(keywords: Iterable[str], session=None,
         all_names_tqdm = tqdm(all_keywords)
         for i, (kid, keyword) in enumerate(all_names_tqdm):
             all_names_tqdm.set_description(f'R{round + 1}/{i + 1} - {keyword}')
-            count, all_tags = get_pixiv_illustration_count_by_keyword(keyword, session)
+            count, all_tags = _native_pixiv_illustration_info(keyword, session)
             if count:
                 records[kid] = (count, all_tags)
             else:
@@ -282,8 +295,8 @@ def _load_pixiv_characters_for_game(game: Union[Type[Character], str]) -> Dict[s
     return {item['index']: (item["illustrations"]["all"], item["illustrations"]["r18"]) for item in chs}
 
 
-def get_pixiv_illustration_count_by_character(char, allow_fuzzy: bool = True, fuzzy_threshold: int = 70,
-                                              **kwargs) -> Optional[Tuple[int, int]]:
+def query_pixiv_illustration_count_by_character(char, allow_fuzzy: bool = True, fuzzy_threshold: int = 70,
+                                                **kwargs) -> Optional[Tuple[int, int]]:
     original_char = char
     if not isinstance(char, Character):
         char = get_character(char, allow_fuzzy, fuzzy_threshold, **kwargs)

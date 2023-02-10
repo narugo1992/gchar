@@ -23,13 +23,13 @@ CHARS = [
 
 @optional_lru_cache()
 def _all_characters(**kwargs) -> List[Character]:
-    from ...resources.pixiv import get_pixiv_illustration_count_by_character
+    from ...resources.pixiv import query_pixiv_illustration_count_by_character
 
     chs: List[Tuple[Character, int, bool, int]] = []
     cnt = 0
     for _ch_set in CHARS:
         for ch in _ch_set.all(**kwargs):
-            counts = get_pixiv_illustration_count_by_character(ch)
+            counts = query_pixiv_illustration_count_by_character(ch)
             if counts:
                 all_count, _ = counts
             else:
