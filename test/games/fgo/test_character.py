@@ -15,7 +15,8 @@ class TestGamesFgoCharacter:
         assert fgo_mashu.rarity == 4
         assert fgo_mashu.clazz == 'shielder'
         assert fgo_mashu.gender == 'female'
-        assert repr(fgo_mashu) == '<Character 1 - 玛修·基列莱特/mash_kyrielight/マシュ・キリエライト, female, 4****>'
+        assert repr(fgo_mashu) == '<Character 1 - 玛修·基列莱特/mash_kyrielight/マシュ・キリエライト, female, ' \
+                                  '4****, class: Clazz.SHIELDER>'
         assert fgo_mashu != fgo_saber
 
         assert fgo_saber == 'saber'
@@ -33,19 +34,26 @@ class TestGamesFgoCharacter:
         assert fgo_saber.clazz == 'saber'
         assert not fgo_saber.is_extra
         assert repr(fgo_saber) == '<Character 2 - 阿尔托莉雅·潘德拉贡/altria_pendragon/' \
-                                  'アルトリア・ペンドラゴン, female, 5*****>'
+                                  'アルトリア・ペンドラゴン, female, 5*****, class: Clazz.SABER>'
         assert fgo_saber == fgo_saber
 
         assert fgo_shihuangdi == '始皇帝'
         assert fgo_shihuangdi.gender == Gender.OTHER
 
     def test_extra(self, fgo_saber, fgo_mashu, fgo_saber_l, fgo_saber_a, fgo_altria_caster,
-                   fgo_elf_gawain, fgo_elf_tristan, fgo_elf_lancelot):
+                   fgo_elf_gawain, fgo_elf_tristan, fgo_elf_lancelot,
+                   fgo_okita, fgo_okita_extra, fgo_tomoe, fgo_tomoe_extra):
         assert not fgo_saber.is_extra
         assert not fgo_mashu.is_extra
         assert fgo_saber_a.is_extra
         assert fgo_saber_l.is_extra
+
         assert not fgo_altria_caster.is_extra
         assert not fgo_elf_gawain.is_extra
         assert not fgo_elf_tristan.is_extra
         assert not fgo_elf_lancelot.is_extra
+
+        assert not fgo_okita.is_extra
+        assert fgo_okita_extra.is_extra
+        assert not fgo_tomoe.is_extra
+        assert fgo_tomoe_extra.is_extra

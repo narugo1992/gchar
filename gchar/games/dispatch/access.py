@@ -37,7 +37,7 @@ def _all_characters(**kwargs) -> List[Character]:
             chs.append((ch, all_count, ch.is_extra, cnt))
             cnt += 1
 
-    chs = sorted(chs, key=lambda x: (-x[1], 0 if not x[2] else 1, x[3]))
+    chs = sorted(chs, key=lambda x: (0 if not x[2] else 1, -x[1], x[3]))
     return [ch for ch, _, _, _ in chs]
 
 

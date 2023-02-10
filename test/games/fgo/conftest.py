@@ -70,3 +70,23 @@ def fgo_elf_lancelot():
 @pytest.fixture()
 def fgo_shihuangdi():
     return Character.get('始皇帝')
+
+
+@pytest.fixture()
+def fgo_okita():
+    return Character.get(68)
+
+
+@pytest.fixture()
+def fgo_okita_extra():
+    return Character.get(267)
+
+
+@pytest.fixture()
+def fgo_tomoe():
+    return Character.get(184)
+
+
+@pytest.fixture()
+def fgo_tomoe_extra():
+    return Character.get(290)

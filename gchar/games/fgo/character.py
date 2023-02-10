@@ -1,4 +1,5 @@
-from typing import List
+from functools import lru_cache
+from typing import List, Optional
 
 from .index import _refresh_index, get_index
 from .name import ChineseName, JapaneseName, EnglishName, ChineseAliasName
@@ -63,19 +64,31 @@ class Character(_BaseCharacter):
 
     def _is_extra(self) -> bool:
         for ch in self.__raw_data['similar']:
-            id_, name = ch['id'], ch['name']
-            if id_ < self.__raw_data['id'] and name == self.cnname:
+            id_ = ch['id']
+            the_ch = self._get_by_id(id_)
+            if id_ < self.__raw_data['id'] and the_ch is not None and \
+                    any([name == the_ch for name in self.names]):
                 return True
 
         return False
 
     def __repr__(self):
         return f'<{type(self).__name__} {self.index} - {"/".join(map(str, self._names()))}, ' \
-               f'{self.gender.name.lower()}, {self.rarity}{"*" * self.rarity}>'
+               f'{self.gender.name.lower()}, {self.rarity}{"*" * self.rarity}, class: {self.clazz}>'
 
     @property
     def skins(self) -> List[Skin]:
         return [Skin(item['name'], item['url']) for item in self.__raw_data['skins']]
+
+    @classmethod
+    @lru_cache()
+    def _make_index_by_id(cls):
+        all_chs = cls.all(contains_extra=True)
+        return {ch.index: ch for ch in all_chs}
+
+    @classmethod
+    def _get_by_id(cls, index: int) -> Optional['Character']:
+        return cls._make_index_by_id().get(index, None)
 
     @classmethod
     def refresh_index(cls, timeout: int = 5):
