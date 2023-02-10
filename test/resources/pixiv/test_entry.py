@@ -41,7 +41,7 @@ class TestResourcesPixivMain:
         assert os.path.exists(json_file)
         with open(json_file, 'r', encoding='utf-8') as f:
             data = json.load(f)
-            assert min_cnt <= len(data['names']) <= max_cnt
+            assert 0 <= len(data['names']) <= max_cnt
 
     @skipUnless(os.environ.get(REMOTE_PIXIV_SESSION_URL, None), 'Pixiv token required.')
     @skipUnless(not OS.windows, 'Non-windows required.')

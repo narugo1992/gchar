@@ -25,7 +25,7 @@ class TestResourcesPixivKeyword:
         with pytest.raises(ValueError):
             _ = query_pixiv_illustration_count_by_character('character_not_exist' * 20)
 
-    @pytest.mark.flaky(reruns=30, reruns_delay=10)
+    @pytest.mark.flaky(reruns=40, reruns_delay=15)
     @skipUnless(os.environ.get(REMOTE_PIXIV_SESSION_URL, None), 'Pixiv token required.')
     def test_get_by_keyword(self, ch_amiya, ch_slzd):
         with pytest.warns(UserWarning):
