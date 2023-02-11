@@ -8,8 +8,12 @@ on:
         description: 'Skip Crawl (Type Anything for Yes)'
         required: false
         default: ''
-      skip_pixiv:
-        description: 'Skip Pixiv (Type Anything for Yes)'
+      skip_pixiv_names:
+        description: 'Skip Pixiv Names (Type Anything for Yes)'
+        required: false
+        default: ''
+      skip_pixiv_characters:
+        description: 'Skip Pixiv Characters (Type Anything for Yes)'
         required: false
         default: ''
   schedule:
@@ -193,15 +197,15 @@ jobs:
           tree .
           mkdir -p ${{ matrix.game }}
       - name: Clone from huggingface
-        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.skip_pixiv }}
         shell: bash
         run: |
           git clone https://huggingface.co/datasets/deepghs/game_characters
           ls -al game_characters
+          cp -rf game_characters/${{ matrix.game }}/pixiv_alias.yaml ${{ matrix.game }}
           cp -rf game_characters/${{ matrix.game }}/pixiv_names.json ${{ matrix.game }}
           cp -rf game_characters/${{ matrix.game }}/pixiv_characters.json ${{ matrix.game }}
       - name: Run Pixiv Names Crawler
-        if: ${{ github.event_name != 'workflow_dispatch' || !github.event.inputs.skip_pixiv }}
+        if: ${{ github.event_name != 'workflow_dispatch' || !github.event.inputs.skip_pixiv_names }}
         env:
           CI: 'true'
           REMOTE_PIXIV_SESSION_URL: ${{ secrets.REMOTE_PIXIV_SESSION_URL }}
@@ -210,7 +214,7 @@ jobs:
           python -m gchar.resources.pixiv names -g ${{ matrix.game }} -o ${{ matrix.game }}/pixiv_names.json
           cp ${{ matrix.game }}/pixiv_names.json gchar/games/${{ matrix.game }}/pixiv_names.json
       - name: Run Pixiv Characters Crawler
-        if: ${{ github.event_name != 'workflow_dispatch' || !github.event.inputs.skip_pixiv }}
+        if: ${{ github.event_name != 'workflow_dispatch' || !github.event.inputs.skip_pixiv_characters }}
         env:
           CI: 'true'
           REMOTE_PIXIV_SESSION_URL: ${{ secrets.REMOTE_PIXIV_SESSION_URL }}
@@ -218,12 +222,6 @@ jobs:
         run: |
           python -m gchar.resources.pixiv characters -g ${{ matrix.game }} -o ${{ matrix.game }}/pixiv_characters.json
           cp ${{ matrix.game }}/pixiv_characters.json gchar/games/${{ matrix.game }}/pixiv_characters.json
-      - name: Try Add Pixiv Alias File
-        env:
-          CI: 'true'
-        shell: bash
-        run: |
-          if [ ! -f ${{ matrix.game }}/pixiv_alias.yaml ]; then echo "alias: []" > ${{ matrix.game }}/pixiv_alias.yaml; fi
       - name: Package The Data
         env:
           CI: 'true'
