@@ -6,15 +6,14 @@ from gchar.resources.pixiv import get_pixiv_keywords
 @pytest.mark.unittest
 class TestResourcesPixivTag:
     @pytest.mark.parametrize(['ch', 'keyword'], [
-        ('lin', 'アークナイツ (lin OR 林) -alina -angelina -anglelina -blindfolded '
-                '-dollsfrontline -elini -flint -folinic -frontline -girlsfrontline '
-                '-kalina -lineスタンプ -line風 -ling -violin -守林人 -密林の長 -巡林者 -杜林 -林檎'),
+        ('lin', 'アークナイツ (lin OR 林) -angelina -dollsfrontline -flint -folinic -frontline -girlsfrontline '
+                '-kalina -lineスタンプ -line風 -ling -violin -华法林 -守林人 '
+                '-密林の長 -巡林者 -杜林 -林檎 -树林 -森林 -雨林'),
         ('ling', 'アークナイツ (ling OR リィン OR 令) -lingerie -pearling -smiling -tickling '
                  '-wrestling -xiangling -博令 -生類憐れみの令'),
         ('blazer', 'アークナイツ (blaze OR ブレイズ OR 煌) -博煌 -煌喉'),
-        ('w', 'w アークナイツ -beeswax -bsw -firewatch -firewhistle -flowey -goldenglow -schwarz '
-              '-shaw -snowsant -steward -swimsuit -swire -waai_fu -warfarin -weedy -whislash -whisperain '
-              '-wild_mane -windflit -wolfgirl'),
+        ('w', 'w アークナイツ -beeswax -bsw -firewatch -firewhistle -flowey -goldenglow -schwarz -shaw -snowsant '
+              '-steward -swimsuit -swire -waai_fu -warfarin -weedy -whislash -whisperain -wild_mane -windflit -wフェラ'),
         ('シー', 'アークナイツ (dusk OR シー OR 夕) -ケルシー -シージ -シースルー -シートベルト -シーン '
                '-セクシー -センターシーム -ドロシー -七夕 -博夕 -夕暮れ -明日方舟夕'),
         ('多萝西', 'アークナイツ (dorothy OR 多萝西)'),
@@ -36,9 +35,9 @@ class TestResourcesPixivTag:
             assert get_pixiv_keywords(ch, ) == keyword
 
     @pytest.mark.parametrize(['ch', 'keyword', 'warn'], [
-        ('lin', 'アークナイツ (lin OR 林) -alina -angelina -anglelina -blindfolded '
-                '-dollsfrontline -elini -flint -folinic -frontline -girlsfrontline '
-                '-kalina -lineスタンプ -line風 -ling -violin -守林人 -密林の長 -巡林者 -杜林 -林檎', True),
+        ('lin', 'アークナイツ (lin OR 林) -angelina -dollsfrontline -flint -folinic -frontline -girlsfrontline '
+                '-kalina -lineスタンプ -line風 -ling -violin -华法林 -守林人 '
+                '-密林の長 -巡林者 -杜林 -林檎 -树林 -森林 -雨林', True),
         ('ling', 'リィン(アークナイツ)', False),
         ('dusk', 'シー(アークナイツ) -ケルシー', False),
         ('CEO', 'エルドラドのバーサーカー(Fate) ペンテシレイア(Fate)', False),
