@@ -91,7 +91,8 @@ class PixivCharPool:
                 yield sname
 
     def get_tag(self, char: Character, use_english: bool = False, positive=None, negative=None,
-                max_exclude_per_word: int = 20, max_exclude: int = 20, max_pollution_ratio: float = 0.8):
+                max_exclude_per_word: int = 20, max_exclude: int = 20, max_pollution_ratio: float = 0.8,
+                max_length: int = 256):
         if not isinstance(char, Character):
             raise TypeError(f'Invalid character type - {char!r}.')  # pragma: no cover
 
@@ -101,6 +102,8 @@ class PixivCharPool:
         if char.index in self.__names_alias:
             char_names.extend(self.__names_alias[char.index])
 
+        origin_positive = positive
+        origin_negative = negative
         positive = set(_yield_tags(positive or []))
         negative = set(_yield_tags(negative or [])) - positive
         or_clause = set()
@@ -128,13 +131,21 @@ class PixivCharPool:
                         exclude_names.add(exname)
                         exclude_name_pairs.append((exname, self.__get_name_count(exname), 0))
 
-        for exname, _, _ in sorted(exclude_name_pairs, key=lambda x: (x[2], -x[1], x[0]))[:max_exclude]:
-            negative.add(exname)
-
         if or_clause:
-            return _format_tags(positive, negative, or_clause)
+            exclude_name_pairs = sorted(exclude_name_pairs, key=lambda x: (x[2], -x[1], len(x[0]), x[0]))[:max_exclude]
+
+            while True:
+                current_negative = set(negative)
+                for exname, _, _ in exclude_name_pairs:
+                    current_negative.add(exname)
+
+                ret_keyword = _format_tags(positive, current_negative, or_clause)
+                if len(ret_keyword) > max_length:
+                    exclude_name_pairs = exclude_name_pairs[:-1]
+                else:
+                    return ret_keyword
         else:
-            return self.get_tag(char, use_english, positive, negative,
+            return self.get_tag(char, use_english, origin_positive, origin_negative,
                                 max_exclude_per_word, max_exclude, max_pollution_ratio=min_pollution + 0.015)
 
     def _iter_end_dup_names(self, name: str) -> Iterator[str]:
@@ -174,12 +185,15 @@ def _get_char_pool(cls: Type[Character], **kwargs):
 
 def get_pixiv_keywords(char, simple: bool = False, use_english: bool = True, includes=None, exclude=None,
                        allow_fuzzy: bool = True, fuzzy_threshold: int = 70, max_exclude: int = 20,
-                       max_pollution_ratio: float = 0.8, **kwargs):
+                       max_pollution_ratio: float = 0.8, max_length: int = 256, **kwargs):
     original_char = char
     if not isinstance(char, Character):
         char = get_character(char, allow_fuzzy, fuzzy_threshold, **kwargs)
     if not char:
         raise ValueError(f'Unknown character - {original_char!r}.')
+    if max_length > 256:
+        warnings.warn(UserWarning(f'The maximum length pixiv supports is 256, but {max_length!r} is given. '
+                                  f'This may result in no search results.'), stacklevel=2)
 
     pool = _get_char_pool(type(char), **kwargs)
     _, game_tag, base_tag = _get_items_from_ch_type(type(char))
@@ -191,4 +205,4 @@ def get_pixiv_keywords(char, simple: bool = False, use_english: bool = True, inc
         warnings.warn(UserWarning(f'No japanese name for {char!r}, falling back to full tag.'), stacklevel=2)
 
     return pool.get_tag(char, use_english, positive=[includes, game_tag], negative=exclude,
-                        max_exclude=max_exclude, max_pollution_ratio=max_pollution_ratio)
+                        max_exclude=max_exclude, max_pollution_ratio=max_pollution_ratio, max_length=max_length)
