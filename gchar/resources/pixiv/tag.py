@@ -46,6 +46,9 @@ def _format_tags(positive, negative, or_clause=None):
     return ' '.join(all_phrases)
 
 
+PIXIV_TAG_MAX_LENGTH = 256
+
+
 class PixivCharPool:
     def __init__(self, chars: Iterable[Character],
                  names_dict: Mapping[str, Tuple[int, float, List[Tuple[str, int]]]],
@@ -92,7 +95,7 @@ class PixivCharPool:
 
     def get_tag(self, char: Character, use_english: bool = False, positive=None, negative=None,
                 max_exclude_per_word: int = 20, max_exclude: int = 20, max_pollution_ratio: float = 0.8,
-                max_length: int = 256):
+                max_length: int = PIXIV_TAG_MAX_LENGTH):
         if not isinstance(char, Character):
             raise TypeError(f'Invalid character type - {char!r}.')  # pragma: no cover
 
@@ -185,14 +188,15 @@ def _get_char_pool(cls: Type[Character], **kwargs):
 
 def get_pixiv_keywords(char, simple: bool = False, use_english: bool = True, includes=None, exclude=None,
                        allow_fuzzy: bool = True, fuzzy_threshold: int = 70, max_exclude: int = 20,
-                       max_pollution_ratio: float = 0.8, max_length: int = 256, **kwargs):
+                       max_pollution_ratio: float = 0.8, max_length: int = PIXIV_TAG_MAX_LENGTH, **kwargs):
     original_char = char
     if not isinstance(char, Character):
         char = get_character(char, allow_fuzzy, fuzzy_threshold, **kwargs)
     if not char:
         raise ValueError(f'Unknown character - {original_char!r}.')
-    if max_length > 256:
-        warnings.warn(UserWarning(f'The maximum length pixiv supports is 256, but {max_length!r} is given. '
+    if max_length > PIXIV_TAG_MAX_LENGTH:
+        warnings.warn(UserWarning(f'The maximum length pixiv supports is {PIXIV_TAG_MAX_LENGTH}, '
+                                  f'but {max_length!r} is given. '
                                   f'This may result in no search results.'), stacklevel=2)
 
     pool = _get_char_pool(type(char), **kwargs)
