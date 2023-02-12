@@ -63,6 +63,10 @@ class Character(_BaseCharacter):
                 suffixes = re.findall(r'\b\w+\b', matching.group('suffix'))
                 external_names.append('・'.join([matching.group('name'), *suffixes]))
 
+                name_segments = re.findall(r'\b\w+\b', matching.group('name'))
+                if len(name_segments) > 1:
+                    external_names.append('・'.join([name_segments[0], *suffixes]))
+
         original_jpnames.extend(external_names)
         return original_jpnames
 
