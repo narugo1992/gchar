@@ -8,7 +8,7 @@ class TestGamesGirlsfrontlineCharacter:
     def test_basic(self, gfl_grizzly: Character, gfl_a416: Character, gfl_bronya: Character):
         assert gfl_grizzly == 96
         assert gfl_grizzly == "灰熊MKV"
-        assert gfl_grizzly.cnname == "灰熊MKV"
+        assert gfl_grizzly.cnname == "灰熊MKⅤ"
         assert gfl_grizzly == "Grizzly"
         assert gfl_grizzly.enname == "Grizzly"
         assert gfl_grizzly == "グリズリー"
@@ -16,7 +16,7 @@ class TestGamesGirlsfrontlineCharacter:
         assert gfl_grizzly.gender == 'female'
         assert gfl_grizzly.rarity == 5
         assert gfl_grizzly.clazz == 'HG'
-        assert repr(gfl_grizzly) == '<Character 96 - 灰熊MKV/grizzly/グリズリー, 5*****, clazz: Clazz.HG>'
+        assert repr(gfl_grizzly) == '<Character 96 - 灰熊MkⅤ/灰熊MKV/grizzly/グリズリー, 5*****, clazz: Clazz.HG>'
 
         assert gfl_a416 == 1029
         assert gfl_a416 == "特工416"
@@ -32,10 +32,12 @@ class TestGamesGirlsfrontlineCharacter:
 
         assert gfl_bronya == 1005
         assert gfl_bronya == "布洛妮娅·扎伊切克"
-        assert gfl_bronya.cnname == "布洛妮娅·扎伊切克"
+        assert gfl_bronya == "布洛妮娅扎伊切克"
+        assert gfl_bronya == '布洛妮娅'
+        assert gfl_bronya.cnname == "布洛妮娅"
         assert gfl_bronya.enname is None
         assert gfl_bronya.jpname is None
         assert gfl_bronya.gender == 'female'
         assert gfl_bronya.rarity == 'extra'
         assert gfl_bronya.clazz == 'rf'
-        assert repr(gfl_bronya) == '<Character 1005 - 布洛妮娅·扎伊切克, EXTRA, clazz: Clazz.RF>'
+        assert repr(gfl_bronya) == '<Character 1005 - 布洛妮娅/布洛妮娅·扎伊切克, EXTRA, clazz: Clazz.RF>'

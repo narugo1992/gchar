@@ -53,6 +53,13 @@ class TextName(_BaseName):
     def _preprocess(cls, name: str) -> str:
         return name.lower().strip()
 
+    @classmethod
+    def _eqprocess(cls, name: str) -> str:
+        return name
+
+    def _key(self):
+        return self._eqprocess(_BaseName._key(self))
+
 
 class SegmentName(_BaseName):
     __seperator__ = '_'

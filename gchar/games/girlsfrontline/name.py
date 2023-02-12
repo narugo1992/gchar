@@ -6,17 +6,38 @@ from ..base import ChineseName as _GenericChineseName
 from ..base import EnglishName as _GenericEnglishName
 from ..base import JapaneseName as _GenericJapaneseName
 
+WORD_PATTERN = re.compile('\\b\\w+\\b')
+
+
+def _text_only(text: str, split: bool = False):
+    return ('_' if split else '').join(WORD_PATTERN.findall(text))
+
 
 class ChineseName(_GenericChineseName):
     @classmethod
     def _preprocess(cls, name: str) -> str:
         return re.sub(r'\s+', '', name.strip())
 
+    def _eqprocess(cls, name: str) -> str:
+        return _text_only(name).lower()
+
+
+class ChineseAliasName(_GenericChineseName):
+    @classmethod
+    def _preprocess(cls, name: str) -> str:
+        return re.sub(r'\s+', '', name.strip())
+
+    def _eqprocess(cls, name: str) -> str:
+        return _text_only(name).lower()
+
 
 class JapaneseName(_GenericJapaneseName):
     @classmethod
     def _preprocess(cls, name: str) -> str:
         return re.sub(r'\s+', '', name.strip())
+
+    def _eqprocess(cls, name: str) -> str:
+        return _text_only(name).lower()
 
 
 class EnglishName(_GenericEnglishName):

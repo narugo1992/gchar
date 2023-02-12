@@ -1,7 +1,7 @@
 from typing import List
 
 from .index import _refresh_index, get_index
-from .name import EnglishName, JapaneseName, ChineseName
+from .name import EnglishName, JapaneseName, ChineseName, ChineseAliasName
 from .property import Rarity, Clazz
 from ..base import Character as _BaseCharacter
 from ..base import Skin
@@ -12,6 +12,7 @@ class Character(_BaseCharacter):
     __enname_class__ = EnglishName
     __cnname_class__ = ChineseName
     __jpname_class__ = JapaneseName
+    __alias_name_class__ = ChineseAliasName
     __index_func__ = optional_lru_cache()(get_index)
 
     def __init__(self, raw_data: dict):
@@ -23,11 +24,17 @@ class Character(_BaseCharacter):
     def _cnname(self):
         return self.__raw_data['cnname']
 
+    def _cnnames(self):
+        return self.__raw_data['cnnames']
+
     def _enname(self):
         return self.__raw_data['enname']
 
     def _jpname(self):
         return self.__raw_data['jpname']
+
+    def _alias_names(self):
+        return self.__raw_data['alias']
 
     def _gender(self):
         return 'female'
