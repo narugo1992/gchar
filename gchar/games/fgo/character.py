@@ -1,3 +1,4 @@
+import re
 from functools import lru_cache
 from typing import List, Optional
 
@@ -39,7 +40,10 @@ class Character(_BaseCharacter):
 
     @property
     def clazz(self) -> Clazz:
-        return Clazz.loads(self.__raw_data['class'])
+        try:
+            return Clazz.loads(self.__raw_data['class'])
+        except (KeyError, TypeError, ValueError):
+            return self.__raw_data['class']
 
     def _cnname(self):
         return self._cnnames()[0]
@@ -51,7 +55,16 @@ class Character(_BaseCharacter):
         return self._jpnames()[0]
 
     def _jpnames(self):
-        return self.__raw_data['jpnames']
+        original_jpnames = list(self.__raw_data['jpnames'])
+        external_names = []
+        for name in original_jpnames:
+            matching = re.fullmatch(r'^(?P<name>[\s\S]+?)〔(?P<suffix>[\s\S]+?)〕$', name)
+            if matching:
+                suffixes = re.findall(r'\b\w+\b', matching.group('suffix'))
+                external_names.append('・'.join([matching.group('name'), *suffixes]))
+
+        original_jpnames.extend(external_names)
+        return original_jpnames
 
     def _enname(self):
         return self._ennames()[0]
