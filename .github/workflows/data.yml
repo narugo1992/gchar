@@ -77,7 +77,7 @@ jobs:
           pip install -r requirements.txt
           pip install -r requirements-test.txt
           pip install -r requirements-crawl.txt
-      - name: Check if is scheduled when not workflow dispatched
+      - name: Check if is scheduled when workflow dispatched
         if: ${{ github.event_name != 'workflow_dispatch' }}
         shell: bash
         run: |
@@ -197,7 +197,7 @@ jobs:
           pip install -r requirements.txt
           pip install -r requirements-test.txt
           pip install -r requirements-crawl.txt
-      - name: Check if is scheduled when not workflow dispatched
+      - name: Check if is scheduled when workflow dispatched
         if: ${{ github.event_name != 'workflow_dispatch' }}
         shell: bash
         run: |
@@ -316,7 +316,7 @@ jobs:
           pip install -r requirements.txt
           pip install -r requirements-test.txt
           pip install -r requirements-crawl.txt
-      - name: Check if is scheduled when not workflow dispatched
+      - name: Check if is scheduled when workflow dispatched
         if: ${{ github.event_name != 'workflow_dispatch' }}
         shell: bash
         run: |

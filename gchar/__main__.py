@@ -65,7 +65,7 @@ def schedule(game: str):
 @click.option('--string', '-s', 'string', type=str, required=True)
 def scheck(game: str, string: str):
     selected = set(map(str.lower, re.findall(r'\b\w+\b', string)))
-    if game.lower().split() in selected:
+    if game.lower().strip() in selected:
         click.echo('yes')
     else:
         click.echo('no')
