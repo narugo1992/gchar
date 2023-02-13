@@ -27,10 +27,10 @@ jobs:
       fail-fast: false
       matrix:
         game:
-          - 'arknights'
-          - 'fgo'
-          - 'azurlane'
-          - 'girlsfrontline'
+#          - 'arknights'
+#          - 'fgo'
+#          - 'azurlane'
+#          - 'girlsfrontline'
           - 'genshin'
         os:
           - 'ubuntu-latest'
@@ -131,10 +131,10 @@ jobs:
       max-parallel: 1
       matrix:
         game:
-          - 'arknights'
-          - 'fgo'
-          - 'azurlane'
-          - 'girlsfrontline'
+#          - 'arknights'
+#          - 'fgo'
+#          - 'azurlane'
+#          - 'girlsfrontline'
           - 'genshin'
         os:
           - 'ubuntu-latest'
@@ -185,6 +185,10 @@ jobs:
         run: |
           ls -al ${{ matrix.game }}.zip
           unzip -o ${{ matrix.game }}.zip
+          git clone https://huggingface.co/datasets/deepghs/game_characters
+          ls -al game_characters
+          cp -rf game_characters/${{ matrix.game }}/pixiv_alias.yaml ${{ matrix.game }}
+          cp -rf game_characters/${{ matrix.game }}/pixiv_names.json ${{ matrix.game }}
           tree ${{ matrix.game }}
           cp ${{ matrix.game }}/* gchar/games/${{ matrix.game }}
           ls -al gchar/games/${{ matrix.game }}
@@ -195,15 +199,6 @@ jobs:
           pip --version
           pip list
           tree .
-          mkdir -p ${{ matrix.game }}
-      - name: Clone from huggingface
-        shell: bash
-        run: |
-          git clone https://huggingface.co/datasets/deepghs/game_characters
-          ls -al game_characters
-          cp -rf game_characters/${{ matrix.game }}/pixiv_alias.yaml ${{ matrix.game }}
-          cp -rf game_characters/${{ matrix.game }}/pixiv_names.json ${{ matrix.game }}
-          cp -rf game_characters/${{ matrix.game }}/pixiv_characters.json ${{ matrix.game }}
       - name: Run Pixiv Names Crawler
         if: ${{ github.event_name != 'workflow_dispatch' || !github.event.inputs.skip_pixiv_names }}
         env:
@@ -211,8 +206,101 @@ jobs:
           REMOTE_PIXIV_SESSION_URL: ${{ secrets.REMOTE_PIXIV_SESSION_URL }}
         shell: bash
         run: |
-          python -m gchar.resources.pixiv names -g ${{ matrix.game }} -o ${{ matrix.game }}/pixiv_names.json
+          python -m gchar.resources.pixiv names \
+            -g ${{ matrix.game }} \
+            -o ${{ matrix.game }}/pixiv_names.json \
+            --interval 3 --sleep_time 35
           cp ${{ matrix.game }}/pixiv_names.json gchar/games/${{ matrix.game }}/pixiv_names.json
+      - name: Package The Data
+        env:
+          CI: 'true'
+        shell: bash
+        run: |
+          zip -r ${{ matrix.game }}.zip ${{ matrix.game }}
+      - name: Upload the character databases
+        uses: actions/upload-artifact@v3
+        with:
+          name: character-database
+          path: ${{ matrix.game }}.zip
+
+  chars_crawl:
+    name: Chars Crawl
+    runs-on: ${{ matrix.os }}
+    needs:
+      - data_crawl
+      - names_crawl
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        game:
+#          - 'arknights'
+#          - 'fgo'
+#          - 'azurlane'
+#          - 'girlsfrontline'
+          - 'genshin'
+        os:
+          - 'ubuntu-latest'
+        python-version:
+          - '3.8'
+
+    steps:
+      - name: Get system version for Linux
+        if: ${{ contains(matrix.os, 'ubuntu') }}
+        shell: bash
+        run: |
+          echo "OS_NAME=Linux" >> $GITHUB_ENV
+          echo "IS_WIN=" >> $GITHUB_ENV
+          echo "IS_MAC=" >> $GITHUB_ENV
+      - name: Set environment for Cpython
+        if: ${{ !contains(matrix.python-version, 'pypy') }}
+        shell: bash
+        run: |
+          echo "IS_PYPY=" >> $GITHUB_ENV
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 20
+          submodules: 'recursive'
+      - name: Set up system dependences on Linux
+        if: ${{ env.OS_NAME == 'Linux' }}
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y tree cloc wget curl make zip
+      - name: Set up python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          pip install --upgrade flake8 setuptools wheel twine
+          pip install -r requirements.txt
+          pip install -r requirements-test.txt
+      - name: Download from artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: character-database
+      - name: Load Index file from upstream
+        shell: bash
+        run: |
+          ls -al ${{ matrix.game }}.zip
+          unzip -o ${{ matrix.game }}.zip
+          git clone https://huggingface.co/datasets/deepghs/game_characters
+          ls -al game_characters
+          cp -rf game_characters/${{ matrix.game }}/pixiv_characters.json ${{ matrix.game }}
+          tree ${{ matrix.game }}
+          cp ${{ matrix.game }}/* gchar/games/${{ matrix.game }}
+          ls -al gchar/games/${{ matrix.game }}
+      - name: Test the basic environment
+        shell: bash
+        run: |
+          python -V
+          pip --version
+          pip list
+          tree .
       - name: Run Pixiv Characters Crawler
         if: ${{ github.event_name != 'workflow_dispatch' || !github.event.inputs.skip_pixiv_characters }}
         env:
@@ -220,7 +308,10 @@ jobs:
           REMOTE_PIXIV_SESSION_URL: ${{ secrets.REMOTE_PIXIV_SESSION_URL }}
         shell: bash
         run: |
-          python -m gchar.resources.pixiv characters -g ${{ matrix.game }} -o ${{ matrix.game }}/pixiv_characters.json
+          python -m gchar.resources.pixiv characters \
+            -g ${{ matrix.game }} \
+            -o ${{ matrix.game }}/pixiv_characters.json \
+            --interval 3 --sleep_time 35
           cp ${{ matrix.game }}/pixiv_characters.json gchar/games/${{ matrix.game }}/pixiv_characters.json
       - name: Package The Data
         env:
@@ -240,6 +331,7 @@ jobs:
     needs:
       - data_crawl
       - names_crawl
+      - chars_crawl
     strategy:
       fail-fast: false
       matrix:
