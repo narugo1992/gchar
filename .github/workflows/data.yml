@@ -27,10 +27,10 @@ jobs:
       fail-fast: false
       matrix:
         game:
-#          - 'arknights'
-#          - 'fgo'
-#          - 'azurlane'
-#          - 'girlsfrontline'
+          #          - 'arknights'
+          #          - 'fgo'
+          #          - 'azurlane'
+          #          - 'girlsfrontline'
           - 'genshin'
         os:
           - 'ubuntu-latest'
@@ -72,6 +72,7 @@ jobs:
           pip install --upgrade flake8 setuptools wheel twine
           pip install -r requirements.txt
           pip install -r requirements-test.txt
+          pip install -r requirements-crawl.txt
       - name: Test the basic environment
         shell: bash
         run: |
@@ -131,10 +132,10 @@ jobs:
       max-parallel: 1
       matrix:
         game:
-#          - 'arknights'
-#          - 'fgo'
-#          - 'azurlane'
-#          - 'girlsfrontline'
+          #          - 'arknights'
+          #          - 'fgo'
+          #          - 'azurlane'
+          #          - 'girlsfrontline'
           - 'genshin'
         os:
           - 'ubuntu-latest'
@@ -176,6 +177,7 @@ jobs:
           pip install --upgrade flake8 setuptools wheel twine
           pip install -r requirements.txt
           pip install -r requirements-test.txt
+          pip install -r requirements-crawl.txt
       - name: Download from artifact
         uses: actions/download-artifact@v3
         with:
@@ -209,7 +211,7 @@ jobs:
           python -m gchar.resources.pixiv names \
             -g ${{ matrix.game }} \
             -o ${{ matrix.game }}/pixiv_names.json \
-            --interval 3 --sleep_time 35
+            --interval 3 --min_interval 1.5 --sleep_time 35
           cp ${{ matrix.game }}/pixiv_names.json gchar/games/${{ matrix.game }}/pixiv_names.json
       - name: Package The Data
         env:
@@ -234,10 +236,10 @@ jobs:
       max-parallel: 1
       matrix:
         game:
-#          - 'arknights'
-#          - 'fgo'
-#          - 'azurlane'
-#          - 'girlsfrontline'
+          #          - 'arknights'
+          #          - 'fgo'
+          #          - 'azurlane'
+          #          - 'girlsfrontline'
           - 'genshin'
         os:
           - 'ubuntu-latest'
@@ -279,6 +281,7 @@ jobs:
           pip install --upgrade flake8 setuptools wheel twine
           pip install -r requirements.txt
           pip install -r requirements-test.txt
+          pip install -r requirements-crawl.txt
       - name: Download from artifact
         uses: actions/download-artifact@v3
         with:
@@ -311,7 +314,7 @@ jobs:
           python -m gchar.resources.pixiv characters \
             -g ${{ matrix.game }} \
             -o ${{ matrix.game }}/pixiv_characters.json \
-            --interval 3 --sleep_time 35
+            --interval 3 --min_interval 1.5 --sleep_time 35
           cp ${{ matrix.game }}/pixiv_characters.json gchar/games/${{ matrix.game }}/pixiv_characters.json
       - name: Package The Data
         env:

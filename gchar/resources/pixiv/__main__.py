@@ -29,6 +29,8 @@ def cli():
               help='Game to crawl pixiv names.')
 @click.option('--interval', 'interval', type=float, default=0.2,
               help='Sleep time after every name.', show_default=True)
+@click.option('--min_interval', 'min_interval', type=float, default=0.2,
+              help='Min sleep time after every name.', show_default=True)
 @click.option('--sleep_every', 'sleep_every', type=int, default=70,
               help='Sleep after some number of names.', show_default=True)
 @click.option('--sleep_time', 'sleep_time', type=float, default=30.0,
@@ -39,8 +41,8 @@ def cli():
               help='Output path of names\' data file.', show_default=None)
 @click.option('--maxcnt', '-n', 'maxcnt', type=int, default=None,
               help='Max count to crawler (only used for debugging and testing).', show_default=True)
-def names(game, output: Optional[str], interval: float, sleep_every: int, sleep_time: float,
-          ensure_times: int, maxcnt: Optional[int]):
+def names(game, output: Optional[str], interval: float, min_interval: float,
+          sleep_every: int, sleep_time: float, ensure_times: int, maxcnt: Optional[int]):
     output = output or _local_names_file(game)
     session = get_pixiv_session()
     if not is_pixiv_session_okay(session):
@@ -49,9 +51,9 @@ def names(game, output: Optional[str], interval: float, sleep_every: int, sleep_
 
     data = _get_pixiv_search_count_by_name(
         game, session,
-        interval=interval, sleep_every=sleep_every,
-        sleep_time=sleep_time, ensure_times=ensure_times,
-        maxcnt=maxcnt,
+        interval=interval, min_interval=min_interval,
+        sleep_every=sleep_every, sleep_time=sleep_time,
+        ensure_times=ensure_times, maxcnt=maxcnt,
     )
     output_dir = os.path.dirname(output)
     if output_dir:
@@ -71,6 +73,8 @@ def names(game, output: Optional[str], interval: float, sleep_every: int, sleep_
               help='Game to crawl pixiv names.')
 @click.option('--interval', 'interval', type=float, default=0.2,
               help='Sleep time after every name.', show_default=True)
+@click.option('--min_interval', 'min_interval', type=float, default=0.2,
+              help='Min sleep time after every name.', show_default=True)
 @click.option('--sleep_every', 'sleep_every', type=int, default=70,
               help='Sleep after some number of names.', show_default=True)
 @click.option('--sleep_time', 'sleep_time', type=float, default=30.0,
@@ -81,8 +85,8 @@ def names(game, output: Optional[str], interval: float, sleep_every: int, sleep_
               help='Output path of names\' data file.', show_default=None)
 @click.option('--maxcnt', '-n', 'maxcnt', type=int, default=None,
               help='Max count to crawler (only used for debugging and testing).', show_default=True)
-def characters(game, output: Optional[str], interval: float, sleep_every: int, sleep_time: float, ensure_times: int,
-               maxcnt: Optional[int]):
+def characters(game, output: Optional[str], interval: float, min_interval: float,
+               sleep_every: int, sleep_time: float, ensure_times: int, maxcnt: Optional[int]):
     output = output or _local_characters_file(game)
     session = get_pixiv_session()
     if not is_pixiv_session_okay(session):
@@ -91,9 +95,9 @@ def characters(game, output: Optional[str], interval: float, sleep_every: int, s
 
     data = _get_pixiv_character_search_counts_by_game(
         game, session,
-        interval=interval, sleep_every=sleep_every,
-        sleep_time=sleep_time, ensure_times=ensure_times,
-        maxcnt=maxcnt,
+        interval=interval, min_interval=min_interval,
+        sleep_every=sleep_every, sleep_time=sleep_time,
+        ensure_times=ensure_times, maxcnt=maxcnt,
     )
     output_dir = os.path.dirname(output)
     if output_dir:

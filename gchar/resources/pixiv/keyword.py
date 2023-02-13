@@ -5,8 +5,10 @@ import time
 import warnings
 from functools import lru_cache
 from itertools import chain
-from typing import Type, List, Union, Dict, Tuple, Iterable, Optional
+from typing import Type, List, Union, Dict, Tuple, Iterable, Optional, Callable
 from urllib.parse import quote
+
+import numpy as np
 
 try:
     from yaml import CLoader as Loader, CDumper as Dumper
@@ -54,7 +56,8 @@ def get_pixiv_illustration_count_by_keyword(keyword, session=None, order='popula
 
 
 def _names_search_count(keywords: Iterable[str], session=None,
-                        interval: float = 0.2, sleep_every: int = 70, sleep_time: float = 20,
+                        interval: Union[float, Callable[[], float]] = 0.2,
+                        sleep_every: int = 70, sleep_time: float = 20,
                         ensure_times: int = 3, **kwargs) -> List[Tuple[int, List[List[str]]]]:
     session = session or get_pixiv_session(**kwargs)
     # noinspection PyTypeChecker
@@ -78,7 +81,10 @@ def _names_search_count(keywords: Iterable[str], session=None,
             if (i + 1) % sleep_every == 0:
                 time.sleep(sleep_time)
             else:
-                time.sleep(interval)
+                if isinstance(interval, (int, float)):
+                    time.sleep(interval)
+                else:
+                    time.sleep(interval())
 
         if len(all_keywords) % sleep_every != 0:
             time.sleep(sleep_time)
@@ -121,9 +127,16 @@ def _load_pixiv_alias_for_game(cls: Type[Character]) -> Dict[Union[int, str], Li
     return {item['id']: item['alias'] for item in alias}
 
 
-def _get_pixiv_search_count_by_name(cls: Type[Character], session=None,
-                                    interval: float = 0.2, sleep_every: int = 70, sleep_time: float = 20,
-                                    ensure_times: int = 3, maxcnt: Optional[int] = None, **kwargs):
+def _get_interval_func(interval: float, min_interval: float):
+    def _interval_func():
+        return float(np.maximum(np.random.normal(interval, 0.4 * interval), min_interval))
+
+    return _interval_func
+
+
+def _get_pixiv_search_count_by_name(
+        cls: Type[Character], session=None, interval: float = 0.2, min_interval: float = 0.2,
+        sleep_every: int = 70, sleep_time: float = 20, ensure_times: int = 3, maxcnt: Optional[int] = None, **kwargs):
     (cls, _), base_tag, _ = _get_items_from_ch_type(cls)
     session = session or get_pixiv_session(**kwargs)
 
@@ -150,7 +163,8 @@ def _get_pixiv_search_count_by_name(cls: Type[Character], session=None,
         all_excluded.append(excluded_words)
         all_keywords.append(f'{base_tag} {name} {excluded_text}')
 
-    count_data = _names_search_count(all_keywords, session, interval, sleep_every, sleep_time, ensure_times, **kwargs)
+    count_data = _names_search_count(all_keywords, session, _get_interval_func(interval, min_interval),
+                                     sleep_every, sleep_time, ensure_times, **kwargs)
     retval = []
     for name, keyword, excluded, (count, tag_items) in zip(all_names, all_keywords, all_excluded, count_data):
         if count <= 0:
@@ -266,9 +280,11 @@ def _load_pixiv_names_for_game(game: Union[Type[Character], str]) \
     return retval
 
 
-def _get_pixiv_character_search_counts_by_game(cls: Type[Character], session=None,
-                                               interval: float = 0.2, sleep_every: int = 70, sleep_time: float = 20,
-                                               ensure_times: int = 3, maxcnt: Optional[int] = None, **kwargs):
+def _get_pixiv_character_search_counts_by_game(
+        cls: Type[Character], session=None,
+        interval: float = 0.2, min_interval: float = 0.2,
+        sleep_every: int = 70, sleep_time: float = 20,
+        ensure_times: int = 3, maxcnt: Optional[int] = None, **kwargs):
     (cls, _), base_tag, _ = _get_items_from_ch_type(cls)
     session = session or get_pixiv_session(**kwargs)
 
@@ -292,7 +308,8 @@ def _get_pixiv_character_search_counts_by_game(cls: Type[Character], session=Non
             break
 
     _all = _names_search_count([*all_keywords, *all_unsafe_keywords], session,
-                               interval, sleep_every, sleep_time, ensure_times, **kwargs)
+                               _get_interval_func(interval, min_interval),
+                               sleep_every, sleep_time, ensure_times, **kwargs)
     all_counts = _all[:len(all_keywords)]
     all_unsafe_counts = _all[len(all_keywords):]
 
