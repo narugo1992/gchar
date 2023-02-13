@@ -4,6 +4,10 @@ on:
   #  push:
   workflow_dispatch:
     inputs:
+      games:
+        description: 'Game to Crawl'
+        required: true
+        default: 'arknights,fgo,girlsfrontline,genshin,azurlane'
       skip_crawl:
         description: 'Skip Crawl (Type Anything for Yes)'
         required: false
@@ -27,10 +31,10 @@ jobs:
       fail-fast: false
       matrix:
         game:
-          #          - 'arknights'
-          #          - 'fgo'
-          #          - 'azurlane'
-          #          - 'girlsfrontline'
+          - 'arknights'
+          - 'fgo'
+          - 'azurlane'
+          - 'girlsfrontline'
           - 'genshin'
         os:
           - 'ubuntu-latest'
@@ -73,6 +77,21 @@ jobs:
           pip install -r requirements.txt
           pip install -r requirements-test.txt
           pip install -r requirements-crawl.txt
+      - name: Check if is scheduled when not workflow dispatched
+        if: ${{ github.event_name != 'workflow_dispatch' }}
+        shell: bash
+        run: |
+          echo "SCHEDULED=$(python -m gchar schedule -g ${{ matrix.game }})" >> $GITHUB_ENV
+      - name: Check if is scheduled when not workflow dispatched
+        if: ${{ github.event_name == 'workflow_dispatch' && !github.event.inputs.skip_crawl }}
+        shell: bash
+        run: |
+          echo "SCHEDULED=$(python -m gchar scheck -g ${{ matrix.game }} -s ${{ github.event.inputs.games }})" >> $GITHUB_ENV
+      - name: Check if is scheduled when not workflow dispatched x
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.skip_crawl }}
+        shell: bash
+        run: |
+          echo "SCHEDULED=no" >> $GITHUB_ENV
       - name: Test the basic environment
         shell: bash
         run: |
@@ -89,7 +108,7 @@ jobs:
           cp -rf game_characters/${{ matrix.game }}/* ${{ matrix.game }}
           cp -rf game_characters/${{ matrix.game }}/* gchar/games/${{ matrix.game }}
       - name: Run Game Crawler
-        if: ${{ github.event_name != 'workflow_dispatch' || !github.event.inputs.skip_crawl }}
+        if: ${{ env.SCHEDULED == 'yes' }}
         uses: nick-fields/retry@v2
         env:
           CI: 'true'
@@ -103,7 +122,7 @@ jobs:
             python -m gchar.games.${{ matrix.game }} update -o ${{ matrix.game }}/index.json
             cp ${{ matrix.game }}/index.json gchar/games/${{ matrix.game }}/index.json
       - name: Run Danbooru Tags Crawler
-        if: ${{ github.event_name != 'workflow_dispatch' || !github.event.inputs.skip_crawl }}
+        if: ${{ env.SCHEDULED == 'yes' }}
         env:
           CI: 'true'
         shell: bash
@@ -132,10 +151,10 @@ jobs:
       max-parallel: 1
       matrix:
         game:
-          #          - 'arknights'
-          #          - 'fgo'
-          #          - 'azurlane'
-          #          - 'girlsfrontline'
+          - 'arknights'
+          - 'fgo'
+          - 'azurlane'
+          - 'girlsfrontline'
           - 'genshin'
         os:
           - 'ubuntu-latest'
@@ -178,6 +197,21 @@ jobs:
           pip install -r requirements.txt
           pip install -r requirements-test.txt
           pip install -r requirements-crawl.txt
+      - name: Check if is scheduled when not workflow dispatched
+        if: ${{ github.event_name != 'workflow_dispatch' }}
+        shell: bash
+        run: |
+          echo "SCHEDULED=$(python -m gchar schedule -g ${{ matrix.game }})" >> $GITHUB_ENV
+      - name: Check if is scheduled when not workflow dispatched
+        if: ${{ github.event_name == 'workflow_dispatch' && !github.event.inputs.skip_pixiv_names }}
+        shell: bash
+        run: |
+          echo "SCHEDULED=$(python -m gchar scheck -g ${{ matrix.game }} -s ${{ github.event.inputs.games }})" >> $GITHUB_ENV
+      - name: Check if is scheduled when not workflow dispatched x
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.skip_pixiv_names }}
+        shell: bash
+        run: |
+          echo "SCHEDULED=no" >> $GITHUB_ENV
       - name: Download from artifact
         uses: actions/download-artifact@v3
         with:
@@ -202,7 +236,7 @@ jobs:
           pip list
           tree .
       - name: Run Pixiv Names Crawler
-        if: ${{ github.event_name != 'workflow_dispatch' || !github.event.inputs.skip_pixiv_names }}
+        if: ${{ env.SCHEDULED == 'yes' }}
         env:
           CI: 'true'
           REMOTE_PIXIV_SESSION_INDEX_URL: ${{ secrets.REMOTE_PIXIV_SESSION_INDEX_URL }}
@@ -236,10 +270,10 @@ jobs:
       max-parallel: 1
       matrix:
         game:
-          #          - 'arknights'
-          #          - 'fgo'
-          #          - 'azurlane'
-          #          - 'girlsfrontline'
+          - 'arknights'
+          - 'fgo'
+          - 'azurlane'
+          - 'girlsfrontline'
           - 'genshin'
         os:
           - 'ubuntu-latest'
@@ -282,6 +316,21 @@ jobs:
           pip install -r requirements.txt
           pip install -r requirements-test.txt
           pip install -r requirements-crawl.txt
+      - name: Check if is scheduled when not workflow dispatched
+        if: ${{ github.event_name != 'workflow_dispatch' }}
+        shell: bash
+        run: |
+          echo "SCHEDULED=$(python -m gchar schedule -g ${{ matrix.game }})" >> $GITHUB_ENV
+      - name: Check if is scheduled when not workflow dispatched
+        if: ${{ github.event_name == 'workflow_dispatch' && !github.event.inputs.skip_pixiv_characters }}
+        shell: bash
+        run: |
+          echo "SCHEDULED=$(python -m gchar scheck -g ${{ matrix.game }} -s ${{ github.event.inputs.games }})" >> $GITHUB_ENV
+      - name: Check if is scheduled when not workflow dispatched x
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.skip_pixiv_characters }}
+        shell: bash
+        run: |
+          echo "SCHEDULED=no" >> $GITHUB_ENV
       - name: Download from artifact
         uses: actions/download-artifact@v3
         with:
@@ -305,7 +354,7 @@ jobs:
           pip list
           tree .
       - name: Run Pixiv Characters Crawler
-        if: ${{ github.event_name != 'workflow_dispatch' || !github.event.inputs.skip_pixiv_characters }}
+        if: ${{ env.SCHEDULED == 'yes' }}
         env:
           CI: 'true'
           REMOTE_PIXIV_SESSION_INDEX_URL: ${{ secrets.REMOTE_PIXIV_SESSION_INDEX_URL }}

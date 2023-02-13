@@ -1,4 +1,7 @@
+import re
+from datetime import datetime
 from functools import partial
+from itertools import chain
 
 import click
 from tqdm.auto import tqdm
@@ -32,6 +35,40 @@ DOWNLOAD_FUNCS = {
               help="Utils with gchar.")
 def cli():
     pass  # pragma: no cover
+
+
+SCHEDULE_TABLE = [
+    ('fgo',),  # Monday
+    (),  # Tuesday
+    ('azurlane',),  # Wednesday
+    (),  # Thursday
+    ('arknights',),  # Friday
+    ('girlsfrontline',),  # Saturday
+    ('genshin',),  # Sunday
+]
+assert all([name in GAMES for name in chain(*SCHEDULE_TABLE)]), 'Some name not in games.'
+
+
+@cli.command('schedule', help='Check the scheduling of this date')
+@click.option('--game', '-g', 'game', type=click.Choice(GAMES), required=True,
+              help='Game to query.', show_default=True)
+def schedule(game: str):
+    if game in SCHEDULE_TABLE[datetime.now().weekday()]:
+        click.echo('yes')
+    else:
+        click.echo('no')
+
+
+@cli.command('scheck', help='String scheduled check')
+@click.option('--game', '-g', 'game', type=click.Choice(GAMES), required=True,
+              help='Game to query.', show_default=True)
+@click.option('--string', '-s', 'string', type=str, required=True)
+def scheck(game: str, string: str):
+    selected = set(map(str.lower, re.findall(r'\b\w+\b', string)))
+    if game.lower().split() in selected:
+        click.echo('yes')
+    else:
+        click.echo('no')
 
 
 @cli.command('update', help='Download the newest data from huggingface.')
