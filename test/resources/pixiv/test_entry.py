@@ -7,7 +7,7 @@ from hbutils.testing import simulate_entry, OS
 
 from gchar.config.meta import __VERSION__
 from gchar.resources.pixiv.__main__ import cli
-from gchar.resources.pixiv.session import REMOTE_PIXIV_SESSION_URL
+from gchar.resources.pixiv.session import REMOTE_PIXIV_SESSION_INDEX_URL
 
 
 @pytest.mark.unittest
@@ -18,7 +18,7 @@ class TestResourcesPixivMain:
         assert __VERSION__ in result.stdout
         assert 'pixiv' in result.stdout
 
-    @skipUnless(os.environ.get(REMOTE_PIXIV_SESSION_URL, None), 'Pixiv token required.')
+    @skipUnless(os.environ.get(REMOTE_PIXIV_SESSION_INDEX_URL, None), 'Pixiv token required.')
     @skipUnless(not OS.windows, 'Non-windows required.')
     @pytest.mark.flaky(reruns=5, reruns_delay=10)
     @pytest.mark.parametrize(['game', 'min_cnt', 'max_cnt'], [
@@ -43,7 +43,7 @@ class TestResourcesPixivMain:
             data = json.load(f)
             assert 0 <= len(data['names']) <= max_cnt
 
-    @skipUnless(os.environ.get(REMOTE_PIXIV_SESSION_URL, None), 'Pixiv token required.')
+    @skipUnless(os.environ.get(REMOTE_PIXIV_SESSION_INDEX_URL, None), 'Pixiv token required.')
     @skipUnless(not OS.windows, 'Non-windows required.')
     @pytest.mark.parametrize(['game'], [
         ('arknights',),

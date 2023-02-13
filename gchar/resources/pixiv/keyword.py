@@ -18,20 +18,20 @@ import yaml
 from tqdm.auto import tqdm
 
 from .games import _get_items_from_ch_type, _local_names_file, _local_characters_file, _local_alias_file
-from .session import get_pixiv_session
+from .session import get_pixiv_sessions
 from ...games import get_character
 from ...games.base import Character
-from ...utils import download_file
+from ...utils import download_file, sget
 
 
 def _native_pixiv_illustration_info(keyword, session=None, order='popular_d', **kwargs) \
         -> Tuple[int, List[List[str]]]:
-    session = session or get_pixiv_session(**kwargs)
+    session = session or get_pixiv_sessions(**kwargs)
     url = f'https://www.pixiv.net/ajax/search/artworks/{quote(keyword, safe="()")}?' \
           f'word={quote(keyword, safe="")}' \
           f'&order={order}&mode=all&p=1&s_mode=s_tag&type=all&lang=zh&version=9c834eede9446d61102731a4be356cd0f1090e84'
 
-    resp = session.get(url, headers={
+    resp = sget(session, url, headers={
         'Referer': f'https://www.pixiv.net/tags/{quote(keyword, safe="()")}/artworks?s_mode=s_tag',
     })
     resp.raise_for_status()
@@ -59,7 +59,7 @@ def _names_search_count(keywords: Iterable[str], session=None,
                         interval: Union[float, Callable[[], float]] = 0.2,
                         sleep_every: int = 70, sleep_time: float = 20,
                         ensure_times: int = 3, **kwargs) -> List[Tuple[int, List[List[str]]]]:
-    session = session or get_pixiv_session(**kwargs)
+    session = session or get_pixiv_sessions(**kwargs)
     # noinspection PyTypeChecker
     all_keywords: List[Tuple[int, str]] = list(enumerate(keywords))
     total = len(all_keywords)
@@ -138,7 +138,7 @@ def _get_pixiv_search_count_by_name(
         cls: Type[Character], session=None, interval: float = 0.2, min_interval: float = 0.2,
         sleep_every: int = 70, sleep_time: float = 20, ensure_times: int = 3, maxcnt: Optional[int] = None, **kwargs):
     (cls, _), base_tag, _ = _get_items_from_ch_type(cls)
-    session = session or get_pixiv_session(**kwargs)
+    session = session or get_pixiv_sessions(**kwargs)
 
     _all_names_set = set()
     for ch in cls.all(contains_extra=True):
@@ -286,7 +286,7 @@ def _get_pixiv_character_search_counts_by_game(
         sleep_every: int = 70, sleep_time: float = 20,
         ensure_times: int = 3, maxcnt: Optional[int] = None, **kwargs):
     (cls, _), base_tag, _ = _get_items_from_ch_type(cls)
-    session = session or get_pixiv_session(**kwargs)
+    session = session or get_pixiv_sessions(**kwargs)
 
     chs = cls.all(**kwargs)
     _all_ids = {}

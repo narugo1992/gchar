@@ -8,7 +8,7 @@ import click
 
 from .games import _GAMES, _local_names_file, _local_characters_file
 from .keyword import _get_pixiv_search_count_by_name, _get_pixiv_character_search_counts_by_game
-from .session import is_pixiv_session_okay, get_pixiv_session
+from .session import is_pixiv_session_okay, get_pixiv_sessions
 from ...utils import GLOBAL_CONTEXT_SETTINGS
 from ...utils import print_version as _origin_print_version
 
@@ -44,7 +44,7 @@ def cli():
 def names(game, output: Optional[str], interval: float, min_interval: float,
           sleep_every: int, sleep_time: float, ensure_times: int, maxcnt: Optional[int]):
     output = output or _local_names_file(game)
-    session = get_pixiv_session()
+    session = get_pixiv_sessions()
     if not is_pixiv_session_okay(session):
         raise ValueError('Pixiv session is down! Please use new cookies.')
     click.secho('Updating from pixiv.net web ajax ...', fg='yellow')
@@ -88,7 +88,7 @@ def names(game, output: Optional[str], interval: float, min_interval: float,
 def characters(game, output: Optional[str], interval: float, min_interval: float,
                sleep_every: int, sleep_time: float, ensure_times: int, maxcnt: Optional[int]):
     output = output or _local_characters_file(game)
-    session = get_pixiv_session()
+    session = get_pixiv_sessions()
     if not is_pixiv_session_okay(session):
         raise ValueError('Pixiv session is down! Please use new cookies.')
     click.secho('Updating from pixiv.net web ajax ...', fg='yellow')

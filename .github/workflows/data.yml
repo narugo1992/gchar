@@ -205,7 +205,7 @@ jobs:
         if: ${{ github.event_name != 'workflow_dispatch' || !github.event.inputs.skip_pixiv_names }}
         env:
           CI: 'true'
-          REMOTE_PIXIV_SESSION_URL: ${{ secrets.REMOTE_PIXIV_SESSION_URL }}
+          REMOTE_PIXIV_SESSION_INDEX_URL: ${{ secrets.REMOTE_PIXIV_SESSION_INDEX_URL }}
         shell: bash
         run: |
           python -m gchar.resources.pixiv names \
@@ -308,7 +308,7 @@ jobs:
         if: ${{ github.event_name != 'workflow_dispatch' || !github.event.inputs.skip_pixiv_characters }}
         env:
           CI: 'true'
-          REMOTE_PIXIV_SESSION_URL: ${{ secrets.REMOTE_PIXIV_SESSION_URL }}
+          REMOTE_PIXIV_SESSION_INDEX_URL: ${{ secrets.REMOTE_PIXIV_SESSION_INDEX_URL }}
         shell: bash
         run: |
           python -m gchar.resources.pixiv characters \
