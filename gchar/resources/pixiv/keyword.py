@@ -8,7 +8,7 @@ from itertools import chain
 from typing import Type, List, Union, Dict, Tuple, Iterable, Optional, Callable
 from urllib.parse import quote
 
-from scipy.stats import truncnorm
+import numpy as np
 
 try:
     from yaml import CLoader as Loader, CDumper as Dumper
@@ -129,10 +129,15 @@ def _load_pixiv_alias_for_game(cls: Type[Character]) -> Dict[Union[int, str], Li
 
 
 def _get_interval_func(interval: float, min_interval: float):
+    mean, std = interval, 0.4 * interval
+    lower_bound, upper_bound = min_interval, interval * 2
+
     def _interval_func():
-        mean, std = interval, 0.4 * interval
-        lower_bound, upper_bound = min_interval, interval * 2
-        return float(truncnorm((lower_bound - mean) / std, (upper_bound - mean) / std, loc=mean, scale=std))
+        v = np.random.normal(mean, std)
+        while not (lower_bound <= v <= upper_bound):
+            v = np.random.normal(mean, std)
+
+        return float(v)
 
     return _interval_func
 

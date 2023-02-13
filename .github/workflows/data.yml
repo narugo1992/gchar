@@ -24,7 +24,7 @@ on:
     - cron: '0 17 * * *'
 
 env:
-  PIXIV_INTERVAL: '2.0'
+  PIXIV_INTERVAL: '1.7'
   PIXIV_MIN_INTERVAL: '1.5'
   PIXIV_SLEEP_TIME: '30'
   PIXIV_SLEEP_EVERY: '70'
