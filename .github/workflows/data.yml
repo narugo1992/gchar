@@ -23,6 +23,12 @@ on:
   schedule:
     - cron: '0 17 * * *'
 
+env:
+  PIXIV_INTERVAL: '2.0'
+  PIXIV_MIN_INTERVAL: '1.5'
+  PIXIV_SLEEP_TIME: '30'
+  PIXIV_SLEEP_EVERY: '70'
+
 jobs:
   data_crawl:
     name: Data Crawl
@@ -245,7 +251,10 @@ jobs:
           python -m gchar.resources.pixiv names \
             -g ${{ matrix.game }} \
             -o ${{ matrix.game }}/pixiv_names.json \
-            --interval 3 --min_interval 1.5 --sleep_time 35
+            --interval ${{ env.PIXIV_INTERVAL }} \
+            --min_interval ${{ env.PIXIV_MIN_INTERVAL }} \
+            --sleep_time ${{ env.PIXIV_SLEEP_TIME }} \
+            --sleep_every ${{ env.PIXIV_SLEEP_EVERY }}
           cp ${{ matrix.game }}/pixiv_names.json gchar/games/${{ matrix.game }}/pixiv_names.json
       - name: Package The Data
         env:
@@ -363,7 +372,10 @@ jobs:
           python -m gchar.resources.pixiv characters \
             -g ${{ matrix.game }} \
             -o ${{ matrix.game }}/pixiv_characters.json \
-            --interval 3 --min_interval 1.5 --sleep_time 35
+            --interval ${{ env.PIXIV_INTERVAL }} \
+            --min_interval ${{ env.PIXIV_MIN_INTERVAL }} \
+            --sleep_time ${{ env.PIXIV_SLEEP_TIME }} \
+            --sleep_every ${{ env.PIXIV_SLEEP_EVERY }}
           cp ${{ matrix.game }}/pixiv_characters.json gchar/games/${{ matrix.game }}/pixiv_characters.json
       - name: Package The Data
         env:
@@ -418,7 +430,8 @@ jobs:
           cd game_characters
           git config user.name 'narugo1992'
           git config user.email 'narugo@126.com'
-          git add -A && git commit -a -m "dev(narugo): auto sync $(date -R)"
+          git add -A
+          git diff-index --quiet HEAD || git commit -a -m "dev(narugo): auto sync $(date -R)"
           git push https://narugo:$HF_TOKEN@huggingface.co/datasets/deepghs/game_characters main
       - name: Get the Numbers
         run: |

@@ -8,7 +8,7 @@ from itertools import chain
 from typing import Type, List, Union, Dict, Tuple, Iterable, Optional, Callable
 from urllib.parse import quote
 
-import numpy as np
+from scipy.stats import truncnorm
 
 try:
     from yaml import CLoader as Loader, CDumper as Dumper
@@ -86,14 +86,15 @@ def _names_search_count(keywords: Iterable[str], session=None,
                 else:
                     time.sleep(interval())
 
-        if len(all_keywords) % sleep_every != 0:
-            time.sleep(sleep_time)
-
+        need_sleep = len(all_keywords) % sleep_every != 0
         all_keywords = new_round_names
         round += 1
         last_sizes = tuple((*last_sizes[1:], len(all_keywords)))
-        if all([last_sizes[i] == last_sizes[i + 1] for i in range(ensure_times - 1)]):
+        if not all_keywords or all([last_sizes[i] == last_sizes[i + 1] for i in range(ensure_times - 1)]):
             break
+
+        if need_sleep:
+            time.sleep(sleep_time)
 
     final_retval = []
     for i in range(total):
@@ -129,7 +130,9 @@ def _load_pixiv_alias_for_game(cls: Type[Character]) -> Dict[Union[int, str], Li
 
 def _get_interval_func(interval: float, min_interval: float):
     def _interval_func():
-        return float(np.maximum(np.random.normal(interval, 0.4 * interval), min_interval))
+        mean, std = interval, 0.4 * interval
+        lower_bound, upper_bound = min_interval, interval * 2
+        return float(truncnorm((lower_bound - mean) / std, (upper_bound - mean) / std, loc=mean, scale=std))
 
     return _interval_func
 
