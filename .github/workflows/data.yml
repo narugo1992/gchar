@@ -83,17 +83,17 @@ jobs:
           pip install -r requirements.txt
           pip install -r requirements-test.txt
           pip install -r requirements-crawl.txt
-      - name: Check if is scheduled when workflow dispatched
+      - name: Check if is scheduled when not workflow dispatched
         if: ${{ github.event_name != 'workflow_dispatch' }}
         shell: bash
         run: |
           echo "SCHEDULED=$(python -m gchar schedule -g ${{ matrix.game }})" >> $GITHUB_ENV
-      - name: Check if is scheduled when not workflow dispatched
+      - name: Check if is scheduled when is workflow dispatched
         if: ${{ github.event_name == 'workflow_dispatch' && !github.event.inputs.skip_crawl }}
         shell: bash
         run: |
           echo "SCHEDULED=$(python -m gchar scheck -g ${{ matrix.game }} -s ${{ github.event.inputs.games }})" >> $GITHUB_ENV
-      - name: Check if is scheduled when not workflow dispatched x
+      - name: Check if is scheduled when is workflow dispatched and skipped
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.skip_crawl }}
         shell: bash
         run: |
@@ -203,17 +203,17 @@ jobs:
           pip install -r requirements.txt
           pip install -r requirements-test.txt
           pip install -r requirements-crawl.txt
-      - name: Check if is scheduled when workflow dispatched
+      - name: Check if is scheduled when not workflow dispatched
         if: ${{ github.event_name != 'workflow_dispatch' }}
         shell: bash
         run: |
           echo "SCHEDULED=$(python -m gchar schedule -g ${{ matrix.game }})" >> $GITHUB_ENV
-      - name: Check if is scheduled when not workflow dispatched
+      - name: Check if is scheduled when is workflow dispatched
         if: ${{ github.event_name == 'workflow_dispatch' && !github.event.inputs.skip_pixiv_names }}
         shell: bash
         run: |
           echo "SCHEDULED=$(python -m gchar scheck -g ${{ matrix.game }} -s ${{ github.event.inputs.games }})" >> $GITHUB_ENV
-      - name: Check if is scheduled when not workflow dispatched x
+      - name: Check if is scheduled when is workflow dispatched and skipped
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.skip_pixiv_names }}
         shell: bash
         run: |
@@ -325,17 +325,17 @@ jobs:
           pip install -r requirements.txt
           pip install -r requirements-test.txt
           pip install -r requirements-crawl.txt
-      - name: Check if is scheduled when workflow dispatched
+      - name: Check if is scheduled when not workflow dispatched
         if: ${{ github.event_name != 'workflow_dispatch' }}
         shell: bash
         run: |
           echo "SCHEDULED=$(python -m gchar schedule -g ${{ matrix.game }})" >> $GITHUB_ENV
-      - name: Check if is scheduled when not workflow dispatched
+      - name: Check if is scheduled when is workflow dispatched
         if: ${{ github.event_name == 'workflow_dispatch' && !github.event.inputs.skip_pixiv_characters }}
         shell: bash
         run: |
           echo "SCHEDULED=$(python -m gchar scheck -g ${{ matrix.game }} -s ${{ github.event.inputs.games }})" >> $GITHUB_ENV
-      - name: Check if is scheduled when not workflow dispatched x
+      - name: Check if is scheduled when is workflow dispatched and skipped
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.skip_pixiv_characters }}
         shell: bash
         run: |
