@@ -9,7 +9,7 @@ from ..base import BaseIndexer
 from ...utils import sget
 
 
-class GenshinIndexer(BaseIndexer):
+class Indexer(BaseIndexer):
     __game_name__ = 'genshin'
     __official_name__ = 'genshin impact'
     __root_website__ = 'https://genshin-impact.fandom.com/'
@@ -101,4 +101,4 @@ class GenshinIndexer(BaseIndexer):
         return retval
 
 
-INDEXER = GenshinIndexer()
+INDEXER = Indexer()

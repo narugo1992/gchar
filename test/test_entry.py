@@ -21,7 +21,7 @@ def no_local_data():
                 with patch(f'gchar.games.{GAMES[layer]}.index._INDEX_FILE', json_file):
                     yield from _nested_mock(layer + 1)
             else:
-                with patch('gchar.games.genshin.index.GenshinIndexer.__class__.index_file',
+                with patch('gchar.games.genshin.index.Indexer.__class__.index_file',
                            new_callable=PropertyMock(return_value=json_file)):
                     yield from _nested_mock(layer + 1)
 
