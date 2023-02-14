@@ -58,7 +58,7 @@ def get_pixiv_illustration_count_by_keyword(keyword, session=None, order='popula
 def _names_search_count(keywords: Iterable[str], session=None,
                         interval: Union[float, Callable[[], float]] = 0.2,
                         sleep_every: int = 70, sleep_time: float = 20,
-                        ensure_times: int = 3, **kwargs) -> List[Tuple[int, List[List[str]]]]:
+                        ensure_times: int = 2, **kwargs) -> List[Tuple[int, List[List[str]]]]:
     session = session or get_pixiv_sessions(**kwargs)
     # noinspection PyTypeChecker
     all_keywords: List[Tuple[int, str]] = list(enumerate(keywords))
@@ -144,7 +144,7 @@ def _get_interval_func(interval: float, min_interval: float):
 
 def _get_pixiv_search_count_by_name(
         cls: Type[Character], session=None, interval: float = 0.2, min_interval: float = 0.2,
-        sleep_every: int = 70, sleep_time: float = 20, ensure_times: int = 3, maxcnt: Optional[int] = None, **kwargs):
+        sleep_every: int = 70, sleep_time: float = 20, ensure_times: int = 2, maxcnt: Optional[int] = None, **kwargs):
     (cls, _), base_tag, _ = _get_items_from_ch_type(cls)
     session = session or get_pixiv_sessions(**kwargs)
 
@@ -292,7 +292,7 @@ def _get_pixiv_character_search_counts_by_game(
         cls: Type[Character], session=None,
         interval: float = 0.2, min_interval: float = 0.2,
         sleep_every: int = 70, sleep_time: float = 20,
-        ensure_times: int = 3, maxcnt: Optional[int] = None, **kwargs):
+        ensure_times: int = 2, maxcnt: Optional[int] = None, **kwargs):
     (cls, _), base_tag, _ = _get_items_from_ch_type(cls)
     session = session or get_pixiv_sessions(**kwargs)
 

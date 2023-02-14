@@ -21,13 +21,14 @@ on:
         required: false
         default: ''
   schedule:
-    - cron: '0 17 * * *'
+    - cron: '20 16 * * *'
 
 env:
   PIXIV_INTERVAL: '1.7'
   PIXIV_MIN_INTERVAL: '1.5'
   PIXIV_SLEEP_TIME: '30'
   PIXIV_SLEEP_EVERY: '70'
+  PIXIV_ENSURE_TIMES: '2'
 
 jobs:
   data_crawl:
@@ -254,7 +255,8 @@ jobs:
             --interval ${{ env.PIXIV_INTERVAL }} \
             --min_interval ${{ env.PIXIV_MIN_INTERVAL }} \
             --sleep_time ${{ env.PIXIV_SLEEP_TIME }} \
-            --sleep_every ${{ env.PIXIV_SLEEP_EVERY }}
+            --sleep_every ${{ env.PIXIV_SLEEP_EVERY }} \
+            --ensure_times ${{ env.PIXIV_ENSURE_TIMES }}
           cp ${{ matrix.game }}/pixiv_names.json gchar/games/${{ matrix.game }}/pixiv_names.json
       - name: Package The Data
         env:
@@ -375,7 +377,8 @@ jobs:
             --interval ${{ env.PIXIV_INTERVAL }} \
             --min_interval ${{ env.PIXIV_MIN_INTERVAL }} \
             --sleep_time ${{ env.PIXIV_SLEEP_TIME }} \
-            --sleep_every ${{ env.PIXIV_SLEEP_EVERY }}
+            --sleep_every ${{ env.PIXIV_SLEEP_EVERY }} \
+            --ensure_times ${{ env.PIXIV_ENSURE_TIMES }}
           cp ${{ matrix.game }}/pixiv_characters.json gchar/games/${{ matrix.game }}/pixiv_characters.json
       - name: Package The Data
         env:

@@ -1,5 +1,5 @@
 import re
-from datetime import datetime
+from datetime import date
 from functools import partial
 from itertools import chain
 
@@ -38,22 +38,22 @@ def cli():
 
 
 SCHEDULE_TABLE = [
-    ('fgo',),  # Monday
-    (),  # Tuesday
-    ('azurlane',),  # Wednesday
-    (),  # Thursday
-    ('arknights',),  # Friday
-    ('girlsfrontline',),  # Saturday
-    ('genshin',),  # Sunday
+    ('fgo', 'girlsfrontline', 'arknights'),
+    ('azurlane', 'genshin'),
 ]
-assert all([name in GAMES for name in chain(*SCHEDULE_TABLE)]), 'Some name not in games.'
+for name in chain(*SCHEDULE_TABLE):
+    assert name in GAMES, f'Name {name!r} not in games.'
 
 
 @cli.command('schedule', help='Check the scheduling of this date')
 @click.option('--game', '-g', 'game', type=click.Choice(GAMES), required=True,
               help='Game to query.', show_default=True)
 def schedule(game: str):
-    if game in SCHEDULE_TABLE[datetime.now().weekday()]:
+    index = (date.today() - date(2020, 1, 1)).days % len(SCHEDULE_TABLE)
+    if index < 0:
+        index += len(SCHEDULE_TABLE)
+
+    if game in SCHEDULE_TABLE[index]:
         click.echo('yes')
     else:
         click.echo('no')

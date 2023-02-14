@@ -35,7 +35,7 @@ def cli():
               help='Sleep after some number of names.', show_default=True)
 @click.option('--sleep_time', 'sleep_time', type=float, default=30.0,
               help='Sleep time after some number of names.', show_default=True)
-@click.option('--ensure_times', '-E', 'ensure_times', type=int, default=3,
+@click.option('--ensure_times', '-E', 'ensure_times', type=int, default=2,
               help='Ensure times at the end of crawler.', show_default=True)
 @click.option('--output', '-o', 'output', type=click.Path(dir_okay=False), default=None,
               help='Output path of names\' data file.', show_default=None)
@@ -79,7 +79,7 @@ def names(game, output: Optional[str], interval: float, min_interval: float,
               help='Sleep after some number of names.', show_default=True)
 @click.option('--sleep_time', 'sleep_time', type=float, default=30.0,
               help='Sleep time after some number of names.', show_default=True)
-@click.option('--ensure_times', '-E', 'ensure_times', type=int, default=3,
+@click.option('--ensure_times', '-E', 'ensure_times', type=int, default=2,
               help='Ensure times at the end of crawler.', show_default=True)
 @click.option('--output', '-o', 'output', type=click.Path(dir_okay=False), default=None,
               help='Output path of names\' data file.', show_default=None)
