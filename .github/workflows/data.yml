@@ -1,5 +1,8 @@
 name: Data Publish
 
+permissions:
+  contents: write
+
 on:
   #  push:
   workflow_dispatch:
@@ -448,3 +451,9 @@ jobs:
           label: Data Updated
           message: ${{ env.UPDATE_DATE }}
           color: yellowgreen
+      - name: Repository Dispatch
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.PAT }}
+          repository: narugo1992/games_character_ranking
+          event-type: data-refreshed
