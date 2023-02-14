@@ -8,7 +8,7 @@ from tqdm.auto import tqdm
 
 from .games.arknights.index import _download_from_huggingface as _arknights_download
 from .games.azurlane.index import _download_from_huggingface as _azurlane_download
-from .games.fgo.index import _download_from_huggingface as _fgo_download
+from .games.fgo.index import INDEXER as FGO_INDEX
 from .games.genshin.index import INDEXER as GENSHIN_INDEXER
 from .games.girlsfrontline.index import INDEXER as GIRLSFRONTLINE_INDEXER
 from .resources.danbooru.index import _download_from_huggingface as _download_danbooru_tags
@@ -21,7 +21,7 @@ print_version = partial(_origin_print_version, 'gchar')
 
 GAMES = ['fgo', 'arknights', 'azurlane', 'genshin', 'girlsfrontline']
 DOWNLOAD_FUNCS = {
-    'fgo': _fgo_download,
+    'fgo': partial(FGO_INDEX.download_index_from_online, force=True),
     'arknights': _arknights_download,
     'genshin': partial(GENSHIN_INDEXER.download_index_from_online, force=True),
     'azurlane': _azurlane_download,

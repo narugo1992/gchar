@@ -2,12 +2,11 @@ import re
 from functools import lru_cache
 from typing import List, Optional
 
-from .index import _refresh_index, get_index
+from .index import INDEXER
 from .name import ChineseName, JapaneseName, EnglishName, ChineseAliasName
 from .property import Rarity, Clazz
 from ..base import Character as _BaseCharacter
 from ..base import Skin
-from ...utils import optional_lru_cache
 
 
 class Character(_BaseCharacter):
@@ -15,7 +14,7 @@ class Character(_BaseCharacter):
     __jpname_class__ = JapaneseName
     __enname_class__ = EnglishName
     __alias_name_class__ = ChineseAliasName
-    __index_func__ = optional_lru_cache()(get_index)
+    __index_func__ = INDEXER.get_index
 
     def __init__(self, raw_data: dict):
         self.__raw_data = raw_data
@@ -106,7 +105,3 @@ class Character(_BaseCharacter):
     @classmethod
     def _get_by_id(cls, index: int) -> Optional['Character']:
         return cls._make_index_by_id().get(index, None)
-
-    @classmethod
-    def refresh_index(cls, timeout: int = 5):
-        _refresh_index(timeout)
