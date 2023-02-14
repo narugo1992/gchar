@@ -105,10 +105,10 @@ class BaseIndexer(metaclass=IndexerMeta):
     def get_cli(self):
         print_version = partial(_origin_print_version, self.__class__.package_name)
 
-        @click.group(context_settings={**GLOBAL_CONTEXT_SETTINGS})
+        @click.group(context_settings={**GLOBAL_CONTEXT_SETTINGS},
+                     help=f"Utils with {self.capitalized_name}.")
         @click.option('-v', '--version', is_flag=True,
-                      callback=print_version, expose_value=False, is_eager=True,
-                      help=f"Utils with {self.capitalized_name}.")
+                      callback=print_version, expose_value=False, is_eager=True)
         def cli():
             pass  # pragma: no cover
 

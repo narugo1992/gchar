@@ -11,6 +11,7 @@ from ...utils import sget
 
 class GenshinIndexer(BaseIndexer):
     __game_name__ = 'genshin'
+    __official_name__ = 'genshin impact'
     __root_website__ = 'https://genshin-impact.fandom.com/'
 
     def _crawl_index_from_online(self, session: requests.Session, maxcnt: Optional[int] = None,
