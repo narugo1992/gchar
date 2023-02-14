@@ -12,7 +12,7 @@ from ...testings import LocalTemporaryDirectory
 def no_index_json():
     with LocalTemporaryDirectory() as td:
         json_file = os.path.join(td, 'index.json')
-        with patch('gchar.games.genshin.index.Indexer.__class__.index_file',
+        with patch('gchar.games.genshin.index.Indexer.__INDEX_FILE__',
                    new_callable=PropertyMock(return_value=json_file)):
             yield json_file
 
@@ -25,7 +25,7 @@ def exist_index_json():
 
         if os.path.exists(INDEXER.__class__.index_file):
             copy(INDEXER.__class__.index_file, dstfile)
-        with patch('gchar.games.genshin.index.Indexer.__class__.index_file',
+        with patch('gchar.games.genshin.index.Indexer.__INDEX_FILE__',
                    new_callable=PropertyMock(return_value=dstfile)):
             yield
 

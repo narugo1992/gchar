@@ -1,6 +1,6 @@
 import os
 from contextlib import contextmanager
-from unittest.mock import patch, PropertyMock
+from unittest.mock import patch
 
 import pytest
 from hbutils.testing import simulate_entry
@@ -17,12 +17,11 @@ def no_local_data():
             yield
         else:
             json_file = os.path.join(td, GAMES[layer], 'index.json')
-            if GAMES[layer] != 'genshin':
+            if GAMES[layer] not in {'genshin', 'girlsfrontline'}:
                 with patch(f'gchar.games.{GAMES[layer]}.index._INDEX_FILE', json_file):
                     yield from _nested_mock(layer + 1)
             else:
-                with patch('gchar.games.genshin.index.Indexer.__class__.index_file',
-                           new_callable=PropertyMock(return_value=json_file)):
+                with patch(f'gchar.games.{GAMES[layer]}.index.Indexer.__INDEX_FILE__', json_file):
                     yield from _nested_mock(layer + 1)
 
     @contextmanager
@@ -51,8 +50,10 @@ class TestMain:
         assert result.exitcode == 0, f'Exitcode is {result.exitcode}.{os.linesep}' \
                                      f'This is stdout:{os.linesep}{result.stdout}{os.linesep}' \
                                      f'This is stderr:{os.linesep}{result.stderr}{os.linesep}'
-        assert os.path.exists(os.path.join(no_local_data, game, 'danbooru_tags.json'))
-        assert os.path.exists(os.path.join(no_local_data, game, 'index.json'))
+        assert os.path.exists(os.path.join(no_local_data, game, 'danbooru_tags.json')), \
+            f"This is the files here: {os.listdir(os.path.join(no_local_data, game))}"
+        assert os.path.exists(os.path.join(no_local_data, game, 'index.json')), \
+            f"This is the files here: {os.listdir(os.path.join(no_local_data, game))}"
 
     def test_update_all(self, no_local_data):
         result = simulate_entry(cli, ['gchar', 'update'])
@@ -60,5 +61,7 @@ class TestMain:
                                      f'This is stdout:{os.linesep}{result.stdout}{os.linesep}' \
                                      f'This is stderr:{os.linesep}{result.stderr}{os.linesep}'
         for game in GAMES:
-            assert os.path.exists(os.path.join(no_local_data, game, 'danbooru_tags.json'))
-            assert os.path.exists(os.path.join(no_local_data, game, 'index.json'))
+            assert os.path.exists(os.path.join(no_local_data, game, 'danbooru_tags.json')), \
+                f"This is the files here: {os.listdir(os.path.join(no_local_data, game))}"
+            assert os.path.exists(os.path.join(no_local_data, game, 'index.json')), \
+                f"This is the files here: {os.listdir(os.path.join(no_local_data, game))}"

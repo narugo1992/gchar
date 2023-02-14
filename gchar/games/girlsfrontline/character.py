@@ -1,11 +1,10 @@
 from typing import List
 
-from .index import _refresh_index, get_index
+from .index import INDEXER
 from .name import EnglishName, JapaneseName, ChineseName, ChineseAliasName
 from .property import Rarity, Clazz
 from ..base import Character as _BaseCharacter
 from ..base import Skin
-from ...utils import optional_lru_cache
 
 
 class Character(_BaseCharacter):
@@ -13,7 +12,7 @@ class Character(_BaseCharacter):
     __cnname_class__ = ChineseName
     __jpname_class__ = JapaneseName
     __alias_name_class__ = ChineseAliasName
-    __index_func__ = optional_lru_cache()(get_index)
+    __index_func__ = INDEXER.get_index
 
     def __init__(self, raw_data: dict):
         self.__raw_data = raw_data
@@ -59,7 +58,3 @@ class Character(_BaseCharacter):
 
         return f'<{type(self).__name__} {self.index} - {"/".join(map(str, self._names()))}, ' \
                f'{_rarity_repr}, clazz: {self.clazz}>'
-
-    @classmethod
-    def refresh_index(cls, timeout: int = 5):
-        _refresh_index(timeout)

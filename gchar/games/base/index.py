@@ -62,7 +62,7 @@ class BaseIndexer(metaclass=IndexerMeta):
 
     @property
     def official_name(self):
-        return re.sub(r'\s+', ' ', self.__official_name__).strip()
+        return re.sub(r'\s+', ' ', self.__official_name__).strip().lower()
 
     @property
     def capitalized_name(self):
