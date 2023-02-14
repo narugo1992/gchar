@@ -12,7 +12,7 @@ from ...testings import LocalTemporaryDirectory
 def no_index_json():
     with LocalTemporaryDirectory() as td:
         json_file = os.path.join(td, 'index.json')
-        with patch('gchar.games.azurlane.index._INDEX_FILE', json_file):
+        with patch('gchar.games.azurlane.index.Indexer.__INDEX_FILE__', json_file):
             yield json_file
 
 
@@ -20,10 +20,10 @@ def no_index_json():
 def exist_index_json():
     with LocalTemporaryDirectory() as td:
         dstfile = os.path.join(td, 'index.json')
-        from gchar.games.azurlane.index import _INDEX_FILE
-        if os.path.exists(_INDEX_FILE):
-            copy(_INDEX_FILE, dstfile)
-        with patch('gchar.games.azurlane.index._INDEX_FILE', dstfile):
+        from gchar.games.azurlane.index import INDEXER
+        if os.path.exists(INDEXER.__class__.index_file):
+            copy(INDEXER.__class__.index_file, dstfile)
+        with patch('gchar.games.azurlane.index.Indexer.__INDEX_FILE__', dstfile):
             yield
 
 
