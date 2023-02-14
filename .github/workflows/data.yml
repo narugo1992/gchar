@@ -24,7 +24,7 @@ on:
         required: false
         default: ''
   schedule:
-    - cron: '20 16 * * *'
+    - cron: '0 17 * * *'
 
 env:
   PIXIV_INTERVAL: '1.7'

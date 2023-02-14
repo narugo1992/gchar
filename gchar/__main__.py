@@ -6,7 +6,7 @@ from itertools import chain
 import click
 from tqdm.auto import tqdm
 
-from .games.arknights.index import _download_from_huggingface as _arknights_download
+from .games.arknights.index import INDEXER as ARKNIGHTS_INDEXER
 from .games.azurlane.index import INDEXER as AZURLANE_INDEXER
 from .games.fgo.index import INDEXER as FGO_INDEX
 from .games.genshin.index import INDEXER as GENSHIN_INDEXER
@@ -22,7 +22,7 @@ print_version = partial(_origin_print_version, 'gchar')
 GAMES = ['fgo', 'arknights', 'azurlane', 'genshin', 'girlsfrontline']
 DOWNLOAD_FUNCS = {
     'fgo': partial(FGO_INDEX.download_index_from_online, force=True),
-    'arknights': _arknights_download,
+    'arknights': partial(ARKNIGHTS_INDEXER.download_index_from_online, force=True),
     'genshin': partial(GENSHIN_INDEXER.download_index_from_online, force=True),
     'azurlane': partial(AZURLANE_INDEXER.download_index_from_online, force=True),
     'girlsfrontline': partial(GIRLSFRONTLINE_INDEXER.download_index_from_online, force=True),

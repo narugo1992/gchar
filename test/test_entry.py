@@ -17,12 +17,8 @@ def no_local_data():
             yield
         else:
             json_file = os.path.join(td, GAMES[layer], 'index.json')
-            if GAMES[layer] not in {'genshin', 'girlsfrontline', 'fgo', 'azurlane'}:
-                with patch(f'gchar.games.{GAMES[layer]}.index._INDEX_FILE', json_file):
-                    yield from _nested_mock(layer + 1)
-            else:
-                with patch(f'gchar.games.{GAMES[layer]}.index.Indexer.__INDEX_FILE__', json_file):
-                    yield from _nested_mock(layer + 1)
+            with patch(f'gchar.games.{GAMES[layer]}.index.Indexer.__INDEX_FILE__', json_file):
+                yield from _nested_mock(layer + 1)
 
     @contextmanager
     def _nested_game_character_mock():
