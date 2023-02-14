@@ -1,3 +1,3 @@
 from .character import Character
-from .index import get_index
+from .index import INDEXER
 from .property import Rarity, Weapon, Element

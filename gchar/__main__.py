@@ -9,7 +9,7 @@ from tqdm.auto import tqdm
 from .games.arknights.index import _download_from_huggingface as _arknights_download
 from .games.azurlane.index import _download_from_huggingface as _azurlane_download
 from .games.fgo.index import _download_from_huggingface as _fgo_download
-from .games.genshin.index import _download_from_huggingface as _genshin_download
+from .games.genshin.index import INDEXER as GENSHIN_INDEXER
 from .games.girlsfrontline.index import _download_from_huggingface as _girlsfrontline_download
 from .resources.danbooru.index import _download_from_huggingface as _download_danbooru_tags
 from .resources.pixiv.keyword import _download_pixiv_names_for_game, _download_pixiv_characters_for_game, \
@@ -23,7 +23,7 @@ GAMES = ['fgo', 'arknights', 'azurlane', 'genshin', 'girlsfrontline']
 DOWNLOAD_FUNCS = {
     'fgo': _fgo_download,
     'arknights': _arknights_download,
-    'genshin': _genshin_download,
+    'genshin': partial(GENSHIN_INDEXER.download_index_from_online, force=True),
     'azurlane': _azurlane_download,
     'girlsfrontline': _girlsfrontline_download,
 }

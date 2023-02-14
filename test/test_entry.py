@@ -1,6 +1,6 @@
 import os
 from contextlib import contextmanager
-from unittest.mock import patch
+from unittest.mock import patch, PropertyMock
 
 import pytest
 from hbutils.testing import simulate_entry
@@ -17,8 +17,13 @@ def no_local_data():
             yield
         else:
             json_file = os.path.join(td, GAMES[layer], 'index.json')
-            with patch(f'gchar.games.{GAMES[layer]}.index._INDEX_FILE', json_file):
-                yield from _nested_mock(layer + 1)
+            if GAMES[layer] != 'genshin':
+                with patch(f'gchar.games.{GAMES[layer]}.index._INDEX_FILE', json_file):
+                    yield from _nested_mock(layer + 1)
+            else:
+                with patch('gchar.games.genshin.index.GenshinIndexer.__class__.index_file',
+                           new_callable=PropertyMock(return_value=json_file)):
+                    yield from _nested_mock(layer + 1)
 
     @contextmanager
     def _nested_game_character_mock():
