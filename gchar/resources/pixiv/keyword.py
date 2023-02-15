@@ -156,7 +156,7 @@ def _get_pixiv_search_count_by_name(
     _alias_data = _load_pixiv_alias_for_game(cls)
     _all_names_set |= set(chain(*_alias_data.values()))
 
-    all_names: List[str] = sorted(_all_names_set)
+    all_names: List[str] = [name.lower() for name in sorted(_all_names_set)]
     if maxcnt is not None:
         all_names = all_names[-maxcnt:]
     all_keywords = []

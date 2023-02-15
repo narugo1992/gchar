@@ -16,28 +16,28 @@ def _text_only(text: str, split: bool = False):
 class ChineseName(_GenericChineseName):
     @classmethod
     def _preprocess(cls, name: str) -> str:
-        return re.sub(r'\s+', '', name.strip())
+        return re.sub(r'\s+', '', _GenericChineseName._preprocess(name))
 
     def _eqprocess(cls, name: str) -> str:
-        return _text_only(name).lower()
+        return _text_only(_GenericChineseName._eqprocess(name)).lower()
 
 
 class ChineseAliasName(_GenericChineseName):
     @classmethod
     def _preprocess(cls, name: str) -> str:
-        return re.sub(r'\s+', '', name.strip())
+        return re.sub(r'\s+', '', _GenericChineseName._preprocess(name))
 
     def _eqprocess(cls, name: str) -> str:
-        return _text_only(name).lower()
+        return _text_only(_GenericChineseName._eqprocess(name)).lower()
 
 
 class JapaneseName(_GenericJapaneseName):
     @classmethod
     def _preprocess(cls, name: str) -> str:
-        return re.sub(r'\s+', '', name.strip())
+        return re.sub(r'\s+', '', _GenericJapaneseName._preprocess(name))
 
     def _eqprocess(cls, name: str) -> str:
-        return _text_only(name).lower()
+        return _text_only(_GenericJapaneseName._eqprocess(name)).lower()
 
 
 class EnglishName(_GenericEnglishName):

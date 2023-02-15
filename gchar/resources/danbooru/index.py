@@ -62,7 +62,7 @@ def _split_name(tag: str) -> Tuple[str, List[str], str]:
 
 
 def _trim_name_to_ascii(name: str) -> str:
-    return ''.join(re.findall('[a-zA-Z0-9]+', name))
+    return ''.join(re.findall('[a-zA-Z0-9]+', name.lower()))
 
 
 def _makeup_tags(session: requests.Session, games: Union[List[str], str]) -> List[Dict]:

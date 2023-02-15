@@ -58,7 +58,7 @@ class TestGamesAzurlaneCharacter:
         assert not azl_fuso_meta.is_mu
         assert not azl_fuso_meta.is_chibi
         assert azl_fuso_meta.is_extra
-        assert repr(azl_fuso_meta) == '<Character META005 - 扶桑·meta/fuso_meta/扶桑(meta), 精锐(3***), group: 其他>'
+        assert repr(azl_fuso_meta) == '<Character META005 - 扶桑·META/fuso_meta/扶桑(META), 精锐(3***), group: 其他>'
 
         assert azl_san_diego_refit == '036'
         assert azl_san_diego_refit == '圣地亚哥.改'
@@ -125,7 +125,7 @@ class TestGamesAzurlaneCharacter:
         assert not azl_u556.is_mu
         assert not azl_u556.is_chibi
         assert not azl_u556.is_extra
-        assert repr(azl_u556) == '<Character 386 - u-556/u_556, 精锐(3***), group: Group.KMS>'
+        assert repr(azl_u556) == '<Character 386 - U-556/u_556, 精锐(3***), group: Group.KMS>'
 
         assert azl_azuma == 'Plan010'
         assert azl_azuma == '吾妻'

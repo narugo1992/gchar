@@ -17,7 +17,7 @@ def _ascii_only(name: str) -> str:
 def _get_ascii_names(ch: Character, rdis: float = 0.15, adis=2) -> Iterator[str]:
     tags = [
         (editdistance.eval(_ascii_only(name), name), i, name)
-        for i, name in enumerate(ch.names)
+        for i, name in enumerate(map(lambda x: str(x).lower(), ch.names))
     ]
 
     for distance, _, name in tags:

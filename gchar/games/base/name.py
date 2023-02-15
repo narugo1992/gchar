@@ -51,11 +51,11 @@ class TextName(_BaseName):
 
     @classmethod
     def _preprocess(cls, name: str) -> str:
-        return name.lower().strip()
+        return name.strip()
 
     @classmethod
     def _eqprocess(cls, name: str) -> str:
-        return name
+        return name.lower()
 
     def _key(self):
         return self._eqprocess(_BaseName._key(self))

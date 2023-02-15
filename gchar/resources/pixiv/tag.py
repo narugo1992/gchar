@@ -105,6 +105,8 @@ class PixivCharPool:
         if char.index in self.__names_alias:
             char_names.extend(self.__names_alias[char.index])
 
+        char_names = sorted(set(map(lambda x: str(x).lower(), char_names)))
+
         origin_positive = positive
         origin_negative = negative
         positive = set(_yield_tags(positive or []))
