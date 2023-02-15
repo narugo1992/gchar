@@ -10,6 +10,7 @@ from ..base import Character
 from ..fgo import Character as FateGrandOrderCharacter
 from ..genshin import Character as GenshinImpactCharacter
 from ..girlsfrontline import Character as GirlsFrontLineCharacter
+from ..neuralcloud import Character as NeuralCloudCharacter
 from ...utils import optional_lru_cache
 
 CHARS = [
@@ -17,7 +18,8 @@ CHARS = [
     FateGrandOrderCharacter,
     AzurLaneCharacter,
     GenshinImpactCharacter,
-    GirlsFrontLineCharacter
+    GirlsFrontLineCharacter,
+    NeuralCloudCharacter,
 ]
 
 
