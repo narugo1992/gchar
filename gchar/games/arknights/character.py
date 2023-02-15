@@ -1,10 +1,9 @@
-from typing import List
+from typing import List, Tuple
 
 from .index import _KNOWN_DATA_FIELDS, INDEXER
 from .name import EnglishName, JapaneseName, ChineseName, ChineseAliasName
 from .property import Level, Clazz
 from ..base import Character as _BaseCharacter
-from ..base import Skin
 
 
 class Character(_BaseCharacter):
@@ -67,10 +66,6 @@ class Character(_BaseCharacter):
         self.__skins = raw_data['skins']
         self.__is_extra = None
 
-    @property
-    def skins(self) -> List[Skin]:
-        return [Skin(item['name'], item['url']) for item in self.__skins]
-
     def _index(self):
         return self.__raw_data['data-index']
 
@@ -96,6 +91,9 @@ class Character(_BaseCharacter):
 
     def _alias_names(self):
         return list(self.__origin_raw_data.get('alias', []) or [])
+
+    def _skins(self) -> List[Tuple[str, str]]:
+        return [(item['name'], item['url']) for item in self.__skins]
 
     def __getattr__(self, item: str):
         key = 'data-' + item.replace('_', '-')

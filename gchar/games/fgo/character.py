@@ -1,12 +1,11 @@
 import re
 from functools import lru_cache
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 from .index import INDEXER
 from .name import ChineseName, JapaneseName, EnglishName, ChineseAliasName
 from .property import Rarity, Clazz
 from ..base import Character as _BaseCharacter
-from ..base import Skin
 
 
 class Character(_BaseCharacter):
@@ -92,9 +91,8 @@ class Character(_BaseCharacter):
         return f'<{type(self).__name__} {self.index} - {"/".join(map(str, self._names()))}, ' \
                f'{self.gender.name.lower()}, {self.rarity}{"*" * self.rarity}, class: {self.clazz}>'
 
-    @property
-    def skins(self) -> List[Skin]:
-        return [Skin(item['name'], item['url']) for item in self.__raw_data['skins']]
+    def _skins(self) -> List[Tuple[str, str]]:
+        return [(item['name'], item['url']) for item in self.__raw_data['skins']]
 
     @classmethod
     @lru_cache()

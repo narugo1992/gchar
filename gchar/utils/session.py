@@ -46,7 +46,7 @@ def get_requests_session(max_retries: int = 5, timeout: int = DEFAULT_TIMEOUT,
 
 
 def sget(session: requests.Session, url, *, max_retries: int = 5,
-         sleep_time: float = 5.0, **kwargs) -> requests.Response:
+         sleep_time: float = 5.0, raise_for_status: bool = True, **kwargs) -> requests.Response:
     if isinstance(session, (list, tuple)):
         session = random.choice(session)
 
@@ -59,6 +59,7 @@ def sget(session: requests.Session, url, *, max_retries: int = 5,
         else:
             break
     assert resp is not None
-    resp.raise_for_status()
+    if raise_for_status:
+        resp.raise_for_status()
 
     return resp

@@ -7,6 +7,7 @@ from ...games.base import Character
 from ...games.fgo import Character as FateGrandOrderCharacter
 from ...games.genshin import Character as GenshinImpactCharacter
 from ...games.girlsfrontline import Character as GirlsFrontLineCharacter
+from ...games.neuralcloud import Character as NeuralChoudCharacter
 
 _GAMES = [
     (ArknightsCharacter, 'arknights', 'arknights'),
@@ -14,6 +15,7 @@ _GAMES = [
     (AzurLaneCharacter, 'azur_lane', 'azurlane'),
     (GenshinImpactCharacter, 'genshin_impact', 'genshin'),
     (GirlsFrontLineCharacter, 'girls\'_frontline', 'girlsfrontline'),
+    (NeuralChoudCharacter, ['girls\'_frontline_nc', 'girls\'_frontline'], 'neuralcloud')
 ]
 
 

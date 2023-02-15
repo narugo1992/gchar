@@ -1,8 +1,9 @@
 from itertools import chain
-from typing import List, Union, Type, Iterator, Optional, Callable
+from typing import List, Union, Type, Iterator, Optional, Callable, Tuple
 
 from .name import _BaseName, ChineseName, EnglishName, JapaneseName
 from .property import Gender
+from .skin import Skin
 
 
 class Character:
@@ -97,6 +98,13 @@ class Character:
     @property
     def is_extra(self) -> bool:
         return bool(self._is_extra())
+
+    def _skins(self) -> List[Tuple[str, str]]:
+        raise NotImplementedError
+
+    @property
+    def skins(self) -> List[Skin]:
+        return [Skin(name, url) for name, url in self._skins()]
 
     def __eq__(self, other) -> bool:
         if type(other) == type(self):

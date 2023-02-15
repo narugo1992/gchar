@@ -11,6 +11,7 @@ from .games.azurlane.index import INDEXER as AZURLANE_INDEXER
 from .games.fgo.index import INDEXER as FGO_INDEX
 from .games.genshin.index import INDEXER as GENSHIN_INDEXER
 from .games.girlsfrontline.index import INDEXER as GIRLSFRONTLINE_INDEXER
+from .games.neuralcloud.index import INDEXER as NEURALCLOUD_INDEXER
 from .resources.danbooru.index import _download_from_huggingface as _download_danbooru_tags
 from .resources.pixiv.keyword import _download_pixiv_names_for_game, _download_pixiv_characters_for_game, \
     _download_pixiv_alias_for_game
@@ -19,13 +20,14 @@ from .utils import print_version as _origin_print_version
 
 print_version = partial(_origin_print_version, 'gchar')
 
-GAMES = ['fgo', 'arknights', 'azurlane', 'genshin', 'girlsfrontline']
+GAMES = ['fgo', 'arknights', 'azurlane', 'genshin', 'girlsfrontline', 'neuralcloud']
 DOWNLOAD_FUNCS = {
     'fgo': partial(FGO_INDEX.download_index_from_online, force=True),
     'arknights': partial(ARKNIGHTS_INDEXER.download_index_from_online, force=True),
     'genshin': partial(GENSHIN_INDEXER.download_index_from_online, force=True),
     'azurlane': partial(AZURLANE_INDEXER.download_index_from_online, force=True),
     'girlsfrontline': partial(GIRLSFRONTLINE_INDEXER.download_index_from_online, force=True),
+    'neuralcloud': partial(NEURALCLOUD_INDEXER.download_index_from_online, force=True),
 }
 
 
@@ -39,7 +41,7 @@ def cli():
 
 SCHEDULE_TABLE = [
     ('fgo', 'girlsfrontline', 'arknights'),
-    ('azurlane', 'genshin'),
+    ('azurlane', 'genshin', 'neuralcloud'),
 ]
 for name in chain(*SCHEDULE_TABLE):
     assert name in GAMES, f'Name {name!r} not in games.'

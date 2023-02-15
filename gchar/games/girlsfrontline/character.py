@@ -1,10 +1,9 @@
-from typing import List
+from typing import List, Tuple
 
 from .index import INDEXER
 from .name import EnglishName, JapaneseName, ChineseName, ChineseAliasName
 from .property import Rarity, Clazz
 from ..base import Character as _BaseCharacter
-from ..base import Skin
 
 
 class Character(_BaseCharacter):
@@ -46,9 +45,8 @@ class Character(_BaseCharacter):
     def clazz(self) -> Clazz:
         return Clazz.loads(self.__raw_data['class'])
 
-    @property
-    def skins(self) -> List[Skin]:
-        return [Skin(item['desc'], item['url']) for item in self.__raw_data['skins']]
+    def _skins(self) -> List[Tuple[str, str]]:
+        return [(item['desc'], item['url']) for item in self.__raw_data['skins']]
 
     def __repr__(self):
         if isinstance(self.rarity.value, int):

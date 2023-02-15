@@ -1,10 +1,9 @@
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Tuple
 
 from .index import INDEXER
 from .name import EnglishName, JapaneseName, ChineseName, ChineseAliasName
 from .property import BasicRarity, ResearchRarity, Group
 from ..base import Character as _BaseCharacter
-from ..base import Skin
 
 
 class Character(_BaseCharacter):
@@ -75,9 +74,8 @@ class Character(_BaseCharacter):
     def _is_extra(self) -> bool:
         return self.is_meta or self.is_refit or self.is_mu or self.is_chibi
 
-    @property
-    def skins(self) -> List[Skin]:
-        return [Skin(item['name'], item['url']) for item in self.__raw_data['skins']]
+    def _skins(self) -> List[Tuple[str, str]]:
+        return [(item['name'], item['url']) for item in self.__raw_data['skins']]
 
     def __repr__(self):
         return f'<{type(self).__name__} {self.index} - {"/".join(map(str, self._names()))}, ' \
