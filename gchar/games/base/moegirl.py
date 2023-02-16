@@ -40,7 +40,7 @@ def get_alias_from_moegirl_wiki(keyword: str, session: Optional[requests.Session
 
                 for sentence in sentences:
                     sentence = re.sub(r'[(（][\s\S]*?[)）]', '', sentence)
-                    words.extend([word.strip() for word in re.findall(r'\b[\w \t\-・·]+\b', sentence)])
+                    words.extend([word.strip() for word in re.findall(r'\b[\w \t\-・·`_]+\b', sentence)])
 
                 return words
 
