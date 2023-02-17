@@ -37,8 +37,8 @@ def get_requests_session(max_retries: int = 5, timeout: int = DEFAULT_TIMEOUT,
     session.mount('http://', adapter)
     session.mount('https://', adapter)
     session.headers.update({
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-                      "(KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36",
+        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+                      "(KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36",
         **dict(headers or {}),
     })
 

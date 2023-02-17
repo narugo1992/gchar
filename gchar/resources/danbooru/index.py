@@ -5,12 +5,22 @@ import time
 from typing import List, Tuple, Iterator, Dict, Union, Type, Optional
 
 import requests
+from requests.auth import HTTPBasicAuth, AuthBase
 from tqdm.auto import tqdm
 
 from .games import _get_info_by_cls
 from ...games import __file__ as __games_file__
 from ...games.base import Character
 from ...utils import sget, get_requests_session, download_file, optional_lru_cache
+
+
+def _get_danbooru_auth() -> Optional[AuthBase]:
+    username = os.environ.get('DANBOORU_USERNAME', '')
+    api_token = os.environ.get('DANBOORU_APITOKEN', '')
+    if username or api_token:
+        return HTTPBasicAuth(username, api_token)
+    else:
+        return None
 
 
 def _get_danbooru_tags(session: requests.Session, game: str) -> Iterator[Tuple[int, str, int]]:
@@ -31,6 +41,7 @@ def _get_danbooru_tags(session: requests.Session, game: str) -> Iterator[Tuple[i
                 "limit": str(1000),
                 "page": str(page),
             },
+            auth=_get_danbooru_auth(),
         )
         page_tqdm.update()
 
