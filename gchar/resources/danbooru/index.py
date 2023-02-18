@@ -127,6 +127,7 @@ def _save_tags_to_local(cls: Type[Character], file: Optional[str] = None,
                         session: Optional[requests.Session] = None):
     session = session or get_requests_session(headers={
         "User-Agent": f"gchar/{__VERSION__}",
+        'Content-Type': 'application/json; charset=utf-8',
     })
     name, game_names = _get_info_by_cls(cls)
     tags = _makeup_tags(session, game_names)
