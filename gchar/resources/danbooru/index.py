@@ -9,6 +9,7 @@ from requests.auth import HTTPBasicAuth, AuthBase
 from tqdm.auto import tqdm
 
 from .games import _get_info_by_cls
+from ...config.meta import __VERSION__
 from ...games import __file__ as __games_file__
 from ...games.base import Character
 from ...utils import sget, get_requests_session, download_file, optional_lru_cache
@@ -124,7 +125,9 @@ def _is_lookup_local_ready(cls: Type[Character]):
 
 def _save_tags_to_local(cls: Type[Character], file: Optional[str] = None,
                         session: Optional[requests.Session] = None):
-    session = session or get_requests_session()
+    session = session or get_requests_session(headers={
+        "User-Agent": f"gchar/{__VERSION__}",
+    })
     name, game_names = _get_info_by_cls(cls)
     tags = _makeup_tags(session, game_names)
     file = file or _local_file(name)

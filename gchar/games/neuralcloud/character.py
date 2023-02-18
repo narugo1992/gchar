@@ -33,7 +33,7 @@ class Character(_BaseCharacter):
         return [name for name in names if name]
 
     def _jpname(self):
-        return None
+        return self.__raw_data['jpname']
 
     @property
     def jpnames(self):
