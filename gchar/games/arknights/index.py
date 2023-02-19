@@ -1,7 +1,8 @@
 import os.path
 import os.path
 import re
-from typing import Iterator, Optional, List, Any
+from datetime import datetime
+from typing import Iterator, Optional, List, Any, Mapping, Tuple
 from urllib.parse import quote
 
 import requests
@@ -95,6 +96,36 @@ class Indexer(BaseIndexer):
 
         return skins
 
+    def _crawl_release_index(self, session: requests.Session) -> Mapping[str, Tuple[int, float]]:
+        response = sget(
+            session,
+            f'{self.__root_website__}/w/%E5%B9%B2%E5%91%98%E4%B8%8A%E7%BA%BF%E6%97%B6%E9%97%B4%E4%B8%80%E8%A7%88'
+        )
+        response.raise_for_status()
+
+        full_page = pq(response.text)
+        main_table = full_page('.wikitable')
+        retval = {}
+        for i, row in enumerate(main_table('tbody tr').items()):
+            cnname = row('td:nth-child(1) a').attr('title')
+            if not cnname:
+                continue
+
+            date_match = re.fullmatch(
+                r'^\s*(?P<year>\d+)年(?P<month>\d+)月(?P<day>\d+)日\s+(?P<hour>\d+):(?P<minute>\d+)\s*$',
+                row('td:nth-child(3)').text()
+            )
+            assert date_match, f'Release date invalid - {(cnname, row("td:nth-child(3)").text())}.'
+
+            release_time = datetime.strptime(
+                f'{date_match.group("year")}/{date_match.group("month")}/{date_match.group("day")} '
+                f'{date_match.group("hour")}:{date_match.group("minute")}:00 +0800',
+                '%Y/%m/%d %H:%M:%S %z'
+            )
+            retval[cnname] = (i, release_time.timestamp())
+
+        return retval
+
     def _crawl_index_from_online(self, session: requests.Session, maxcnt: Optional[int] = None, **kwargs) \
             -> Iterator[Any]:
         response = sget(
@@ -102,6 +133,7 @@ class Indexer(BaseIndexer):
             f'{self.__root_website__}/w/CHAR?filter=AAAAAAAggAAAAAAAAAAAAAAAAAAAAAAA',
         )
         text = response.content.decode()
+        _release_date_index = self._crawl_release_index(session)
         tqs = tqdm(list(pq(text)('.smwdata').items()))
         retval = []
         for item in tqs:
@@ -112,10 +144,13 @@ class Indexer(BaseIndexer):
                     val = pq(val).text()
                 data[name] = val
 
-            tqs.set_description(data['data-cn'])
+            cnname = data['data-cn']
+            tqs.set_description(cnname)
 
-            skins = self._get_skins_of_op(data['data-cn'], session)
+            skins = self._get_skins_of_op(cnname, session)
             assert skins
+
+            release_index, release_time = _release_date_index[cnname]
             retval.append({
                 'data': data,
                 'alias': self._get_alias_of_op(
@@ -126,6 +161,10 @@ class Indexer(BaseIndexer):
                         data.get('data-jp', None),
                     ]
                 ),
+                'release': {
+                    'index': release_index,
+                    'time': release_time,
+                },
                 'skins': skins,
             })
             if maxcnt is not None and len(retval) >= maxcnt:
