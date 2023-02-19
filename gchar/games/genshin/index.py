@@ -1,4 +1,5 @@
 import re
+from datetime import datetime
 from typing import Optional, Iterator, Any
 
 import requests
@@ -7,6 +8,12 @@ from tqdm import tqdm
 
 from ..base import BaseIndexer
 from ...utils import sget
+
+MONTH_NAMES = [
+    'January', 'February', 'March', 'April', 'May', 'June', 'July',
+    'August', 'September', 'October', 'November', 'December'
+]
+MONTH_MAP = {name.lower(): i for i, name in enumerate(MONTH_NAMES, start=1)}
 
 
 class Indexer(BaseIndexer):
@@ -55,6 +62,20 @@ class Indexer(BaseIndexer):
                     'url': image_url,
                 })
 
+            info_tab = page('section.wds-tabber .wds-tab__content [data-source=releaseDate]')
+            assert info_tab('h3').text().strip() == 'Release Date'
+            month_pattern = '|'.join(MONTH_NAMES)
+            date_match = re.fullmatch(
+                rf'^\s*(?P<month>{month_pattern})\s+(?P<day>\d+),\s*(?P<year>\d+)\s*$',
+                info_tab('.pi-data-value').text().splitlines()[0].strip(),
+            )
+            month = MONTH_MAP[date_match.group('month').lower()]
+            day, year = int(date_match.group('day')), int(date_match.group('year'))
+            release_time = datetime.strptime(
+                f'{year}/{month}/{day} 12:00:00 +0800',
+                '%Y/%m/%d %H:%M:%S %z'
+            )
+
             lang_table = None
             for tb in page('.article-table').items():
                 if 'language' in tb('th').text().strip().lower():
@@ -93,7 +114,10 @@ class Indexer(BaseIndexer):
                 'element': element,
                 'weapon': weapon,
                 'region': region,
-                'skins': skins
+                'skins': skins,
+                'release': {
+                    'time': release_time.timestamp(),
+                }
             })
             if maxcnt is not None and len(retval) >= maxcnt:
                 break
