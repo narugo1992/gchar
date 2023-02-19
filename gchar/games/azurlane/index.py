@@ -65,11 +65,11 @@ class Indexer(BaseIndexer):
             ch_id = l2('#PNN').text()
             type_ = l2('#PNshiptype').text()
             date_match = re.fullmatch(
-                r'^\s*(?P<year>\d+)年(?P<month>\d+)月(?P<day>\d+)日\s*$',
+                r'^\s*(?P<year>\d+)年(?P<month>\d+)月((?P<day>\d+)日)?\s*$',
                 l4('td:nth-child(2)').text()
             )
             release_time = datetime.strptime(
-                f'{date_match.group("year")}/{date_match.group("month")}/{date_match.group("day")} '
+                f'{date_match.group("year")}/{date_match.group("month")}/{date_match.group("day") or "15"} '
                 f'17:00:00 +0800',
                 '%Y/%m/%d %H:%M:%S %z'
             )
