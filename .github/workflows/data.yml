@@ -129,9 +129,9 @@ jobs:
           max_attempts: 5
           retry_on: any
           command: |
-            python -m gchar.games.${{ matrix.game }} --help
-            python -m gchar.games.${{ matrix.game }} update -o ${{ matrix.game }}/index.json
-            cp ${{ matrix.game }}/index.json gchar/games/${{ matrix.game }}/index.json
+            python -m gchar.games.${{ matrix.game }} --help && \
+              python -m gchar.games.${{ matrix.game }} update -o ${{ matrix.game }}/index.json && \
+              cp ${{ matrix.game }}/index.json gchar/games/${{ matrix.game }}/index.json
       - name: Run Danbooru Tags Crawler
         if: ${{ env.SCHEDULED == 'yes' }}
         env:
