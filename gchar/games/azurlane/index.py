@@ -1,4 +1,5 @@
 import re
+from datetime import datetime
 from itertools import islice
 from typing import Optional, Tuple, Iterator, Any
 
@@ -60,9 +61,19 @@ class Indexer(BaseIndexer):
             resp = sget(session, page_url)
             full = pq(resp.text)
             table = full('table.wikitable.sv-general')
-            target, l2 = islice(table('tr').items(), 2)
+            target, l2, l3, l4 = islice(table('tr').items(), 4)
             ch_id = l2('#PNN').text()
             type_ = l2('#PNshiptype').text()
+            date_match = re.fullmatch(
+                r'^\s*(?P<year>\d+)年(?P<month>\d+)月(?P<day>\d+)日\s*$',
+                l4('td:nth-child(2)').text()
+            )
+            release_time = datetime.strptime(
+                f'{date_match.group("year")}/{date_match.group("month")}/{date_match.group("day")} '
+                f'17:00:00 +0800',
+                '%Y/%m/%d %H:%M:%S %z'
+            )
+
             enname, jpname = map(lambda x: x.text(), target('span').items())
             enname_full = enname.replace(chr(160), ' ')
             if re.fullmatch('^[A-Z]{2,}$', enname_full.split(' ')[0]):
@@ -113,6 +124,9 @@ class Indexer(BaseIndexer):
                 'is_mu': '兵装' in cnname,
                 'is_chibi': False,
                 'group': group,
+                'release': {
+                    'time': release_time.timestamp(),
+                },
                 'skins': skins,
             })
             exist_cnnames.append(short_cnname)
