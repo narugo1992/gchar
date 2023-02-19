@@ -1,4 +1,5 @@
 import re
+from datetime import datetime
 from typing import List, Optional, Iterator, Any
 from urllib.parse import quote
 
@@ -69,6 +70,16 @@ class Indexer(BaseIndexer):
             page_resp.raise_for_status()
             one_page = pq(page_resp.text)
 
+            date_match = re.fullmatch(
+                r'^\s*(?P<year>\d+)-(?P<month>\d+)-(?P<day>\d+)\s*$',
+                one_page('.flexRight table tr:nth-child(7) td:nth-child(2)').text(),
+            )
+            release_time = datetime.strptime(
+                f'{date_match.group("year")}/{date_match.group("month")}/{date_match.group("day")} '
+                f'17:00:00 +0800',
+                '%Y/%m/%d %H:%M:%S %z'
+            )
+
             if one_page('#后续经历'):
                 gf_char_block = one_page('#后续经历').parent('h2').next('table.dollPageCloud')
                 *_, gf_char_element = gf_char_block('td > a.externalCloud').items()
@@ -133,6 +144,9 @@ class Indexer(BaseIndexer):
                 'class': clazz,
                 'company': company,
                 'wiki_url': wiki_url,
+                'release': {
+                    'time': release_time.timestamp(),
+                },
                 'skins': skins,
             })
             if maxcnt is not None and len(retval) >= maxcnt:
