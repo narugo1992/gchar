@@ -1,4 +1,5 @@
 import re
+from datetime import datetime
 from typing import Optional, List, Dict, Iterator, Any
 from urllib.parse import quote
 
@@ -105,6 +106,19 @@ class Indexer(BaseIndexer):
                 alias_names.extend(self._get_alias_of_op(_cn_index[id_], session, self.__root_website_cn__,
                                                          [*alias_names, *cnnames, enname, jpname]))
 
+            cn_page_resp = sget(session, f'{self.__root_website_cn__}/w/{quote(_cn_index[id_])}')
+            cn_page = pq(cn_page_resp.text)
+            cn_page_main_info, *_ = cn_page('.dollDivSplit4R table.dollTable').items()
+            date_match = re.fullmatch(
+                r'^\s*(?P<year>\d+)-(?P<month>\d+)-(?P<day>\d+)\s*$',
+                cn_page_main_info('tr:nth-child(4) td').text(),
+            )
+            release_time = datetime.strptime(
+                f'{date_match.group("year")}/{date_match.group("month")}/{date_match.group("day")} '
+                f'17:00:00 +0800',
+                '%Y/%m/%d %H:%M:%S %z'
+            )
+
             resp = sget(session, f"{self.__root_website__}/{item('.pad a').attr('href')}")
             ch_page = pq(resp.text)
             _first, *_ = ch_page('a.image').parents('ul').items()
@@ -131,6 +145,9 @@ class Indexer(BaseIndexer):
                 'alias': alias_names,
                 'twname': _get_name_with_lang('TW'),
                 'krname': _get_name_with_lang('KR'),
+                'release': {
+                    'time': release_time.timestamp(),
+                },
                 'skins': skins
             })
             if maxcnt is not None and len(retval) >= maxcnt:
