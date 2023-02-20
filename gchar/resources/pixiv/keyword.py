@@ -5,7 +5,7 @@ import time
 import warnings
 from functools import lru_cache
 from itertools import chain
-from typing import Type, List, Union, Dict, Tuple, Iterable, Optional, Callable
+from typing import Type, List, Union, Dict, Tuple, Iterable, Optional, Callable, Mapping, Any
 from urllib.parse import quote
 
 import numpy as np
@@ -24,12 +24,15 @@ from ...games.base import Character
 from ...utils import download_file, sget
 
 
-def _native_pixiv_illustration_info(keyword, session=None, order='popular_d', **kwargs) \
+def _native_pixiv_illustration_info(keyword, session=None, order='popular_d', mode='all', **kwargs) \
         -> Tuple[int, List[List[str]]]:
+    """
+    mode: all, safe, r18
+    """
     session = session or get_pixiv_sessions(**kwargs)
     url = f'https://www.pixiv.net/ajax/search/artworks/{quote(keyword, safe="()")}?' \
           f'word={quote(keyword, safe="")}' \
-          f'&order={order}&mode=all&p=1&s_mode=s_tag&type=all&lang=zh&version=9c834eede9446d61102731a4be356cd0f1090e84'
+          f'&order={order}&mode={mode}&p=1&s_mode=s_tag&type=all&lang=zh&version=9c834eede9446d61102731a4be356cd0f1090e84'
 
     resp = sget(session, url, headers={
         'Referer': f'https://www.pixiv.net/tags/{quote(keyword, safe="()")}/artworks?s_mode=s_tag',
@@ -43,7 +46,7 @@ def _native_pixiv_illustration_info(keyword, session=None, order='popular_d', **
     return total_count, all_tags
 
 
-def get_pixiv_illustration_count_by_keyword(keyword, session=None, order='popular_d', **kwargs) -> int:
+def get_pixiv_illustration_count_by_keyword(keyword, session=None, order='popular_d', mode='all', **kwargs) -> int:
     if isinstance(keyword, Character):
         from .tag import get_pixiv_keywords
         char = keyword
@@ -51,8 +54,17 @@ def get_pixiv_illustration_count_by_keyword(keyword, session=None, order='popula
         warnings.warn(UserWarning(f'Character {char!r} detected, '
                                   f'auto-generated keyword {keyword!r} will be used.'), stacklevel=2)
 
-    retval, _ = _native_pixiv_illustration_info(keyword, session, order=order, **kwargs)
+    retval, _ = _native_pixiv_illustration_info(keyword, session, order=order, mode=mode, **kwargs)
     return retval
+
+
+def _process_name_search_item(keyword: Union[str, Tuple[str, Mapping[str, Any]]]) -> Tuple[str, Mapping[str, Any]]:
+    if isinstance(keyword, str):
+        return keyword, {}
+    elif isinstance(keyword, tuple):
+        return keyword
+    else:
+        raise TypeError(f'Invalid keyword format - {keyword!r}.')
 
 
 def _names_search_count(keywords: Iterable[str], session=None,
@@ -61,22 +73,23 @@ def _names_search_count(keywords: Iterable[str], session=None,
                         ensure_times: int = 2, **kwargs) -> List[Tuple[int, List[List[str]]]]:
     session = session or get_pixiv_sessions(**kwargs)
     # noinspection PyTypeChecker
-    all_keywords: List[Tuple[int, str]] = list(enumerate(keywords))
+    all_keywords: List[Tuple[int, Tuple[str, Mapping[str, Any]]]] = \
+        list(enumerate(map(_process_name_search_item, keywords)))
     total = len(all_keywords)
 
     records: Dict[int, Tuple[int, List[List[str]]]] = {}
     last_sizes = tuple((*([None] * (ensure_times - 1)), total))
     round = 0
     while all_keywords:
-        new_round_names: List[Tuple[int, str]] = []
+        new_round_names: List[Tuple[int, Tuple[str, Mapping[str, Any]]]] = []
         all_names_tqdm = tqdm(all_keywords)
-        for i, (kid, keyword) in enumerate(all_names_tqdm):
-            all_names_tqdm.set_description(f'R{round + 1}/{i + 1} - {keyword}')
-            count, all_tags = _native_pixiv_illustration_info(keyword, session)
+        for i, (kid, (keyword, info_kwargs)) in enumerate(all_names_tqdm):
+            all_names_tqdm.set_description(f'R{round + 1}/{i + 1} - {keyword} - {info_kwargs!r}')
+            count, all_tags = _native_pixiv_illustration_info(keyword, session, **info_kwargs)
             if count:
                 records[kid] = (count, all_tags)
             else:
-                new_round_names.append((kid, keyword))
+                new_round_names.append((kid, (keyword, info_kwargs)))
 
             if (i + 1) % sleep_every == 0:
                 time.sleep(sleep_time)
@@ -309,8 +322,9 @@ def _get_pixiv_character_search_counts_by_game(
             continue
 
         all_characters.append(ch)
-        all_keywords.append(get_pixiv_keywords(ch))
-        all_unsafe_keywords.append(get_pixiv_keywords(ch, includes=['R-18']))
+        keyword = get_pixiv_keywords(ch)
+        all_keywords.append(keyword)
+        all_unsafe_keywords.append((keyword, {'mode': 'r18'}))
 
         if maxcnt is not None and len(all_characters) >= maxcnt:
             break
