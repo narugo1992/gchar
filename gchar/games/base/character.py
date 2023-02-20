@@ -4,9 +4,10 @@ from typing import List, Union, Type, Iterator, Optional, Callable, Tuple
 from .name import _BaseName, ChineseName, EnglishName, JapaneseName
 from .property import Gender
 from .skin import Skin
+from ...utils import Comparable
 
 
-class Character:
+class Character(Comparable):
     __cnname_class__: Type[ChineseName] = ChineseName
     __enname_class__: Type[EnglishName] = EnglishName
     __jpname_class__: Type[JapaneseName] = JapaneseName
@@ -106,6 +107,19 @@ class Character:
     def skins(self) -> List[Skin]:
         return [Skin(name, url) for name, url in self._skins()]
 
+    def _release_time(self):
+        raise NotImplementedError  # pragma: no cover
+
+    @property
+    def release_time(self) -> Optional[float]:
+        return self._release_time()
+
+    def _order(self):
+        return ()
+
+    def _key(self):
+        return self._order(), self._index()
+
     def __eq__(self, other) -> bool:
         if type(other) == type(self):
             return self.index == other.index
@@ -118,11 +132,14 @@ class Character:
 
             return False
 
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
     @classmethod
     def all(cls, timeout: int = 5, contains_extra: bool = True, **kwargs):
         all_chs = [cls(data) for data in cls.__index_func__(timeout=timeout)]
         chs = [ch for ch in all_chs if contains_extra or not ch.is_extra]
-        return chs
+        return sorted(chs)
 
     @classmethod
     def get(cls, name, **kwargs):

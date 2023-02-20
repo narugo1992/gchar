@@ -77,6 +77,13 @@ class Character(_BaseCharacter):
     def _skins(self) -> List[Tuple[str, str]]:
         return [(item['name'], item['url']) for item in self.__raw_data['skins']]
 
+    def _release_time(self):
+        release_info = self.__raw_data['release']
+        return release_info['time']
+
+    def _order(self):
+        return self._release_time()
+
     def __repr__(self):
         return f'<{type(self).__name__} {self.index} - {"/".join(map(str, self._names()))}, ' \
                f'{self.rarity.label}({int(self.rarity)}{"*" * self.rarity}), ' \

@@ -87,6 +87,9 @@ class Character(_BaseCharacter):
 
         return False
 
+    def _release_time(self):
+        return None
+
     def __repr__(self):
         return f'<{type(self).__name__} {self.index} - {"/".join(map(str, self._names()))}, ' \
                f'{self.gender.name.lower()}, {self.rarity}{"*" * self.rarity}, class: {self.clazz}>'

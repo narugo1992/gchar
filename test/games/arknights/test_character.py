@@ -112,6 +112,7 @@ class TestGamesArknightsCharacter:
         assert chen_extra.gender == 'female'
         assert chen_extra.clazz == 'sniper'
         assert chen_extra.is_extra
+        assert chen_extra.release_time == 1627977600.0
         assert repr(chen_extra) == '<Character R112 - 假日威龙陈/chen_the_holungday/遊龍チェン, female, 6******>'
 
         assert fang == 'fang'
@@ -124,6 +125,9 @@ class TestGamesArknightsCharacter:
         assert len(fang.skins) == 2
         assert fang.skins[0].name == '立绘 芬 1'
         assert fang.skins[1].name == '立绘 芬 skin1'
+
+        assert chen_extra > amiya
+        assert amiya_guard > fang
 
     def test_chars_get(self):
         assert Character.get('what_the_fxxk') is None

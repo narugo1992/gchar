@@ -85,6 +85,13 @@ class Character(_BaseCharacter):
         return f'<{type(self).__name__} {self.index} - {"/".join(map(str, self._names()))}, ' \
                f'rarity: {self.rarity}{"*" * self.rarity}, clazz: {self.clazz.name}>'
 
+    def _release_time(self):
+        release_info = self.__raw_data['release']
+        return release_info['time']
+
+    def _order(self):
+        return self._release_time()
+
     @classmethod
     @optional_lru_cache()
     def _list_index_of_gf(cls) -> Mapping[int, GFCharacter]:

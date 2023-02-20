@@ -106,6 +106,14 @@ class Character(_BaseCharacter):
         return (self.enname and 'the' in self.enname) or \
             (self.enname == 'amiya' and self.cnname != '阿米娅')
 
+    def _order(self):
+        release_info = self.__origin_raw_data['release']
+        return release_info['time'], release_info['index']
+
+    def _release_time(self):
+        _release_time, _ = self._order()
+        return _release_time
+
     def __repr__(self):
         return f'<{type(self).__name__} {self.index} - {"/".join(map(str, self._names()))}, ' \
                f'{self.gender.name.lower()}, {self.rarity}{"*" * self.rarity}>'
