@@ -6,9 +6,7 @@ from gchar.resources.pixiv import get_pixiv_keywords
 @pytest.mark.unittest
 class TestResourcesPixivTag:
     @pytest.mark.parametrize(['ch', 'keyword'], [
-        ('lin', 'アークナイツ (lin OR 林) -angelina -dollsfrontline -flint -folinic -frontline -girlsfrontline '
-                '-kalina -lineスタンプ -line風 -ling -violin -华法林 -守林人 '
-                '-密林の長 -巡林者 -杜林 -林檎 -树林 -森林 -雨林'),
+        ('lin', 'アークナイツ 林雨霞'),
         ('ling', 'アークナイツ (ling OR リィン OR 令) -lingerie -pearling -smiling -tickling '
                  '-wrestling -xiangling -博令 -生類憐れみの令'),
         ('blazer', 'アークナイツ (blaze OR ブレイズ OR 煌) -博煌 -煌喉'),
@@ -17,7 +15,7 @@ class TestResourcesPixivTag:
         ('シー', 'アークナイツ (dusk OR シー OR 夕) -ケルシー -シージ -シースルー -シートベルト -シーン '
                '-セクシー -センターシーム -ドロシー -七夕 -博夕 -夕暮れ -明日方舟夕'),
         ('多萝西', 'アークナイツ (dorothy OR 多萝西)'),
-        ('aak', 'アークナイツ (aak OR 阿) -博阿 -阿丝忒菈 -阿丽娜 -阿咬 -阿波尼亚 -阿消 -阿米亚 '
+        ('aak', 'アークナイツ (aak OR 阿) -博阿 -阿丝忒菈 -阿丽娜 -阿咬 -阿方索 -阿波尼亚 -阿消 -阿米亚 '
                 '-阿米娅 -阿米婭 -阿米驴 -阿芙茉妮 -阿赫茉妮 -阿陈 -阿黑颜'),
         ('CEO', 'Fate/GrandOrder (berserker_of_el_dorado OR penthesilea OR エルドラドのバーサーカー '
                 'OR ペンテシレイア OR 彭忒西勒亚 OR 黄金国的berserker)'),
@@ -36,9 +34,7 @@ class TestResourcesPixivTag:
             assert get_pixiv_keywords(ch, ) == keyword
 
     @pytest.mark.parametrize(['ch', 'keyword', 'warn'], [
-        ('lin', 'アークナイツ (lin OR 林) -angelina -dollsfrontline -flint -folinic -frontline -girlsfrontline '
-                '-kalina -lineスタンプ -line風 -ling -violin -华法林 -守林人 '
-                '-密林の長 -巡林者 -杜林 -林檎 -树林 -森林 -雨林', True),
+        ('lin', 'アークナイツ 林雨霞', True),
         ('ling', 'リィン(アークナイツ)', False),
         ('dusk', 'シー(アークナイツ) -ケルシー', False),
         ('CEO', 'エルドラドのバーサーカー(Fate) ペンテシレイア(Fate)', False),
