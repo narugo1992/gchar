@@ -11,7 +11,7 @@ class Character(_BaseCharacter):
     __cnname_class__ = ChineseName
     __jpname_class__ = JapaneseName
     __alias_name_class__ = ChineseAliasName
-    __index_func__ = INDEXER.get_index
+    __indexer__ = INDEXER
 
     def __init__(self, raw_data: dict):
         self.__raw_data = raw_data

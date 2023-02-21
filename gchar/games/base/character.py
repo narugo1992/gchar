@@ -1,18 +1,38 @@
 from itertools import chain
 from typing import List, Union, Type, Iterator, Optional, Callable, Tuple
 
+from .index import BaseIndexer
 from .name import _BaseName, ChineseName, EnglishName, JapaneseName
 from .property import Gender
 from .skin import Skin
 from ...utils import Comparable
 
 
-class Character(Comparable):
+class CharacterMeta(type):
+    def __init__(cls, name, bases, dict_):
+        type.__init__(cls, name, bases, dict_)
+        cls.__original_names = set([name for name in dir(type) if name.startswith('__') and name.endswith('__')])
+        if not hasattr(cls, '__indexer__'):
+            cls.__indexer__: Optional[BaseIndexer] = None
+
+    @property
+    def __index_func__(cls) -> Optional[Callable]:
+        if cls.__indexer__:
+            return cls.__indexer__.get_index
+        else:
+            return None
+
+    @property
+    def __game_name__(cls):
+        return cls.__indexer__.__game_name__
+
+
+class Character(Comparable, metaclass=CharacterMeta):
     __cnname_class__: Type[ChineseName] = ChineseName
     __enname_class__: Type[EnglishName] = EnglishName
     __jpname_class__: Type[JapaneseName] = JapaneseName
     __alias_name_class__: Optional[Type[ChineseName]] = None
-    __index_func__: Optional[Callable] = None
+    __indexer__: Optional[BaseIndexer] = None
 
     def _index(self):
         raise NotImplementedError  # pragma: no cover
