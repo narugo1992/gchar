@@ -28,6 +28,6 @@ class TestResourcesPixivKeyword:
     # @pytest.mark.flaky(reruns=40, reruns_delay=15)
     @skipUnless(os.environ.get(REMOTE_PIXIV_SESSION_INDEX_URL, None), 'Pixiv token required.')
     def test_get_by_keyword(self, ch_amiya, ch_slzd, pixiv_mock):
-        with pytest.raises(UserWarning):
+        with pytest.warns(UserWarning):
             _ = get_pixiv_illustration_count_by_keyword(ch_amiya)
         _ = get_pixiv_illustration_count_by_keyword('アークナイツ')
