@@ -40,8 +40,11 @@ def cli():
 
 
 SCHEDULE_TABLE = [
-    ('fgo', 'girlsfrontline', 'arknights'),
-    ('azurlane', 'genshin', 'neuralcloud'),
+    ('fgo',),
+    ('girlsfrontline',),
+    ('arknights',),
+    ('azurlane',),
+    ('genshin', 'neuralcloud'),
 ]
 for name in chain(*SCHEDULE_TABLE):
     assert name in GAMES, f'Name {name!r} not in games.'
