@@ -13,8 +13,8 @@ class TestResourcesPixivTag:
         ('w', 'w アークナイツ -beeswax -bsw -firewatch -firewhistle -flowey -goldenglow -schwarz -shaw -snowsant '
               '-steward -swimsuit -swire -waai_fu -warfarin -weedy -whislash -whisperain -wild_mane -windflit -wフェラ'),
         ('シー', 'アークナイツ (dusk OR シー OR 夕) -ケルシー -シージ -シースルー -シートベルト -シーン '
-               '-セクシー -センターシーム -ドロシー -七夕 -博夕 -夕暮れ -明日方舟夕'),
-        ('多萝西', 'アークナイツ (dorothy OR 多萝西)'),
+               '-セクシー -センターシーム -ドロシー -七夕 -博夕 -夕方 -夕暮れ -明日方舟夕'),
+        ('多萝西', 'アークナイツ (dorothy OR ドロシー OR 多萝西)'),
         ('aak', 'アークナイツ (aak OR 阿) -博阿 -阿丝忒菈 -阿丽娜 -阿咬 -阿方索 -阿波尼亚 -阿消 -阿米亚 '
                 '-阿米娅 -阿米婭 -阿米驴 -阿芙茉妮 -阿赫茉妮 -阿陈 -阿黑颜'),
         ('CEO', 'Fate/GrandOrder (berserker_of_el_dorado OR penthesilea OR エルドラドのバーサーカー '
@@ -36,7 +36,7 @@ class TestResourcesPixivTag:
     @pytest.mark.parametrize(['ch', 'keyword', 'warn'], [
         ('lin', 'アークナイツ 林雨霞', True),
         ('ling', 'リィン(アークナイツ)', False),
-        ('dusk', 'シー(アークナイツ) -ケルシー', False),
+        ('dusk', 'シー(アークナイツ) -ケルシー -ドロシー', False),
         ('CEO', 'エルドラドのバーサーカー(Fate) ペンテシレイア(Fate)', False),
     ])
     def test_get_pixiv_keywords_simple(self, ch, keyword, warn):
