@@ -1,7 +1,7 @@
 import re
 from datetime import datetime
 from itertools import islice
-from typing import Optional, Tuple, Iterator, Any
+from typing import Optional, Tuple, Iterator, Any, List
 
 import requests
 from pyquery import PyQuery as pq
@@ -13,27 +13,37 @@ from ...utils import sget
 _VALID_TYPES = ['前排先锋', '后排主力', '驱逐', '轻巡', '重巡', '超巡', '战巡', '战列', '航战', '航母', '轻航', '重炮',
                 '维修', '潜艇', '潜母', '运输', '风帆']
 
-CNNAME_PATTERN = re.compile(r'^(?P<name>[^(]+)(\((?P<alias>[^)]+)\))?(?P<suffix>.改|)$')
-CNNAME_MU_PATTERN = re.compile(r'^(?P<name>[^(]+\(\S+兵装\))(\((?P<alias>[^(]+\(\S+兵装\))\))?$')
+CNNAME_PATTERN = re.compile(r'^(?P<name>[^(]+)(?P<suffix>.改|)$')
+CNNAME_MU_PATTERN = re.compile(r'^(?P<name>[^(]+\(\S+兵装\))$')
 
 
 def _no_big_curve(s: str) -> str:
     return s.replace('（', '(').replace('）', ')').replace('・', '·')
 
 
-def _process_cnname(s: str) -> Tuple[str, str, str]:
-    if '兵装' not in s:
-        matching = CNNAME_PATTERN.fullmatch(s)
-        if not matching:
-            raise ValueError(f'Invalid cnname - {s!r}')
-        else:
-            return matching.group('name'), matching.group('alias'), matching.group('suffix')
+def _process_cnname(s: str) -> Tuple[str, List[str], str]:
+    lines = s.splitlines(keepends=False)
+    if '兵装' not in lines[0]:
+        name, alias, suffix = None, [], None
+        for line in lines:
+            matching = CNNAME_PATTERN.fullmatch(line)
+            if name is None:
+                name, suffix = matching.group('name'), matching.group('suffix')
+            else:
+                alias.append(matching.group('name'))
+
+        return name, alias, suffix
+
     else:
-        matching = CNNAME_MU_PATTERN.fullmatch(s)
-        if not matching:
-            raise ValueError(f'Invalid cnname - {s!r}')
-        else:
-            return matching.group('name'), matching.group('alias'), ''
+        name, alias = None, []
+        for line in lines:
+            matching = CNNAME_MU_PATTERN.fullmatch(line)
+            if name is None:
+                name = matching.group('name')
+            else:
+                alias.append(matching.group('name'))
+
+        return name, alias, ''
 
 
 class Indexer(BaseIndexer):
@@ -45,7 +55,7 @@ class Indexer(BaseIndexer):
             -> Iterator[Any]:
         response = sget(session, f'{self.__root_website__}/blhx/%E8%88%B0%E8%88%B9%E5%9B%BE%E9%89%B4')
 
-        items = list(pq(response.text)('.jntj-1').items())[85:]
+        items = list(pq(response.text)('.jntj-1').items())
         items_tqdm = tqdm(items, total=maxcnt)
         retval = []
         exist_cnnames = []
@@ -54,10 +64,7 @@ class Indexer(BaseIndexer):
             items_tqdm.set_description(cnname)
             p_cnname, cn_alias, cn_suffix = _process_cnname(cnname)
             short_cnname = f'{p_cnname}{cn_suffix}'
-            alias = []
-            if cn_alias:
-                cn_alias = f'{cn_alias}{cn_suffix}'
-                alias.append(cn_alias)
+            alias = [f'{cn_alias_item}{cn_suffix}' for cn_alias_item in cn_alias]
 
             types_ = item.attr('data-param1').split(',')
             rarity = item.attr('data-param2')
@@ -113,7 +120,7 @@ class Indexer(BaseIndexer):
                 'id': ch_id,
                 'cnname': {
                     'full': full_cnname,
-                    'label': cnname,
+                    'label': cnname.splitlines(keepends=False)[0],
                     'short': short_cnname,
                 },
                 'enname': {
