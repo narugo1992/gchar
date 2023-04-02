@@ -24,10 +24,16 @@ def _no_big_curve(s: str) -> str:
 def _process_cnname(s: str) -> Tuple[str, str, str]:
     if '兵装' not in s:
         matching = CNNAME_PATTERN.fullmatch(s)
-        return matching.group('name'), matching.group('alias'), matching.group('suffix')
+        if not matching:
+            raise ValueError(f'Invalid cnname - {s!r}')
+        else:
+            return matching.group('name'), matching.group('alias'), matching.group('suffix')
     else:
         matching = CNNAME_MU_PATTERN.fullmatch(s)
-        return matching.group('name'), matching.group('alias'), ''
+        if not matching:
+            raise ValueError(f'Invalid cnname - {s!r}')
+        else:
+            return matching.group('name'), matching.group('alias'), ''
 
 
 class Indexer(BaseIndexer):
@@ -39,7 +45,7 @@ class Indexer(BaseIndexer):
             -> Iterator[Any]:
         response = sget(session, f'{self.__root_website__}/blhx/%E8%88%B0%E8%88%B9%E5%9B%BE%E9%89%B4')
 
-        items = list(pq(response.text)('.jntj-1').items())
+        items = list(pq(response.text)('.jntj-1').items())[85:]
         items_tqdm = tqdm(items, total=maxcnt)
         retval = []
         exist_cnnames = []

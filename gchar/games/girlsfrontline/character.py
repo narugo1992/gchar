@@ -1,3 +1,4 @@
+import math
 from typing import List, Tuple
 
 from .index import INDEXER
@@ -53,7 +54,8 @@ class Character(_BaseCharacter):
         return release_info['time']
 
     def _order(self):
-        return self._release_time()
+        _release_time = self._release_time()
+        return _release_time if _release_time is not None else math.inf
 
     def __repr__(self):
         if isinstance(self.rarity.value, int):
