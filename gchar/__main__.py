@@ -119,7 +119,7 @@ def skins(game, output_dir: str):
     os.makedirs(output_dir, exist_ok=True)
 
     session = get_requests_session()
-    ch_tqdm = tqdm(ch_class.all()[:10])
+    ch_tqdm = tqdm(ch_class.all())
     indices = []
     for ch in ch_tqdm:
         ch_tqdm.set_description(f'{ch.index} - {ch.cnname}')

@@ -15,6 +15,10 @@ on:
         description: 'Skip Crawl (Type Anything for Yes)'
         required: false
         default: ''
+      skip_skin_crawl:
+        description: 'Skip Skin Crawl (Type Anything for Yes)'
+        required: false
+        default: ''
       skip_pixiv_names:
         description: 'Skip Pixiv Names (Type Anything for Yes)'
         required: false
@@ -150,6 +154,120 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: character-database
+          path: ${{ matrix.game }}.zip
+
+  skin_crawl:
+    name: Skin Crawl
+    runs-on: ${{ matrix.os }}
+    needs:
+      - data_crawl
+    strategy:
+      fail-fast: false
+      matrix:
+        game:
+          - 'arknights'
+          - 'fgo'
+          - 'azurlane'
+          - 'girlsfrontline'
+          - 'genshin'
+          - 'neuralcloud'
+        os:
+          - 'ubuntu-latest'
+        python-version:
+          - '3.8'
+
+    steps:
+      - name: Get system version for Linux
+        if: ${{ contains(matrix.os, 'ubuntu') }}
+        shell: bash
+        run: |
+          echo "OS_NAME=Linux" >> $GITHUB_ENV
+          echo "IS_WIN=" >> $GITHUB_ENV
+          echo "IS_MAC=" >> $GITHUB_ENV
+      - name: Set environment for Cpython
+        if: ${{ !contains(matrix.python-version, 'pypy') }}
+        shell: bash
+        run: |
+          echo "IS_PYPY=" >> $GITHUB_ENV
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 20
+          submodules: 'recursive'
+      - name: Set up system dependences on Linux
+        if: ${{ env.OS_NAME == 'Linux' }}
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y tree cloc wget curl make zip
+      - name: Set up python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          pip install --upgrade flake8 setuptools wheel twine
+          pip install -r requirements.txt
+          pip install -r requirements-test.txt
+          pip install -r requirements-crawl.txt
+      - name: Check if is scheduled when not workflow dispatched
+        if: ${{ github.event_name != 'workflow_dispatch' }}
+        shell: bash
+        run: |
+          echo "SCHEDULED=$(python -m gchar schedule -g ${{ matrix.game }})" >> $GITHUB_ENV
+      - name: Check if is scheduled when is workflow dispatched
+        if: ${{ github.event_name == 'workflow_dispatch' && !github.event.inputs.skip_skin_crawl }}
+        shell: bash
+        run: |
+          echo "SCHEDULED=$(python -m gchar scheck -g ${{ matrix.game }} -s ${{ github.event.inputs.games }})" >> $GITHUB_ENV
+      - name: Check if is scheduled when is workflow dispatched and skipped
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.skip_skin_crawl }}
+        shell: bash
+        run: |
+          echo "SCHEDULED=no" >> $GITHUB_ENV
+      - name: Download from artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: character-database
+      - name: Load Index file from upstream
+        shell: bash
+        run: |
+          ls -al ${{ matrix.game }}.zip
+          unzip -o ${{ matrix.game }}.zip
+          git clone https://huggingface.co/datasets/deepghs/game_characters
+          ls -al game_characters
+          cp -rf game_characters/${{ matrix.game }}/pixiv_alias.yaml ${{ matrix.game }}
+          cp -rf game_characters/${{ matrix.game }}/pixiv_names.json ${{ matrix.game }}
+          tree ${{ matrix.game }}
+          cp ${{ matrix.game }}/* gchar/games/${{ matrix.game }}
+          ls -al gchar/games/${{ matrix.game }}
+      - name: Test the basic environment
+        shell: bash
+        run: |
+          python -V
+          pip --version
+          pip list
+          tree .
+      - name: Run Pixiv Skins Crawler
+        if: ${{ env.SCHEDULED == 'yes' }}
+        env:
+          CI: 'true'
+        shell: bash
+        run: |
+          python -m gchar skins -g ${{ matrix.game }} -O ${{ matrix.game }}
+          tree ${{ matrix.game }}
+      - name: Package The Data
+        env:
+          CI: 'true'
+        shell: bash
+        run: |
+          zip -r ${{ matrix.game }}.zip ${{ matrix.game }}
+      - name: Upload the character databases
+        uses: actions/upload-artifact@v3
+        with:
+          name: character-skin-database
           path: ${{ matrix.game }}.zip
 
   names_crawl:
@@ -442,6 +560,65 @@ jobs:
           git add -A
           git diff-index --quiet HEAD || git commit -a -m "dev(narugo): auto sync $(date -R)"
           git push https://narugo:$HF_TOKEN@huggingface.co/datasets/deepghs/game_characters main
+
+  skin_upload:
+    name: Skin Upload
+    runs-on: ${{ matrix.os }}
+    needs:
+      - data_crawl
+      - skin_crawl
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - 'ubuntu-latest'
+        python-version:
+          - '3.8'
+
+    steps:
+      - name: Prepare the repository
+        shell: bash
+        run: |
+          sudo apt-get install -y tree
+          git clone https://huggingface.co/datasets/deepghs/game_character_skins
+          ls -al game_character_skins
+      - name: Download from artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: character-skin-database
+          path: game_character_skins
+      - name: See what is in this path
+        shell: bash
+        run: |
+          cd game_character_skins
+          for zfile in *.zip; do rm -rf ${zfile%.*} && unzip -o $zfile && rm -rf $zfile; done
+          tree .
+      - name: Push models to hugging face repository
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          cd game_character_skins
+          git config user.name 'narugo1992'
+          git config user.email 'narugo@126.com'
+          git add -A
+          git diff-index --quiet HEAD || git commit -a -m "dev(narugo): auto sync $(date -R)"
+          git push https://narugo:$HF_TOKEN@huggingface.co/datasets/deepghs/game_character_skins main
+
+  final_complete:
+    name: Final Complete
+    runs-on: ${{ matrix.os }}
+    needs:
+      - data_upload
+      - skin_upload
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - 'ubuntu-latest'
+        python-version:
+          - '3.8'
+
+    steps:
       - name: Get the Numbers
         run: |
           echo "UPDATE_DATE=$(date +'%Y-%m-%d %H:%M %Z')" >> $GITHUB_ENV
