@@ -1,6 +1,7 @@
 import json
 import os
 import re
+import tempfile
 import time
 from datetime import date
 from functools import partial
@@ -8,6 +9,7 @@ from itertools import chain
 from mimetypes import guess_extension
 
 import click
+from huggingface_hub import HfApi
 from tqdm.auto import tqdm
 
 from .games.arknights.index import INDEXER as ARKNIGHTS_INDEXER
@@ -20,7 +22,7 @@ from .games.neuralcloud.index import INDEXER as NEURALCLOUD_INDEXER
 from .resources.danbooru.index import _download_from_huggingface as _download_danbooru_tags
 from .resources.pixiv.keyword import _download_pixiv_names_for_game, _download_pixiv_characters_for_game, \
     _download_pixiv_alias_for_game
-from .utils import GLOBAL_CONTEXT_SETTINGS, download_file, srequest, get_requests_session
+from .utils import GLOBAL_CONTEXT_SETTINGS, download_file, srequest, get_requests_session, hf_upload_file_if_need
 from .utils import print_version as _origin_print_version
 
 print_version = partial(_origin_print_version, 'gchar')
@@ -112,19 +114,18 @@ def update(game):
 @cli.command('skins', help='Download all the skins of a game.')
 @click.option('--game', '-g', 'game', type=click.Choice(GAMES), required=True,
               help='Game to download all images.', show_default=True)
-@click.option('--output_directory', '-O', 'output_dir', type=str, required=True,
-              help='Directory to download.', show_default=True)
-def skins(game, output_dir: str):
+@click.option('--repo', '-r', 'repo', type=str, default='deepghs/game_character_skins',
+              help='Repository to upload.', show_default=True)
+def skins(game, repo):
     ch_class = {ch.__game_name__: ch for ch in CHARS}[game]
-    os.makedirs(output_dir, exist_ok=True)
+    api = HfApi(token=os.environ['HF_TOKEN'])
 
     session = get_requests_session()
     ch_tqdm = tqdm(ch_class.all())
     indices = []
     for ch in ch_tqdm:
         ch_tqdm.set_description(f'{ch.index} - {ch.cnname}')
-        meta_file = os.path.join(output_dir, str(ch.index), 'meta.json')
-        if not os.path.exists(meta_file):
+        with tempfile.TemporaryDirectory() as td:
             skins_tqdm = tqdm(ch.skins)
             items = []
             for skin in skins_tqdm:
@@ -132,13 +133,21 @@ def skins(game, output_dir: str):
                 resp = srequest(session, 'HEAD', skin.url)
                 ext = guess_extension(resp.headers['Content-Type'])
                 filename = re.sub(r'\W+', '_', skin.name).strip('_') + ext
-                download_file(skin.url, os.path.join(output_dir, str(ch.index), filename))
+
+                local_filename = os.path.join(td, filename)
+                download_file(skin.url, local_filename)
+                hf_upload_file_if_need(
+                    api, local_filename, f'{game}/{ch.index}/{filename}',
+                    repo_id=repo, repo_type='dataset',
+                )
+
                 items.append({
                     'name': skin.name,
                     'source_url': skin.url,
                     'filename': filename,
                 })
 
+            meta_file = os.path.join(td, 'meta.json')
             with open(meta_file, 'w') as f:
                 json.dump({
                     'index': ch.index,
@@ -148,14 +157,25 @@ def skins(game, output_dir: str):
                     'skins': items,
                     'last_updated': time.time(),
                 }, f, indent=4, ensure_ascii=False)
+            hf_upload_file_if_need(
+                api, meta_file, f'{game}/{ch.index}/meta.json',
+                repo_id=repo, repo_type='dataset',
+            )
 
         indices.append(ch.index)
 
-    with open(os.path.join(output_dir, 'meta.json'), 'w') as f:
-        json.dump({
-            'indices': indices,
-            'last_updated': time.time(),
-        }, f, indent=4, ensure_ascii=False)
+    with tempfile.TemporaryDirectory() as td:
+        global_meta_file = os.path.join(td, 'meta.json')
+        with open(global_meta_file, 'w') as f:
+            json.dump({
+                'indices': indices,
+                'last_updated': time.time(),
+            }, f, indent=4, ensure_ascii=False)
+
+        hf_upload_file_if_need(
+            api, global_meta_file, f'{game}/meta.json',
+            repo_id=repo, repo_type='dataset',
+        )
 
 
 if __name__ == '__main__':

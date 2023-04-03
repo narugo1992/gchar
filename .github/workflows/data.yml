@@ -255,21 +255,10 @@ jobs:
         if: ${{ env.SCHEDULED == 'yes' }}
         env:
           CI: 'true'
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
         shell: bash
         run: |
-          python -m gchar skins -g ${{ matrix.game }} -O ${{ matrix.game }}
-          tree ${{ matrix.game }}
-      - name: Package The Data
-        env:
-          CI: 'true'
-        shell: bash
-        run: |
-          zip -r ${{ matrix.game }}.zip ${{ matrix.game }}
-      - name: Upload the character databases
-        uses: actions/upload-artifact@v3
-        with:
-          name: character-skin-database
-          path: ${{ matrix.game }}.zip
+          python -m gchar skins -g ${{ matrix.game }}
 
   names_crawl:
     name: Names Crawl
@@ -562,55 +551,11 @@ jobs:
           git diff-index --quiet HEAD || git commit -a -m "dev(narugo): auto sync $(date -R)"
           git push https://narugo:$HF_TOKEN@huggingface.co/datasets/deepghs/game_characters main
 
-  skin_upload:
-    name: Skin Upload
-    runs-on: ${{ matrix.os }}
-    needs:
-      - data_crawl
-      - skin_crawl
-    strategy:
-      fail-fast: false
-      matrix:
-        os:
-          - 'ubuntu-latest'
-        python-version:
-          - '3.8'
-
-    steps:
-      - name: Prepare the repository
-        shell: bash
-        run: |
-          sudo apt-get install -y tree
-          git clone https://huggingface.co/datasets/deepghs/game_character_skins
-          ls -al game_character_skins
-      - name: Download from artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: character-skin-database
-          path: game_character_skins
-      - name: See what is in this path
-        shell: bash
-        run: |
-          cd game_character_skins
-          for zfile in *.zip; do rm -rf ${zfile%.*} && unzip -o $zfile && rm -rf $zfile; done
-          tree .
-      - name: Push models to hugging face repository
-        env:
-          HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        run: |
-          cd game_character_skins
-          git config user.name 'narugo1992'
-          git config user.email 'narugo@126.com'
-          git add -A
-          git diff-index --quiet HEAD || git commit -a -m "dev(narugo): auto sync $(date -R)"
-          git push https://narugo:$HF_TOKEN@huggingface.co/datasets/deepghs/game_character_skins main
-
   final_complete:
     name: Final Complete
     runs-on: ${{ matrix.os }}
     needs:
       - data_upload
-      - skin_upload
     strategy:
       fail-fast: false
       matrix:
