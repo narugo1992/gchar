@@ -163,6 +163,7 @@ jobs:
       - data_crawl
     strategy:
       fail-fast: false
+      max-parallel: 1
       matrix:
         game:
           - 'arknights'
