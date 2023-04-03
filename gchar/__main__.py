@@ -1,13 +1,18 @@
+import json
+import os
 import re
+import time
 from datetime import date
 from functools import partial
 from itertools import chain
+from mimetypes import guess_extension
 
 import click
 from tqdm.auto import tqdm
 
 from .games.arknights.index import INDEXER as ARKNIGHTS_INDEXER
 from .games.azurlane.index import INDEXER as AZURLANE_INDEXER
+from .games.dispatch.access import CHARS
 from .games.fgo.index import INDEXER as FGO_INDEX
 from .games.genshin.index import INDEXER as GENSHIN_INDEXER
 from .games.girlsfrontline.index import INDEXER as GIRLSFRONTLINE_INDEXER
@@ -15,7 +20,7 @@ from .games.neuralcloud.index import INDEXER as NEURALCLOUD_INDEXER
 from .resources.danbooru.index import _download_from_huggingface as _download_danbooru_tags
 from .resources.pixiv.keyword import _download_pixiv_names_for_game, _download_pixiv_characters_for_game, \
     _download_pixiv_alias_for_game
-from .utils import GLOBAL_CONTEXT_SETTINGS
+from .utils import GLOBAL_CONTEXT_SETTINGS, download_file, srequest, get_requests_session
 from .utils import print_version as _origin_print_version
 
 print_version = partial(_origin_print_version, 'gchar')
@@ -102,6 +107,55 @@ def update(game):
         _download_pixiv_characters_for_game(_gitem)
 
     click.echo(click.style('Completed!', fg='green'))
+
+
+@cli.command('skins', help='Download all the skins of a game.')
+@click.option('--game', '-g', 'game', type=click.Choice(GAMES), required=True,
+              help='Game to download all images.', show_default=True)
+@click.option('--output_directory', '-O', 'output_dir', type=str, required=True,
+              help='Directory to download.', show_default=True)
+def skins(game, output_dir: str):
+    ch_class = {ch.__game_name__: ch for ch in CHARS}[game]
+    os.makedirs(output_dir, exist_ok=True)
+
+    session = get_requests_session()
+    ch_tqdm = tqdm(ch_class.all()[:10])
+    indices = []
+    for ch in ch_tqdm:
+        ch_tqdm.set_description(f'{ch.index} - {ch.cnname}')
+        meta_file = os.path.join(output_dir, str(ch.index), 'meta.json')
+        if not os.path.exists(meta_file):
+            skins_tqdm = tqdm(ch.skins)
+            items = []
+            for skin in skins_tqdm:
+                skins_tqdm.set_description(skin.name)
+                resp = srequest(session, 'HEAD', skin.url)
+                ext = guess_extension(resp.headers['Content-Type'])
+                filename = re.sub(r'\W+', '_', skin.name).strip('_') + ext
+                download_file(skin.url, os.path.join(output_dir, str(ch.index), filename))
+                items.append({
+                    'name': skin.name,
+                    'source_url': skin.url,
+                    'filename': filename,
+                })
+
+            with open(meta_file, 'w') as f:
+                json.dump({
+                    'index': ch.index,
+                    'cnname': str(ch.cnname) if ch.cnname else None,
+                    'enname': str(ch.enname) if ch.enname else None,
+                    'jpname': str(ch.jpname) if ch.jpname else None,
+                    'skins': items,
+                    'last_updated': time.time(),
+                }, f, indent=4, ensure_ascii=False)
+
+        indices.append(ch.index)
+
+    with open(os.path.join(output_dir, 'meta.json'), 'w') as f:
+        json.dump({
+            'indices': indices,
+            'last_updated': time.time(),
+        }, f, indent=4, ensure_ascii=False)
 
 
 if __name__ == '__main__':

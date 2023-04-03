@@ -45,15 +45,15 @@ def get_requests_session(max_retries: int = 5, timeout: int = DEFAULT_TIMEOUT,
     return session
 
 
-def sget(session: requests.Session, url, *, max_retries: int = 5,
-         sleep_time: float = 5.0, raise_for_status: bool = True, **kwargs) -> requests.Response:
+def srequest(session: requests.Session, method, url, *, max_retries: int = 5,
+             sleep_time: float = 5.0, raise_for_status: bool = True, **kwargs) -> requests.Response:
     if isinstance(session, (list, tuple)):
         session = random.choice(session)
 
     resp = None
     for _ in range(max_retries):
         try:
-            resp = session.get(url, **kwargs)
+            resp = session.request(method, url, **kwargs)
         except RequestException:
             time.sleep(sleep_time)
         else:
@@ -63,3 +63,14 @@ def sget(session: requests.Session, url, *, max_retries: int = 5,
         resp.raise_for_status()
 
     return resp
+
+
+def sget(session: requests.Session, url, *, max_retries: int = 5,
+         sleep_time: float = 5.0, raise_for_status: bool = True, **kwargs) -> requests.Response:
+    return srequest(
+        session, 'GET', url,
+        max_retries=max_retries,
+        sleep_time=sleep_time,
+        raise_for_status=raise_for_status,
+        **kwargs,
+    )
