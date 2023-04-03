@@ -2,6 +2,7 @@ import re
 from datetime import datetime
 from itertools import islice
 from typing import Optional, Tuple, Iterator, Any, List
+from urllib.parse import urljoin
 
 import requests
 from pyquery import PyQuery as pq
@@ -50,10 +51,81 @@ class Indexer(BaseIndexer):
     __game_name__ = 'azurlane'
     __official_name__ = 'azur lane'
     __root_website__ = 'https://wiki.biligame.com/'
+    __root_website_en__ = 'https://azurlane.koumakan.jp/'
+
+    def _crawl_index_from_ensite(self, session: requests.Session):
+        response = sget(session, f'{self.__root_website_en__}/wiki/List_of_Ships')
+        records = {}
+        page = pq(response.text)
+        base_table, plan_table, meta_table, collab_table = page('.wikitable').items()
+
+        for row in base_table('tbody tr').items():
+            link = row('td:nth-child(1) a')
+            if link.text().strip():
+                index = link.text().strip()
+                url = f"{self.__root_website_en__}/{link.attr('href')}"
+                records[index] = url
+
+        for row in plan_table('tbody tr').items():
+            link = row('td:nth-child(1) a')
+            if link.text().strip():
+                index = f'Plan{link.text().strip()[-3:]}'
+                url = f"{self.__root_website_en__}/{link.attr('href')}"
+                records[index] = url
+
+        for row in meta_table('tbody tr').items():
+            link = row('td:nth-child(1) a')
+            if link.text().strip():
+                index = f'META{link.text().strip()[-3:]}'
+                url = f"{self.__root_website_en__}/{link.attr('href')}"
+                records[index] = url
+
+        for row in collab_table('tbody tr').items():
+            link = row('td:nth-child(1) a')
+            if link.text().strip():
+                index = f'Collab{link.text().strip()[-3:]}'
+                url = f"{self.__root_website_en__}/{link.attr('href')}"
+                records[index] = url
+
+        return records
+
+    def _get_skins_resources_from_enwiki_page(self, session: requests.Session, wiki_url: str):
+        response = sget(session, f'{wiki_url}/Gallery')
+        page = pq(response.text)
+
+        records = []
+        for link in page('.shipskin-image a').items():
+            title = ' - '.join([item.attr('data-title') for item in
+                                islice(link.parents('article.tabber__panel').items(), 2)])
+            url = f"{self.__root_website_en__}/{link.attr('href')}"
+            records.append((title, url))
+
+        chibi_items = list(page('.shipskin-chibi a').items())
+        if chibi_items:
+            link = chibi_items[0]
+            title = 'chibi'
+            url = f"{self.__root_website_en__}/{link.attr('href')}"
+            records.append((title, url))
+
+        return records
+
+    def _get_skins_from_enwiki_page(self, session: requests.Session, wiki_url: str):
+        tqdm_list = tqdm(self._get_skins_resources_from_enwiki_page(session, wiki_url))
+        skins = []
+        for title, url in tqdm_list:
+            tqdm_list.set_description(title)
+
+            resp = sget(session, url)
+            page = pq(resp.text)
+            media_url = urljoin(url, page('.fullMedia a').attr('href'))
+            skins.append({'name': title, 'url': media_url})
+
+        return skins
 
     def _crawl_index_from_online(self, session: requests.Session, maxcnt: Optional[int] = None, **kwargs) \
             -> Iterator[Any]:
         response = sget(session, f'{self.__root_website__}/blhx/%E8%88%B0%E8%88%B9%E5%9B%BE%E9%89%B4')
+        _en_wiki_index = self._crawl_index_from_ensite(session)
 
         items = list(pq(response.text)('.jntj-1').items())
         items_tqdm = tqdm(items, total=maxcnt)
@@ -61,7 +133,7 @@ class Indexer(BaseIndexer):
         exist_cnnames = []
         for item in items_tqdm:
             cnname = _no_big_curve(item('span a').text())
-            items_tqdm.set_description(cnname)
+            items_tqdm.set_description(cnname.splitlines(keepends=False)[0])
             p_cnname, cn_alias, cn_suffix = _process_cnname(cnname)
             short_cnname = f'{p_cnname}{cn_suffix}'
             alias = [f'{cn_alias_item}{cn_suffix}' for cn_alias_item in cn_alias]
@@ -98,24 +170,7 @@ class Indexer(BaseIndexer):
             target.remove('span')
             full_cnname = target.text()
 
-            image_tab = full('#characters .TabContainer')
-            skins = []
-            for li, con in zip(image_tab('ul .tab_li').items(), image_tab('.Contentbox2 .tab_con').items()):
-                skin_name = li.text().strip()
-                if con('img'):
-                    skin_url, skin_scale = con('img').attr('src'), 1.0
-                    srcset = con('img').attr('srcset')
-                    if srcset:
-                        skin_url_items = re.findall(r'(?P<url>http\S+) (?P<scale>[\d.]+)x', srcset)
-                        for single_url, _str_scale in skin_url_items:
-                            if float(_str_scale) > skin_scale:
-                                skin_url = single_url
-                                skin_scale = float(_str_scale)
-                    skins.append({
-                        'name': skin_name,
-                        'url': skin_url,
-                    })
-
+            skins = self._get_skins_from_enwiki_page(session, _en_wiki_index[ch_id])
             retval.append({
                 'id': ch_id,
                 'cnname': {
