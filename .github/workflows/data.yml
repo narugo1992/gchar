@@ -243,6 +243,7 @@ jobs:
           tree ${{ matrix.game }}
           cp ${{ matrix.game }}/* gchar/games/${{ matrix.game }}
           ls -al gchar/games/${{ matrix.game }}
+          rm -rf ${{ matrix.game }}
       - name: Test the basic environment
         shell: bash
         run: |
