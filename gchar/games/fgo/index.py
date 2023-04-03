@@ -1,5 +1,6 @@
 import os
 import re
+import unicodedata
 from typing import List, Optional, Iterator, Any
 from urllib.parse import quote
 
@@ -148,19 +149,22 @@ class Indexer(BaseIndexer):
 
             graphbox = row6('th:nth-child(7)')
             skins = []
-            img_items = tqdm(list(graphbox('.graphpicker a.image').items()), leave=True)
-            for img in img_items:
+            skin_title_raw, *_ = re.findall(r'var\s+arrayTitle\s*=\s*new\s+Array\((?P<text>[\s\S]*?)\);', resp.text)
+            skin_title_items = re.split(r'\s*,\s*', unicodedata.normalize('NFKC', skin_title_raw))
+            skin_titles = [eval(item) for item in skin_title_items if eval(item)]
+
+            img_items = tqdm(list(zip(skin_titles, graphbox('.graphpicker a.image').items())))
+            for skin_title, img in img_items:
+                img_items.set_description(skin_title)
                 sp = sget(session, f'{self.__root_website__}/{img.attr("href")}')
                 sp_page = pq(sp.text)
                 heading = sp_page('#firstHeading').text()
-                img_items.set_description(heading)
 
                 _, resource_filename = heading.split(':', maxsplit=1)
-                image_name, _ = os.path.splitext(resource_filename)
                 image_url = f"{self.__root_website__}/{sp_page('.fullMedia a').attr('href')}"
 
                 skins.append({
-                    'name': image_name,
+                    'name': skin_title,
                     'url': image_url
                 })
 

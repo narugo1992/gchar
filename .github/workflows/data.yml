@@ -557,6 +557,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     needs:
       - data_upload
+      - skin_crawl
     strategy:
       fail-fast: false
       matrix:
