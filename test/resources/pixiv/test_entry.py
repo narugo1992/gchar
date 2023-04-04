@@ -19,7 +19,7 @@ class TestResourcesPixivMain:
         assert 'pixiv' in result.stdout
 
     @skipUnless(os.environ.get(REMOTE_PIXIV_SESSION_INDEX_URL, None), 'Pixiv token required.')
-    @skipUnless(not OS.windows, 'Non-windows required.')
+    @skipUnless(OS.linux, 'Linux required.')
     @pytest.mark.flaky(reruns=5, reruns_delay=10)
     @pytest.mark.parametrize(['game'], [
         # ('arknights',),
@@ -44,7 +44,7 @@ class TestResourcesPixivMain:
             assert 0 <= len(data['names']) <= 5
 
     @skipUnless(os.environ.get(REMOTE_PIXIV_SESSION_INDEX_URL, None), 'Pixiv token required.')
-    @skipUnless(not OS.windows, 'Non-windows required.')
+    @skipUnless(OS.linux, 'Linux required.')
     @pytest.mark.parametrize(['game'], [
         # ('arknights',),
         # ('fgo',),

@@ -80,6 +80,24 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y tree cloc wget curl make zip
+      - name: Install chrome stable
+        if: ${{ env.OS_NAME == 'Linux' }}
+        shell: bash
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          wget -qO- https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+          sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends google-chrome-stable unzip
+      - name: Install chrome driver
+        if: ${{ env.OS_NAME == 'Linux' }}
+        shell: bash
+        run: |
+          wget -qO /tmp/chromedriver.zip "http://chromedriver.storage.googleapis.com/$(wget -qO- chromedriver.storage.googleapis.com/LATEST_RELEASE)/chromedriver_linux64.zip"
+          sudo unzip -qq /tmp/chromedriver.zip chromedriver -d /usr/local/bin/
+          chromedriver --help
+          chromedriver --version
       - name: Set up python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:

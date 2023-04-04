@@ -17,7 +17,7 @@ class TestResourcesDanbooruMain:
         assert __VERSION__ in result.stdout
         assert 'danbooru' in result.stdout
 
-    @skipUnless(not OS.windows, 'Non-windows required.')
+    @skipUnless(OS.linux, 'Linux required.')
     @pytest.mark.parametrize(['game', 'cnt'], [
         ('arknights', 878),
         ('fgo', 2011),
@@ -37,7 +37,7 @@ class TestResourcesDanbooruMain:
             assert isinstance(data['tags'], list)
             assert len(data['tags']) >= cnt
 
-    @skipUnless(not OS.windows, 'Non-windows required.')
+    @skipUnless(OS.linux, 'Linux required.')
     @pytest.mark.parametrize(['game', 'cnt'], [
         ('arknights', 878),
         ('fgo', 2011),
