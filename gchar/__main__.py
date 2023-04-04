@@ -115,10 +115,21 @@ def update(game):
               help='Game to download all images.', show_default=True)
 @click.option('--repo', '-r', 'repo', type=str, default='deepghs/game_character_skins',
               help='Repository to upload.', show_default=True)
-def skins(game, repo):
+@click.option('--attempts', '-a', 'attempts', type=int, default=10,
+              help='Max attempts when upload the files.', show_default=True)
+@click.option('--wait_before_retry', 'wait_before_retry', type=int, default=1,
+              help='Wait seconds before retry.', show_default=True)
+def skins(game, repo, attempts: int, wait_before_retry: int):
     from huggingface_hub import HfApi
     ch_class = {ch.__game_name__: ch for ch in CHARS}[game]
     api = HfApi(token=os.environ['HF_TOKEN'])
+
+    def hf_file_upload(local_file, remote_file):
+        hf_upload_file_if_need(
+            api, local_file, remote_file,
+            repo_id=repo, repo_type='dataset',
+            max_attempts=attempts, wait_before_retry=wait_before_retry,
+        )
 
     session = get_requests_session()
     ch_tqdm = tqdm(ch_class.all())
@@ -136,10 +147,7 @@ def skins(game, repo):
 
                 local_filename = os.path.join(td, filename)
                 download_file(skin.url, local_filename)
-                hf_upload_file_if_need(
-                    api, local_filename, f'{game}/{ch.index}/{filename}',
-                    repo_id=repo, repo_type='dataset',
-                )
+                hf_file_upload(local_filename, f'{game}/{ch.index}/{filename}')
 
                 items.append({
                     'name': skin.name,
@@ -157,10 +165,7 @@ def skins(game, repo):
                     'skins': items,
                     'last_updated': time.time(),
                 }, f, indent=4, ensure_ascii=False)
-            hf_upload_file_if_need(
-                api, meta_file, f'{game}/{ch.index}/meta.json',
-                repo_id=repo, repo_type='dataset',
-            )
+            hf_file_upload(meta_file, f'{game}/{ch.index}/meta.json')
 
         indices.append(ch.index)
 
@@ -172,10 +177,7 @@ def skins(game, repo):
                 'last_updated': time.time(),
             }, f, indent=4, ensure_ascii=False)
 
-        hf_upload_file_if_need(
-            api, global_meta_file, f'{game}/meta.json',
-            repo_id=repo, repo_type='dataset',
-        )
+        hf_file_upload(global_meta_file, f'{game}/meta.json')
 
 
 if __name__ == '__main__':

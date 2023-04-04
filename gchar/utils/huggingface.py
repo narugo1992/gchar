@@ -1,8 +1,10 @@
 import os
+import time
 from hashlib import sha256, sha1
 
 import requests
 from huggingface_hub import hf_hub_url, HfApi
+from huggingface_hub.utils import HfHubHTTPError
 
 
 def hf_resource_check(local_filename, repo_id: str, file_in_repo: str, repo_type='model', revision='main',
@@ -45,11 +47,20 @@ def hf_need_upload(local_filename, repo_id: str, file_in_repo: str, repo_type='m
         return True
 
 
-def hf_upload_file_if_need(api: HfApi, local_filename, path_in_repo: str, repo_id: str, **kwargs):
-    if hf_need_upload(local_filename, repo_id, path_in_repo, **kwargs):
-        api.upload_file(
-            path_or_fileobj=local_filename,
-            path_in_repo=path_in_repo,
-            repo_id=repo_id,
-            **kwargs
-        )
+def hf_upload_file_if_need(api: HfApi, local_filename, path_in_repo: str, repo_id: str,
+                           max_attempts: int = 10, wait_before_retry: int = 1, **kwargs):
+    attempt = 0
+    while True:
+        attempt += 1
+        try:
+            if hf_need_upload(local_filename, repo_id, path_in_repo, **kwargs):
+                api.upload_file(
+                    path_or_fileobj=local_filename,
+                    path_in_repo=path_in_repo,
+                    repo_id=repo_id,
+                    **kwargs
+                )
+        except HfHubHTTPError as error:
+            if error.response.status_code != 412 or attempt > max_attempts:
+                raise
+            time.sleep(wait_before_retry)

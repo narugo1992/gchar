@@ -179,9 +179,11 @@ jobs:
     runs-on: ${{ matrix.os }}
     needs:
       - data_crawl
+    env:
+      MAX_ATTEMPTS: '20'
+      WAIT_BEFORE_RETRY: '3'
     strategy:
       fail-fast: false
-      max-parallel: 1
       matrix:
         game:
           - 'arknights'
@@ -277,7 +279,10 @@ jobs:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         shell: bash
         run: |
-          python -m gchar skins -g ${{ matrix.game }}
+          python -m gchar skins \
+            -g ${{ matrix.game }} \
+            --attempts ${{ env.MAX_ATTEMPTS }} \
+            --wait_before_retry ${{ env.WAIT_BEFORE_RETRY }}
 
   names_crawl:
     name: Names Crawl
