@@ -1,3 +1,6 @@
 numpy
 scipy
 huggingface_hub
+hf-webdriver-manager
+selenium
+faker

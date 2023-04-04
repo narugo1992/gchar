@@ -10,7 +10,7 @@ from pyquery import PyQuery as pq
 from tqdm.auto import tqdm
 
 from ..base import BaseIndexer
-from ...utils import sget
+from ...utils import sget, get_chrome
 
 _KNOWN_DATA_FIELDS = [
     "data-cn", "data-position", "data-en", "data-sex", "data-tag", "data-race", "data-rarity", "data-class",
@@ -46,7 +46,49 @@ class Indexer(BaseIndexer):
 
         return alias_names
 
+    def _get_skins_of_op_with_selenium(self, page_url, session: requests.Session, driver):
+        driver.get(page_url)
+        skins = []
+        charimg_params = driver.execute_script('return charimg_params;')
+        for key, item in charimg_params.items():
+            if item['url']:
+                if key == 'elite0':
+                    suffix = '精英零'
+                elif key == 'elite1':
+                    suffix = '精英一'
+                elif key == 'elite2':
+                    suffix = '精英二'
+                else:
+                    raise KeyError(f'Unknown key {key} in charimg_params.')
+                skins.append((f"{item['introduce_name']} - {suffix}", item['url']))
+
+        charskin_params = driver.execute_script('return charskin_params;')
+        for key, item in charskin_params.items():
+            if item['url']:
+                skins.append((item['name'], item['url']))
+
+        print(skins)
+        skins_tqdm = tqdm(skins)
+        retval = []
+        for name, url in skins_tqdm:
+            skins_tqdm.set_description(name)
+            from urllib import parse as urlparse
+            filename = os.path.basename(urlparse.urlsplit(url).path)
+
+            print('f', name, url)
+            resource_url = f"{self.__root_website__}/w/文件:{filename}"
+            print('t', filename, resource_url)
+
+            resp = sget(session, resource_url)
+            page = pq(resp.text)
+            media_url = f"{self.__root_website__}/{page('.fullMedia a').attr('href')}"
+
+            retval.append({'name': name, 'url': media_url})
+
+        return retval
+
     def _get_skins_of_op(self, op, session: requests.Session):
+
         search_content = quote(f"立绘 \"{op}\"")
         response = sget(
             session,
@@ -128,6 +170,7 @@ class Indexer(BaseIndexer):
 
     def _crawl_index_from_online(self, session: requests.Session, maxcnt: Optional[int] = None, **kwargs) \
             -> Iterator[Any]:
+        selenium_driver = get_chrome(headless=True)
         response = sget(
             session,
             f'{self.__root_website__}/w/CHAR?filter=AAAAAAAggAAAAAAAAAAAAAAAAAAAAAAA',
@@ -147,7 +190,9 @@ class Indexer(BaseIndexer):
             cnname = data['data-cn']
             tqs.set_description(cnname)
 
-            skins = self._get_skins_of_op(cnname, session)
+            # skins = self._get_skins_of_op(cnname, session)
+            skins = self._get_skins_of_op_with_selenium(
+                f'{self.__root_website__}/w/{quote(cnname)}', session, selenium_driver)
             assert skins
 
             release_index, release_time = _release_date_index[cnname]
@@ -170,6 +215,7 @@ class Indexer(BaseIndexer):
             if maxcnt is not None and len(retval) >= maxcnt:
                 break
 
+        selenium_driver.close()
         return retval
 
 
