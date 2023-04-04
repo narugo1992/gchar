@@ -149,11 +149,22 @@ class Indexer(BaseIndexer):
 
             graphbox = row6('th:nth-child(7)')
             skins = []
-            skin_title_raw, *_ = re.findall(r'var\s+arrayTitle\s*=\s*new\s+Array\((?P<text>[\s\S]*?)\);', resp.text)
-            skin_title_items = re.split(r'\s*,\s*', unicodedata.normalize('NFKC', skin_title_raw))
-            skin_titles = [eval(item) for item in skin_title_items if eval(item)]
+            skin_title_raw = re.findall(r'var\s+arrayTitle\s*=\s*new\s+Array\((?P<text>[\s\S]*?)\);', resp.text)
+            if skin_title_raw:  # normal servants
+                skin_title_items = re.split(r'\s*,\s*', unicodedata.normalize('NFKC', skin_title_raw[0]))
+                skin_titles = [eval(item) for item in skin_title_items if eval(item)]
+                skin_items = list(graphbox('.graphpicker a.image').items())
+            else:
+                graphbox = main_table("tbody tr:nth-child(4) th:nth-child(3)")
+                if list(graphbox('article.tabber__panel a.image').items()):  # solomon
+                    skin_items = list(graphbox('article.tabber__panel a.image').items())
+                    skin_titles = [eitem.parents('article.tabber__panel').attr('title') for eitem in skin_items]
+                else:  # other beasts
+                    skin_items = list(graphbox('a.image').items())
+                    assert len(skin_items) == 1
+                    skin_titles = ['普通']
 
-            img_items = tqdm(list(zip(skin_titles, graphbox('.graphpicker a.image').items())))
+            img_items = tqdm(list(zip(skin_titles, skin_items)))
             for skin_title, img in img_items:
                 img_items.set_description(skin_title)
                 sp = sget(session, f'{self.__root_website__}/{img.attr("href")}')
