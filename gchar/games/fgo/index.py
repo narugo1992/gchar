@@ -164,6 +164,10 @@ class Indexer(BaseIndexer):
                     assert len(skin_items) == 1
                     skin_titles = ['普通']
 
+            assert len(skin_items) == len(skin_items), \
+                f"The quantity ({len(skin_items)}) of skin items should " \
+                f"be consistent with the quantity ({len(skin_titles)}) of skin titles, " \
+                f"but in reality they are different. The current servant number is {id_}."
             img_items = tqdm(list(zip(skin_titles, skin_items)))
             for skin_title, img in img_items:
                 img_items.set_description(skin_title)
