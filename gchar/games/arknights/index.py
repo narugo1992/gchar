@@ -1,5 +1,4 @@
-import os.path
-import os.path
+import json
 import re
 from datetime import datetime
 from typing import Iterator, Optional, List, Any, Mapping, Tuple
@@ -10,7 +9,7 @@ from pyquery import PyQuery as pq
 from tqdm.auto import tqdm
 
 from ..base import BaseIndexer
-from ...utils import sget, get_chrome
+from ...utils import sget
 
 _KNOWN_DATA_FIELDS = [
     "data-cn", "data-position", "data-en", "data-sex", "data-tag", "data-race", "data-rarity", "data-class",
@@ -46,95 +45,43 @@ class Indexer(BaseIndexer):
 
         return alias_names
 
-    def _get_skins_of_op_with_selenium(self, page_url, session: requests.Session, driver):
-        driver.get(page_url)
+    def _get_skins_of_op(self, op, page_url, session: requests.Session):
+        p_resp = sget(session, page_url)
+        skins_data = []
+        _exist_names = set()
+        for tag, type_, index_, data in \
+                re.findall(r'\"(?P<tag>(skin|elite)(\d+))\"\s*:\s*(?P<data>{[^\r\n]+?})', p_resp.text):
+            index_ = int(index_)
+            if tag in _exist_names:
+                continue
+
+            data = json.loads(data)
+            if type_ == 'elite':
+                if data['introduce'] != f'精英{index_}介绍':
+                    filename = f"立绘_{op}_{['1', '1+', '2'][index_]}.png"
+                    suffix = ['精英零', '精英一', '精英二'][index_]
+                    skins_data.append((f"{data['introduce_name']} - {suffix}", filename))
+                    _exist_names.add(tag)
+            elif type_ == 'skin':
+                if data['name']:
+                    filename = f"立绘_{op}_{tag}.png"
+                    skins_data.append((data['name'], filename))
+                    _exist_names.add(tag)
+            else:
+                assert False, f'Invalid type - {type_}.'
+
+        skins_data_tqdm = tqdm(skins_data)
         skins = []
-        charimg_params = driver.execute_script('return charimg_params;')
-        for key, item in charimg_params.items():
-            if item['url']:
-                if key == 'elite0':
-                    suffix = '精英零'
-                elif key == 'elite1':
-                    suffix = '精英一'
-                elif key == 'elite2':
-                    suffix = '精英二'
-                else:
-                    raise KeyError(f'Unknown key {key} in charimg_params.')
-                skins.append((f"{item['introduce_name']} - {suffix}", item['url']))
-
-        charskin_params = driver.execute_script('return charskin_params;')
-        for key, item in charskin_params.items():
-            if item['url']:
-                skins.append((item['name'], item['url']))
-
-        print(skins)
-        skins_tqdm = tqdm(skins)
-        retval = []
-        for name, url in skins_tqdm:
-            skins_tqdm.set_description(name)
-            from urllib import parse as urlparse
-            filename = os.path.basename(urlparse.urlsplit(url).path)
-
-            print('f', name, url)
-            resource_url = f"{self.__root_website__}/w/文件:{filename}"
-            print('t', filename, resource_url)
-
-            resp = sget(session, resource_url)
-            page = pq(resp.text)
-            media_url = f"{self.__root_website__}/{page('.fullMedia a').attr('href')}"
-
-            retval.append({'name': name, 'url': media_url})
-
-        return retval
-
-    def _get_skins_of_op(self, op, session: requests.Session):
-
-        search_content = quote(f"立绘 \"{op}\"")
-        response = sget(
-            session,
-            f'{self.__root_website__}/index.php?title=%E7%89%B9%E6%AE%8A:%E6%90%9C%E7%B4%A2&profile=images'
-            f'&search={search_content}&fulltext=1'
-        )
-
-        text = response.content.decode()
-        full = pq(text)
-        result_list = full('li.mw-search-result')
-
-        skins = []
-        exist_names = set()
-        tqs = tqdm(list(result_list.items()))
-        for item in tqs:
-            url = item('td > a')
-            title = url.text().strip()
-            resource_url = f"{self.__root_website__}/{url.attr('href')}"
-            tqs.set_description(title)
-
-            assert title.startswith('文件:')
-            _, ctitle = title.split(':', maxsplit=1)
-            ctitle, _ = os.path.splitext(ctitle)
-            if ctitle in exist_names:
-                continue
-
-            try:
-                _, name, sign = re.split(r'\s+', ctitle, maxsplit=2)
-            except ValueError:
-                continue
-
-            if name != op:
-                continue
-
-            if not re.fullmatch(r'^(skin\d+|\d+|\d+\+)$', sign):
-                continue
-
-            resp = sget(session, resource_url)
+        for name, filename in skins_data_tqdm:
+            skins_data_tqdm.set_description(name)
+            resp = sget(session, f'{self.__root_website__}/w/文件:{filename}')
             page = pq(resp.text)
             media_url = f"{self.__root_website__}/{page('.fullMedia a').attr('href')}"
 
             skins.append({
-                'name': ctitle,
+                'name': name,
                 'url': media_url,
             })
-            exist_names.add(ctitle)
 
         return skins
 
@@ -170,7 +117,6 @@ class Indexer(BaseIndexer):
 
     def _crawl_index_from_online(self, session: requests.Session, maxcnt: Optional[int] = None, **kwargs) \
             -> Iterator[Any]:
-        selenium_driver = get_chrome(headless=True)
         response = sget(
             session,
             f'{self.__root_website__}/w/CHAR?filter=AAAAAAAggAAAAAAAAAAAAAAAAAAAAAAA',
@@ -190,9 +136,7 @@ class Indexer(BaseIndexer):
             cnname = data['data-cn']
             tqs.set_description(cnname)
 
-            # skins = self._get_skins_of_op(cnname, session)
-            skins = self._get_skins_of_op_with_selenium(
-                f'{self.__root_website__}/w/{quote(cnname)}', session, selenium_driver)
+            skins = self._get_skins_of_op(cnname, f'{self.__root_website__}/w/{quote(cnname)}', session)
             assert skins
 
             release_index, release_time = _release_date_index[cnname]
@@ -215,7 +159,6 @@ class Indexer(BaseIndexer):
             if maxcnt is not None and len(retval) >= maxcnt:
                 break
 
-        selenium_driver.close()
         return retval
 
 

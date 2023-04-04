@@ -9,7 +9,6 @@ from itertools import chain
 from mimetypes import guess_extension
 
 import click
-from huggingface_hub import HfApi
 from tqdm.auto import tqdm
 
 from .games.arknights.index import INDEXER as ARKNIGHTS_INDEXER
@@ -117,6 +116,7 @@ def update(game):
 @click.option('--repo', '-r', 'repo', type=str, default='deepghs/game_character_skins',
               help='Repository to upload.', show_default=True)
 def skins(game, repo):
+    from huggingface_hub import HfApi
     ch_class = {ch.__game_name__: ch for ch in CHARS}[game]
     api = HfApi(token=os.environ['HF_TOKEN'])
 
