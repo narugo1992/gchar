@@ -133,10 +133,11 @@ class Indexer(BaseIndexer):
                 img_name = fn('.gallerytext').text()
                 img_items_tqdm.set_description(img_name)
                 img_url = self._get_media_url(session, f"{self.__root_website__}/{fn('a.image').attr('href')}")
-                skins.append({
-                    'desc': img_name,
-                    'url': f"{self.__root_website__}/{img_url}",
-                })
+                if not re.findall(r'\bprofile\b', img_name, re.IGNORECASE):
+                    skins.append({
+                        'desc': img_name,
+                        'url': f"{self.__root_website__}/{img_url}",
+                    })
 
             retval.append({
                 'id': id_,

@@ -123,8 +123,8 @@ class TestGamesArknightsCharacter:
         assert fang.clazz == 'vanguard'
         assert not fang.is_extra
         assert len(fang.skins) == 2
-        assert fang.skins[0].name == '立绘 芬 1'
-        assert fang.skins[1].name == '立绘 芬 skin1'
+        assert fang.skins[0].name == '默认服装 - 精英零'
+        assert fang.skins[1].name == '十字郡'
 
         assert chen_extra > amiya
         assert amiya_guard > fang
