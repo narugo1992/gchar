@@ -64,3 +64,5 @@ def hf_upload_file_if_need(api: HfApi, local_filename, path_in_repo: str, repo_i
             if error.response.status_code != 412 or attempt > max_attempts:
                 raise
             time.sleep(wait_before_retry)
+        else:
+            break
