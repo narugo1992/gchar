@@ -138,7 +138,7 @@ class Character(Comparable, metaclass=CharacterMeta):
         return ()
 
     def _key(self):
-        return self._order(), self._index(), (1 if self.is_extra else 0)
+        return self._order(), self._index(), (1 if self._is_extra() else 0)
 
     def __eq__(self, other) -> bool:
         if type(other) == type(self):
@@ -156,10 +156,14 @@ class Character(Comparable, metaclass=CharacterMeta):
         return not self.__eq__(other)
 
     @classmethod
-    def all(cls, timeout: int = 5, contains_extra: bool = True, **kwargs):
+    def _simple_all(cls, timeout: int = 5, contains_extra: bool = True, **kwargs):
         all_chs = [cls(data) for data in cls.__index_func__(timeout=timeout)]
         chs = [ch for ch in all_chs if contains_extra or not ch.is_extra]
-        return sorted(chs)
+        return chs
+
+    @classmethod
+    def all(cls, timeout: int = 5, contains_extra: bool = True, **kwargs):
+        return sorted(cls._simple_all(timeout, contains_extra, **kwargs))
 
     @classmethod
     def get(cls, name, **kwargs):

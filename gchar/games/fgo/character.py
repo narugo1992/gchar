@@ -100,7 +100,7 @@ class Character(_BaseCharacter):
     @classmethod
     @lru_cache()
     def _make_index_by_id(cls):
-        all_chs = cls.all(contains_extra=True)
+        all_chs = cls._simple_all(contains_extra=True)
         return {ch.index: ch for ch in all_chs}
 
     @classmethod
