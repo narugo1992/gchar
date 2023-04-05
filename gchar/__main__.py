@@ -21,7 +21,8 @@ from .games.neuralcloud.index import INDEXER as NEURALCLOUD_INDEXER
 from .resources.danbooru.index import _download_from_huggingface as _download_danbooru_tags
 from .resources.pixiv.keyword import _download_pixiv_names_for_game, _download_pixiv_characters_for_game, \
     _download_pixiv_alias_for_game
-from .utils import GLOBAL_CONTEXT_SETTINGS, download_file, srequest, get_requests_session, hf_upload_file_if_need
+from .utils import GLOBAL_CONTEXT_SETTINGS, download_file, srequest, get_requests_session, hf_upload_file_if_need, \
+    hf_file_exist
 from .utils import print_version as _origin_print_version
 
 print_version = partial(_origin_print_version, 'gchar')
@@ -148,9 +149,10 @@ def skins(game, repo, attempts: int, wait_before_retry: int):
                 ext = guess_extension(resp.headers['Content-Type'])
                 filename = re.sub(r'\W+', '_', skin.name).strip('_') + ext
 
-                local_filename = os.path.join(td, filename)
-                download_file(skin.url, local_filename)
-                hf_file_upload(local_filename, f'{game}/{ch.index}/{filename}')
+                if not hf_file_exist(repo, f'{game}/{ch.index}/{filename}', repo_type='dataset'):
+                    local_filename = os.path.join(td, filename)
+                    download_file(skin.url, local_filename)
+                    hf_file_upload(local_filename, f'{game}/{ch.index}/{filename}')
 
                 items.append({
                     'name': skin.name,

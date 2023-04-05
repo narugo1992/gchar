@@ -38,6 +38,12 @@ def hf_resource_check(local_filename, repo_id: str, file_in_repo: str, repo_type
     return sha.hexdigest() == oid
 
 
+def hf_file_exist(repo_id: str, file_in_repo: str, repo_type='model', revision='main'):
+    from .session import srequest, get_requests_session
+    url = hf_hub_url(repo_id, file_in_repo, repo_type=repo_type, revision=revision)
+    return srequest(get_requests_session(), 'HEAD', url, raise_for_status=False).ok
+
+
 def hf_need_upload(local_filename, repo_id: str, file_in_repo: str, repo_type='model', revision='main',
                    chunk_for_hash: int = 1 << 20, **kwargs):
     _ = kwargs
