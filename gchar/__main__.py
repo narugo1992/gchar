@@ -133,9 +133,12 @@ def skins(game, repo, attempts: int, wait_before_retry: int):
 
     session = get_requests_session()
     ch_tqdm = tqdm(sorted(ch_class.all()))
-    indices = []
+    indices, index_set = [], set()
     for ch in ch_tqdm:
         ch_tqdm.set_description(f'{ch.index} - {ch.cnname}')
+        if ch.index in index_set:
+            continue
+
         with tempfile.TemporaryDirectory() as td:
             skins_tqdm = tqdm(ch.skins)
             items = []
@@ -167,6 +170,7 @@ def skins(game, repo, attempts: int, wait_before_retry: int):
             hf_file_upload(meta_file, f'{game}/{ch.index}/meta.json')
 
         indices.append(ch.index)
+        index_set.add(ch.index)
 
     with tempfile.TemporaryDirectory() as td:
         global_meta_file = os.path.join(td, 'meta.json')
