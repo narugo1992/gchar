@@ -132,7 +132,7 @@ def skins(game, repo, attempts: int, wait_before_retry: int):
         )
 
     session = get_requests_session()
-    ch_tqdm = tqdm(ch_class.all())
+    ch_tqdm = tqdm(sorted(ch_class.all()))
     indices = []
     for ch in ch_tqdm:
         ch_tqdm.set_description(f'{ch.index} - {ch.cnname}')
@@ -163,7 +163,6 @@ def skins(game, repo, attempts: int, wait_before_retry: int):
                     'enname': str(ch.enname) if ch.enname else None,
                     'jpname': str(ch.jpname) if ch.jpname else None,
                     'skins': items,
-                    'last_updated': time.time(),
                 }, f, indent=4, ensure_ascii=False)
             hf_file_upload(meta_file, f'{game}/{ch.index}/meta.json')
 
