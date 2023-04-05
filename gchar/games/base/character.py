@@ -138,7 +138,7 @@ class Character(Comparable, metaclass=CharacterMeta):
         return ()
 
     def _key(self):
-        return self._order(), self._index()
+        return self._order(), self._index(), (1 if self.is_extra else 0)
 
     def __eq__(self, other) -> bool:
         if type(other) == type(self):
