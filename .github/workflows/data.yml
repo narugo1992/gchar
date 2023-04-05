@@ -184,6 +184,7 @@ jobs:
       WAIT_BEFORE_RETRY: '3'
     strategy:
       fail-fast: false
+      max-parallel: 1
       matrix:
         game:
           - 'arknights'
