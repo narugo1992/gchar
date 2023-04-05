@@ -275,15 +275,20 @@ jobs:
           tree .
       - name: Run Pixiv Skins Crawler
         if: ${{ env.SCHEDULED == 'yes' }}
+        uses: nick-fields/retry@v2
         env:
           CI: 'true'
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        shell: bash
-        run: |
-          python -m gchar skins \
-            -g ${{ matrix.game }} \
-            --attempts ${{ env.MAX_ATTEMPTS }} \
-            --wait_before_retry ${{ env.WAIT_BEFORE_RETRY }}
+        with:
+          shell: bash
+          timeout_minutes: 300
+          max_attempts: 5
+          retry_on: any
+          command: |
+            python -m gchar skins \
+              -g ${{ matrix.game }} \
+              --attempts ${{ env.MAX_ATTEMPTS }} \
+              --wait_before_retry ${{ env.WAIT_BEFORE_RETRY }}
 
   names_crawl:
     name: Names Crawl
