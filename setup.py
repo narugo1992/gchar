@@ -46,7 +46,7 @@ setup(
     author_email=meta['__AUTHOR_EMAIL__'],
     license='Apache License, Version 2.0',
     keywords='A simple tool for automatic parameter tuning.',
-    url='https://github.com/HansBug/gchar',
+    url='https://github.com/narugo1992/gchar',
 
     # environment
     python_requires=">=3.7",
