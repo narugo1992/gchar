@@ -57,7 +57,7 @@ class Indexer(BaseIndexer):
         response = sget(session, f'{self.__root_website_en__}/wiki/List_of_Ships')
         records = {}
         page = pq(response.text)
-        base_table, plan_table, meta_table, collab_table = page('.wikitable').items()
+        base_table, plan_table, meta_table, collab_table, _ = page('.wikitable').items()
 
         for row in base_table('tbody tr').items():
             link = row('td:nth-child(1) a')
