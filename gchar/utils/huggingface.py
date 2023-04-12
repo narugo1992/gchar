@@ -3,8 +3,6 @@ import time
 from hashlib import sha256, sha1
 
 import requests
-from huggingface_hub import hf_hub_url, HfApi
-from huggingface_hub.utils import HfHubHTTPError
 
 
 def hf_resource_check(local_filename, repo_id: str, file_in_repo: str, repo_type='model', revision='main',
@@ -39,6 +37,7 @@ def hf_resource_check(local_filename, repo_id: str, file_in_repo: str, repo_type
 
 
 def hf_file_exist(repo_id: str, file_in_repo: str, repo_type='model', revision='main'):
+    from huggingface_hub import hf_hub_url
     from .session import srequest, get_requests_session
     url = hf_hub_url(repo_id, file_in_repo, repo_type=repo_type, revision=revision)
     return srequest(get_requests_session(), 'HEAD', url, raise_for_status=False).ok
@@ -46,6 +45,7 @@ def hf_file_exist(repo_id: str, file_in_repo: str, repo_type='model', revision='
 
 def hf_need_upload(local_filename, repo_id: str, file_in_repo: str, repo_type='model', revision='main',
                    chunk_for_hash: int = 1 << 20, **kwargs):
+    from huggingface_hub import hf_hub_url
     _ = kwargs
     if requests.head(hf_hub_url(repo_id, file_in_repo, repo_type=repo_type, revision=revision)).ok:
         return not hf_resource_check(local_filename, repo_id, file_in_repo, repo_type, revision, chunk_for_hash)
@@ -53,8 +53,9 @@ def hf_need_upload(local_filename, repo_id: str, file_in_repo: str, repo_type='m
         return True
 
 
-def hf_upload_file_if_need(api: HfApi, local_filename, path_in_repo: str, repo_id: str,
+def hf_upload_file_if_need(api, local_filename, path_in_repo: str, repo_id: str,
                            max_attempts: int = 10, wait_before_retry: int = 1, **kwargs):
+    from huggingface_hub.utils import HfHubHTTPError
     attempt = 0
     while True:
         attempt += 1
