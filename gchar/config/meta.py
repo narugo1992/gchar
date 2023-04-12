@@ -7,7 +7,7 @@ Overview:
 __TITLE__ = 'gchar'
 
 #: Version of this project.
-__VERSION__ = '0.0.7'
+__VERSION__ = '0.0.8'
 
 #: Short description of the project, will be included in ``setup.py``.
 __DESCRIPTION__ = 'Game character manager.'
