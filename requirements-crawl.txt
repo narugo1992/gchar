@@ -1,2 +1,2 @@
 numpy
-huggingface_hub
+hfmirror>=0.0.2
