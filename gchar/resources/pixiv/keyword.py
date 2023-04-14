@@ -8,8 +8,6 @@ from itertools import chain
 from typing import Type, List, Union, Dict, Tuple, Iterable, Optional, Callable, Mapping, Any
 from urllib.parse import quote
 
-import numpy as np
-
 try:
     from yaml import CLoader as Loader, CDumper as Dumper
 except ImportError:
@@ -142,6 +140,7 @@ def _load_pixiv_alias_for_game(cls: Type[Character]) -> Dict[Union[int, str], Li
 
 
 def _get_interval_func(interval: float, min_interval: float):
+    import numpy as np
     mean, std = interval, 0.4 * interval
     lower_bound, upper_bound = min_interval, interval * 2
 
