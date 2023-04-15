@@ -179,9 +179,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     needs:
       - data_crawl
-    env:
-      MAX_ATTEMPTS: '20'
-      WAIT_BEFORE_RETRY: '3'
     strategy:
       fail-fast: false
       max-parallel: 1
@@ -285,10 +282,7 @@ jobs:
           max_attempts: 5
           retry_on: any
           command: |
-            python -m gchar skins \
-              -g ${{ matrix.game }} \
-              --attempts ${{ env.MAX_ATTEMPTS }} \
-              --wait_before_retry ${{ env.WAIT_BEFORE_RETRY }}
+            python -m gchar skins -g ${{ matrix.game }}
 
   names_crawl:
     name: Names Crawl

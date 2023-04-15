@@ -1,12 +1,9 @@
-import json
+import mimetypes
 import os
 import re
-import tempfile
-import time
 from datetime import date
 from functools import partial
 from itertools import chain
-from mimetypes import guess_extension
 
 import click
 from tqdm.auto import tqdm
@@ -21,8 +18,7 @@ from .games.neuralcloud.index import INDEXER as NEURALCLOUD_INDEXER
 from .resources.danbooru.index import _download_from_huggingface as _download_danbooru_tags
 from .resources.pixiv.keyword import _download_pixiv_names_for_game, _download_pixiv_characters_for_game, \
     _download_pixiv_alias_for_game
-from .utils import GLOBAL_CONTEXT_SETTINGS, download_file, srequest, get_requests_session, hf_upload_file_if_need, \
-    hf_file_exist
+from .utils import GLOBAL_CONTEXT_SETTINGS, srequest, get_requests_session
 from .utils import print_version as _origin_print_version
 
 print_version = partial(_origin_print_version, 'gchar')
@@ -116,73 +112,56 @@ def update(game):
               help='Game to download all images.', show_default=True)
 @click.option('--repo', '-r', 'repo', type=str, default='deepghs/game_character_skins',
               help='Repository to upload.', show_default=True)
-@click.option('--attempts', '-a', 'attempts', type=int, default=10,
-              help='Max attempts when upload the files.', show_default=True)
-@click.option('--wait_before_retry', 'wait_before_retry', type=int, default=1,
-              help='Wait seconds before retry.', show_default=True)
-def skins(game, repo, attempts: int, wait_before_retry: int):
+def skins(game, repo):
+    from hfmirror.resource import SyncResource
+    from hfmirror.storage import HuggingfaceStorage
+    from hfmirror.sync import SyncTask
+    from hbutils.system import urlsplit
     from huggingface_hub import HfApi
+
     ch_class = {ch.__game_name__: ch for ch in CHARS}[game]
-    api = HfApi(token=os.environ['HF_TOKEN'])
 
-    def hf_file_upload(local_file, remote_file):
-        hf_upload_file_if_need(
-            api, local_file, remote_file,
-            repo_id=repo, repo_type='dataset',
-            max_attempts=attempts, wait_before_retry=wait_before_retry,
-        )
+    class ArknightsSkinResource(SyncResource):
+        def __init__(self, chs, ch_type):
+            SyncResource.__init__(self)
+            self.characters = chs
+            self.ch_type = ch_type
+            self.session = get_requests_session()
 
-    session = get_requests_session()
-    ch_tqdm = tqdm(sorted(ch_class.all()))
-    indices, index_set = [], set()
-    for ch in ch_tqdm:
-        ch_tqdm.set_description(f'{ch.index} - {ch.cnname}')
-        if ch.index in index_set:
-            continue
+        def grab(self):
+            yield 'metadata', {'game': self.ch_type.__game_name__}, ''
+            _exist_ids = set()
+            for ch in tqdm(self.characters):
+                if ch.index in _exist_ids:
+                    continue
 
-        with tempfile.TemporaryDirectory() as td:
-            skins_tqdm = tqdm(ch.skins)
-            items = []
-            for skin in skins_tqdm:
-                skins_tqdm.set_description(skin.name)
-                resp = srequest(session, 'HEAD', skin.url)
-                ext = guess_extension(resp.headers['Content-Type'])
-                filename = re.sub(r'\W+', '_', skin.name).strip('_') + ext
-
-                if not hf_file_exist(repo, f'{game}/{ch.index}/{filename}', repo_type='dataset'):
-                    local_filename = os.path.join(td, filename)
-                    download_file(skin.url, local_filename)
-                    hf_file_upload(local_filename, f'{game}/{ch.index}/{filename}')
-
-                items.append({
-                    'name': skin.name,
-                    'source_url': skin.url,
-                    'filename': filename,
-                })
-
-            meta_file = os.path.join(td, 'meta.json')
-            with open(meta_file, 'w') as f:
-                json.dump({
-                    'index': ch.index,
+                metadata = {
+                    'id': ch.index,
                     'cnname': str(ch.cnname) if ch.cnname else None,
-                    'enname': str(ch.enname) if ch.enname else None,
                     'jpname': str(ch.jpname) if ch.jpname else None,
-                    'skins': items,
-                }, f, indent=4, ensure_ascii=False)
-            hf_file_upload(meta_file, f'{game}/{ch.index}/meta.json')
+                    'enname': str(ch.enname) if ch.enname else None,
+                    'alias': list(map(str, ch.alias_names)),
+                }
+                yield 'metadata', metadata, f'{ch.index}'
+                _exist_ids.add(ch.index)
 
-        indices.append(ch.index)
-        index_set.add(ch.index)
+                for skin_ in ch.skins:
+                    _, ext_ = os.path.splitext(urlsplit(skin_.url).filename)
+                    if not ext_:
+                        resp_ = srequest(self.session, 'HEAD', skin_.url)
+                        ext_ = mimetypes.guess_extension(resp_.headers['Content-Type'])
 
-    with tempfile.TemporaryDirectory() as td:
-        global_meta_file = os.path.join(td, 'meta.json')
-        with open(global_meta_file, 'w') as f:
-            json.dump({
-                'indices': indices,
-                'last_updated': time.time(),
-            }, f, indent=4, ensure_ascii=False)
+                    filename_ = re.sub(r'\W+', '_', skin_.name).strip('_') + ext_
+                    yield 'remote', skin_.url, f'{ch.index}/{filename_}', {'name': skin_.name}
 
-        hf_file_upload(global_meta_file, f'{game}/meta.json')
+    resource = ArknightsSkinResource(ch_class.all(), ch_class)
+
+    api = HfApi(token=os.environ['HF_TOKEN'])
+    api.create_repo(repo, repo_type='dataset', exist_ok=True)
+    storage = HuggingfaceStorage(repo=repo, hf_client=api, namespace=game)
+
+    task = SyncTask(resource, storage)
+    task.sync()
 
 
 if __name__ == '__main__':
