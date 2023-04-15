@@ -112,6 +112,8 @@ class Indexer(BaseIndexer):
     def _get_skins_from_enwiki_page(self, session: requests.Session, wiki_url: str):
         tqdm_list = tqdm(self._get_skins_resources_from_enwiki_page(session, wiki_url))
         skins = []
+        _exist_names = set()
+        duplicate_names = set()
         for title, url in tqdm_list:
             tqdm_list.set_description(title)
 
@@ -119,8 +121,21 @@ class Indexer(BaseIndexer):
             page = pq(resp.text)
             media_url = urljoin(url, page('.fullMedia a').attr('href'))
             skins.append({'name': title, 'url': media_url})
+            if title in _exist_names:
+                duplicate_names.add(title)
+            _exist_names.add(title)
 
-        return skins
+        _max_index = {}
+        retval = []
+        for item in skins:
+            title, download_url = item['name'], item['url']
+            if title in duplicate_names:
+                _max_index[title] = _max_index.get(title, 0) + 1
+                title = f'{title} #{_max_index[title]}'
+
+            retval.append({'name': title, 'url': download_url})
+
+        return retval
 
     def _crawl_index_from_online(self, session: requests.Session, maxcnt: Optional[int] = None, **kwargs) \
             -> Iterator[Any]:
