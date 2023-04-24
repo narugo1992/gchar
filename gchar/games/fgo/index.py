@@ -105,7 +105,6 @@ class Indexer(BaseIndexer):
             row1 = main_table('tr:nth-child(1)')
             row2 = main_table('tr:nth-child(2)')
             row3 = main_table('tr:nth-child(3)')
-            row6 = main_table('tr:nth-child(6)')
             row7 = main_table('tr:nth-child(7)')
 
             CN_ALIAS_PATTERN = re.compile('^(?P<cnalias>[^（]+)（(?P<cnname>[^）]+)）$')
@@ -138,31 +137,18 @@ class Indexer(BaseIndexer):
             if enname not in all_ennames:
                 all_ennames.append(enname)
 
-            if not row3('th > img').attr('alt'):
-                accessible = False
-                rarity, *_ = re.findall(r'\d+', row1('th:nth-child(2) a img').attr('alt'))
-            else:
-                accessible = True
-                rarity, *_ = re.findall(r'\d+', row3('th > img').attr('alt'))
+            accessible = not (row1('th > span').text().strip() == '无法召唤')
+            rarity, *_ = re.findall(r'\d+', row3('th > img').attr('alt'))
             clazz = row7('td:nth-child(1)').text().strip()
             gender = row7('td:nth-child(2)').text().strip()
 
-            graphbox = row6('th:nth-child(7)')
+            graphbox = main_table('.graphpicker').parent('th')
             skins = []
             skin_title_raw = re.findall(r'var\s+arrayTitle\s*=\s*new\s+Array\((?P<text>[\s\S]*?)\);', resp.text)
-            if skin_title_raw:  # normal servants
-                skin_title_items = re.split(r'\s*,\s*', unicodedata.normalize('NFKC', skin_title_raw[0]))
-                skin_titles = [eval(item) for item in skin_title_items if eval(item)]
-                skin_items = list(graphbox('.graphpicker a.image').items())
-            else:
-                graphbox = main_table("tbody tr:nth-child(4) th:nth-child(3)")
-                if list(graphbox('article.tabber__panel a.image').items()):  # solomon
-                    skin_items = list(graphbox('article.tabber__panel a.image').items())
-                    skin_titles = [eitem.parents('article.tabber__panel').attr('title') for eitem in skin_items]
-                else:  # other beasts
-                    skin_items = list(graphbox('a.image').items())
-                    assert len(skin_items) == 1
-                    skin_titles = ['普通']
+            assert skin_title_raw, f'arrayTitle not found for character {id_!r}.'
+            skin_title_items = re.split(r'\s*,\s*', unicodedata.normalize('NFKC', skin_title_raw[0]))
+            skin_titles = [eval(item) for item in skin_title_items if eval(item)]
+            skin_items = list(graphbox('.graphpicker a.image').items())
 
             assert len(skin_items) == len(skin_items), \
                 f"The quantity ({len(skin_items)}) of skin items should " \
