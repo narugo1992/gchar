@@ -1,2 +1,4 @@
 numpy
 hfmirror>=0.0.2
+pandas
+GitPython
