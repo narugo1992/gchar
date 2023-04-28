@@ -45,13 +45,13 @@ jobs:
       fail-fast: false
       matrix:
         game:
+          - 'bluearchive'
           - 'arknights'
           - 'fgo'
           - 'azurlane'
           - 'girlsfrontline'
           - 'genshin'
           - 'neuralcloud'
-          - 'bluearchive'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -185,13 +185,13 @@ jobs:
       max-parallel: 1
       matrix:
         game:
+          - 'bluearchive'
           - 'arknights'
           - 'fgo'
           - 'azurlane'
           - 'girlsfrontline'
           - 'genshin'
           - 'neuralcloud'
-          - 'bluearchive'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -259,8 +259,14 @@ jobs:
           unzip -o ${{ matrix.game }}.zip
           git clone https://huggingface.co/datasets/deepghs/game_characters
           ls -al game_characters
-          cp -rf game_characters/${{ matrix.game }}/pixiv_alias.yaml ${{ matrix.game }}
-          cp -rf game_characters/${{ matrix.game }}/pixiv_names.json ${{ matrix.game }}
+          if [ -f game_characters/${{ matrix.game }}/pixiv_alias.yaml ]; then \
+            cp -rf game_characters/${{ matrix.game }}/pixiv_alias.yaml ${{ matrix.game }}; \
+          else \
+            echo "alias: []" > ${{ matrix.game }}/pixiv_alias.yaml; \
+          fi
+          if [ -f game_characters/${{ matrix.game }}/pixiv_names.json ]; then \
+            cp -rf game_characters/${{ matrix.game }}/pixiv_names.json ${{ matrix.game }}; \
+          fi
           tree ${{ matrix.game }}
           cp ${{ matrix.game }}/* gchar/games/${{ matrix.game }}
           ls -al gchar/games/${{ matrix.game }}
@@ -296,13 +302,13 @@ jobs:
       max-parallel: 1
       matrix:
         game:
+          - 'bluearchive'
           - 'arknights'
           - 'fgo'
           - 'azurlane'
           - 'girlsfrontline'
           - 'genshin'
           - 'neuralcloud'
-          - 'bluearchive'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -370,8 +376,14 @@ jobs:
           unzip -o ${{ matrix.game }}.zip
           git clone https://huggingface.co/datasets/deepghs/game_characters
           ls -al game_characters
-          cp -rf game_characters/${{ matrix.game }}/pixiv_alias.yaml ${{ matrix.game }}
-          cp -rf game_characters/${{ matrix.game }}/pixiv_names.json ${{ matrix.game }}
+          if [ -f game_characters/${{ matrix.game }}/pixiv_alias.yaml ]; then \
+            cp -rf game_characters/${{ matrix.game }}/pixiv_alias.yaml ${{ matrix.game }}; \
+          else \
+            echo "alias: []" > ${{ matrix.game }}/pixiv_alias.yaml; \
+          fi
+          if [ -f game_characters/${{ matrix.game }}/pixiv_names.json ]; then \
+            cp -rf game_characters/${{ matrix.game }}/pixiv_names.json ${{ matrix.game }}; \
+          fi
           tree ${{ matrix.game }}
           cp ${{ matrix.game }}/* gchar/games/${{ matrix.game }}
           ls -al gchar/games/${{ matrix.game }}
@@ -421,13 +433,13 @@ jobs:
       max-parallel: 1
       matrix:
         game:
+          - 'bluearchive'
           - 'arknights'
           - 'fgo'
           - 'azurlane'
           - 'girlsfrontline'
           - 'genshin'
           - 'neuralcloud'
-          - 'bluearchive'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -495,7 +507,9 @@ jobs:
           unzip -o ${{ matrix.game }}.zip
           git clone https://huggingface.co/datasets/deepghs/game_characters
           ls -al game_characters
-          cp -rf game_characters/${{ matrix.game }}/pixiv_characters.json ${{ matrix.game }}
+          if [ -f game_characters/${{ matrix.game }}/pixiv_characters.json ]; then \
+            cp -rf game_characters/${{ matrix.game }}/pixiv_characters.json ${{ matrix.game }}; \
+          fi
           tree ${{ matrix.game }}
           cp ${{ matrix.game }}/* gchar/games/${{ matrix.game }}
           ls -al gchar/games/${{ matrix.game }}
