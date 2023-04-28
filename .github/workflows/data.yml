@@ -10,7 +10,7 @@ on:
       games:
         description: 'Game to Crawl'
         required: true
-        default: 'arknights,fgo,girlsfrontline,genshin,azurlane,neuralcloud'
+        default: 'arknights,fgo,girlsfrontline,genshin,azurlane,neuralcloud,bluearchive'
       skip_crawl:
         description: 'Skip Crawl (Type Anything for Yes)'
         required: false

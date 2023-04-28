@@ -4,6 +4,7 @@ from typing import Type, List, Tuple
 from ...games.arknights import Character as ArknightsCharacter
 from ...games.azurlane import Character as AzurLaneCharacter
 from ...games.base import Character
+from ...games.bluearchive import Character as BlueArchiveCloudCharacter
 from ...games.fgo import Character as FateGrandOrderCharacter
 from ...games.genshin import Character as GenshinImpactCharacter
 from ...games.girlsfrontline import Character as GirlsFrontLineCharacter
@@ -15,7 +16,8 @@ _GAMES = [
     (AzurLaneCharacter, 'azur_lane', 'azurlane'),
     (GenshinImpactCharacter, 'genshin_impact', 'genshin'),
     (GirlsFrontLineCharacter, 'girls\'_frontline', 'girlsfrontline'),
-    (NeuralChoudCharacter, ['girls\'_frontline_nc', 'girls\'_frontline'], 'neuralcloud')
+    (NeuralChoudCharacter, ['girls\'_frontline_nc', 'girls\'_frontline'], 'neuralcloud'),
+    (BlueArchiveCloudCharacter, 'blue_archive', 'bluearchive'),
 ]
 
 

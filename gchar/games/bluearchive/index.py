@@ -1,17 +1,21 @@
+import os.path
 import re
 import unicodedata
+import warnings
 from datetime import datetime
 from typing import Optional, Iterator, Any
 from urllib.parse import urljoin
 
-import pykakasi
 import requests
+from PIL import Image
+from hbutils.system import TemporaryDirectory
+from imgutils.data import load_image
+from imgutils.metrics import lpips_extract_feature, lpips_difference
 from pyquery import PyQuery as pq
-from thefuzz import fuzz
 from tqdm.auto import tqdm
 
 from ..base import BaseIndexer
-from ...utils import sget
+from ...utils import sget, download_file
 
 SERVANT_ALT_PATTERN = re.compile(r'Servant (?P<id>\d+)\.[a-zA-Z\d]+')
 PAGE_REL_PATTERN = re.compile(r'var data_list\s*=\"(?P<ids>[\d,\s]*)\"')
@@ -56,7 +60,8 @@ class Indexer(BaseIndexer):
         cn_title, comment = _title_matching.group('title'), _title_matching.group('comment')
 
         first_table, *_ = page_full('table').items()
-        ch_title = first_table('tr:nth-child(1)').text().strip()
+        fr, *_ = first_table('tr:nth-child(1)').items()
+        ch_title = fr.text().strip()
         _title_matching = self._CN_TITLE_PATTERN.fullmatch(unicodedata.normalize('NFKC', ch_title))
         assert comment == _title_matching.group('comment'), \
             f'Comment not match, {comment!r} in title, ' \
@@ -119,7 +124,7 @@ class Indexer(BaseIndexer):
             items.append(self._get_ch_info_from_cn(session, content_id, ch_info['name']))
 
         items = sorted(items, key=lambda x: (x[0][0], x[0][1] or ''))
-        ch_ret, name_map = {}, {}
+        ch_ret = {}
         for (cn_title, comment), (cnnames, jpnames, skin_url) in items:
             if cn_title not in ch_ret:
                 ch_ret[cn_title] = {
@@ -135,18 +140,19 @@ class Indexer(BaseIndexer):
             # noinspection PyTypeChecker
             old_item['skins'].append({'name': comment or '默认', 'url': skin_url})
 
-            name_map[cn_title] = cn_title
-            for cnname in cnnames:
-                name_map[cnname] = cn_title
-            for jpname in jpnames:
-                name_map[jpname] = cn_title
-
-        return ch_ret, name_map
+        return ch_ret
 
     def _get_names_by_ch_url(self, session: requests.Session, ch_url: str):
         resp = sget(session, ch_url)
         full_page = pq(resp.text)
         ch_table = full_page('table.wikitable.character')
+
+        image_file_page_url = urljoin(
+            resp.url,
+            full_page("article.tabber__panel[data-title=Artwork] a.image").attr("href")
+        )
+        src_resp = sget(session, image_file_page_url)
+        full_image_url = urljoin(src_resp.url, pq(src_resp.text)(".fullMedia a").attr('href'))
 
         for row in ch_table('tr').items():
             if row('th:nth-child(1)').text().lower().strip() == 'full name':
@@ -154,13 +160,11 @@ class Indexer(BaseIndexer):
                 enname = en_line.strip()
                 jpname = re.sub(r'\s+', '', jp_line).lstrip('(').rstrip(')')
 
-                return enname, jpname
+                return enname, jpname, full_image_url
         else:
             assert False, f'Enname and jpname not found on {ch_url!r}.'
 
-    def _crawl_index_from_online(self, session: requests.Session, maxcnt: Optional[int] = None, **kwargs) \
-            -> Iterator[Any]:
-        ch_ret, name_map = self._crawl_index_from_cn(session)
+    def _crawl_index_from_en(self, session: requests.Session):
         resp = sget(session, f'{self.__root_website__}/wiki/Characters')
         full_page = pq(resp.text)
 
@@ -170,6 +174,7 @@ class Indexer(BaseIndexer):
             title = re.sub(r'\W+', '_', title.lower()).strip('_')
             columns.append(title)
 
+        retval = []
         for row in tqdm(list(full_page('table.wikitable tbody tr').items())):
             if row('th'):
                 continue
@@ -190,49 +195,94 @@ class Indexer(BaseIndexer):
             data = dict(zip(columns[1:], values[1:]))
             assert 1 <= data['rarity'] <= 3
 
-            info_url = urljoin(resp.url, row('td:nth-child(2) a').attr('href'))
-            full_enname, jpname = self._get_names_by_ch_url(session, info_url)
-            kks = pykakasi.kakasi()
-
-            def _tr(x):
-                return ' '.join([item['hepburn'] for item in kks.convert(x) if item['hepburn']])
-
-            if jpname not in name_map:
-                ot = sorted([
-                    (key, fuzz.ratio(_tr(jpname), _tr(key)), fuzz.ratio(jpname, key))
-                    for key in name_map.keys()
-                ], key=lambda x: (-x[1], -x[2], x[0]))
-                (_best_tag, _best_score_en, _best_score_jp), *_ = ot
-                # assert _best_score >= 0.6, f'Best score lower than 0.6, {jpname!r} --> {_best_tag!r} : {_best_score!r}'
-
-                print(f'{jpname}({_tr(jpname)}) --> {_best_tag}({_tr(_best_tag)}) : '
-                      f'{_best_score_jp:.1f}/{_best_score_en:.1f}')
-                print(ot[:5])
-                ch_tag = name_map[_best_tag]
-            else:
-                ch_tag = name_map[jpname]
-
-            full_cn_data = ch_ret[ch_tag]
-            full_cn_data['ennames'] = _merge_list([data['name'], full_enname])
-            full_cn_data['jpnames'] = _merge_list(full_cn_data['jpnames'], [jpname])
-
             date_match = re.fullmatch(r'^\s*(?P<year>\d+)/(?P<month>\d+)/(?P<day>\d+)\s*$', data['release_date'])
             release_time = datetime.strptime(
                 f'{date_match.group("year")}/{date_match.group("month")}/{date_match.group("day")} 17:00:00 +0800',
                 '%Y/%m/%d %H:%M:%S %z'
             )
 
-            yield {
-                'cnnames': full_cn_data['cnnames'],
-                'ennames': full_cn_data['ennames'],
-                'jpnames': full_cn_data['jpnames'],
-                'is_extra': full_cn_data['is_extra'],
-                'skins': full_cn_data['skins'],
+            info_url = urljoin(resp.url, row('td:nth-child(2) a').attr('href'))
+            full_enname, jpname, en_image_url = self._get_names_by_ch_url(session, info_url)
+            retval.append({
                 'data': data,
-                'release': {
-                    'time': release_time.timestamp(),
-                },
-            }
+                'enname': row('td:nth-child(2)').text().strip(),
+                'full_enname': full_enname,
+                'jpname': jpname,
+                'en_image_url': en_image_url,
+                'release_time': release_time.timestamp(),
+            })
+
+        return retval
+
+    def _crawl_index_from_online(self, session: requests.Session, maxcnt: Optional[int] = None, **kwargs) \
+            -> Iterator[Any]:
+        cn_ret = self._crawl_index_from_cn(session)
+        en_ret = self._crawl_index_from_en(session)
+
+        def cut_for_content(image, threshold: int = 10):
+            import numpy as np
+            data = np.array(image)
+            tp_data = data[:, :, 3]  # HxW
+
+            width_valids = np.array(range(image.width))[tp_data.mean(axis=0) > threshold]
+            height_valids = np.array(range(image.height))[tp_data.mean(axis=1) > threshold]
+
+            width_range = width_valids.min(), width_valids.max()
+            height_range = height_valids.min(), height_valids.max()
+
+            return image.crop((width_range[0], height_range[0], width_range[1], height_range[1]))
+
+        with TemporaryDirectory() as td:
+            cn_images = {}
+            for cn_name, cn_item in tqdm(cn_ret.items()):
+                file = os.path.join(td, f'cn_{cn_name}.png')
+                download_file(cn_item['skins'][0]['url'], file, session=session)
+                image = load_image(cut_for_content(Image.open(file).convert('RGBA')))
+                cn_images[cn_name] = (image, lpips_extract_feature(image))
+
+            en_images = {}
+            for i, en_item in enumerate(tqdm(en_ret)):
+                file = os.path.join(td, f'en_{i}.png')
+                download_file(en_item['en_image_url'], file, session=session)
+                image = load_image(cut_for_content(Image.open(file).convert('RGBA')))
+                en_images[i] = (image, lpips_extract_feature(image))
+
+            matches = []
+            for cn_key, (cn_image, cn_feat) in tqdm(cn_images.items()):
+                for en_key, (en_image, en_feat) in en_images.items():
+                    matches.append((cn_key, en_key, lpips_difference(cn_feat, en_feat)))
+
+            matches = sorted(matches, key=lambda x: (x[2], x[0], x[1]))
+            recorded = []
+            _remain_cn_keys, _remain_en_keys = set(cn_images.keys()), set(en_images.keys())
+            for cn_key, en_key, diff in matches:
+                if cn_key in _remain_cn_keys and en_key in _remain_en_keys and diff < 0.55:
+                    _remain_cn_keys.remove(cn_key)
+                    _remain_en_keys.remove(en_key)
+                    recorded.append((cn_key, en_key, diff))
+
+            if _remain_cn_keys:
+                warnings.warn(f'Unmatched chinese names: {list(_remain_cn_keys)!r}.')
+            if _remain_en_keys:
+                warnings.warn(f'Unmatched english names: '
+                              f'{[en_ret[en_key]["enname"] for en_key in _remain_en_keys]!r}.')
+
+            recorded = sorted(recorded, key=lambda x: x[1])
+            for cn_key, en_key, diff in recorded:
+                cn_info = cn_ret[cn_key]
+                en_info = en_ret[en_key]
+                yield {
+                    'cnnames': cn_info['cnnames'],
+                    'ennames': _merge_list([en_info['enname'], en_info['full_enname']]),
+                    'jpnames': _merge_list([en_info['jpname']], cn_info['jpnames']),
+                    'is_extra': cn_info['is_extra'],
+                    'skins': cn_info['skins'],
+                    'data': en_info['data'],
+                    'release': {
+                        'time': en_info['release_time'],
+                    },
+                    'match_diff': diff,
+                }
 
 
 INDEXER = Indexer()

@@ -7,6 +7,7 @@ from thefuzz import fuzz
 from ..arknights import Character as ArknightsCharacter
 from ..azurlane import Character as AzurLaneCharacter
 from ..base import Character
+from ..bluearchive import Character as BlueArchiveCharacter
 from ..fgo import Character as FateGrandOrderCharacter
 from ..genshin import Character as GenshinImpactCharacter
 from ..girlsfrontline import Character as GirlsFrontLineCharacter
@@ -20,6 +21,7 @@ CHARS = [
     GenshinImpactCharacter,
     GirlsFrontLineCharacter,
     NeuralCloudCharacter,
+    BlueArchiveCharacter,
 ]
 
 

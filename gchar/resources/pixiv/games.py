@@ -6,6 +6,7 @@ from ...games import __file__ as __games_file__
 from ...games.arknights import Character as ArknightsCharacter
 from ...games.azurlane import Character as AzurLaneCharacter
 from ...games.base import Character
+from ...games.bluearchive import Character as BlueArchiveCharacter
 from ...games.fgo import Character as FateGrandOrderCharacter
 from ...games.genshin import Character as GenshinImpactCharacter
 from ...games.girlsfrontline import Character as GirlsFrontLineCharacter
@@ -17,7 +18,8 @@ _GAMES = [
     (AzurLaneCharacter, 'azurlane', 'アズールレーン'),
     (GenshinImpactCharacter, 'genshin', '原神'),
     (GirlsFrontLineCharacter, 'girlsfrontline', 'ドールズフロントライン'),
-    (NeuralCloudCharacter, 'neuralcloud', '云图计划')
+    (NeuralCloudCharacter, 'neuralcloud', '云图计划'),
+    (BlueArchiveCharacter, 'bluearchive', 'ブルーアーカイブ'),
 ]
 
 
