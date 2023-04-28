@@ -7,10 +7,7 @@ from typing import Optional, Iterator, Any
 from urllib.parse import urljoin
 
 import requests
-from PIL import Image
 from hbutils.system import TemporaryDirectory
-from imgutils.data import load_image
-from imgutils.metrics import lpips_extract_feature, lpips_difference
 from pyquery import PyQuery as pq
 from tqdm.auto import tqdm
 
@@ -216,6 +213,10 @@ class Indexer(BaseIndexer):
 
     def _crawl_index_from_online(self, session: requests.Session, maxcnt: Optional[int] = None, **kwargs) \
             -> Iterator[Any]:
+        from PIL import Image
+        from imgutils.data import load_image
+        from imgutils.metrics import lpips_extract_feature, lpips_difference
+
         cn_ret = self._crawl_index_from_cn(session)
         en_ret = self._crawl_index_from_en(session)
 
