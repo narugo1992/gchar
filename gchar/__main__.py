@@ -10,6 +10,7 @@ from tqdm.auto import tqdm
 
 from .games.arknights.index import INDEXER as ARKNIGHTS_INDEXER
 from .games.azurlane.index import INDEXER as AZURLANE_INDEXER
+from .games.bluearchive.index import INDEXER as BLUEARCHIVE_INDEXER
 from .games.dispatch.access import CHARS
 from .games.fgo.index import INDEXER as FGO_INDEX
 from .games.genshin.index import INDEXER as GENSHIN_INDEXER
@@ -23,7 +24,7 @@ from .utils import print_version as _origin_print_version
 
 print_version = partial(_origin_print_version, 'gchar')
 
-GAMES = ['fgo', 'arknights', 'azurlane', 'genshin', 'girlsfrontline', 'neuralcloud']
+GAMES = ['fgo', 'arknights', 'azurlane', 'genshin', 'girlsfrontline', 'neuralcloud', 'bluearchive']
 DOWNLOAD_FUNCS = {
     'fgo': partial(FGO_INDEX.download_index_from_online, force=True),
     'arknights': partial(ARKNIGHTS_INDEXER.download_index_from_online, force=True),
@@ -31,6 +32,7 @@ DOWNLOAD_FUNCS = {
     'azurlane': partial(AZURLANE_INDEXER.download_index_from_online, force=True),
     'girlsfrontline': partial(GIRLSFRONTLINE_INDEXER.download_index_from_online, force=True),
     'neuralcloud': partial(NEURALCLOUD_INDEXER.download_index_from_online, force=True),
+    'bluearchive': partial(BLUEARCHIVE_INDEXER.download_index_from_online, force=True),
 }
 
 
