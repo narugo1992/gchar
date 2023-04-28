@@ -1,3 +1,4 @@
+import re
 from typing import List, Tuple
 
 from .index import INDEXER
@@ -17,7 +18,7 @@ class Character(_BaseCharacter):
         self.__raw_data = raw_data
 
     def _index(self) -> str:
-        return self._enname()
+        return re.sub(r'\W+', '_', self._enname().lower())
 
     def _cnname(self):
         return self.__raw_data['cnnames'][0]
