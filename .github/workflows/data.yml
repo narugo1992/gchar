@@ -51,6 +51,7 @@ jobs:
           - 'girlsfrontline'
           - 'genshin'
           - 'neuralcloud'
+          - 'bluearchive'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -190,6 +191,7 @@ jobs:
           - 'girlsfrontline'
           - 'genshin'
           - 'neuralcloud'
+          - 'bluearchive'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -300,6 +302,7 @@ jobs:
           - 'girlsfrontline'
           - 'genshin'
           - 'neuralcloud'
+          - 'bluearchive'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -424,6 +427,7 @@ jobs:
           - 'girlsfrontline'
           - 'genshin'
           - 'neuralcloud'
+          - 'bluearchive'
         os:
           - 'ubuntu-latest'
         python-version:
