@@ -49,7 +49,7 @@ SCHEDULE_TABLE = [
     ('girlsfrontline',),
     ('arknights',),
     ('azurlane',),
-    ('genshin', 'neuralcloud'),
+    ('genshin', 'neuralcloud', 'bluearchive'),
 ]
 for name in chain(*SCHEDULE_TABLE):
     assert name in GAMES, f'Name {name!r} not in games.'

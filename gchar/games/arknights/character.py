@@ -1,3 +1,4 @@
+import math
 from typing import List, Tuple
 
 from .index import _KNOWN_DATA_FIELDS, INDEXER
@@ -104,11 +105,13 @@ class Character(_BaseCharacter):
 
     def _is_extra(self) -> bool:
         return (self.enname and 'the' in self.enname) or \
-            (self.enname == 'amiya' and self.cnname != '阿米娅')
+               (self.enname == 'amiya' and self.cnname != '阿米娅')
 
     def _order(self):
         release_info = self.__origin_raw_data['release']
-        return release_info['time'], release_info['index']
+        _release_time = release_info['time'] if release_info['time'] is not None else math.inf
+        _release_index = release_info['index'] if release_info['index'] is not None else math.inf
+        return _release_time, _release_index
 
     def _release_time(self):
         _release_time, _ = self._order()

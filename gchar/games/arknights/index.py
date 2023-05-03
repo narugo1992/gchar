@@ -139,7 +139,11 @@ class Indexer(BaseIndexer):
             skins = self._get_skins_of_op(cnname, f'{self.__root_website__}/w/{quote(cnname)}', session)
             assert skins
 
-            release_index, release_time = _release_date_index[cnname]
+            _release_info = _release_date_index.get(cnname, None)
+            if _release_info:
+                release_index, release_time = _release_info
+            else:
+                release_index, release_time = None, None
             retval.append({
                 'data': data,
                 'alias': self._get_alias_of_op(
