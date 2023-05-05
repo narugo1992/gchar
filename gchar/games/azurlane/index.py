@@ -63,28 +63,28 @@ class Indexer(BaseIndexer):
             link = row('td:nth-child(1) a')
             if link.text().strip():
                 index = link.text().strip()
-                url = f"{self.__root_website_en__}/{link.attr('href')}"
+                url = urljoin(self.__root_website_en__, link.attr('href'))
                 records[index] = url
 
         for row in plan_table('tbody tr').items():
             link = row('td:nth-child(1) a')
             if link.text().strip():
                 index = f'Plan{link.text().strip()[-3:]}'
-                url = f"{self.__root_website_en__}/{link.attr('href')}"
+                url = urljoin(self.__root_website_en__, link.attr('href'))
                 records[index] = url
 
         for row in meta_table('tbody tr').items():
             link = row('td:nth-child(1) a')
             if link.text().strip():
                 index = f'META{link.text().strip()[-3:]}'
-                url = f"{self.__root_website_en__}/{link.attr('href')}"
+                url = urljoin(self.__root_website_en__, link.attr('href'))
                 records[index] = url
 
         for row in collab_table('tbody tr').items():
             link = row('td:nth-child(1) a')
             if link.text().strip():
                 index = f'Collab{link.text().strip()[-3:]}'
-                url = f"{self.__root_website_en__}/{link.attr('href')}"
+                url = urljoin(self.__root_website_en__, link.attr('href'))
                 records[index] = url
 
         return records
@@ -97,15 +97,17 @@ class Indexer(BaseIndexer):
         for link in page('.shipskin-image a').items():
             title = ' - '.join([item.attr('data-title') for item in
                                 islice(link.parents('article.tabber__panel').items(), 2)])
-            url = f"{self.__root_website_en__}/{link.attr('href')}"
-            records.append((title, url))
+            if link.attr('href'):
+                url = urljoin(self.__root_website_en__, link.attr('href'))
+                records.append((title, url))
 
         chibi_items = list(page('.shipskin-chibi a').items())
         if chibi_items:
             link = chibi_items[0]
             title = 'chibi'
-            url = f"{self.__root_website_en__}/{link.attr('href')}"
-            records.append((title, url))
+            if link.attr('href'):
+                url = urljoin(self.__root_website_en__, link.attr('href'))
+                records.append((title, url))
 
         return records
 
@@ -156,7 +158,7 @@ class Indexer(BaseIndexer):
             types_ = item.attr('data-param1').split(',')
             rarity = item.attr('data-param2')
             group, *_ = [g.strip() for g in item.attr('data-param3').split(',') if g]
-            page_url = f"{self.__root_website__}{item('.jntj-4 a').attr('href')}"
+            page_url = urljoin(self.__root_website__, item('.jntj-4 a').attr('href'))
 
             resp = sget(session, page_url)
             full = pq(resp.text)
