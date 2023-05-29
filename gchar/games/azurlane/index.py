@@ -187,7 +187,10 @@ class Indexer(BaseIndexer):
             target.remove('span')
             full_cnname = target.text()
 
-            skins = self._get_skins_from_enwiki_page(session, _en_wiki_index[ch_id])
+            if ch_id in _en_wiki_index:
+                skins = self._get_skins_from_enwiki_page(session, _en_wiki_index[ch_id])
+            else:
+                skins = []
             retval.append({
                 'id': ch_id,
                 'cnname': {

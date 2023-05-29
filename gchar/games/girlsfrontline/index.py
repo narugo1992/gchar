@@ -109,17 +109,21 @@ class Indexer(BaseIndexer):
             if id_ in _cn_index:
                 cn_page_resp = sget(session, f'{self.__root_website_cn__}/w/{quote(_cn_index[id_])}')
                 cn_page = pq(cn_page_resp.text)
-                cn_page_main_info, *_ = cn_page('.dollDivSplit4R table.dollTable').items()
-                date_match = re.fullmatch(
-                    r'^\s*(?P<year>\d+)-(?P<month>\d+)-(?P<day>\d+)\s*$',
-                    cn_page_main_info('tr:nth-child(4) td').text(),
-                )
-                release_time = datetime.strptime(
-                    f'{date_match.group("year")}/{date_match.group("month")}/{date_match.group("day")} '
-                    f'17:00:00 +0800',
-                    '%Y/%m/%d %H:%M:%S %z'
-                )
-                release_timestamp = release_time.timestamp()
+                all_doll_items = list(cn_page('.dollDivSplit4R table.dollTable').items())
+                if all_doll_items:
+                    cn_page_main_info, *_ = all_doll_items
+                    date_match = re.fullmatch(
+                        r'^\s*(?P<year>\d+)-(?P<month>\d+)-(?P<day>\d+)\s*$',
+                        cn_page_main_info('tr:nth-child(4) td').text(),
+                    )
+                    release_time = datetime.strptime(
+                        f'{date_match.group("year")}/{date_match.group("month")}/{date_match.group("day")} '
+                        f'17:00:00 +0800',
+                        '%Y/%m/%d %H:%M:%S %z'
+                    )
+                    release_timestamp = release_time.timestamp()
+                else:
+                    release_timestamp = None
             else:
                 release_timestamp = None
 

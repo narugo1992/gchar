@@ -39,7 +39,7 @@ class Indexer(BaseIndexer):
         alias_names = []
         pages = response.json()['query']['pages']
         for _, data in pages.items():
-            for item in data['redirects']:
+            for item in (data.get('redirects') or []):
                 if item['title'] not in names:
                     alias_names.append(item['title'])
 

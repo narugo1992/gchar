@@ -144,7 +144,7 @@ class Indexer(BaseIndexer):
 
             graphbox = main_table('.graphpicker').parent('th')
             skins = []
-            skin_title_raw = re.findall(r'var\s+arrayTitle\s*=\s*new\s+Array\((?P<text>[\s\S]*?)\);', resp.text)
+            skin_title_raw = re.findall(r'const\s+arrayTitle\s*=\s*\[(?P<text>[\s\S]*?)]\.filter', resp.text)
             assert skin_title_raw, f'arrayTitle not found for character {id_!r}.'
             skin_title_items = re.split(r'\s*,\s*', unicodedata.normalize('NFKC', skin_title_raw[0]))
             skin_titles = [eval(item) for item in skin_title_items if eval(item)]
