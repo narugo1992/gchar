@@ -1,10 +1,12 @@
 import re
+import warnings
 from datetime import datetime
 from itertools import islice
 from typing import Optional, Tuple, Iterator, Any, List
 from urllib.parse import urljoin
 
 import requests
+from hbutils.system import urlsplit
 from pyquery import PyQuery as pq
 from tqdm import tqdm
 
@@ -52,6 +54,7 @@ class Indexer(BaseIndexer):
     __official_name__ = 'azur lane'
     __root_website__ = 'https://wiki.biligame.com/'
     __root_website_en__ = 'https://azurlane.koumakan.jp/'
+    __img_website__ = 'https://azurlane.netojuu.com'
 
     def _crawl_index_from_ensite(self, session: requests.Session):
         response = sget(session, f'{self.__root_website_en__}/wiki/List_of_Ships')
@@ -135,7 +138,11 @@ class Indexer(BaseIndexer):
                 _max_index[title] = _max_index.get(title, 0) + 1
                 title = f'{title} #{_max_index[title]}'
 
-            retval.append({'name': title, 'url': download_url})
+            if urlsplit(self.__img_website__).host == urlsplit(download_url).host:
+                retval.append({'name': title, 'url': download_url})
+            else:
+                warnings.warn(f'Skin {title!r} url is {download_url!r}, '
+                              f'ignored due to the possibility of error site.')
 
         return retval
 

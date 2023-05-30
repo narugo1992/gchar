@@ -123,7 +123,7 @@ def skins(game, repo):
 
     ch_class = {ch.__game_name__: ch for ch in CHARS}[game]
 
-    class ArknightsSkinResource(SyncResource):
+    class SkinResource(SyncResource):
         def __init__(self, chs, ch_type):
             SyncResource.__init__(self)
             self.characters = chs
@@ -156,7 +156,7 @@ def skins(game, repo):
                     filename_ = re.sub(r'\W+', '_', skin_.name).strip('_') + ext_
                     yield 'remote', skin_.url, f'{ch.index}/{filename_}', {'name': skin_.name}
 
-    resource = ArknightsSkinResource(ch_class.all(), ch_class)
+    resource = SkinResource(ch_class.all(), ch_class)
 
     api = HfApi(token=os.environ['HF_TOKEN'])
     api.create_repo(repo, repo_type='dataset', exist_ok=True)
