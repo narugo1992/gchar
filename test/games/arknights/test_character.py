@@ -78,8 +78,8 @@ class TestGamesArknightsCharacter:
         assert repr(amiya_guard) == '<Character R001 - 阿米娅(近卫)/amiya/アーミヤ, female, 5*****>'
         assert amiya_guard == '剑兔'
 
-        assert amiya.approach == '主线剧情'
-        assert amiya_guard.approach == '主线剧情'
+        assert amiya.skill == '标准'
+        assert amiya_guard.skill == '标准'
         with pytest.raises(AttributeError):
             _ = amiya.what_the_fxxk
 
