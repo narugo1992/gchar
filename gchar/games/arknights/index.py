@@ -12,16 +12,22 @@ from ..base import BaseIndexer
 from ...utils import sget
 
 _KNOWN_DATA_FIELDS = [
-    "data-cn", "data-position", "data-en", "data-sex", "data-tag", "data-race", "data-rarity", "data-class",
-    "data-approach", "data-camp", "data-team", "data-des", "data-feature", "data-str", "data-flex", "data-tolerance",
-    "data-plan", "data-skill", "data-adapt", "data-moredes", "data-icon", "data-half", "data-ori-hp", "data-ori-atk",
-    "data-ori-def", "data-ori-res", "data-ori-dt", "data-ori-dc", "data-ori-block", "data-ori-cd", "data-index",
-    "data-jp", "data-birthplace", "data-nation", "data-group"
+    'data-adapt', 'data-atk', 'data-birth_place', 'data-block', 'data-cost', 'data-def', 'data-en',
+    'data-flex', 'data-group', 'data-hp', 'data-id', 'data-interval', 'data-ja', 'data-logo',
+    'data-nation', 'data-obtain_method', 'data-phy', 'data-plan', 'data-position', 'data-potential',
+    'data-profession', 'data-race', 'data-rarity', 'data-re_deploy', 'data-res', 'data-sex',
+    'data-skill', 'data-sortid', 'data-subprofession', 'data-tag', 'data-team', 'data-tolerance',
+    'data-trust', 'data-zh'
 ]
 
 _UNQUOTE_NEEDED_FIELDS = {
     'data-feature',
 }
+
+
+# 20220607, the data format is changed, here are the known maps
+# data-cn --> data-zh
+# data-jp --> data-ja
 
 
 class Indexer(BaseIndexer):
@@ -123,17 +129,12 @@ class Indexer(BaseIndexer):
         )
         text = response.content.decode()
         _release_date_index = self._crawl_release_index(session)
-        tqs = tqdm(list(pq(text)('.smwdata').items()))
+        tqs = tqdm(list(pq(text)('#filter-data > div').items()))
         retval = []
         for item in tqs:
-            data = {}
-            for name in _KNOWN_DATA_FIELDS:
-                val = item.attr(name)
-                if name in _UNQUOTE_NEEDED_FIELDS:
-                    val = pq(val).text()
-                data[name] = val
+            data = {key: item.attr(key) for key in _KNOWN_DATA_FIELDS}
 
-            cnname = data['data-cn']
+            cnname = data.get('data-cn') or data.get('data-zh')
             tqs.set_description(cnname)
 
             skins = self._get_skins_of_op(cnname, f'{self.__root_website__}/w/{quote(cnname)}', session)
@@ -147,11 +148,11 @@ class Indexer(BaseIndexer):
             retval.append({
                 'data': data,
                 'alias': self._get_alias_of_op(
-                    data['data-cn'], session,
+                    cnname, session,
                     [
-                        data['data-cn'],
-                        data.get('data-en', None),
-                        data.get('data-jp', None),
+                        cnname,
+                        data.get('data-en'),
+                        data.get('data-jp') or data.get('data-ja'),
                     ]
                 ),
                 'release': {

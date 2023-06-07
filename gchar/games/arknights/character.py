@@ -16,43 +16,40 @@ class Character(_BaseCharacter):
         :language: text
 
         {
-            "data-cn": "龙舌兰",
-            "data-position": "近战位",
-            "data-en": "Tequila",
-            "data-sex": "男",
-            "data-tag": "爆发",
-            "data-race": "佩洛",
-            "data-rarity": "4",
-            "data-class": "近卫",
-            "data-approach": "活动获得",
-            "data-camp": "玻利瓦尔",
-            "data-team": "",
-            "data-des": "近卫干员龙舌兰，在战场上也面带笑容。",
-            "data-feature": "通常不攻击且阻挡数为0，技能未开启时<span style=\"color:#00B0FF;\">40</span>
-                             秒内攻击力逐渐提升至最高<span style=\"color:#00B0FF;\">+200%</span>且技能结束时重置攻击力",
-            "data-str": "标准",
-            "data-flex": "标准",
-            "data-tolerance": "普通",
-            "data-plan": "优良",
-            "data-skill": "标准",
             "data-adapt": "普通",
-            "data-moredes": "别担心，他会把一切都安排妥帖。",
-            "data-icon": "//prts.wiki/images/4/42/%E5%A4%B4%E5%83%8F_%E9%BE%99%E8%88%8C%E5%85%B0.png",
-            "data-half": "//prts.wiki/images/thumb/3/34/%E5%8D%8A%E8%BA%AB%E5%83%8F_%E9%BE%99%E8%88%8C%E5%85
-                          %B0_1.png/110px-%E5%8D%8A%E8%BA%AB%E5%83%8F_%E9%BE%99%E8%88%8C%E5%85%B0_1.png",
-            "data-ori-hp": "1,871",
-            "data-ori-atk": "137",
-            "data-ori-def": "238",
-            "data-ori-res": "15",
-            "data-ori-dt": "80s",
-            "data-ori-dc": "11→13",
-            "data-ori-block": "2→2→3",
-            "data-ori-cd": "1.2s",
-            "data-index": "BV12",
-            "data-jp": "テキーラ",
-            "data-birthplace": "玻利瓦尔",
-            "data-nation": "玻利瓦尔",
-            "data-group": ""
+            "data-atk": "102",
+            "data-birth_place": "未公开",
+            "data-block": "1",
+            "data-cost": "3",
+            "data-def": "28",
+            "data-en": "U-Official",
+            "data-flex": "缺陷",
+            "data-group": "",
+            "data-hp": "385",
+            "data-id": "U007",
+            "data-interval": "1.3s",
+            "data-ja": "",
+            "data-logo": "罗德岛",
+            "data-nation": "罗德岛",
+            "data-obtain_method": "活动获得",
+            "data-phy": "普通",
+            "data-plan": "缺陷",
+            "data-position": "远程位",
+            "data-potential": "`",
+            "data-profession": "辅助",
+            "data-race": "札拉克",
+            "data-rarity": "0",
+            "data-re_deploy": "200s",
+            "data-res": "0",
+            "data-sex": "女",
+            "data-skill": "缺陷",
+            "data-sortid": "274",
+            "data-subprofession": "吟游者",
+            "data-tag": "控场",
+            "data-team": "",
+            "data-tolerance": "普通",
+            "data-trust": "120,20,0",
+            "data-zh": "U-Official"
         }
     """
     __cnname_class__ = ChineseName
@@ -68,7 +65,7 @@ class Character(_BaseCharacter):
         self.__is_extra = None
 
     def _index(self):
-        return self.__raw_data['data-index']
+        return self.__raw_data.get('data-index') or self.__raw_data.get('data-id')
 
     def _gender(self):
         return self.__raw_data['data-sex']
@@ -79,16 +76,16 @@ class Character(_BaseCharacter):
 
     @property
     def clazz(self) -> Clazz:
-        return Clazz.loads(self.__raw_data['data-class'])
+        return Clazz.loads(self.__raw_data.get('data-class') or self.__raw_data.get('data-profession'))
 
     def _cnname(self):
-        return self.__raw_data['data-cn']
+        return self.__raw_data.get('data-cn') or self.__raw_data.get('data-zh') or None
 
     def _enname(self):
-        return self.__raw_data.get('data-en', None)
+        return self.__raw_data.get('data-en') or None
 
     def _jpname(self):
-        return self.__raw_data.get('data-jp', None)
+        return self.__raw_data.get('data-jp') or self.__raw_data.get('data-ja') or None
 
     def _alias_names(self):
         return list(self.__origin_raw_data.get('alias', []) or [])
@@ -105,7 +102,7 @@ class Character(_BaseCharacter):
 
     def _is_extra(self) -> bool:
         return (self.enname and 'the' in self.enname) or \
-               (self.enname == 'amiya' and self.cnname != '阿米娅')
+            (self.enname == 'amiya' and self.cnname != '阿米娅')
 
     def _order(self):
         release_info = self.__origin_raw_data['release']
