@@ -12,7 +12,7 @@ class TestResourcesDanbooruTag:
         ('amiya', 'amiya_(arknights)'),
         ('林雨霞', 'lin_(arknights)'),
         ('战车', None),
-        ('saber', 'artoria_pendragon_(fate/grand_order)'),
+        ('saber', 'artoria_pendragon_(fate)'),
         ('character_not_exist_wtf', ValueError),
     ])
     def test_get_danbooru_tag(self, ch, tag):
@@ -26,7 +26,7 @@ class TestResourcesDanbooruTag:
         ('CEO', 'penthesilea_(fate/grand_order)'),
         ('CBA', 'scathach_skadi_(fate/grand_order)'),
         ('战车', None),
-        ('saber', 'artoria_pendragon_(fate/grand_order)'),
+        ('saber', 'artoria_pendragon_(fate)'),
         ('character_not_exist_wtf', ValueError),
     ])
     def test_get_danbooru_tag_without_local(self, ch, tag, no_tags_json):
