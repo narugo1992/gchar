@@ -53,17 +53,21 @@ def list_danbooru_tags(char, allow_fuzzy: bool = True, fuzzy_threshold: int = 70
     if limit is not None:
         findings = findings[:limit]
     tag_list = []
+    max_posts = {}
     for i, (_, mx, *_) in enumerate(findings):
         for oid in lookup[mx]:
             data = tags[oid]
             tag = data['tag']
             posts = data['posts']
-            tag_list.append((i, posts, tag))
+            main_tag = data['split']['title']
+            sub_tags = data['split']['subtitles']
+            max_posts[main_tag] = max(max_posts.get(main_tag, 0), posts)
+            tag_list.append((i, main_tag, bool(sub_tags), posts, tag))
 
-    tag_list = sorted(tag_list, key=lambda x: (x[0], -x[1]))
+    tag_list = sorted(tag_list, key=lambda x: (x[0], -max_posts[x[1]], 1 if x[2] else 0, -posts))
     if limit is not None:
         tag_list = tag_list[:limit]
-    return [tag for _, _, tag in tag_list]
+    return [tag for _, _, _, _, tag in tag_list]
 
 
 def get_danbooru_tag(char, allow_fuzzy: bool = True, fuzzy_threshold: int = 80, ed_ratio: float = 0.7,
