@@ -1,7 +1,6 @@
 import datetime
 import json
 import os
-import time
 from functools import partial
 
 import click
@@ -39,10 +38,7 @@ def tags(repository: str, namespace: str, revision: str):
     with TemporaryDirectory() as td:
         json_file = os.path.join(td, 'tags.json')
         with open(json_file, 'w', encoding='utf-8') as f:
-            json.dump({
-                'data': data,
-                'last_updated': time.time(),
-            }, f, indent=4, ensure_ascii=False, sort_keys=True)
+            json.dump(data, f, indent=4, ensure_ascii=False, sort_keys=True)
 
         current_time = datetime.datetime.now().astimezone().strftime('%Y-%m-%d %H:%M:%S %Z')
         commit_message = f"Publish {namespace}\'s tags, on {current_time}"
