@@ -18,6 +18,7 @@ jobs:
       matrix:
         resource:
           - 'anime_pictures'
+          - 'zerochan'
         os:
           - 'ubuntu-latest'
         python-version:

@@ -13,10 +13,10 @@ from gchar.utils import GLOBAL_CONTEXT_SETTINGS
 from gchar.utils import print_version as _origin_print_version
 from .tags import crawl_tags_to_json
 
-print_version = partial(_origin_print_version, 'zoo.resources.anime_pictures')
+print_version = partial(_origin_print_version, 'zoo.resources.zerochan')
 
 
-@click.group(context_settings={**GLOBAL_CONTEXT_SETTINGS}, help='Crawler of anime-pictures.net')
+@click.group(context_settings={**GLOBAL_CONTEXT_SETTINGS}, help='Crawler of zerochan.net')
 @click.option('-v', '--version', is_flag=True,
               callback=print_version, expose_value=False, is_eager=True)
 def cli():
@@ -27,7 +27,7 @@ def cli():
              context_settings={**GLOBAL_CONTEXT_SETTINGS})
 @click.option('--repository', '-r', 'repository', type=str, default='deepghs/site_tags',
               help='Repository to publish to.', show_default=True)
-@click.option('--namespace', '-n', 'namespace', type=str, default='anime-pictures.net',
+@click.option('--namespace', '-n', 'namespace', type=str, default='zerochan.net',
               help='Namespace to publish to.', show_default=True)
 @click.option('--revision', '-R', 'revision', type=str, default='main',
               help='Revision for pushing the model.', show_default=True)
