@@ -10,6 +10,7 @@ def crawl_tags_to_json():
     offset = 0
     retval = []
     pg = tqdm(desc='Tag Crawl')
+    exist_ids = set()
     while True:
         resp = srequest(session, 'GET', 'https://anime-pictures.net/api/v3/tags?offset=131000&limit=1000&lang=en',
                         params={
@@ -23,7 +24,13 @@ def crawl_tags_to_json():
         if not tags:
             break
 
-        retval.extend(tags)
+        for tag in tags:
+            if tag['id'] in exist_ids:
+                continue
+
+            retval.append(tag)
+            exist_ids.add(tag['id'])
+
         offset += len(tags)
         pg.update()
 
