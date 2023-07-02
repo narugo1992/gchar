@@ -45,8 +45,8 @@ def tags(repository: str, namespace: str, revision: str):
             }, f, indent=4, ensure_ascii=False, sort_keys=True)
 
         current_time = datetime.datetime.now().astimezone().strftime('%Y-%m-%d %H:%M:%S %Z')
-        commit_message = f"Publish {namespace}\' tags, on {current_time}"
-        logging.info(f'Publishing {namespace!r}\'s tags to repository {repository!r} ...')
+        commit_message = f"Publish {namespace}\'s tags, on {current_time}"
+        logging.info(f'Publishing {namespace}\'s tags to repository {repository!r} ...')
         hf_client.create_commit(
             repository,
             [CommitOperationAdd(

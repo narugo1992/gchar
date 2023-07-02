@@ -25,8 +25,6 @@ def crawl_tags_to_json():
 
         retval.extend(tags)
         offset += len(tags)
-        if offset >= 200:
-            break
         pg.update()
 
     pg.close()
