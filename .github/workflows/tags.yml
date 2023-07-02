@@ -70,10 +70,11 @@ jobs:
         uses: nick-fields/retry@v2
         env:
           CI: 'true'
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
         with:
           shell: bash
           timeout_minutes: 180
           max_attempts: 5
           retry_on: any
           command: |
-            python -m zoo.${{ matrix.resource }} tags
+            python -m zoo.resources.${{ matrix.resource }} tags
