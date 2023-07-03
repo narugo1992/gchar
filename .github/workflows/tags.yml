@@ -20,7 +20,9 @@ jobs:
 #          - 'anime_pictures'
 #          - 'zerochan'
 #          - 'danbooru'
-          - 'sankaku'
+#          - 'sankaku'
+          - 'rule34'
+          - 'hypnohub'
         os:
           - 'ubuntu-latest'
         python-version:
