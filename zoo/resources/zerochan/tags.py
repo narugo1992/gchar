@@ -8,7 +8,7 @@ from tqdm.auto import tqdm
 from gchar.utils import get_requests_session, srequest
 
 
-def crawl_tags_to_json(min_timespan: float = 0.5):
+def crawl_tags_to_json(min_timespan: float = 0.6):
     session = get_requests_session(headers={'User-Agent': 'Tag Crawler - narugo1992'})
     page_no = 1
     data, exist_names = [], set()
@@ -16,7 +16,8 @@ def crawl_tags_to_json(min_timespan: float = 0.5):
     _last_time = time.time()
 
     while True:
-        time.sleep(max(_last_time + min_timespan - time.time(), 0.0))
+        _last_time += min_timespan
+        time.sleep(max(_last_time - time.time(), 0.0))
         resp = srequest(session, 'GET', 'https://www.zerochan.net/tags', params={
             's': 'count',
             'm': 'details',
@@ -24,7 +25,6 @@ def crawl_tags_to_json(min_timespan: float = 0.5):
             't': '',
             'p': str(page_no)
         })
-        _last_time = time.time()
         resp.raise_for_status()
         page = pq(resp.text)
         active = False
