@@ -27,8 +27,10 @@ def crawl_tags_to_json(site_root: str = 'https://rule34.xxx'):
         })
         resp.raise_for_status()
 
-        tags = xmltodict.parse(resp.text)['tags']['tag']
-
+        json_data = xmltodict.parse(resp.text)
+        if 'tags' not in json_data or 'tag' not in json_data['tags']:
+            break
+        tags = json_data['tags']['tag']
         if not tags:
             break
 
