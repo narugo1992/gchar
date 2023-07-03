@@ -1,5 +1,6 @@
 import json
 import sqlite3
+import string
 
 import pandas as pd
 from tqdm.auto import tqdm
@@ -13,30 +14,37 @@ def crawl_tags_to_json():
         "User-Agent": f"{__TITLE__}/{__VERSION__}",
         'Content-Type': 'application/json; charset=utf-8',
     })
-    page_no = 1
+
     data, exist_ids = [], set()
     pg = tqdm()
 
-    while True:
-        resp = srequest(session, 'GET', 'https://danbooru.donmai.us/tags.json', params={
-            'limit': '1000',
-            'page': str(page_no),
-        })
-        resp.raise_for_status()
+    for c in string.printable:
+        if c == '*' or c == '?' or not c.strip():
+            continue
 
-        if not resp.json():
-            break
+        page_no = 1
+        while True:
+            resp = srequest(session, 'GET', 'https://danbooru.donmai.us/tags.json', params={
+                'limit': '1000',
+                'page': str(page_no),
+                'search[name_matches]': f'{c}*',
+            })
+            resp.raise_for_status()
 
-        for item in resp.json():
-            if item['id'] in exist_ids:
-                continue
+            if not resp.json():
+                break
 
-            data.append(item)
-            exist_ids.add(item['id'])
+            for item in resp.json():
+                if item['id'] in exist_ids:
+                    continue
 
-        page_no += 1
-        pg.update()
+                data.append(item)
+                exist_ids.add(item['id'])
 
+            page_no += 1
+            pg.update()
+
+    data = sorted(data, key=lambda x: -x['id'])
     return data
 
 
