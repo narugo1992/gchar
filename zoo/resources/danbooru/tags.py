@@ -9,7 +9,7 @@ from gchar.config.meta import __TITLE__, __VERSION__
 from gchar.utils import get_requests_session, srequest
 
 
-def crawl_tags_to_json():
+def crawl_tags_to_json(site_url='https://danbooru.donmai.us'):
     session = get_requests_session(headers={
         "User-Agent": f"{__TITLE__}/{__VERSION__}",
         'Content-Type': 'application/json; charset=utf-8',
@@ -22,9 +22,10 @@ def crawl_tags_to_json():
         if c == '*' or c == '?' or not c.strip():
             continue
 
+        pg.set_description(f'{c}*')
         page_no = 1
         while True:
-            resp = srequest(session, 'GET', 'https://danbooru.donmai.us/tags.json', params={
+            resp = srequest(session, 'GET', f'{site_url}/tags.json', params={
                 'limit': '1000',
                 'page': str(page_no),
                 'search[name_matches]': f'{c}*',

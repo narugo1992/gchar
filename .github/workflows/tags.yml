@@ -20,13 +20,15 @@ jobs:
 #          - 'anime_pictures'
 #          - 'zerochan'
 #          - 'danbooru'
+          - 'safebooru'
+          - 'atfbooru'
 #          - 'sankaku'
 #          - 'rule34'
 #          - 'hypnohub'
 #          - 'xbooru'
-          - 'konachan'
-          - 'konachan_net'
-          - 'yande'
+#          - 'konachan'
+#          - 'konachan_net'
+#          - 'yande'
         os:
           - 'ubuntu-latest'
         python-version:
