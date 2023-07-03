@@ -34,7 +34,7 @@ def tags(repository: str, namespace: str, revision: str):
     hf_client = HfApi(token=os.environ['HF_TOKEN'])
     hf_client.create_repo(repo_id=repository, repo_type='dataset', exist_ok=True)
 
-    data = crawl_tags_to_json()
+    data = crawl_tags_to_json(direct=True)
     with TemporaryDirectory() as td:
         files = []
 

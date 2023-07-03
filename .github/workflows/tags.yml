@@ -21,12 +21,12 @@ jobs:
 #          - 'zerochan'
 #          - 'danbooru'
 #          - 'sankaku'
-          - 'rule34'
-          - 'hypnohub'
-          - 'xbooru'
-#          - 'konachan'
-#          - 'konachan_net'
-#          - 'yande'
+#          - 'rule34'
+#          - 'hypnohub'
+#          - 'xbooru'
+          - 'konachan'
+          - 'konachan_net'
+          - 'yande'
         os:
           - 'ubuntu-latest'
         python-version:

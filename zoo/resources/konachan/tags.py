@@ -7,32 +7,39 @@ from tqdm.auto import tqdm
 from gchar.utils import get_requests_session, srequest
 
 
-def crawl_tags_to_json(site_root: str = 'https://konachan.com'):
-    session = get_requests_session()
+def crawl_tags_to_json(site_root: str = 'https://konachan.com', direct: bool = False):
+    session = get_requests_session(timeout=60)
     data, exist_ids = [], set()
-    pg = tqdm()
-
-    page_no = 1
-    while True:
+    if direct:
         resp = srequest(session, 'GET', f'{site_root}/tag.json', params={
-            'limit': '100',
-            'page': str(page_no),
+            'limit': '0',
         })
         resp.raise_for_status()
+        data.extend(json.loads(resp.text))
 
-        tags = json.loads(resp.text)
-        if not tags:
-            break
+    else:
+        pg = tqdm()
+        page_no = 1
+        while True:
+            resp = srequest(session, 'GET', f'{site_root}/tag.json', params={
+                'limit': '100',
+                'page': str(page_no),
+            })
+            resp.raise_for_status()
 
-        for item in tags:
-            if item['id'] in exist_ids:
-                continue
+            tags = json.loads(resp.text)
+            if not tags:
+                break
 
-            data.append(item)
-            exist_ids.add(item['id'])
+            for item in tags:
+                if item['id'] in exist_ids:
+                    continue
 
-        page_no += 1
-        pg.update()
+                data.append(item)
+                exist_ids.add(item['id'])
+
+            page_no += 1
+            pg.update()
 
     data = sorted(data, key=lambda x: -x['id'])
     return data
