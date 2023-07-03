@@ -1,5 +1,4 @@
 import json
-import os
 import sqlite3
 from concurrent.futures import ThreadPoolExecutor
 
@@ -12,15 +11,15 @@ from gchar.utils import get_requests_session, srequest
 
 def crawl_tags_to_json(limit: int = 100):
     session = get_requests_session(headers={
-        "user-agent": (
+        "User-Agent": (
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
             "(KHTML, like Gecko) Chrome/94.0.4606.85 YaBrowser/21.11.0.1996 "
             "Yowser/2.5 Safari/537.36"
         ),
-        "content-type": "application/json; charset=utf-8",
-        "x-requested-with": "com.android.browser",
-        "accept-encoding": "gzip, deflate, br",
-        "host": "capi-v2.sankakucomplex.com"
+        "Content-Type": "application/json; charset=utf-8",
+        "X-Requested-With": "com.android.browser",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Host": "capi-v2.sankakucomplex.com"
     })
 
     # username = os.environ['SANKAKU_USERNAME']
