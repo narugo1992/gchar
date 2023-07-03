@@ -10,7 +10,7 @@ from huggingface_hub import HfApi, CommitOperationAdd
 
 from gchar.utils import GLOBAL_CONTEXT_SETTINGS
 from gchar.utils import print_version as _origin_print_version
-from .tags import crawl_tags_to_json
+from .tags import crawl_tags_to_json, json_save_to_csv, json_save_to_sqlite
 
 print_version = partial(_origin_print_version, 'zoo.resources.zerochan')
 
@@ -36,19 +36,32 @@ def tags(repository: str, namespace: str, revision: str):
 
     data = crawl_tags_to_json()
     with TemporaryDirectory() as td:
+        files = []
+
         json_file = os.path.join(td, 'tags.json')
         with open(json_file, 'w', encoding='utf-8') as f:
-            json.dump(data, f, indent=4, ensure_ascii=False, sort_keys=True)
+            json.dump(data, f)
+        files.append(json_file)
+
+        csv_file = os.path.join(td, 'tags.csv')
+        json_save_to_csv(data, csv_file)
+        files.append(csv_file)
+
+        sqlite_file = os.path.join(td, 'tags.sqlite')
+        json_save_to_sqlite(data, sqlite_file)
+        files.append(sqlite_file)
 
         current_time = datetime.datetime.now().astimezone().strftime('%Y-%m-%d %H:%M:%S %Z')
         commit_message = f"Publish {namespace}\'s tags, on {current_time}"
         logging.info(f'Publishing {namespace}\'s tags to repository {repository!r} ...')
         hf_client.create_commit(
             repository,
-            [CommitOperationAdd(
-                path_in_repo=f'{namespace}/tags.json',
-                path_or_fileobj=json_file,
-            )],
+            [
+                CommitOperationAdd(
+                    path_in_repo=f'{namespace}/{os.path.basename(file)}',
+                    path_or_fileobj=file,
+                ) for file in files
+            ],
             commit_message=commit_message,
             repo_type='dataset',
             revision=revision,

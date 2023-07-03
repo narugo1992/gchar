@@ -1,12 +1,14 @@
+import sqlite3
 import time
 
+import pandas as pd
 from pyquery import PyQuery as pq
 from tqdm.auto import tqdm
 
 from gchar.utils import get_requests_session, srequest
 
 
-def crawl_tags_to_json(min_timespan: float = 1.0):
+def crawl_tags_to_json(min_timespan: float = 0.5):
     session = get_requests_session(headers={'User-Agent': 'Tag Crawler - narugo1992'})
     page_no = 1
     data, exist_names = [], set()
@@ -59,3 +61,27 @@ def crawl_tags_to_json(min_timespan: float = 1.0):
         pg.update()
 
     return data
+
+
+def json_to_df(json_):
+    df = pd.DataFrame(json_).astype({})
+    return df
+
+
+def json_save_to_csv(json_, csv_file):
+    df = json_to_df(json_)
+    df.to_csv(csv_file, index=False)
+    return csv_file
+
+
+def json_save_to_sqlite(json_, sqlite_file):
+    sql = sqlite3.connect(sqlite_file)
+    df = json_to_df(json_)
+    df.to_sql('tags', sql, )
+
+    index_columns = ['children_count', 'parent', 'parent_count', 'strict', 'tag', 'total', 'type']
+    for column in index_columns:
+        sql.execute(f"CREATE INDEX tags_index_{column} ON tags ({column});").fetchall()
+
+    sql.close()
+    return sqlite_file
