@@ -65,7 +65,7 @@ def json_save_to_sqlite(json_, sqlite_file):
     sql = sqlite3.connect(sqlite_file)
     df = json_to_df(json_)
     df['words'] = df['words'].apply(json.dumps).astype(str)
-    df.to_sql('tags', sql, )
+    df.to_sql('tags', sql)
 
     index_columns = ['id', 'name', 'post_count', 'category', "created_at", "updated_at", "is_deprecated"]
     for column in index_columns:

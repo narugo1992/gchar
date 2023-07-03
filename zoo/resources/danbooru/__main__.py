@@ -47,9 +47,9 @@ def tags(repository: str, namespace: str, revision: str):
         json_save_to_csv(data, csv_file)
         files.append(csv_file)
 
-        # sqlite_file = os.path.join(td, 'tags.sqlite')
-        # json_save_to_sqlite(data, sqlite_file)
-        # files.append(sqlite_file)
+        sqlite_file = os.path.join(td, 'tags.sqlite')
+        json_save_to_sqlite(data, sqlite_file)
+        files.append(sqlite_file)
 
         current_time = datetime.datetime.now().astimezone().strftime('%Y-%m-%d %H:%M:%S %Z')
         commit_message = f"Publish {namespace}\'s tags, on {current_time}"
