@@ -1,3 +1,6 @@
+import sqlite3
+
+import pandas as pd
 from tqdm.auto import tqdm
 
 from gchar.utils import get_requests_session, srequest
@@ -36,3 +39,30 @@ def crawl_tags_to_json():
 
     pg.close()
     return retval
+
+
+def json_to_df(json_):
+    df = pd.DataFrame(json_).astype({
+        "parent": pd.Int64Dtype(),
+        "alias": pd.Int64Dtype(),
+    })
+    return df
+
+
+def json_save_to_csv(json_, csv_file):
+    df = json_to_df(json_)
+    df.to_csv(csv_file, index=False)
+    return csv_file
+
+
+def json_save_to_sqlite(json_, sqlite_file):
+    sql = sqlite3.connect(sqlite_file)
+    df = json_to_df(json_)
+    df.to_sql('tags', sql, )
+
+    index_columns = ['id', 'parent', 'type', 'num', 'num_pub', 'views', 'tag', 'tag_jp', 'tag_ru', 'alias']
+    for column in index_columns:
+        sql.execute(f"CREATE INDEX tags_index_{column} ON tags ({column});").fetchall()
+
+    sql.close()
+    return sqlite_file
