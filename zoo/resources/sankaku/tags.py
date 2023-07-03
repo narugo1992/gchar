@@ -23,15 +23,15 @@ def crawl_tags_to_json(limit: int = 100):
         "host": "capi-v2.sankakucomplex.com"
     })
 
-    username = os.environ['SANKAKU_USERNAME']
-    password = os.environ['SANKAKU_PASSWORD']
-    resp = srequest(session, 'POST', 'https://login.sankakucomplex.com/auth/token',
-                    json={"login": username, "password": password})
-    resp.raise_for_status()
-    login_data = resp.json()
-    session.headers.update({
-        "Authorization": f"{login_data['token_type']} {login_data['access_token']}",
-    })
+    # username = os.environ['SANKAKU_USERNAME']
+    # password = os.environ['SANKAKU_PASSWORD']
+    # resp = srequest(session, 'POST', 'https://login.sankakucomplex.com/auth/token',
+    #                 json={"login": username, "password": password})
+    # resp.raise_for_status()
+    # login_data = resp.json()
+    # session.headers.update({
+    #     "Authorization": f"{login_data['token_type']} {login_data['access_token']}",
+    # })
 
     def _check_page(p):
         resp = srequest(session, 'GET', 'https://capi-v2.sankakucomplex.com/tags', params={
