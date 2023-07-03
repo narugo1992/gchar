@@ -6,8 +6,8 @@ permissions:
 on:
   push:
   workflow_dispatch:
-  schedule:
-    - cron: '30 14 * * *'
+#  schedule:
+#    - cron: '30 14 * * *'
 
 jobs:
   data_crawl:
@@ -19,7 +19,8 @@ jobs:
         resource:
 #          - 'anime_pictures'
 #          - 'zerochan'
-          - 'danbooru'
+#          - 'danbooru'
+          - 'sankaku'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -73,6 +74,8 @@ jobs:
         env:
           CI: 'true'
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          SANKAKU_USERNAME: ${{ secrets.SANKAKU_USERNAME }}
+          SANKAKU_PASSWORD: ${{ secrets.SANKAKU_PASSWORD }}
         with:
           shell: bash
           timeout_minutes: 180
