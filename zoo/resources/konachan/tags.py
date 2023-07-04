@@ -21,6 +21,7 @@ class KonachanDirectTagCrawler(TagCrawler):
 class KonachanTagCrawler(ParallelTagCrawler):
     __init_page__ = 1
     __id_key__ = 'id'
+    __max_workers__ = 8
 
     def get_tags_from_page(self, p, **kwargs) -> Optional[List[Mapping[str, Any]]]:
         resp = srequest(self.session, 'GET', f'{self.site_url}/tag.json', params={
