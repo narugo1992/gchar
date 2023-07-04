@@ -8,6 +8,7 @@ from contextlib import contextmanager
 from typing import List, Mapping, Any, Optional
 
 import pandas as pd
+import requests
 from ditk import logging
 from hbutils.system import TemporaryDirectory, urlsplit
 from huggingface_hub import HfApi, CommitOperationAdd
@@ -17,9 +18,9 @@ from gchar.utils import get_requests_session
 
 
 class TagCrawler:
-    def __init__(self, site_url: str):
+    def __init__(self, site_url: str, session: Optional[requests.Session] = None):
         self.site_url = site_url
-        self.session = get_requests_session()
+        self.session = get_requests_session(session=session)
 
     def get_tags_json(self) -> List[Mapping[str, Any]]:
         raise NotImplementedError
