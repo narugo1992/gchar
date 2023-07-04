@@ -1,38 +1,23 @@
+import json
 from itertools import chain
-from typing import List, Union, Type, Iterator, Optional, Callable, Tuple
+from typing import List, Union, Type, Iterator, Optional, Tuple, Dict
 
-from .index import BaseIndexer
+from huggingface_hub import hf_hub_download
+
 from .name import _BaseName, ChineseName, EnglishName, JapaneseName
 from .property import Gender
 from .skin import Skin
 from ...utils import Comparable
 
 
-class CharacterMeta(type):
-    def __init__(cls, name, bases, dict_):
-        type.__init__(cls, name, bases, dict_)
-        cls.__original_names = set([name for name in dir(type) if name.startswith('__') and name.endswith('__')])
-        if not hasattr(cls, '__indexer__'):
-            cls.__indexer__: Optional[BaseIndexer] = None
-
-    @property
-    def __index_func__(cls) -> Optional[Callable]:
-        if cls.__indexer__:
-            return cls.__indexer__.get_index
-        else:
-            return None
-
-    @property
-    def __game_name__(cls):
-        return cls.__indexer__.__game_name__
-
-
-class Character(Comparable, metaclass=CharacterMeta):
+class Character(Comparable):
+    __repository__: str = 'deepghs/game_characters'
+    __game_name__: str
+    __official_name__: str
     __cnname_class__: Type[ChineseName] = ChineseName
     __enname_class__: Type[EnglishName] = EnglishName
     __jpname_class__: Type[JapaneseName] = JapaneseName
     __alias_name_class__: Optional[Type[ChineseName]] = None
-    __indexer__: Optional[BaseIndexer] = None
 
     def _index(self):
         raise NotImplementedError  # pragma: no cover
@@ -156,14 +141,23 @@ class Character(Comparable, metaclass=CharacterMeta):
         return not self.__eq__(other)
 
     @classmethod
-    def _simple_all(cls, timeout: int = 5, contains_extra: bool = True, **kwargs):
-        all_chs = [cls(data) for data in cls.__index_func__(timeout=timeout)]
+    def _get_index(cls) -> List[Dict]:
+        with open(hf_hub_download(
+                repo_id=cls.__repository__,
+                filename=f'{cls.__game_name__}/index.json',
+                repo_type='dataset',
+        ), 'r', encoding='utf-8') as f:
+            return json.load(f)['data']
+
+    @classmethod
+    def _simple_all(cls, contains_extra: bool = True):
+        all_chs = [cls(data) for data in cls._get_index()]
         chs = [ch for ch in all_chs if contains_extra or not ch.is_extra]
         return chs
 
     @classmethod
-    def all(cls, timeout: int = 5, contains_extra: bool = True, **kwargs):
-        return sorted(cls._simple_all(timeout, contains_extra, **kwargs))
+    def all(cls, contains_extra: bool = True):
+        return sorted(cls._simple_all(contains_extra))
 
     @classmethod
     def get(cls, name, **kwargs):

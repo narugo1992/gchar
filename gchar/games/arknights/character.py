@@ -1,10 +1,19 @@
-import math
 from typing import List, Tuple
 
-from .index import _KNOWN_DATA_FIELDS, INDEXER
+import math
+
 from .name import EnglishName, JapaneseName, ChineseName, ChineseAliasName
 from .property import Level, Clazz
 from ..base import Character as _BaseCharacter
+
+_KNOWN_DATA_FIELDS = [
+    'data-adapt', 'data-atk', 'data-birth_place', 'data-block', 'data-cost', 'data-def', 'data-en',
+    'data-flex', 'data-group', 'data-hp', 'data-id', 'data-interval', 'data-ja', 'data-logo',
+    'data-nation', 'data-obtain_method', 'data-phy', 'data-plan', 'data-position', 'data-potential',
+    'data-profession', 'data-race', 'data-rarity', 'data-re_deploy', 'data-res', 'data-sex',
+    'data-skill', 'data-sortid', 'data-subprofession', 'data-tag', 'data-team', 'data-tolerance',
+    'data-trust', 'data-zh'
+]
 
 
 class Character(_BaseCharacter):
@@ -52,11 +61,12 @@ class Character(_BaseCharacter):
             "data-zh": "U-Official"
         }
     """
+    __game_name__ = 'arknights'
+    __official_name__ = 'Arknights'
     __cnname_class__ = ChineseName
     __enname_class__ = EnglishName
     __jpname_class__ = JapaneseName
     __alias_name_class__ = ChineseAliasName
-    __indexer__ = INDEXER
 
     def __init__(self, raw_data: dict):
         self.__origin_raw_data = raw_data

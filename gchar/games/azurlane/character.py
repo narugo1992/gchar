@@ -1,17 +1,17 @@
 from typing import List, Optional, Union, Tuple
 
-from .index import INDEXER
 from .name import EnglishName, JapaneseName, ChineseName, ChineseAliasName
 from .property import BasicRarity, ResearchRarity, Group
 from ..base import Character as _BaseCharacter
 
 
 class Character(_BaseCharacter):
+    __game_name__ = 'azurlane'
+    __official_name__ = 'Azur Lane'
     __cnname_class__ = ChineseName
     __enname_class__ = EnglishName
     __jpname_class__ = JapaneseName
     __alias_name_class__ = ChineseAliasName
-    __indexer__ = INDEXER
 
     def __init__(self, raw_data: dict):
         self.__raw_data = raw_data

@@ -1,18 +1,18 @@
 import re
 from typing import List, Tuple
 
-from .index import INDEXER
 from .name import EnglishName, JapaneseName, ChineseName, ChineseAliasName
 from .property import Rarity, WeaponType, Role, AttackType
 from ..base import Character as _BaseCharacter, Gender
 
 
 class Character(_BaseCharacter):
+    __game_name__ = 'bluearchive'
+    __official_name__ = 'Blue Archive'
     __cnname_class__ = ChineseName
     __enname_class__ = EnglishName
     __jpname_class__ = JapaneseName
     __alias_name_class__ = ChineseAliasName
-    __indexer__ = INDEXER
 
     def __init__(self, raw_data: dict):
         self.__raw_data = raw_data

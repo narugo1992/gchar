@@ -24,4 +24,4 @@ class JapaneseName(_GenericJapaneseName):
 class EnglishName(_GenericEnglishName):
     @classmethod
     def _word_trans(cls, text: str):
-        return translit(text.replace('\'', '').replace('\"', ''), 'ru', reversed=True)
+        return translit(text, 'ru', reversed=True)

@@ -1,5 +1,6 @@
 import re
 
+import unicodedata
 from unidecode import unidecode
 
 from ..base import ChineseName as _GenericChineseName
@@ -17,14 +18,13 @@ class ChineseName(_GenericChineseName):
 class ChineseAliasName(_GenericChineseName):
     @classmethod
     def _preprocess(cls, name: str) -> str:
-        return _GenericChineseName._preprocess(name).replace('・', '·')
+        return unicodedata.normalize('NFKC', _GenericChineseName._preprocess(name))
 
 
 class JapaneseName(_GenericJapaneseName):
     @classmethod
     def _preprocess(cls, name: str) -> str:
-        return _GenericJapaneseName._preprocess(name).replace("\"", '') \
-            .replace("“", '').replace("”", '')
+        return unicodedata.normalize('NFKC', _GenericJapaneseName._preprocess(name))
 
 
 class EnglishName(_GenericEnglishName):

@@ -1,6 +1,5 @@
 from typing import List, Tuple, Mapping, Optional
 
-from .index import INDEXER
 from .name import EnglishName, ChineseName, ChineseAliasName, JapaneseName
 from .property import Clazz, Rarity
 from ..base import Character as _BaseCharacter
@@ -9,11 +8,12 @@ from ...utils import optional_lru_cache
 
 
 class Character(_BaseCharacter):
+    __game_name__ = 'neuralcloud'
+    __official_name__ = 'Neural Cloud'
     __enname_class__ = EnglishName
     __cnname_class__ = ChineseName
     __jpname_class__ = JapaneseName
     __alias_name_class__ = ChineseAliasName
-    __indexer__ = INDEXER
 
     def __init__(self, raw_data: dict):
         self.__raw_data = raw_data

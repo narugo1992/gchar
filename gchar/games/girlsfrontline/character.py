@@ -1,18 +1,19 @@
-import math
 from typing import List, Tuple
 
-from .index import INDEXER
+import math
+
 from .name import EnglishName, JapaneseName, ChineseName, ChineseAliasName
 from .property import Rarity, Clazz
 from ..base import Character as _BaseCharacter
 
 
 class Character(_BaseCharacter):
+    __game_name__ = 'girlsfrontline'
+    __official_name__ = 'Girls\' Frontline'
     __enname_class__ = EnglishName
     __cnname_class__ = ChineseName
     __jpname_class__ = JapaneseName
     __alias_name_class__ = ChineseAliasName
-    __indexer__ = INDEXER
 
     def __init__(self, raw_data: dict):
         self.__raw_data = raw_data
