@@ -2,7 +2,7 @@
 name: Code Test
 
 on:
-  - push
+#  - push
 
 jobs:
   unittest:

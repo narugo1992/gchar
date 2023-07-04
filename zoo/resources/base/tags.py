@@ -74,7 +74,7 @@ class TagCrawler(HuggingfaceDeployable):
         with self.tags_files() as files:
             yield files
 
-    def _get_default_namespace(self, **kwargs) -> str:
+    def get_default_namespace(self, **kwargs) -> str:
         return urlsplit(self.site_url).host
 
 

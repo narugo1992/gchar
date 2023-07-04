@@ -7,15 +7,18 @@ import time
 from contextlib import contextmanager
 from typing import Type, List, ContextManager, Iterator
 
+import click
 import numpy as np
+from ditk import logging
 from hbutils.system import TemporaryDirectory
 from huggingface_hub import hf_hub_download
 from orator import DatabaseManager
 from thefuzz import fuzz
 from tqdm.auto import tqdm
 
-from gchar.games import get_character_class
+from gchar.games import get_character_class, list_available_game_names
 from gchar.games.base import Character
+from gchar.utils import GLOBAL_CONTEXT_SETTINGS
 from .base import HuggingfaceDeployable
 
 GAME_KEYWORDS = {
@@ -203,5 +206,35 @@ class TagMatcher(HuggingfaceDeployable):
 
             yield [json_file]
 
-    def _get_default_namespace(self, **kwargs) -> str:
+    def get_default_namespace(self, **kwargs) -> str:
         return self.game_name
+
+    @classmethod
+    def add_commands(cls, cli):
+        @cli.command('chtags', help='Match tags of characters from database.',
+                     context_settings={**GLOBAL_CONTEXT_SETTINGS})
+        @click.option('--repository', '-r', 'repository', type=str, default='deepghs/game_characters',
+                      help='Repository to publish to.', show_default=True)
+        @click.option('--namespace', '-n', 'namespace', type=str, default=None,
+                      help='Namespace to publish to, default to game name.', show_default=True)
+        @click.option('--revision', '-R', 'revision', type=str, default='main',
+                      help='Revision for pushing the model.', show_default=True)
+        @click.option('--game', '-g', 'game_name', type=click.Choice(list_available_game_names()), required=True,
+                      help='Game to deploy.', show_default=True)
+        def chtags(repository: str, namespace: str, revision: str, game_name: str):
+            logging.try_init_root(logging.INFO)
+            matcher = cls(game_name)
+            matcher.deploy_to_huggingface(repository, namespace, revision)
+
+        @cli.command('chtags_export', help='Match tags of characters from database.',
+                     context_settings={**GLOBAL_CONTEXT_SETTINGS})
+        @click.option('--output_directory', '-o', 'output_directory', type=str, default='.',
+                      help='Output directory', show_default=True)
+        @click.option('--namespace', '-n', 'namespace', type=str, default=None,
+                      help='Namespace to publish to, default to game name.', show_default=True)
+        @click.option('--game', '-g', 'game_name', type=click.Choice(list_available_game_names()), required=True,
+                      help='Game to deploy.', show_default=True)
+        def chtags_export(output_directory: str, namespace: str, game_name: str):
+            logging.try_init_root(logging.INFO)
+            matcher = cls(game_name)
+            matcher.export_to_directory(output_directory, namespace)
