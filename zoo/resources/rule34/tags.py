@@ -1,21 +1,25 @@
 import json
-import sqlite3
-from concurrent.futures import ThreadPoolExecutor
+from typing import Optional, List, Mapping, Any
 
-import pandas as pd
 import xmltodict
-from tqdm.auto import tqdm
 
-from gchar.utils import get_requests_session, srequest
+from gchar.utils import srequest
+from ..base.tags import ParallelTagCrawler
 
 
-def crawl_tags_to_json(site_root: str = 'https://rule34.xxx'):
-    session = get_requests_session(headers={
-        'Content-Type': 'application/json; charset=utf-8',
-    })
+class Rule34TagCrawler(ParallelTagCrawler):
+    __init_page__ = 0
+    __max_workers__ = 12
+    __id_key__ = 'id'
 
-    def _crawl(p):
-        resp = srequest(session, 'GET', f'{site_root}/index.php', params={
+    def __init__(self, site_url: str = 'https://rule34.xxx'):
+        ParallelTagCrawler.__init__(self, site_url)
+        self.session.headers.update({
+            'Content-Type': 'application/json; charset=utf-8',
+        })
+
+    def get_tags_from_page(self, p, **kwargs) -> Optional[List[Mapping[str, Any]]]:
+        resp = srequest(self.session, 'GET', f'{self.site_url}/index.php', params={
             'page': 'dapi',
             's': 'tag',
             'q': 'index',
@@ -28,78 +32,16 @@ def crawl_tags_to_json(site_root: str = 'https://rule34.xxx'):
         json_data = xmltodict.parse(resp.text)
         if 'tags' not in json_data or 'tag' not in json_data['tags']:
             return None
-        return json_data['tags']['tag']
 
-    l, r = 1, 2
-    while True:
-        if _crawl(r):
-            l, r = l << 1, r << 1
-            print(f'Left: {l}, right: {r}')
-        else:
-            break
-
-    while l < r:
-        m = (l + r + 1) // 2
-        if _crawl(m):
-            l = m
-        else:
-            r = m - 1
-        print(f'Left: {l}, right: {r}')
-
-    pages = l
-    data, exist_ids = [], set()
-    pg_page = tqdm(total=pages, desc='Pages')
-    pg_tags = tqdm(desc='Tags')
-
-    def _process(p):
-        tags = _crawl(p)
-        if not tags:
-            return
-
-        for item in tags:
+        data = []
+        for item in json_data['tags']['tag']:
             item = {key.lstrip('@'): value for key, value in item.items()}
             item['id'] = int(item['id'])
             item['type'] = int(item['type'])
             item['count'] = int(item['count'])
             item['ambiguous'] = json.loads(item['ambiguous'])
-            if item['id'] in exist_ids:
-                continue
-
             data.append(item)
-            exist_ids.add(item['id'])
-            pg_tags.update()
 
-        pg_page.update()
+        return data
 
-    tp = ThreadPoolExecutor(max_workers=12)
-    for i in range(0, pages + 1):
-        tp.submit(_process, i)
-
-    tp.shutdown()
-
-    data = sorted(data, key=lambda x: -x['id'])
-    return data
-
-
-def json_to_df(json_):
-    df = pd.DataFrame(json_).astype({})
-    return df
-
-
-def json_save_to_csv(json_, csv_file):
-    df = json_to_df(json_)
-    df.to_csv(csv_file, index=False)
-    return csv_file
-
-
-def json_save_to_sqlite(json_, sqlite_file):
-    sql = sqlite3.connect(sqlite_file)
-    df = json_to_df(json_)
-    df.to_sql('tags', sql)
-
-    index_columns = ['id', 'name', 'type', 'count', 'ambiguous']
-    for column in index_columns:
-        sql.execute(f"CREATE INDEX tags_index_{column} ON tags ({column});").fetchall()
-
-    sql.close()
-    return sqlite_file
+    __sqlite_indices__ = ['id', 'name', 'type', 'count', 'ambiguous']

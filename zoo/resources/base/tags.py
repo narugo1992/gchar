@@ -20,7 +20,7 @@ from gchar.utils import get_requests_session
 class TagCrawler:
     def __init__(self, site_url: str, session: Optional[requests.Session] = None):
         self.site_url = site_url
-        self.session = get_requests_session(session=session)
+        self.session = session or get_requests_session()
 
     def get_tags_json(self) -> List[Mapping[str, Any]]:
         raise NotImplementedError
