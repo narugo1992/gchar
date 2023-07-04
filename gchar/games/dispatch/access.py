@@ -1,6 +1,6 @@
 from functools import lru_cache
 from itertools import islice
-from typing import Iterator, Tuple, Optional, List
+from typing import Iterator, Tuple, Optional, List, Type
 
 from thefuzz import fuzz
 
@@ -14,15 +14,34 @@ from ..girlsfrontline import Character as GirlsFrontLineCharacter
 from ..neuralcloud import Character as NeuralCloudCharacter
 from ...utils import optional_lru_cache
 
-CHARS = [
-    ArknightsCharacter,
-    FateGrandOrderCharacter,
-    AzurLaneCharacter,
-    GenshinImpactCharacter,
-    GirlsFrontLineCharacter,
-    NeuralCloudCharacter,
-    BlueArchiveCharacter,
-]
+GAME_CHARS = {}
+
+
+def register_game(cls: Type[Character]):
+    if cls.__game_name__ in GAME_CHARS:
+        raise KeyError(f'Game {cls.__game_name__!r} already exist.')
+    else:
+        GAME_CHARS[cls.__game_name__] = cls
+
+
+def list_available_game_names() -> List[str]:
+    return sorted(GAME_CHARS.keys())
+
+
+def get_character_class(game_name: str) -> Type[Character]:
+    if game_name in GAME_CHARS:
+        return GAME_CHARS[game_name]
+    else:
+        raise KeyError(f'Game {game_name!r} not found.')
+
+
+register_game(ArknightsCharacter)
+register_game(FateGrandOrderCharacter)
+register_game(AzurLaneCharacter)
+register_game(GenshinImpactCharacter)
+register_game(GirlsFrontLineCharacter)
+register_game(NeuralCloudCharacter)
+register_game(BlueArchiveCharacter)
 
 
 @optional_lru_cache()
@@ -31,7 +50,7 @@ def _all_characters(**kwargs) -> List[Character]:
 
     chs: List[Tuple[Character, int, bool, int]] = []
     cnt = 0
-    for _ch_set in CHARS:
+    for _, _ch_set in GAME_CHARS.items():
         for ch in _ch_set.all(**kwargs):
             counts = query_pixiv_illustration_count_by_character(ch)
             if counts:
