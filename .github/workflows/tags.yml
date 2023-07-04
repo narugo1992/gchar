@@ -17,11 +17,11 @@ jobs:
       fail-fast: false
       matrix:
         resource:
-#          - 'anime_pictures'
+          - 'anime_pictures'
 #          - 'zerochan'
 #          - 'danbooru'
-          - 'safebooru'
-          - 'atfbooru'
+#          - 'safebooru'
+#          - 'atfbooru'
 #          - 'sankaku'
 #          - 'rule34'
 #          - 'hypnohub'

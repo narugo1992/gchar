@@ -1,68 +1,54 @@
-import sqlite3
+from typing import List, Mapping, Any
 
 import pandas as pd
 from tqdm.auto import tqdm
 
 from gchar.utils import get_requests_session, srequest
-
-get_requests_session()
-
-
-def crawl_tags_to_json():
-    session = get_requests_session()
-    offset = 0
-    retval = []
-    pg = tqdm(desc='Tag Crawl')
-    exist_ids = set()
-    while True:
-        resp = srequest(session, 'GET', 'https://anime-pictures.net/api/v3/tags?offset=131000&limit=1000&lang=en',
-                        params={
-                            'lang': 'en',
-                            'offset': str(offset),
-                            'limit': '100',
-                        })
-        resp.raise_for_status()
-
-        tags = resp.json()['tags']
-        if not tags:
-            break
-
-        for tag in tags:
-            if tag['id'] in exist_ids:
-                continue
-
-            retval.append(tag)
-            exist_ids.add(tag['id'])
-
-        offset += len(tags)
-        pg.update()
-
-    pg.close()
-    return retval
+from ..base import TagCrawler
 
 
-def json_to_df(json_):
-    df = pd.DataFrame(json_).astype({
-        "parent": pd.Int64Dtype(),
-        "alias": pd.Int64Dtype(),
-    })
-    return df
+class AnimePicturesTagCrawler(TagCrawler):
+    def __init__(self):
+        TagCrawler.__init__(self, 'https://anime-pictures.net')
 
+    def get_tags_json(self) -> List[Mapping[str, Any]]:
+        session = get_requests_session()
+        offset = 0
+        retval = []
+        pg = tqdm(desc='Tag Crawl')
+        exist_ids = set()
+        while True:
+            resp = srequest(
+                session, 'GET', f'{self.site_url}/api/v3/tags?offset=131000&limit=1000&lang=en',
+                params={
+                    'lang': 'en',
+                    'offset': str(offset),
+                    'limit': '100',
+                }
+            )
+            resp.raise_for_status()
 
-def json_save_to_csv(json_, csv_file):
-    df = json_to_df(json_)
-    df.to_csv(csv_file, index=False)
-    return csv_file
+            tags = resp.json()['tags']
+            if not tags:
+                break
 
+            for tag in tags:
+                if tag['id'] in exist_ids:
+                    continue
 
-def json_save_to_sqlite(json_, sqlite_file):
-    sql = sqlite3.connect(sqlite_file)
-    df = json_to_df(json_)
-    df.to_sql('tags', sql, )
+                retval.append(tag)
+                exist_ids.add(tag['id'])
 
-    index_columns = ['id', 'parent', 'type', 'num', 'num_pub', 'views', 'tag', 'tag_jp', 'tag_ru', 'alias']
-    for column in index_columns:
-        sql.execute(f"CREATE INDEX tags_index_{column} ON tags ({column});").fetchall()
+            offset += len(tags)
+            pg.update()
 
-    sql.close()
-    return sqlite_file
+        pg.close()
+        return retval
+
+    def json_to_df(self, json_) -> pd.DataFrame:
+        return TagCrawler.json_to_df(self, json_).astype({
+            "parent": pd.Int64Dtype(),
+            "alias": pd.Int64Dtype(),
+        })
+
+    __sqlite_indices__ = ['id', 'parent', 'type', 'num', 'num_pub', 'views', 'tag', 'tag_jp', 'tag_ru', 'alias']
