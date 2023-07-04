@@ -18,17 +18,18 @@ jobs:
       matrix:
         resource:
 #          - 'anime_pictures'
-          - 'zerochan'
+#          - 'zerochan'
 #          - 'danbooru'
 #          - 'safebooru'
 #          - 'atfbooru'
 #          - 'sankaku'
-          - 'rule34'
-          - 'hypnohub'
-          - 'xbooru'
-          - 'konachan'
-          - 'konachan_net'
-          - 'yande'
+#          - 'rule34'
+#          - 'hypnohub'
+#          - 'xbooru'
+#          - 'konachan'
+#          - 'konachan_net'
+#          - 'yande'
+          - 'lolibooru'
         os:
           - 'ubuntu-latest'
         python-version:

@@ -11,7 +11,7 @@ from ..base.tags import ParallelTagCrawler
 class SankakuTagCrawler(ParallelTagCrawler):
     __init_page__ = 1
     __id_key__ = 'id'
-    __max_workers__ = 12
+    __max_workers__ = 8
 
     def __init__(self, site_url: str = 'https://capi-v2.sankakucomplex.com', limit: int = 100):
         session = get_requests_session(headers={
