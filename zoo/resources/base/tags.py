@@ -1,23 +1,22 @@
-import datetime
 import json
 import os
 import sqlite3
 import string
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
-from typing import List, Mapping, Any, Optional
+from typing import List, Mapping, Any, Optional, ContextManager
 
 import pandas as pd
 import requests
 from ditk import logging
 from hbutils.system import TemporaryDirectory, urlsplit
-from huggingface_hub import HfApi, CommitOperationAdd
 from tqdm.auto import tqdm
 
 from gchar.utils import get_requests_session
+from .base import HuggingfaceDeployable
 
 
-class TagCrawler:
+class TagCrawler(HuggingfaceDeployable):
     def __init__(self, site_url: str, session: Optional[requests.Session] = None):
         self.site_url = site_url
         self.session = session or get_requests_session()
@@ -70,29 +69,13 @@ class TagCrawler:
 
             yield files
 
-    def deploy_to_huggingface(self, repository: str = 'deepghs/site_tags',
-                              namespace: Optional[str] = None, revision: str = 'main'):
-        namespace = namespace or urlsplit(self.site_url).host
-        logging.info(f'Initializing repository {repository!r} ...')
-        hf_client = HfApi(token=os.environ['HF_TOKEN'])
-        hf_client.create_repo(repo_id=repository, repo_type='dataset', exist_ok=True)
-
+    @contextmanager
+    def with_files(self, **kwargs) -> ContextManager[List[str]]:
         with self.tags_files() as files:
-            current_time = datetime.datetime.now().astimezone().strftime('%Y-%m-%d %H:%M:%S %Z')
-            commit_message = f"Publish {namespace}\'s tags, on {current_time}"
-            logging.info(f'Publishing {namespace}\'s tags to repository {repository!r} ...')
-            hf_client.create_commit(
-                repository,
-                [
-                    CommitOperationAdd(
-                        path_in_repo=f'{namespace}/{os.path.basename(file)}',
-                        path_or_fileobj=file,
-                    ) for file in files
-                ],
-                commit_message=commit_message,
-                repo_type='dataset',
-                revision=revision,
-            )
+            yield files
+
+    def _get_default_namespace(self, **kwargs) -> str:
+        return urlsplit(self.site_url).host
 
 
 class ParallelTagCrawler(TagCrawler):

@@ -6,3 +6,5 @@ pillow
 dghs-imgutils>=0.0.1
 DI-toolkit
 xmltodict
+orator
+thefuzz[speedup]
