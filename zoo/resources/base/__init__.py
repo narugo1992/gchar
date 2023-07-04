@@ -1,1 +1,1 @@
-from .tags import TagCrawler
+from .tags import TagCrawler, ParallelTagCrawler, HeaderParallelTagCrawler

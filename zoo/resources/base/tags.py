@@ -2,6 +2,8 @@ import datetime
 import json
 import os
 import sqlite3
+import string
+from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from typing import List, Mapping, Any, Optional
 
@@ -9,6 +11,7 @@ import pandas as pd
 from ditk import logging
 from hbutils.system import TemporaryDirectory, urlsplit
 from huggingface_hub import HfApi, CommitOperationAdd
+from tqdm.auto import tqdm
 
 
 class TagCrawler:
@@ -86,3 +89,89 @@ class TagCrawler:
                 repo_type='dataset',
                 revision=revision,
             )
+
+
+class ParallelTagCrawler(TagCrawler):
+    __max_workers__ = 12
+    __init_page__ = 1
+    __id_key__ = 'id'
+
+    def get_tags_from_page(self, p, **kwargs) -> Optional[List[Mapping[str, Any]]]:
+        raise NotImplementedError
+
+    def _get_tags_json(self, data=None, exist_ids=None,
+                       pg_pages: Optional[tqdm] = None, pg_tags: Optional[tqdm] = None, **kwargs):
+        logging.info(f'Finding max pages for {kwargs!r} ...')
+        left, right = 1, 2
+        while True:
+            if self.get_tags_from_page(right, **kwargs):
+                left, right = left << 1, right << 1
+                logging.info(f'Left: {left}, right: {right}')
+            else:
+                break
+
+        while left < right:
+            middle = (left + right + 1) // 2
+            if self.get_tags_from_page(middle, **kwargs):
+                left = middle
+            else:
+                right = middle - 1
+            logging.info(f'Left: {left}, right: {right}')
+
+        pages = left
+        logging.info(f'Max pages for {kwargs!r} is {pages!r}.')
+
+        if data is None:
+            data = []
+        if exist_ids is None:
+            exist_ids = set()
+        if pg_tags is None:
+            pg_tags = tqdm(desc=f'Tags {kwargs!r}')
+        if pg_pages is None:
+            pg_pages = tqdm(desc=f'Pages {kwargs}', total=len(range(self.__init_page__, pages + 1)))
+
+        def _process(p):
+            for item in self.get_tags_from_page(p, **kwargs):
+                if self.__id_key__ and item[self.__id_key__] in exist_ids:
+                    continue
+
+                data.append(item)
+                if self.__id_key__:
+                    exist_ids.add(item[self.__id_key__])
+                pg_tags.update()
+
+            pg_pages.update()
+
+        tp = ThreadPoolExecutor(max_workers=self.__max_workers__)
+        for i in range(self.__init_page__, pages + 1):
+            tp.submit(_process, i)
+
+        tp.shutdown()
+        if self.__id_key__:
+            return sorted(data, key=lambda x: x[self.__id_key__])
+        else:
+            return data
+
+    def get_tags_json(self) -> List[Mapping[str, Any]]:
+        return self._get_tags_json()
+
+
+class HeaderParallelTagCrawler(ParallelTagCrawler):
+    def get_tags_from_page(self, p, **kwargs) -> Optional[List[Mapping[str, Any]]]:
+        raise NotImplementedError
+
+    def get_tags_json(self) -> List[Mapping[str, Any]]:
+        data, exist_ids = [], set()
+        pg_tags = tqdm(desc=f'Tags')
+        pg_pages = tqdm(desc=f'Pages')
+
+        for c in string.printable:
+            if c == '*' or c == '?' or not c.strip():
+                continue
+
+            self._get_tags_json(data, exist_ids, pg_pages, pg_tags, name_pattern=f'{c}*')
+
+        if self.__id_key__:
+            return sorted(data, key=lambda x: x[self.__id_key__])
+        else:
+            return data

@@ -1,76 +1,41 @@
 import json
-import sqlite3
-import string
+from typing import Optional, List, Mapping, Any
 
 import pandas as pd
-from tqdm.auto import tqdm
 
 from gchar.config.meta import __TITLE__, __VERSION__
 from gchar.utils import get_requests_session, srequest
+from ..base import HeaderParallelTagCrawler
 
 
-def crawl_tags_to_json(site_url='https://danbooru.donmai.us'):
-    session = get_requests_session(headers={
-        "User-Agent": f"{__TITLE__}/{__VERSION__}",
-        'Content-Type': 'application/json; charset=utf-8',
-    })
+class DanbooruTagCrawler(HeaderParallelTagCrawler):
+    __init_page__ = 1
+    __id_key__ = 'id'
+    __max_workers__ = 4
 
-    data, exist_ids = [], set()
-    pg = tqdm()
+    def __init__(self, site_url: str = 'https://danbooru.donmai.us'):
+        HeaderParallelTagCrawler.__init__(self, site_url)
+        self.session = get_requests_session(headers={
+            "User-Agent": f"{__TITLE__}/{__VERSION__}",
+            'Content-Type': 'application/json; charset=utf-8',
+        })
 
-    for c in string.printable:
-        if c == '*' or c == '?' or not c.strip():
-            continue
+    def get_tags_from_page(self, p, **kwargs) -> Optional[List[Mapping[str, Any]]]:
+        name_pattern = kwargs['name_pattern']
+        resp = srequest(self.session, 'GET', f'{self.site_url}/tags.json', params={
+            'limit': '1000',
+            'page': str(p),
+            'search[name_matches]': name_pattern,
+        })
+        resp.raise_for_status()
 
-        pg.set_description(f'{c}*')
-        page_no = 1
-        while True:
-            resp = srequest(session, 'GET', f'{site_url}/tags.json', params={
-                'limit': '1000',
-                'page': str(page_no),
-                'search[name_matches]': f'{c}*',
-            })
-            resp.raise_for_status()
+        return resp.json()
 
-            if not resp.json():
-                break
+    def json_to_df(self, json_) -> pd.DataFrame:
+        df = HeaderParallelTagCrawler.json_to_df(self, json_)
+        df['created_at'] = pd.to_datetime(df['created_at'])
+        df['updated_at'] = pd.to_datetime(df['updated_at'])
+        df['words'] = df['words'].apply(json.dumps).astype(str)
+        return df
 
-            for item in resp.json():
-                if item['id'] in exist_ids:
-                    continue
-
-                data.append(item)
-                exist_ids.add(item['id'])
-
-            page_no += 1
-            pg.update()
-
-    data = sorted(data, key=lambda x: -x['id'])
-    return data
-
-
-def json_to_df(json_):
-    df = pd.DataFrame(json_).astype({})
-    df['created_at'] = pd.to_datetime(df['created_at'])
-    df['updated_at'] = pd.to_datetime(df['updated_at'])
-    return df
-
-
-def json_save_to_csv(json_, csv_file):
-    df = json_to_df(json_)
-    df.to_csv(csv_file, index=False)
-    return csv_file
-
-
-def json_save_to_sqlite(json_, sqlite_file):
-    sql = sqlite3.connect(sqlite_file)
-    df = json_to_df(json_)
-    df['words'] = df['words'].apply(json.dumps).astype(str)
-    df.to_sql('tags', sql)
-
-    index_columns = ['id', 'name', 'post_count', 'category', "created_at", "updated_at", "is_deprecated"]
-    for column in index_columns:
-        sql.execute(f"CREATE INDEX tags_index_{column} ON tags ({column});").fetchall()
-
-    sql.close()
-    return sqlite_file
+    __sqlite_indices__ = ['id', 'name', 'post_count', 'category', "created_at", "updated_at", "is_deprecated"]
