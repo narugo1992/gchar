@@ -13,10 +13,13 @@ from hbutils.system import TemporaryDirectory, urlsplit
 from huggingface_hub import HfApi, CommitOperationAdd
 from tqdm.auto import tqdm
 
+from gchar.utils import get_requests_session
+
 
 class TagCrawler:
     def __init__(self, site_url: str):
         self.site_url = site_url
+        self.session = get_requests_session()
 
     def get_tags_json(self) -> List[Mapping[str, Any]]:
         raise NotImplementedError

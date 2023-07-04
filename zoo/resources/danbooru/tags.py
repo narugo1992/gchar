@@ -4,7 +4,7 @@ from typing import Optional, List, Mapping, Any
 import pandas as pd
 
 from gchar.config.meta import __TITLE__, __VERSION__
-from gchar.utils import get_requests_session, srequest
+from gchar.utils import srequest
 from ..base import HeaderParallelTagCrawler
 
 
@@ -15,7 +15,7 @@ class DanbooruTagCrawler(HeaderParallelTagCrawler):
 
     def __init__(self, site_url: str = 'https://danbooru.donmai.us'):
         HeaderParallelTagCrawler.__init__(self, site_url)
-        self.session = get_requests_session(headers={
+        self.session.headers.update({
             "User-Agent": f"{__TITLE__}/{__VERSION__}",
             'Content-Type': 'application/json; charset=utf-8',
         })
