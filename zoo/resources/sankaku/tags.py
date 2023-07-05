@@ -60,9 +60,9 @@ class SankakuTagCrawler(ParallelTagCrawler):
 
     __sqlite_indices__ = ['id', 'name', 'type', 'post_count', 'pool_count', 'series_count', 'rating']
 
-    def json_save_to_sqlite(self, json_, sqlite_file) -> str:
+    def json_save_to_sqlite(self, tags, tags_aliases, sqlite_file) -> str:
         sql = sqlite3.connect(sqlite_file)
-        df = self.json_to_df(json_)
+        df = self.tags_json_to_df(tags)
         df['parent_ids'] = df['parent_ids'].apply(json.dumps).astype(str)
         df['child_ids'] = df['child_ids'].apply(json.dumps).astype(str)
         df['related_ids'] = df['related_ids'].apply(json.dumps).astype(str)
@@ -73,7 +73,7 @@ class SankakuTagCrawler(ParallelTagCrawler):
         parent_items = []
         child_items = []
         related_items = []
-        for item in json_:
+        for item in tags:
             for parent_id in item['parent_ids']:
                 parent_items.append({'tag_id': item['id'], 'parent_id': parent_id})
             for child_id in item['child_ids']:

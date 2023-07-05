@@ -19,7 +19,7 @@ class AnimePicturesTagCrawler(TagCrawler):
         exist_ids = set()
         while True:
             resp = srequest(
-                session, 'GET', f'{self.site_url}/api/v3/tags?offset=131000&limit=1000&lang=en',
+                session, 'GET', f'{self.site_url}/api/v3/tags',
                 params={
                     'lang': 'en',
                     'offset': str(offset),
@@ -45,8 +45,8 @@ class AnimePicturesTagCrawler(TagCrawler):
         pg.close()
         return retval
 
-    def json_to_df(self, json_) -> pd.DataFrame:
-        return TagCrawler.json_to_df(self, json_).astype({
+    def tags_json_to_df(self, json_) -> pd.DataFrame:
+        return TagCrawler.tags_json_to_df(self, json_).astype({
             "parent": pd.Int64Dtype(),
             "alias": pd.Int64Dtype(),
         })

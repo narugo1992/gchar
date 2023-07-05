@@ -32,6 +32,18 @@ def tags(repository: str, namespace: str, revision: str):
     crawler.deploy_to_huggingface(repository, namespace, revision)
 
 
+@cli.command('tags_export', help='Crawl tags database to local',
+             context_settings={**GLOBAL_CONTEXT_SETTINGS})
+@click.option('--output_directory', '-o', 'output_directory', type=str, default='.',
+              help='Output directory', show_default=True)
+@click.option('--namespace', '-n', 'namespace', type=str, default=None,
+              help='Namespace to publish to, default to site\' host.', show_default=True)
+def tags_export(output_directory: str, namespace: str):
+    logging.try_init_root(logging.INFO)
+    crawler = DanbooruTagCrawler()
+    crawler.export_to_directory(output_directory, namespace)
+
+
 DanbooruTagMatcher.add_commands(cli)
 
 if __name__ == '__main__':
