@@ -34,7 +34,7 @@ class Rule34TagCrawler(ParallelTagCrawler):
 
         data = []
         for row in table('tr').items():
-            if len(row('td').items()) == 0:
+            if len(list(row('td').items())) == 0:
                 continue
             texts = [item('a').text().strip() for item in row('td').items()]
             v = dict(zip(headers, texts))
