@@ -1,4 +1,12 @@
+from waifuc.source import BaseDataSource, ZerochanSource
+
+from ..base.character import TagFeatureExtract
 from ..base.tag_matches import TagMatcher
+
+
+class ZerochanTagFeatureExtract(TagFeatureExtract):
+    def get_datasource(self) -> BaseDataSource:
+        return ZerochanSource(self.tag, strict=True)
 
 
 class ZerochanTagMatcher(TagMatcher):
@@ -7,3 +15,4 @@ class ZerochanTagMatcher(TagMatcher):
     __count_column__ = 'total'
     __case_insensitive__ = True
     __extra_filters__ = {'type': 'character'}
+    __tag_fe__ = ZerochanTagFeatureExtract

@@ -93,7 +93,6 @@ class TagMatcher(HuggingfaceDeployable):
 
     def _query_via_pattern(self, pattern, *patterns):
         query = self.db.table('tags').select('*')
-        query = query.where(self.__count_column__, '>', 0)
         for key, value in self.__extra_filters__.items():
             query = query.where(key, '=', value)
 
@@ -129,7 +128,11 @@ class TagMatcher(HuggingfaceDeployable):
         return False
 
     def _words_cmp(self, name_words: List[str], tag_words: List[str]) -> float:
-        return fuzz.token_sort_ratio(' '.join(tag_words), ' '.join(name_words)) / 100.0
+        tag = ' '.join(tag_words)
+        name = ' '.join(name_words)
+        tsor = fuzz.token_sort_ratio(tag, name) / 100.0
+        tser = fuzz.token_set_ratio(tag, name) / 100.0
+        return tsor * 0.7 + tser * 0.3
 
     def _get_ch_feats(self, character: Character):
         if character.index not in self.ch_feats:

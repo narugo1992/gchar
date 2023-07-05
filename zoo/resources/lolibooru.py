@@ -3,13 +3,20 @@ from typing import List, Mapping, Any
 
 import click
 from ditk import logging
+from waifuc.source import BaseDataSource, LolibooruSource
 
 from gchar.utils import GLOBAL_CONTEXT_SETTINGS
 from gchar.utils import print_version as _origin_print_version
+from zoo.resources.base.character import TagFeatureExtract
 from zoo.resources.konachan.tag_matches import KonachanTagMatcher
 from .konachan.tags import KonachanTagCrawler
 
 print_version = partial(_origin_print_version, 'zoo.resources.lolibooru')
+
+
+class LolibooruTagFeatureExtract(TagFeatureExtract):
+    def get_datasource(self) -> BaseDataSource:
+        return LolibooruSource([self.tag])
 
 
 class LolibooruTagCrawler(KonachanTagCrawler):
@@ -28,6 +35,7 @@ class LolibooruTagMatcher(KonachanTagMatcher):
     __count_column__ = 'post_count'
     __extra_filters__ = {'tag_type': 4}
     __site_name__ = 'lolibooru.moe'
+    __tag_fe__ = LolibooruTagFeatureExtract
 
 
 @click.group(context_settings={**GLOBAL_CONTEXT_SETTINGS}, help='Crawler of lolibooru')

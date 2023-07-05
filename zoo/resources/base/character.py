@@ -7,7 +7,7 @@ from PIL import Image
 from hbutils.system import urlsplit
 from imgutils.metrics import ccip_extract_feature
 from tqdm.auto import tqdm
-from waifuc.action import ModeConvertAction, FaceCountAction, PersonSplitAction, PaddingAlignAction
+from waifuc.action import ModeConvertAction, FaceCountAction, PersonSplitAction, PaddingAlignAction, NoMonochromeAction
 from waifuc.source import BaseDataSource
 from waifuc.source.web import WebDataSource
 from waifuc.utils import task_ctx
@@ -87,6 +87,7 @@ def get_ccip_features_of_character(ch: Character, maxcnt: int = 10) -> List[np.n
     with task_ctx(title):
         for item in s.attach(
                 ModeConvertAction('RGB', 'white'),
+                NoMonochromeAction(),
                 FaceCountAction(1),
                 PersonSplitAction(),
                 FaceCountAction(1),
@@ -112,6 +113,7 @@ class TagFeatureExtract:
         with task_ctx(self.tag):
             for item in self.get_datasource().attach(
                     ModeConvertAction('RGB', 'white'),
+                    NoMonochromeAction(),
                     FaceCountAction(1),
                     PersonSplitAction(),
                     FaceCountAction(1),
