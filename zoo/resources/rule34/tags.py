@@ -30,7 +30,7 @@ class Rule34TagCrawler(ParallelTagCrawler):
 
         page = pq(resp.text)
         table = page('#aliases table')
-        headers = [item.text().strip().lower() for item in table('thead th').items()]
+        headers = [item.text().strip().lower() for item in table('th').parent('tr')('th').items()]
 
         data = []
         for row in table('tr').items():
