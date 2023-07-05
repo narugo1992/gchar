@@ -123,7 +123,10 @@ class ParallelTagCrawler(TagCrawler):
     @classmethod
     def _load_data_with_pages(cls, one_page_func, key_extract_func=None,
                               data=None, exist_ids=None, pg_pages: Optional[tqdm] = None,
-                              pg_tags: Optional[tqdm] = None, **kwargs):
+                              pg_tags: Optional[tqdm] = None,
+                              init_page: Optional[int] = None, step: int = 1, **kwargs):
+        init_page = init_page if init_page is not None else cls.__init_page__
+
         left, right = 1, 2
         while True:
             if one_page_func(right, **kwargs):
@@ -150,7 +153,7 @@ class ParallelTagCrawler(TagCrawler):
         if pg_tags is None:
             pg_tags = tqdm(desc=f'Tags {kwargs!r}')
         if pg_pages is None:
-            pg_pages = tqdm(desc=f'Pages {kwargs}', total=len(range(cls.__init_page__, pages + 1)))
+            pg_pages = tqdm(desc=f'Pages {kwargs}', total=len(range(init_page, pages + 1, step)))
 
         def _process(p):
             for item in one_page_func(p, **kwargs):
@@ -169,7 +172,7 @@ class ParallelTagCrawler(TagCrawler):
             pg_pages.update()
 
         tp = ThreadPoolExecutor(max_workers=cls.__max_workers__)
-        for i in range(cls.__init_page__, pages + 1):
+        for i in range(init_page, pages + 1, step):
             tp.submit(_process, i)
 
         tp.shutdown()
