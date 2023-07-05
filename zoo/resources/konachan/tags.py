@@ -20,7 +20,7 @@ class _BaseKonachanTagCrawler(ParallelTagCrawler):
         resp.raise_for_status()
 
         page = pq(resp.text)
-        table = page('# aliases table')
+        table = page('#aliases table')
         headers = [item.text().strip().lower() for item in table('thead th').items()]
 
         data = []
