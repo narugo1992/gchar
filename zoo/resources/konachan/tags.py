@@ -25,7 +25,7 @@ class _BaseKonachanTagCrawler(ParallelTagCrawler):
 
         data = []
         for row in table('tbody tr').items():
-            texts = [item.text().strip() for item in row('td').items()]
+            texts = [item('a').text().strip() for item in row('td').items()]
             v = dict(zip(headers, texts))
             data.append((v['alias'], v['to']))
 
