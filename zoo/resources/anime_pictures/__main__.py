@@ -5,6 +5,7 @@ from ditk import logging
 
 from gchar.utils import GLOBAL_CONTEXT_SETTINGS
 from gchar.utils import print_version as _origin_print_version
+from .tag_matches import AnimePicturesTagMatcher
 from .tags import AnimePicturesTagCrawler
 
 print_version = partial(_origin_print_version, 'zoo.resources.anime_pictures')
@@ -30,6 +31,8 @@ def tags(repository: str, namespace: str, revision: str):
     crawler = AnimePicturesTagCrawler()
     crawler.deploy_to_huggingface(repository, namespace, revision)
 
+
+AnimePicturesTagMatcher.add_commands(cli)
 
 if __name__ == '__main__':
     cli()

@@ -17,8 +17,8 @@ jobs:
       fail-fast: false
       matrix:
         resource:
-#          - 'anime_pictures'
-#          - 'zerochan'
+          - 'anime_pictures'
+          - 'zerochan'
           - 'danbooru'
           - 'safebooru'
           - 'atfbooru'

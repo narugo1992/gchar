@@ -5,6 +5,7 @@ from ditk import logging
 
 from gchar.utils import GLOBAL_CONTEXT_SETTINGS
 from gchar.utils import print_version as _origin_print_version
+from .tag_matches import ZerochanTagMatcher
 from .tags import ZerochanTagCrawler
 
 print_version = partial(_origin_print_version, 'zoo.resources.zerochan')
@@ -30,6 +31,8 @@ def tags(repository: str, namespace: str, revision: str):
     crawler = ZerochanTagCrawler()
     crawler.deploy_to_huggingface(repository, namespace, revision)
 
+
+ZerochanTagMatcher.add_commands(cli)
 
 if __name__ == '__main__':
     cli()

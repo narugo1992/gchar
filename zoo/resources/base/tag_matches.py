@@ -47,6 +47,7 @@ class TagMatcher(HuggingfaceDeployable):
     __extra_filters__: dict = {'type': 4}
     __case_insensitive__: bool = False
     __min_similarity__: float = 0.6
+    __strict_similarity__: float = 0.8
     __game_keywords__: dict = GAME_KEYWORDS
     __default_repository__ = 'deepghs/game_characters'
 
@@ -90,18 +91,26 @@ class TagMatcher(HuggingfaceDeployable):
     def _split_tag_to_words(self, tag):
         return split_words(remove_curves(tag.strip()))
 
+    def _keyword_check(self, tag):
+        tag_words = self._split_name_to_words(tag)
+        for keyword in self.game_keywords:
+            keyword_words = self._split_tag_to_words(keyword)
+            for i in range(len(tag_words)):
+                if tag_words[i:i + len(keyword_words)] == keyword_words:
+                    return True
+
+        return False
+
     def _words_cmp(self, name_words: List[str], tag_words: List[str]) -> float:
-        return fuzz.token_set_ratio(' '.join(tag_words), ' '.join(name_words)) / 100.0
+        return fuzz.token_sort_ratio(' '.join(tag_words), ' '.join(name_words)) / 100.0
+
+    def _tag_validate(self, character, tag, count, similarity, has_keyword: bool) -> bool:
+        if has_keyword and similarity >= self.__strict_similarity__:
+            return True
+
+        return False
 
     def _iter_patterns_by_name_words(self, name_words_sets: List[List[str]]) -> Iterator[str]:
-        # name with keyword
-        yield from [
-            '%'.join(['', *words, *self._split_tag_to_words(keyword), ''])
-            for name_words in name_words_sets
-            for words in itertools.permutations(name_words)
-            for keyword in self.game_keywords
-        ]
-
         # name without keyword
         yield from [
             '%'.join(['', *words, ''])
@@ -138,7 +147,7 @@ class TagMatcher(HuggingfaceDeployable):
 
                     tag_words = self._split_tag_to_words(tag)
                     sim = max([self._words_cmp(name_words, tag_words) for name_words in name_words_sets])
-                    kw = any(keyword in tag for keyword in self.game_keywords)
+                    kw = self._keyword_check(tag)
                     if sim < self.__min_similarity__:
                         continue
 
@@ -188,6 +197,7 @@ class TagMatcher(HuggingfaceDeployable):
                             'name': option[0],
                             'count': option[1],
                             'name_similarity': option[2],
+                            'validated': self._tag_validate(ch, *option),
                         } for option in options
                     ]
                 })
