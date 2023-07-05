@@ -40,7 +40,7 @@ class TagCrawler(HuggingfaceDeployable):
         return csv_file
 
     def tag_aliases_json_to_df(self, list_):
-        return pd.DataFrame([{'alias': alias, 'to': to_} for alias, to_ in list_])
+        return pd.DataFrame([{'alias': alias, 'tag': to_} for alias, to_ in list_])
 
     def tag_aliases_json_save_to_csv(self, list_, csv_file):
         df = self.tag_aliases_json_to_df(list_)
@@ -60,7 +60,7 @@ class TagCrawler(HuggingfaceDeployable):
         if tag_aliases is not None:
             df_tag_aliases = self.tag_aliases_json_to_df(tag_aliases)
             df_tag_aliases.to_sql('tag_aliases', sql)
-            for column in ['alias', 'to']:
+            for column in ['alias', 'tag']:
                 sql.execute(f"CREATE INDEX tag_aliases_index_{column} ON tag_aliases ({column});").fetchall()
 
         sql.close()
@@ -203,7 +203,7 @@ class HeaderParallelTagCrawler(ParallelTagCrawler):
         pg_tags = tqdm(desc=f'Tags')
         pg_pages = tqdm(desc=f'Pages')
 
-        for c in string.printable:
+        for c in sorted(set(string.printable.lower())):
             if c == '*' or c == '?' or not c.strip():
                 continue
 

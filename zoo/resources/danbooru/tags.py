@@ -62,7 +62,7 @@ class DanbooruTagCrawler(HeaderParallelTagCrawler):
         pg_tags = tqdm(desc=f'Tag Aliases')
         pg_pages = tqdm(desc=f'Pages')
 
-        for c in string.printable:
+        for c in sorted(set(string.printable.lower())):
             if c == '*' or c == '?' or not c.strip():
                 continue
 
