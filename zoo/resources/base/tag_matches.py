@@ -66,8 +66,8 @@ class TagMatcher(HuggingfaceDeployable):
     __case_insensitive__: bool = False
     __min_similarity__: float = 0.7
     __strict_similarity__: float = 0.9
-    __yes_min_vsim__: float = 0.7
-    __no_max_vsim__: float = 0.35
+    __yes_min_vsim__: float = 0.60
+    __no_max_vsim__: float = 0.20
     __game_keywords__: dict = GAME_KEYWORDS
     __default_repository__ = 'deepghs/game_characters'
     __tag_fe__: Type[TagFeatureExtract]
@@ -93,6 +93,7 @@ class TagMatcher(HuggingfaceDeployable):
 
     def _query_via_pattern(self, pattern, *patterns):
         query = self.db.table('tags').select('*')
+        query = query.where(self.__count_column__, '>', 0)
         for key, value in self.__extra_filters__.items():
             query = query.where(key, '=', value)
 
@@ -152,10 +153,12 @@ class TagMatcher(HuggingfaceDeployable):
             logging.info(f'Visual matching of {character!r} and tag {tag!r}: {ratio}')
             if ratio >= self.__yes_min_vsim__:
                 return ValidationStatus.YES
-            if ratio < self.__no_max_vsim__:
+            elif ratio < self.__no_max_vsim__:
                 return ValidationStatus.NO
-
-        return ValidationStatus.UNCERTAIN
+            else:
+                return ValidationStatus.UNCERTAIN
+        else:
+            return ValidationStatus.NO
 
     def _iter_patterns_by_name_words(self, name_words_sets: List[List[str]]) -> Iterator[str]:
         # name without keyword
@@ -235,7 +238,7 @@ class TagMatcher(HuggingfaceDeployable):
                 for tag, count, sim, kw, status in options
                 if status != ValidationStatus.NO
             ]
-            options = sorted(options, key=lambda x: (x[4], 0 if x[3] else 1, -x[2], -x[1], len(x[0]), x[0]))
+            options = sorted(options, key=lambda x: (x[4].order, 0 if x[3] else 1, -x[2], -x[1], len(x[0]), x[0]))
             if options:
                 retval.append({
                     'index': ch.index,
