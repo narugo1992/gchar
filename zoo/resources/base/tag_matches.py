@@ -30,7 +30,7 @@ GAME_KEYWORDS = {
     'azurlane': ['azur_lane'],
     'genshin': ['genshin_impact'],
     'girlsfrontline': ['girls\'_frontline'],
-    'neuralcloud': ['girls\'_frontline_nc', 'girls\'_frontline'],
+    'neuralcloud': ['girls\'_frontline_nc', 'girls\'_frontline', 'neural_cloud'],
     'bluearchive': ['blue_archive'],
 }
 
@@ -130,9 +130,7 @@ class TagMatcher(HuggingfaceDeployable):
     def _words_cmp(self, name_words: List[str], tag_words: List[str]) -> float:
         tag = ' '.join(tag_words)
         name = ' '.join(name_words)
-        tsor = fuzz.token_sort_ratio(tag, name) / 100.0
-        tser = fuzz.token_set_ratio(tag, name) / 100.0
-        return tsor * 0.7 + tser * 0.3
+        return fuzz.token_set_ratio(tag, name) / 100.0
 
     def _get_ch_feats(self, character: Character):
         if character.index not in self.ch_feats:
@@ -147,21 +145,27 @@ class TagMatcher(HuggingfaceDeployable):
         if self._tag_name_validate(character, tag, count, similarity, has_keyword):
             return ValidationStatus.YES
 
-        ch_feats = self._get_ch_feats(character)
-        tag_feats = self.__tag_fe__(tag).get_features()
-        if ch_feats and tag_feats:
-            feats = [*ch_feats, *tag_feats]
-            smatrix = ccip_batch_same(feats)[0:len(ch_feats), len(ch_feats):len(ch_feats) + len(tag_feats)]
-            ratio = smatrix.astype(np.float32).mean().item()
-            logging.info(f'Visual matching of {character!r} and tag {tag!r}: {ratio}')
-            if ratio >= self.__yes_min_vsim__:
-                return ValidationStatus.YES
-            elif ratio < self.__no_max_vsim__:
-                return ValidationStatus.NO
+        if self.__tag_fe__ is None:
+            return ValidationStatus.UNCERTAIN
+        else:
+            ch_feats = self._get_ch_feats(character)
+            if ch_feats:
+                tag_feats = self.__tag_fe__(tag).get_features()
+                if tag_feats:
+                    feats = [*ch_feats, *tag_feats]
+                    smatrix = ccip_batch_same(feats)[0:len(ch_feats), len(ch_feats):len(ch_feats) + len(tag_feats)]
+                    ratio = smatrix.astype(np.float32).mean().item()
+                    logging.info(f'Visual matching of {character!r} and tag {tag!r}: {ratio}')
+                    if ratio >= self.__yes_min_vsim__:
+                        return ValidationStatus.YES
+                    elif ratio < self.__no_max_vsim__:
+                        return ValidationStatus.NO
+                    else:
+                        return ValidationStatus.UNCERTAIN
+                else:
+                    return ValidationStatus.NO
             else:
                 return ValidationStatus.UNCERTAIN
-        else:
-            return ValidationStatus.NO
 
     def _iter_patterns_by_name_words(self, name_words_sets: List[List[str]]) -> Iterator[str]:
         # name without keyword

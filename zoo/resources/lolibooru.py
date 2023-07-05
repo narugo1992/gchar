@@ -16,7 +16,7 @@ print_version = partial(_origin_print_version, 'zoo.resources.lolibooru')
 
 class LolibooruTagFeatureExtract(TagFeatureExtract):
     def get_datasource(self) -> BaseDataSource:
-        return LolibooruSource([self.tag])
+        return LolibooruSource([self.tag, 'solo'])
 
 
 class LolibooruTagCrawler(KonachanTagCrawler):

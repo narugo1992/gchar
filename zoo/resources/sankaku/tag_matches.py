@@ -14,4 +14,4 @@ class SankakuTagMatcher(TagMatcher):
     __tag_column__ = 'name'
     __count_column__ = 'post_count'
     __extra_filters__ = {'type': 4}
-    __tag_fe__ = SankakuTagFeatureExtract
+    __tag_fe__ = None

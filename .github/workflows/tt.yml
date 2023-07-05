@@ -22,7 +22,7 @@ jobs:
           - 'danbooru'
           - 'safebooru'
           - 'atfbooru'
-#          - 'sankaku'
+          - 'sankaku'
           - 'rule34'
           - 'hypnohub'
           - 'xbooru'
@@ -31,13 +31,13 @@ jobs:
           - 'yande'
           - 'lolibooru'
         game:
-#          - 'bluearchive'
-#          - 'arknights'
-#          - 'fgo'
-#          - 'azurlane'
-#          - 'girlsfrontline'
+          - 'bluearchive'
+          - 'arknights'
+          - 'fgo'
+          - 'azurlane'
+          - 'girlsfrontline'
           - 'genshin'
-#          - 'neuralcloud'
+          - 'neuralcloud'
         os:
           - 'ubuntu-latest'
         python-version:
