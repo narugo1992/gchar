@@ -86,9 +86,13 @@ class TagMatcher(HuggingfaceDeployable):
         return query
 
     def _split_name_to_words(self, name):
+        if self.__case_insensitive__:
+            name = name.lower()
         return split_words(name.strip())
 
     def _split_tag_to_words(self, tag):
+        if self.__case_insensitive__:
+            tag = tag.lower()
         return split_words(remove_curves(tag.strip()))
 
     def _keyword_check(self, tag):

@@ -51,7 +51,7 @@ def chen_extra():
 
 @pytest.mark.unittest
 class TestGamesArknightsCharacter:
-    def test_chars(self, no_index_json, amiya, amiya_guard, specter, specter_extra, silverash, chen, chen_extra, fang):
+    def test_chars(self, amiya, amiya_guard, specter, specter_extra, silverash, chen, chen_extra, fang):
         assert amiya == 'amiya'
         assert amiya_guard == 'amiya'
         assert amiya == amiya_guard
@@ -98,22 +98,22 @@ class TestGamesArknightsCharacter:
         assert repr(silverash) == '<Character JC01 - 银灰/silverash/シルバーアッシュ, male, 6******>'
         assert silverash == '银老板'
 
-        assert chen == 'chen'
+        assert chen == 'ch\'en'
         assert chen == '陈'
         assert chen.rarity == 6
         assert chen.gender == 'female'
         assert chen.clazz == 'guard'
         assert not chen.is_extra
-        assert repr(chen) == '<Character LM04 - 陈/chen/チェン, female, 6******>'
+        assert repr(chen) == '<Character LM04 - 陈/ch\'en/チェン, female, 6******>'
 
-        assert chen_extra == 'chen_the_holungday'
+        assert chen_extra == 'ch\'en_the_holungday'
         assert chen_extra == '假日威龙陈'
         assert chen_extra.rarity == 6
         assert chen_extra.gender == 'female'
         assert chen_extra.clazz == 'sniper'
         assert chen_extra.is_extra
         assert chen_extra.release_time == 1627977600.0
-        assert repr(chen_extra) == '<Character R112 - 假日威龙陈/chen_the_holungday/遊龍チェン, female, 6******>'
+        assert repr(chen_extra) == '<Character R112 - 假日威龙陈/ch\'en_the_holungday/遊龍チェン, female, 6******>'
 
         assert fang == 'fang'
         assert fang == '芬'

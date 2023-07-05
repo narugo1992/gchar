@@ -105,8 +105,8 @@ class TestGamesArknightsName:
         assert en_blue_poison == ['blue', 'poison']
         assert en_blue_poison != 'bluepoison'
 
-        assert en_kaltsit == 'kaltsit'
-        assert en_chen == 'chen'
+        assert en_kaltsit == 'kal\'tsit'
+        assert en_chen == 'ch\'en'
 
         with pytest.raises(TypeError):
             _ = EnglishName(None)

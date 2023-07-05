@@ -1,4 +1,6 @@
+import builtins
 import json
+from functools import lru_cache
 from itertools import chain
 from typing import List, Union, Type, Iterator, Optional, Tuple, Dict
 
@@ -141,6 +143,7 @@ class Character(Comparable):
         return not self.__eq__(other)
 
     @classmethod
+    @lru_cache()
     def _get_index(cls) -> List[Dict]:
         with open(hf_hub_download(
                 repo_id=cls.__repository__,
@@ -150,18 +153,23 @@ class Character(Comparable):
             return json.load(f)['data']
 
     @classmethod
-    def _simple_all(cls, contains_extra: bool = True):
+    @lru_cache()
+    def _simple_all(cls, contains_extra: bool = True) -> List:
         all_chs = [cls(data) for data in cls._get_index()]
         chs = [ch for ch in all_chs if contains_extra or not ch.is_extra]
         return chs
 
     @classmethod
-    def all(cls, contains_extra: bool = True):
-        return sorted(cls._simple_all(contains_extra))
+    def all(cls, contains_extra: bool = True, sorted: bool = True) -> List:
+        chs = cls._simple_all(contains_extra)
+        if sorted:
+            return builtins.sorted(chs)
+        else:
+            return chs
 
     @classmethod
     def get(cls, name, **kwargs):
-        for item in cls.all(**kwargs):
+        for item in cls._simple_all(**kwargs):
             if item == name:
                 return item
 
