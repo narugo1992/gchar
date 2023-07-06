@@ -6,7 +6,7 @@ import re
 import time
 from contextlib import contextmanager
 from enum import Enum
-from typing import Type, List, ContextManager, Iterator
+from typing import Type, List, ContextManager, Iterator, Optional
 
 import click
 import numpy as np
@@ -127,10 +127,15 @@ class TagMatcher(HuggingfaceDeployable):
 
         return False
 
-    def _words_cmp(self, name_words: List[str], tag_words: List[str]) -> float:
+    def _words_filter(self, name_words: List[str], tag_words: List[str]) -> float:
         tag = ' '.join(tag_words)
         name = ' '.join(name_words)
         return fuzz.token_set_ratio(tag, name) / 100.0
+
+    def _words_compare(self, name_words: List[str], tag_words: List[str]) -> float:
+        tag = ' '.join(tag_words)
+        name = ' '.join(name_words)
+        return fuzz.token_sort_ratio(tag, name) / 100.0
 
     def _get_ch_feats(self, character: Character):
         if character.index not in self.ch_feats:
@@ -141,9 +146,17 @@ class TagMatcher(HuggingfaceDeployable):
     def _tag_name_validate(self, character, tag, count, similarity, has_keyword: bool) -> bool:
         return has_keyword and similarity >= self.__strict_similarity__
 
-    def _tag_validate(self, character, tag, count, similarity, has_keyword: bool) -> ValidationStatus:
+    def _tag_validate(self, character, tag, count, similarity, has_keyword: bool,
+                      quick_ref_sim: Optional[float] = None, quick_ref_status: Optional[ValidationStatus] = None) \
+            -> ValidationStatus:
         if self._tag_name_validate(character, tag, count, similarity, has_keyword):
             return ValidationStatus.YES
+
+        if quick_ref_sim is not None:
+            if quick_ref_status == ValidationStatus.YES and similarity < quick_ref_sim - 0.05:
+                return ValidationStatus.NO
+            if quick_ref_status == ValidationStatus.UNCERTAIN and similarity < quick_ref_sim - 0.10:
+                return ValidationStatus.NO
 
         if self.__tag_fe__ is None:
             return ValidationStatus.UNCERTAIN
@@ -203,9 +216,10 @@ class TagMatcher(HuggingfaceDeployable):
                         continue
 
                     tag_words = self._split_tag_to_words(tag)
-                    sim = max([self._words_cmp(name_words, tag_words) for name_words in name_words_sets])
-                    if sim < self.__min_similarity__:
+                    filter_sim = max([self._words_filter(name_words, tag_words) for name_words in name_words_sets])
+                    if filter_sim < self.__min_similarity__:
                         continue
+                    sim = max([self._words_compare(name_words, tag_words) for name_words in name_words_sets])
                     kw = self._keyword_check(tag)
 
                     options.append((tag, count, sim, kw))
@@ -235,10 +249,18 @@ class TagMatcher(HuggingfaceDeployable):
                     if self._tag_name_validate(ch, tag, count, sim, kw)
                 ]
             else:
-                options = [
-                    (tag, count, sim, kw, self._tag_validate(ch, tag, count, sim, kw))
-                    for tag, count, sim, kw in options
-                ]
+                ops = []
+                ref_sim, ref_status = None, None
+                for tag, count, sim, kw in options:
+                    status = self._tag_validate(ch, tag, count, sim, kw, ref_sim, ref_status)
+                    if status == ValidationStatus.YES:
+                        ref_sim, ref_status = sim, status
+                    if status == ValidationStatus.UNCERTAIN and ref_status != ValidationStatus.YES:
+                        ref_sim, ref_status = sim, status
+
+                    ops.append((tag, count, sim, kw, status))
+
+                options = ops
 
             options = [
                 (tag, count, sim, kw, status)
