@@ -219,7 +219,7 @@ class TagMatcher(HuggingfaceDeployable):
                         else:
                             return ValidationStatus.YES
                     elif ratio < self.__no_max_vsim__:
-                        if total < 15:
+                        if total < 8:
                             return ValidationStatus.NO
                         else:
                             return ValidationStatus.BAN
@@ -343,6 +343,7 @@ class TagMatcher(HuggingfaceDeployable):
                     continue
 
                 status = self._tag_validate(ch, tag, count, sim, kw, ref_sim, ref_status)
+                logging.info(f'Validate result of {tag!r}: {status}')
                 if status == ValidationStatus.YES:
                     ref_sim, ref_status = (sim if ref_sim is None else min(ref_sim, sim)), status
                 if status == ValidationStatus.UNCERTAIN and ref_status != ValidationStatus.YES:
@@ -383,6 +384,7 @@ class TagMatcher(HuggingfaceDeployable):
                 logging.info(f'Tags found for character {ch!r} - {find_tags!r}')
             else:
                 logging.warning(f'No Tags found for character {ch!r}')
+            logging.info(f'Blacklisted tags of character {ch!r}: {sorted(blacklist)!r}')
 
         return retval
 
