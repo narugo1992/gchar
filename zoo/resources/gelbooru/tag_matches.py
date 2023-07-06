@@ -11,4 +11,5 @@ class GelbooruTagFeatureExtract(TagFeatureExtract):
 
 class GelbooruTagMatcher(TagMatcher):
     __site_name__ = 'gelbooru.com'
-    __tag_fe__ = GelbooruSource
+    __extra_filters__: dict = {'type': 'character'}
+    __tag_fe__ = GelbooruTagFeatureExtract
