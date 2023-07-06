@@ -9,6 +9,9 @@ from ..rule34.tags import ParallelTagCrawler
 
 
 class GelbooruTagCrawler(ParallelTagCrawler):
+    __init_page__ = 1
+    __max_workers__ = 4
+
     def __init__(self):
         ParallelTagCrawler.__init__(self, 'https://gelbooru.com')
 
@@ -55,3 +58,5 @@ class GelbooruTagCrawler(ParallelTagCrawler):
             })
 
         return data
+
+    __sqlite_indices__ = ['name', 'count', 'type']
