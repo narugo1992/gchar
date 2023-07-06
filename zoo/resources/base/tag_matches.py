@@ -280,11 +280,13 @@ class TagMatcher(HuggingfaceDeployable):
 
                 options = ops
 
-            ops = []
+            ops, _exist_names = [], set()
             for tag, count, sim, kw, status in options:
                 if status != ValidationStatus.NO:
                     tag, count = self._alias_replace(tag, count)
-                    ops.append((tag, count, sim, kw, status))
+                    if tag not in _exist_names:
+                        ops.append((tag, count, sim, kw, status))
+                        _exist_names.add(tag)
             options = sorted(ops, key=lambda x: (x[4].order, 0 if x[3] else 1, -x[2], -x[1], len(x[0]), x[0]))
             if options:
                 retval.append({
