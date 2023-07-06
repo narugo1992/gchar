@@ -4,7 +4,7 @@ permissions:
   contents: write
 
 on:
-#  push:
+  push:
   workflow_dispatch:
 #  schedule:
 #    - cron: '30 14 * * *'
@@ -23,13 +23,14 @@ jobs:
 #          - 'safebooru'
 #          - 'atfbooru'
 #          - 'sankaku'
-          - 'rule34'
-          - 'hypnohub'
-          - 'xbooru'
+#          - 'rule34'
+#          - 'hypnohub'
+#          - 'xbooru'
 #          - 'konachan'
 #          - 'konachan_net'
 #          - 'yande'
 #          - 'lolibooru'
+          - 'gelbooru'
         os:
           - 'ubuntu-latest'
         python-version:
