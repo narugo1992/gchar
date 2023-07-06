@@ -11,4 +11,5 @@ class KonachanTagFeatureExtract(TagFeatureExtract):
 
 class KonachanTagMatcher(TagMatcher):
     __site_name__ = 'konachan.com'
+    __extra_filters__: dict = {'type': 'character'}
     __tag_fe__ = KonachanTagFeatureExtract
