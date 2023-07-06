@@ -202,6 +202,8 @@ class TagMatcher(HuggingfaceDeployable):
             yield list(patterns)
 
     def _alias_replace(self, tag, count) -> Tuple[str, int]:
+        _known_names = {tag}
+        _known_tuples = [(tag, count)]
         while True:
             query = self.db.table('tag_aliases').select('*').where('alias', '=', tag)
             lst = list(query.get())
@@ -209,11 +211,18 @@ class TagMatcher(HuggingfaceDeployable):
                 break
             else:
                 new_tag = lst[0]['tag']
+                if new_tag in _known_names:
+                    cnts = np.array([c for _, c in _known_tuples])
+                    tag, count = _known_tuples[np.argmax(cnts)]
+                    break
+
                 t_query = self.db.table('tags').select('*').where(self.__tag_column__, '=', new_tag)
                 t_lst = list(t_query.get())
                 if t_lst:
                     new_count = t_lst[0][self.__count_column__]
                     tag, count = new_tag, new_count
+                    _known_names.add(tag)
+                    _known_tuples.append((tag, count))
                 else:
                     break
 

@@ -1,5 +1,6 @@
 from typing import Tuple
 
+import numpy as np
 from waifuc.source import BaseDataSource, AnimePicturesSource
 
 from ..base.character import TagFeatureExtract
@@ -19,6 +20,8 @@ class AnimePicturesTagMatcher(TagMatcher):
     __tag_fe__ = AnimePicturesTagFeatureExtract
 
     def _alias_replace(self, tag, count) -> Tuple[str, int]:
+        _known_names = {tag}
+        _known_tuples = [(tag, count)]
         while True:
             c_rows = list(self.db.table('tags').select('*').where(self.__tag_column__, '=', tag).get())
             if not c_rows:
@@ -31,6 +34,12 @@ class AnimePicturesTagMatcher(TagMatcher):
             if not a_rows:
                 break
 
-            tag, count = a_rows[0][self.__tag_column__], a_rows[0][self.__count_column__]
+            new_tag, new_count = a_rows[0][self.__tag_column__], a_rows[0][self.__count_column__]
+            if new_tag in _known_names:
+                cnts = np.array([c for _, c in _known_tuples])
+                tag, count = _known_tuples[np.argmax(cnts)]
+                break
+            else:
+                tag, count = new_tag, new_count
 
         return tag, count
