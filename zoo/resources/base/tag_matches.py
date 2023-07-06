@@ -282,9 +282,9 @@ class TagMatcher(HuggingfaceDeployable):
 
                 status = self._tag_validate(ch, tag, count, sim, kw, ref_sim, ref_status)
                 if status == ValidationStatus.YES:
-                    ref_sim, ref_status = sim, status
+                    ref_sim, ref_status = (sim if ref_sim is None else min(ref_sim, sim)), status
                 if status == ValidationStatus.UNCERTAIN and ref_status != ValidationStatus.YES:
-                    ref_sim, ref_status = sim, status
+                    ref_sim, ref_status = (sim if ref_sim is None else min(ref_sim, sim)), status
 
                 ops.append((tag, count, sim, kw, status))
 
