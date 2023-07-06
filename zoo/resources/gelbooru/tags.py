@@ -11,6 +11,7 @@ from ..rule34.tags import ParallelTagCrawler
 class GelbooruTagCrawler(ParallelTagCrawler):
     __init_page__ = 1
     __max_workers__ = 4
+    __id_key__ = 'name'
 
     def __init__(self):
         ParallelTagCrawler.__init__(self, 'https://gelbooru.com')
