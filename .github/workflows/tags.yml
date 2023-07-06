@@ -4,7 +4,7 @@ permissions:
   contents: write
 
 on:
-  push:
+#  push:
   workflow_dispatch:
   schedule:
     - cron: '30 14 * * *'
@@ -17,19 +17,19 @@ jobs:
       fail-fast: false
       matrix:
         resource:
-#          - 'anime_pictures'
-#          - 'zerochan'
-#          - 'danbooru'
-#          - 'safebooru'
-#          - 'atfbooru'
+          - 'anime_pictures'
+          - 'zerochan'
+          - 'danbooru'
+          - 'safebooru'
+          - 'atfbooru'
 #          - 'sankaku'
-#          - 'rule34'
-#          - 'hypnohub'
-#          - 'xbooru'
-#          - 'konachan'
-#          - 'konachan_net'
-#          - 'yande'
-#          - 'lolibooru'
+          - 'rule34'
+          - 'hypnohub'
+          - 'xbooru'
+          - 'konachan'
+          - 'konachan_net'
+          - 'yande'
+          - 'lolibooru'
           - 'gelbooru'
         os:
           - 'ubuntu-latest'
