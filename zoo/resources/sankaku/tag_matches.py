@@ -1,3 +1,5 @@
+from typing import Tuple
+
 from waifuc.source import BaseDataSource, SankakuSource
 
 from ..base.character import TagFeatureExtract
@@ -15,3 +17,6 @@ class SankakuTagMatcher(TagMatcher):
     __count_column__ = 'post_count'
     __extra_filters__ = {'type': 4}
     __tag_fe__ = None
+
+    def _alias_replace(self, tag, count) -> Tuple[str, int]:
+        return tag, count

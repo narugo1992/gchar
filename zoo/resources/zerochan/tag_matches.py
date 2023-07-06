@@ -1,3 +1,5 @@
+from typing import Tuple
+
 from waifuc.source import BaseDataSource, ZerochanSource
 
 from ..base.character import TagFeatureExtract
@@ -16,3 +18,6 @@ class ZerochanTagMatcher(TagMatcher):
     __case_insensitive__ = True
     __extra_filters__ = {'type': 'character'}
     __tag_fe__ = ZerochanTagFeatureExtract
+
+    def _alias_replace(self, tag, count) -> Tuple[str, int]:
+        return tag, count

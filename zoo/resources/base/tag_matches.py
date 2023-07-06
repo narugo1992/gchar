@@ -6,7 +6,7 @@ import re
 import time
 from contextlib import contextmanager
 from enum import Enum
-from typing import Type, List, ContextManager, Iterator, Optional
+from typing import Type, List, ContextManager, Iterator, Optional, Tuple
 
 import click
 import numpy as np
@@ -201,6 +201,24 @@ class TagMatcher(HuggingfaceDeployable):
         if patterns:
             yield list(patterns)
 
+    def _alias_replace(self, tag, count) -> Tuple[str, int]:
+        while True:
+            query = self.db.table('tag_aliases').select('*').where('alias', '=', tag)
+            lst = list(query.get())
+            if not lst:
+                break
+            else:
+                new_tag = lst[0]['tag']
+                t_query = self.db.table('tags').select('*').where(self.__tag_column__, '=', new_tag)
+                t_lst = list(t_query.get())
+                if t_lst:
+                    new_count = t_lst[0][self.__count_column__]
+                    tag, count = new_tag, new_count
+                else:
+                    break
+
+        return tag, count
+
     def try_matching(self):
         best_sim_for_tag_words, ch_options = {}, {}
         all_chs = self.game_cls.all(contains_extra=False)
@@ -262,12 +280,12 @@ class TagMatcher(HuggingfaceDeployable):
 
                 options = ops
 
-            options = [
-                (tag, count, sim, kw, status)
-                for tag, count, sim, kw, status in options
-                if status != ValidationStatus.NO
-            ]
-            options = sorted(options, key=lambda x: (x[4].order, 0 if x[3] else 1, -x[2], -x[1], len(x[0]), x[0]))
+            ops = []
+            for tag, count, sim, kw, status in options:
+                if status != ValidationStatus.NO:
+                    tag, count = self._alias_replace(tag, count)
+                    ops.append((tag, count, sim, kw, status))
+            options = sorted(ops, key=lambda x: (x[4].order, 0 if x[3] else 1, -x[2], -x[1], len(x[0]), x[0]))
             if options:
                 retval.append({
                     'index': ch.index,
@@ -278,7 +296,7 @@ class TagMatcher(HuggingfaceDeployable):
                         {
                             'name': option[0],
                             'count': option[1],
-                            'status': option[4].value,
+                            'sure': option[4] == ValidationStatus.YES,
                         } for option in options
                     ]
                 })
