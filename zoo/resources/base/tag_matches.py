@@ -153,9 +153,9 @@ class TagMatcher(HuggingfaceDeployable):
             return ValidationStatus.YES
 
         if quick_ref_sim is not None:
-            if quick_ref_status == ValidationStatus.YES and similarity < quick_ref_sim - 0.05:
+            if quick_ref_status == ValidationStatus.YES and similarity < quick_ref_sim - 0.01:
                 return ValidationStatus.NO
-            if quick_ref_status == ValidationStatus.UNCERTAIN and similarity < quick_ref_sim - 0.10:
+            if quick_ref_status == ValidationStatus.UNCERTAIN and similarity < quick_ref_sim - 0.05:
                 return ValidationStatus.NO
 
         if self.__tag_fe__ is None:
@@ -254,32 +254,34 @@ class TagMatcher(HuggingfaceDeployable):
         retval = []
         for ch in tqdm(all_chs, desc='Tag Matching'):
             options = ch_options[ch.index]
+
+            # remove non-best matches
             options = [
                 (tag, count, sim, kw) for tag, count, sim, kw in options
                 if np.isclose(sim, best_sim_for_tag_words[tuple(self._split_tag_to_words(tag))])
             ]
 
-            if any(self._tag_name_validate(ch, tag, count, sim, kw)
-                   for tag, count, sim, kw in options):
-                options = [
-                    (tag, count, sim, kw, ValidationStatus.YES)
-                    for tag, count, sim, kw in options
-                    if self._tag_name_validate(ch, tag, count, sim, kw)
-                ]
-            else:
-                ops = []
-                ref_sim, ref_status = None, None
-                for tag, count, sim, kw in options:
-                    status = self._tag_validate(ch, tag, count, sim, kw, ref_sim, ref_status)
-                    if status == ValidationStatus.YES:
-                        ref_sim, ref_status = sim, status
-                    if status == ValidationStatus.UNCERTAIN and ref_status != ValidationStatus.YES:
-                        ref_sim, ref_status = sim, status
+            # filter visual not matches
+            ops = []
+            has_kw = options and options[0][3]
+            ref_sim, ref_status = None, None
+            for tag, count, sim, kw in options:
+                # when xxx_(game) exist, tags like (xxx)_(yyy) will be dropped.
+                if has_kw and not kw and \
+                        sorted(set(self._split_name_to_words(tag)) - set(self._split_tag_to_words(tag))):
+                    continue
 
-                    ops.append((tag, count, sim, kw, status))
+                status = self._tag_validate(ch, tag, count, sim, kw, ref_sim, ref_status)
+                if status == ValidationStatus.YES:
+                    ref_sim, ref_status = sim, status
+                if status == ValidationStatus.UNCERTAIN and ref_status != ValidationStatus.YES:
+                    ref_sim, ref_status = sim, status
 
-                options = ops
+                ops.append((tag, count, sim, kw, status))
 
+            options = ops
+
+            # mapping tags to aliases
             ops, _exist_names = [], set()
             for tag, count, sim, kw, status in options:
                 if status != ValidationStatus.NO:
@@ -287,7 +289,8 @@ class TagMatcher(HuggingfaceDeployable):
                     if tag not in _exist_names:
                         ops.append((tag, count, sim, kw, status))
                         _exist_names.add(tag)
-            options = sorted(ops, key=lambda x: (x[4].order, 0 if x[3] else 1, -x[2], -x[1], len(x[0]), x[0]))
+
+            options = sorted(ops, key=lambda x: (x[4].order, 0 if x[3] else 1, -x[1], len(x[0]), x[0]))
             if options:
                 retval.append({
                     'index': ch.index,
