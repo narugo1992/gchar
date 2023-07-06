@@ -18,7 +18,7 @@ jobs:
       matrix:
         resource:
 #          - 'anime_pictures'
-#          - 'zerochan'
+          - 'zerochan'
 #          - 'danbooru'
 #          - 'safebooru'
 #          - 'atfbooru'
@@ -30,7 +30,7 @@ jobs:
 #          - 'konachan_net'
 #          - 'yande'
 #          - 'lolibooru'
-          - 'gelbooru'
+#          - 'gelbooru'
         game:
           - 'bluearchive'
           - 'arknights'
