@@ -290,7 +290,7 @@ class TagMatcher(HuggingfaceDeployable):
                         ops.append((tag, count, sim, kw, status))
                         _exist_names.add(tag)
 
-            options = sorted(ops, key=lambda x: (x[4].order, 0 if x[3] else 1, -x[1], len(x[0]), x[0]))
+            options = sorted(ops, key=lambda x: (x[4].order, -x[1], len(x[0]), x[0]))
             if options:
                 retval.append({
                     'index': ch.index,
