@@ -18,8 +18,8 @@ jobs:
       matrix:
         resource:
 #          - 'anime_pictures'
-          - 'zerochan'
-#          - 'danbooru'
+#          - 'zerochan'
+          - 'danbooru'
 #          - 'safebooru'
 #          - 'atfbooru'
 #          - 'sankaku'
@@ -32,13 +32,13 @@ jobs:
 #          - 'lolibooru'
 #          - 'gelbooru'
         game:
-          - 'bluearchive'
+#          - 'bluearchive'
           - 'arknights'
-          - 'fgo'
-          - 'azurlane'
-          - 'girlsfrontline'
-          - 'genshin'
-          - 'neuralcloud'
+#          - 'fgo'
+#          - 'azurlane'
+#          - 'girlsfrontline'
+#          - 'genshin'
+#          - 'neuralcloud'
         os:
           - 'ubuntu-latest'
         python-version:

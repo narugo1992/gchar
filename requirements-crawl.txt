@@ -8,4 +8,5 @@ DI-toolkit
 xmltodict
 orator
 thefuzz[speedup]
+huggingface_hub>=0.14.0
 git+https://github.com/deepghs/waifuc.git

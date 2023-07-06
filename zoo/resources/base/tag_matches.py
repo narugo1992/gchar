@@ -6,13 +6,13 @@ import re
 import time
 from contextlib import contextmanager
 from enum import Enum
-from typing import Type, List, ContextManager, Iterator, Optional, Tuple
+from typing import Type, List, ContextManager, Iterator, Optional, Tuple, Union, Mapping
 
 import click
 import numpy as np
 from ditk import logging
 from hbutils.system import TemporaryDirectory
-from huggingface_hub import hf_hub_download
+from huggingface_hub import hf_hub_download, hf_hub_url
 from imgutils.metrics import ccip_batch_same
 from orator import DatabaseManager
 from thefuzz import fuzz
@@ -20,7 +20,7 @@ from tqdm.auto import tqdm
 
 from gchar.games import get_character_class, list_available_game_names
 from gchar.games.base import Character
-from gchar.utils import GLOBAL_CONTEXT_SETTINGS
+from gchar.utils import GLOBAL_CONTEXT_SETTINGS, srequest, get_requests_session
 from .base import HuggingfaceDeployable
 from .character import get_ccip_features_of_character, TagFeatureExtract
 
@@ -39,6 +39,7 @@ class ValidationStatus(str, Enum):
     YES = 'yes'
     UNCERTAIN = 'uncertain'
     NO = 'no'
+    BAN = 'ban'
 
     @property
     def order(self):
@@ -48,6 +49,16 @@ class ValidationStatus(str, Enum):
             return 2
         elif self == self.NO:
             return 3
+        elif self == self.BAN:
+            return 4
+
+    @property
+    def visible(self) -> bool:
+        return self in {self.YES, self.UNCERTAIN}
+
+    @property
+    def sure(self) -> bool:
+        return self == self.YES
 
 
 def remove_curves(text) -> str:
@@ -56,6 +67,9 @@ def remove_curves(text) -> str:
 
 def split_words(text) -> List[str]:
     return [word for word in re.split(r'[\W_]+', text) if word]
+
+
+_SESSION = get_requests_session()
 
 
 class TagMatcher(HuggingfaceDeployable):
@@ -72,7 +86,7 @@ class TagMatcher(HuggingfaceDeployable):
     __default_repository__ = 'deepghs/game_characters'
     __tag_fe__: Type[TagFeatureExtract]
 
-    def __init__(self, game_name: str, game_keywords: List[str] = None):
+    def __init__(self, game_name: str, game_keywords: List[str] = None, repository: Optional[str] = None):
         db_file = hf_hub_download(
             'deepghs/site_tags',
             filename=f'{self.__site_name__}/tags.sqlite',
@@ -90,6 +104,31 @@ class TagMatcher(HuggingfaceDeployable):
         self.game_cls: Type[Character] = get_character_class(game_name)
         self.game_keywords = list(game_keywords or self.__game_keywords__.get(game_name) or [])
         self.ch_feats = {}
+        self.repository = repository or self.__default_repository__
+
+    def get_blacklists(self) -> Mapping[Union[int, str], List[str]]:
+        file_url = hf_hub_url(
+            self.repository,
+            filename=f'{self.game_name}/tags_{self.__site_name__}.json',
+            repo_type='dataset'
+        )
+        resp = srequest(_SESSION, 'GET', file_url, raise_for_status=False)
+        if resp.ok:
+            json_file = hf_hub_download(
+                self.repository,
+                filename=f'{self.game_name}/tags_{self.__site_name__}.json',
+                repo_type='dataset'
+            )
+            with open(json_file, 'r', encoding='utf-8') as f:
+                data = json.load(f)['data']
+
+            return {
+                item['index']: list(item.get('blacklist', None) or [])
+                for item in data
+            }
+
+        else:
+            return {}
 
     def _query_via_pattern(self, pattern, *patterns):
         query = self.db.table('tags').select('*')
@@ -130,11 +169,15 @@ class TagMatcher(HuggingfaceDeployable):
     def _words_filter(self, name_words: List[str], tag_words: List[str]) -> float:
         tag = ' '.join(tag_words)
         name = ' '.join(name_words)
+        if self.__case_insensitive__:
+            tag, name = tag.lower(), name.lower()
         return fuzz.token_set_ratio(tag, name) / 100.0
 
     def _words_compare(self, name_words: List[str], tag_words: List[str]) -> float:
         tag = ' '.join(tag_words)
         name = ' '.join(name_words)
+        if self.__case_insensitive__:
+            tag, name = tag.lower(), name.lower()
         return fuzz.token_sort_ratio(tag, name) / 100.0
 
     def _get_ch_feats(self, character: Character):
@@ -152,7 +195,7 @@ class TagMatcher(HuggingfaceDeployable):
         if self._tag_name_validate(character, tag, count, similarity, has_keyword):
             return ValidationStatus.YES
 
-        if quick_ref_sim is not None:
+        if quick_ref_sim is not None and not has_keyword:
             if quick_ref_status == ValidationStatus.YES and similarity < quick_ref_sim - 0.01:
                 return ValidationStatus.NO
             if quick_ref_status == ValidationStatus.UNCERTAIN and similarity < quick_ref_sim - 0.05:
@@ -166,13 +209,20 @@ class TagMatcher(HuggingfaceDeployable):
                 tag_feats = self.__tag_fe__(tag).get_features()
                 if tag_feats:
                     feats = [*ch_feats, *tag_feats]
+                    total = len(ch_feats) * len(tag_feats)
                     smatrix = ccip_batch_same(feats)[0:len(ch_feats), len(ch_feats):len(ch_feats) + len(tag_feats)]
                     ratio = smatrix.astype(np.float32).mean().item()
                     logging.info(f'Visual matching of {character!r} and tag {tag!r}: {ratio}')
                     if ratio >= self.__yes_min_vsim__:
-                        return ValidationStatus.YES
+                        if total < 8:
+                            return ValidationStatus.UNCERTAIN
+                        else:
+                            return ValidationStatus.YES
                     elif ratio < self.__no_max_vsim__:
-                        return ValidationStatus.NO
+                        if total < 15:
+                            return ValidationStatus.NO
+                        else:
+                            return ValidationStatus.BAN
                     else:
                         return ValidationStatus.UNCERTAIN
                 else:
@@ -231,6 +281,7 @@ class TagMatcher(HuggingfaceDeployable):
     def try_matching(self):
         best_sim_for_tag_words, ch_options = {}, {}
         all_chs = self.game_cls.all(contains_extra=False)
+        ch_blacklists = self.get_blacklists()
 
         for ch in tqdm(all_chs, desc='Name Searching'):
             name_words_sets = [self._split_name_to_words(name) for name in ch.names]
@@ -270,6 +321,7 @@ class TagMatcher(HuggingfaceDeployable):
         retval = []
         for ch in tqdm(all_chs, desc='Tag Matching'):
             options = ch_options[ch.index]
+            blacklist = set(ch_blacklists.get(ch.index, None) or [])
 
             # remove non-best matches
             options = [
@@ -287,6 +339,8 @@ class TagMatcher(HuggingfaceDeployable):
                 if has_kw and not kw and \
                         sorted(set(self._split_name_to_words(tag)) - set(self._split_tag_to_words(tag))):
                     continue
+                if tag in blacklist:
+                    continue
 
                 status = self._tag_validate(ch, tag, count, sim, kw, ref_sim, ref_status)
                 if status == ValidationStatus.YES:
@@ -301,11 +355,13 @@ class TagMatcher(HuggingfaceDeployable):
             # mapping tags to aliases
             ops, _exist_names = [], set()
             for tag, count, sim, kw, status in options:
-                if status != ValidationStatus.NO:
+                if status.visible:
                     tag, count = self._alias_replace(tag, count)
                     if tag not in _exist_names:
                         ops.append((tag, count, sim, kw, status))
                         _exist_names.add(tag)
+                elif status == ValidationStatus.BAN:
+                    blacklist.add(tag)
 
             options = sorted(ops, key=lambda x: (x[4].order, -x[1], len(x[0]), x[0]))
             if options:
@@ -320,7 +376,8 @@ class TagMatcher(HuggingfaceDeployable):
                             'count': option[1],
                             'sure': option[4] == ValidationStatus.YES,
                         } for option in options
-                    ]
+                    ],
+                    'blacklist': sorted(blacklist),
                 })
                 find_tags = [(tag, count, status.value) for tag, count, sim, kw, status in options]
                 logging.info(f'Tags found for character {ch!r} - {find_tags!r}')
