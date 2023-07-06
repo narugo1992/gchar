@@ -2,6 +2,7 @@ import re
 from itertools import chain
 from typing import Optional, List, Mapping, Any, Tuple
 
+from hbutils.system import urlsplit
 from pyquery import PyQuery as pq
 from tqdm.auto import tqdm
 
@@ -43,8 +44,8 @@ class GelbooruTagCrawler(ParallelTagCrawler):
                 continue
 
             first_a, second_a = row('a').items()
-            alias_tag = first_a.text().strip().replace(' ', '_')
-            tag = second_a.text().strip().replace(' ', '_')
+            alias_tag = urlsplit(first_a.attr('href')).query_dict['tags']
+            tag = urlsplit(second_a.attr('href')).query_dict['tags']
             data.append((alias_tag, tag))
 
         return data
@@ -85,7 +86,7 @@ class GelbooruTagCrawler(ParallelTagCrawler):
                 continue
 
             td_1 = row('td:nth-child(1)')
-            tag = td_1('span:nth-child(1)').text().strip().replace(' ', '_')
+            tag = urlsplit(td_1('span:nth-child(1) a').attr('href')).query_dict['tags']
             count = int(td_1('span:nth-child(2)').text().strip())
             td_2 = row('td:nth-child(2)')
             type_text = re.sub(r'\(\s*edit\s*\)', '', td_2.text(), re.IGNORECASE).strip()
