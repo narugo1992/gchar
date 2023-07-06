@@ -243,19 +243,26 @@ class TagMatcher(HuggingfaceDeployable):
                         continue
 
                     tag_words = self._split_tag_to_words(tag)
-                    filter_sim = max([self._words_filter(name_words, tag_words) for name_words in name_words_sets])
+                    tag_words_n = self._split_name_to_words(tag)
+                    filter_sim = max([
+                        *(self._words_filter(name_words, tag_words) for name_words in name_words_sets),
+                        *(self._words_filter(name_words, tag_words_n) for name_words in name_words_sets),
+                    ])
                     if filter_sim < self.__min_similarity__:
                         continue
-                    sim = max([self._words_compare(name_words, tag_words) for name_words in name_words_sets])
+                    sim = max([
+                        *(self._words_compare(name_words, tag_words) for name_words in name_words_sets),
+                        *(self._words_compare(name_words, tag_words_n) for name_words in name_words_sets),
+                    ])
                     kw = self._keyword_check(tag)
 
                     options.append((tag, count, sim, kw))
                     exist_tags.add(tag)
 
                     tag_tpl = tuple(tag_words)
-                    if tag_tpl not in best_sim_for_tag_words:
-                        best_sim_for_tag_words[tag_tpl] = 0.0
-                    best_sim_for_tag_words[tag_tpl] = max(best_sim_for_tag_words[tag_tpl], sim)
+                    tag_tpl_n = tuple(tag_words_n)
+                    best_sim_for_tag_words[tag_tpl] = max(best_sim_for_tag_words.get(tag_tpl, 0.0), sim)
+                    best_sim_for_tag_words[tag_tpl_n] = max(best_sim_for_tag_words.get(tag_tpl_n, 0.0), sim)
 
             options = sorted(options, key=lambda x: (0 if x[3] else 1, -x[2], -x[1], len(x[0]), x[0]))
             ch_options[ch.index] = options
@@ -267,7 +274,8 @@ class TagMatcher(HuggingfaceDeployable):
             # remove non-best matches
             options = [
                 (tag, count, sim, kw) for tag, count, sim, kw in options
-                if np.isclose(sim, best_sim_for_tag_words[tuple(self._split_tag_to_words(tag))])
+                if np.isclose(sim, best_sim_for_tag_words[tuple(self._split_tag_to_words(tag))]) or
+                   np.isclose(sim, best_sim_for_tag_words[tuple(self._split_name_to_words(tag))])
             ]
 
             # filter visual not matches
