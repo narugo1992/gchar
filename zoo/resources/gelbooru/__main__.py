@@ -5,6 +5,7 @@ from ditk import logging
 
 from gchar.utils import GLOBAL_CONTEXT_SETTINGS
 from gchar.utils import print_version as _origin_print_version
+from .tag_matches import GelbooruTagMatcher
 from .tags import GelbooruTagCrawler
 
 print_version = partial(_origin_print_version, 'zoo.resources.danbooru')
@@ -42,6 +43,8 @@ def tags_export(output_directory: str, namespace: str):
     crawler = GelbooruTagCrawler()
     crawler.export_to_directory(output_directory, namespace)
 
+
+GelbooruTagMatcher.add_commands(cli)
 
 if __name__ == '__main__':
     cli()

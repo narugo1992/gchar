@@ -27,7 +27,7 @@ def _get_tag_mapping(game: str, site: str) -> Mapping[Union[str, int], List[dict
     return {tag['index']: tag['tags'] for tag in tags}
 
 
-def _get_raw_site_tags(ch: Union[Character, str], site: str, validated_only: bool = False,
+def _get_raw_site_tags(ch: Union[Character, str], site: str, sure_only: bool = False,
                        allow_fuzzy: bool = False, **kwargs) -> List[dict]:
     if site not in _AVAIL_SITE_NAMES:
         raise ValueError(f'Unsupported site - {site!r}.\n'
@@ -38,27 +38,27 @@ def _get_raw_site_tags(ch: Union[Character, str], site: str, validated_only: boo
     _tag_mapping = _get_tag_mapping(ch.__game_name__, site)
     if ch.index in _tag_mapping:
         tags = _tag_mapping[ch.index]
-        if validated_only:
-            tags = [tag for tag in tags if tag['validated']]
+        if sure_only:
+            tags = [tag for tag in tags if tag['sure']]
         return tags
     else:
         return []
 
 
-def list_site_tags(ch: Union[Character, str], site: str, validated_only: bool = False,
+def list_site_tags(ch: Union[Character, str], site: str, sure_only: bool = False,
                    with_posts: bool = False, allow_fuzzy: bool = False, **kwargs) \
         -> Union[List[str], List[Tuple[str, int]]]:
-    tags = _get_raw_site_tags(ch, site, validated_only, allow_fuzzy, **kwargs)
+    tags = _get_raw_site_tags(ch, site, sure_only, allow_fuzzy, **kwargs)
     if with_posts:
         return [(tag['name'], tag['count']) for tag in tags]
     else:
         return [tag['name'] for tag in tags]
 
 
-def get_site_tag(ch: Union[Character, str], site: str, validated_only: bool = False,
+def get_site_tag(ch: Union[Character, str], site: str, sure_only: bool = False,
                  with_posts: bool = False, allow_fuzzy: bool = False, **kwargs) \
         -> Union[str, Tuple[str, int], None]:
-    tags = list_site_tags(ch, site, validated_only, with_posts, allow_fuzzy, **kwargs)
+    tags = list_site_tags(ch, site, sure_only, with_posts, allow_fuzzy, **kwargs)
     if tags:
         return tags[0]
     else:
