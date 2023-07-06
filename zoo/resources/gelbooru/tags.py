@@ -51,11 +51,15 @@ class GelbooruTagCrawler(ParallelTagCrawler):
             tag = td_1('span:nth-child(1)').text().strip()
             count = int(td_1('span:nth-child(2)').text().strip())
             td_2 = row('td:nth-child(2)')
-            type_ = re.sub(r'\(\s*edit\s*\)', '', td_2.text(), re.IGNORECASE).strip()
+            type_text = re.sub(r'\(\s*edit\s*\)', '', td_2.text(), re.IGNORECASE).strip()
+            type_, *others = re.split('\s*,\s*', type_text)
+            is_ambiguous = bool(others and 'ambiguous' in others)
+
             data.append({
                 'name': tag,
                 'count': count,
                 'type': type_,
+                'is_ambiguous': is_ambiguous,
             })
 
         return data
