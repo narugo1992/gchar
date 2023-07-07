@@ -22,7 +22,7 @@ jobs:
           - 'danbooru'
           - 'safebooru'
           - 'atfbooru'
-#          - 'sankaku'
+          - 'sankaku'
           - 'rule34'
           - 'hypnohub'
           - 'xbooru'

@@ -365,25 +365,22 @@ class TagMatcher(HuggingfaceDeployable):
                     blacklist.add(tag)
 
             options = sorted(ops, key=lambda x: (x[4].order, -x[1], len(x[0]), x[0]))
-            if options:
-                retval.append({
-                    'index': ch.index,
-                    'cnname': str(ch.cnname) if ch.cnname else None,
-                    'enname': str(ch.enname) if ch.enname else None,
-                    'jpname': str(ch.jpname) if ch.jpname else None,
-                    'tags': [
-                        {
-                            'name': option[0],
-                            'count': option[1],
-                            'sure': option[4] == ValidationStatus.YES,
-                        } for option in options
-                    ],
-                    'blacklist': sorted(blacklist),
-                })
-                find_tags = [(tag, count, status.value) for tag, count, sim, kw, status in options]
-                logging.info(f'Tags found for character {ch!r} - {find_tags!r}')
-            else:
-                logging.warning(f'No Tags found for character {ch!r}')
+            retval.append({
+                'index': ch.index,
+                'cnname': str(ch.cnname) if ch.cnname else None,
+                'enname': str(ch.enname) if ch.enname else None,
+                'jpname': str(ch.jpname) if ch.jpname else None,
+                'tags': [
+                    {
+                        'name': option[0],
+                        'count': option[1],
+                        'sure': option[4] == ValidationStatus.YES,
+                    } for option in options
+                ],
+                'blacklist': sorted(blacklist),
+            })
+            find_tags = [(tag, count, status.value) for tag, count, sim, kw, status in options]
+            logging.info(f'Tags found for character {ch!r} - {find_tags!r}')
             logging.info(f'Blacklisted tags of character {ch!r}: {sorted(blacklist)!r}')
 
         return retval
