@@ -87,9 +87,7 @@ def get_ccip_features_of_character(ch: Character, maxcnt: int = 10) -> List[np.n
     with task_ctx(title):
         for item in s.attach(
                 ModeConvertAction('RGB', 'white'),
-                FaceCountAction(1),
                 PersonSplitAction(),
-                FaceCountAction(1),
                 PaddingAlignAction((512, 704)),
         )[:maxcnt]:
             images.append(item.image)
