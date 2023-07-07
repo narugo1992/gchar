@@ -234,15 +234,16 @@ class TagMatcher(HuggingfaceDeployable):
     def _iter_patterns_by_name_words(self, name_words_sets: List[List[str]]) -> Iterator[str]:
         # name without keyword
         for name_words in name_words_sets:
-            for words in itertools.permutations(name_words):
-                origin_text = '_'.join(words)
-                for i in range(len(origin_text)):
-                    new_text = ''.join([
-                        '_' if i == j else origin_text[j]
-                        for j in range(len(origin_text))
-                    ])
-                    pattern = '%'.join(['', *new_text.split('_'), ''])
-                    yield pattern
+            for word_cmbs in itertools.combinations(name_words, max(len(name_words) // 2, 1)):
+                for words in itertools.permutations(word_cmbs):
+                    origin_text = '_'.join(words)
+                    for i in range(len(origin_text)):
+                        new_text = ''.join([
+                            '_' if i == j else origin_text[j]
+                            for j in range(len(origin_text))
+                        ])
+                        pattern = '%'.join(['', *new_text.split('_'), ''])
+                        yield pattern
 
     __pattern_batch__: int = 200
 
@@ -341,11 +342,14 @@ class TagMatcher(HuggingfaceDeployable):
             blacklist = set(ch_blacklists.get(ch.index, None) or [])
 
             # remove non-best matches
-            options = [
-                (tag, count, sim, kw) for tag, count, sim, kw in options
-                if np.isclose(sim, best_sim_for_tag_words[tuple(self._split_tag_to_words(tag))]) or
-                   np.isclose(sim, best_sim_for_tag_words[tuple(self._split_name_to_words(tag))])
-            ]
+            ops = []
+            for tag, count, sim, kw in options:
+                _best_sim_tag = best_sim_for_tag_words[tuple(self._split_tag_to_words(tag))]
+                _best_sim_name = best_sim_for_tag_words[tuple(self._split_name_to_words(tag))]
+                if np.isclose(sim, _best_sim_tag) or np.isclose(sim, _best_sim_name) or \
+                        max(_best_sim_tag, _best_sim_tag) < self.__strict_similarity__:
+                    ops.append((tag, count, sim, kw))
+            options = ops
 
             # filter visual not matches
             ops = []
