@@ -38,7 +38,7 @@ jobs:
           - 'azurlane'
           - 'girlsfrontline'
           - 'genshin'
-#          - 'neuralcloud'
+          - 'neuralcloud'
         os:
           - 'ubuntu-latest'
         python-version:
