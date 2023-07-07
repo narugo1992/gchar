@@ -79,7 +79,7 @@ class TagMatcher(HuggingfaceDeployable):
     __extra_filters__: dict = {'type': 4}
     __case_insensitive__: bool = False
     __min_similarity__: float = 0.6
-    __strict_similarity__: float = 0.9
+    __strict_similarity__: float = 0.95
     __yes_min_vsim__: float = 0.60
     __no_max_vsim__: float = 0.20
     __sure_threshold__: int = 8
@@ -366,10 +366,11 @@ class TagMatcher(HuggingfaceDeployable):
             options = ops
 
             # mapping tags to aliases
-            ops = []
+            ops, _exist_tags = [], set()
             for tag, count, sim, kw, status in options:
-                if status.visible:
+                if status.visible and tag not in _exist_tags:
                     ops.append((tag, count, sim, kw, status))
+                    _exist_tags.add(tag)
                 elif status == ValidationStatus.BAN:
                     blacklist.add(tag)
 
