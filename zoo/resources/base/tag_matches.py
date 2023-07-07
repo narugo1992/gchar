@@ -288,7 +288,7 @@ class TagMatcher(HuggingfaceDeployable):
                 count = row[self.__count_column__]
                 origin_tag = tag
                 tag, count = self._alias_replace(tag, count)
-                if origin_tag in exist_tags:
+                if tag in exist_tags:
                     continue
 
                 tag_words = self._split_tag_to_words(origin_tag)
@@ -366,11 +366,10 @@ class TagMatcher(HuggingfaceDeployable):
             options = ops
 
             # mapping tags to aliases
-            ops, _exist_tags = [], set()
+            ops = []
             for tag, count, sim, kw, status in options:
-                if status.visible and tag not in _exist_tags:
+                if status.visible:
                     ops.append((tag, count, sim, kw, status))
-                    _exist_tags.add(tag)
                 elif status == ValidationStatus.BAN:
                     blacklist.add(tag)
 
