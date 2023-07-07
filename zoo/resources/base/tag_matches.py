@@ -197,9 +197,9 @@ class TagMatcher(HuggingfaceDeployable):
             return ValidationStatus.YES
 
         if quick_ref_sim is not None and not has_keyword:
-            if quick_ref_status == ValidationStatus.YES and similarity < quick_ref_sim - 0.01:
+            if quick_ref_status == ValidationStatus.YES and similarity < quick_ref_sim - 0.05:
                 return ValidationStatus.NO
-            if quick_ref_status == ValidationStatus.UNCERTAIN and similarity < quick_ref_sim - 0.05:
+            if quick_ref_status == ValidationStatus.UNCERTAIN and similarity < quick_ref_sim - 0.10:
                 return ValidationStatus.NO
 
         if self.__tag_fe__ is None:
