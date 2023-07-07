@@ -33,7 +33,7 @@ jobs:
 #          - 'gelbooru'
         game:
 #          - 'bluearchive'
-#          - 'arknights'
+          - 'arknights'
           - 'fgo'
 #          - 'azurlane'
 #          - 'girlsfrontline'

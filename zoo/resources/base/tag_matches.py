@@ -233,11 +233,16 @@ class TagMatcher(HuggingfaceDeployable):
 
     def _iter_patterns_by_name_words(self, name_words_sets: List[List[str]]) -> Iterator[str]:
         # name without keyword
-        yield from [
-            '%'.join(['', *words, ''])
-            for name_words in name_words_sets
-            for words in itertools.permutations(name_words)
-        ]
+        for name_words in name_words_sets:
+            for words in itertools.permutations(name_words):
+                origin_text = '_'.join(words)
+                for i in range(len(origin_text)):
+                    new_text = ''.join([
+                        '_' if i == j else origin_text[j]
+                        for j in range(len(origin_text))
+                    ])
+                    pattern = '%'.join(['', *new_text.split('_'), ''])
+                    yield pattern
 
     __pattern_batch__: int = 200
 
