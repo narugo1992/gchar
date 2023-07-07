@@ -78,10 +78,11 @@ class TagMatcher(HuggingfaceDeployable):
     __count_column__: str = 'count'
     __extra_filters__: dict = {'type': 4}
     __case_insensitive__: bool = False
-    __min_similarity__: float = 0.7
+    __min_similarity__: float = 0.6
     __strict_similarity__: float = 0.9
     __yes_min_vsim__: float = 0.60
     __no_max_vsim__: float = 0.20
+    __sure_threshold__: int = 8
     __game_keywords__: dict = GAME_KEYWORDS
     __default_repository__ = 'deepghs/game_characters'
     __tag_fe__: Type[TagFeatureExtract]
@@ -214,12 +215,12 @@ class TagMatcher(HuggingfaceDeployable):
                     ratio = smatrix.astype(np.float32).mean().item()
                     logging.info(f'Visual matching of {character!r} and tag {tag!r}: {ratio}')
                     if ratio >= self.__yes_min_vsim__:
-                        if total < 8:
+                        if total < self.__sure_threshold__:
                             return ValidationStatus.UNCERTAIN
                         else:
                             return ValidationStatus.YES
                     elif ratio < self.__no_max_vsim__:
-                        if total < 8:
+                        if total < self.__sure_threshold__:
                             return ValidationStatus.NO
                         else:
                             return ValidationStatus.BAN
@@ -278,6 +279,30 @@ class TagMatcher(HuggingfaceDeployable):
 
         return tag, count
 
+    def _yield_name_count(self, names: List[str]) -> Iterator[Tuple[str, int]]:
+        name_words_sets = [self._split_name_to_words(name) for name in names]
+        exist_tags = set()
+        for patterns in self._batch_iter_patterns(name_words_sets):
+            for row in self._query_via_pattern(*patterns).get():
+                tag = row[self.__tag_column__]
+                count = row[self.__count_column__]
+                origin_tag = tag
+                tag, count = self._alias_replace(tag, count)
+                if origin_tag in exist_tags:
+                    continue
+
+                tag_words = self._split_tag_to_words(origin_tag)
+                tag_words_n = self._split_name_to_words(origin_tag)
+                filter_sim = max([
+                    *(self._words_filter(name_words, tag_words) for name_words in name_words_sets),
+                    *(self._words_filter(name_words, tag_words_n) for name_words in name_words_sets),
+                ])
+                if filter_sim < self.__min_similarity__:
+                    continue
+
+                exist_tags.add(tag)
+                yield tag, count
+
     def try_matching(self):
         best_sim_for_tag_words, ch_options = {}, {}
         all_chs = self.game_cls.all(contains_extra=False)
@@ -285,35 +310,22 @@ class TagMatcher(HuggingfaceDeployable):
 
         for ch in tqdm(all_chs, desc='Name Searching'):
             name_words_sets = [self._split_name_to_words(name) for name in ch.names]
-            options, exist_tags = [], set()
-            for patterns in self._batch_iter_patterns(name_words_sets):
-                for row in self._query_via_pattern(*patterns).get():
-                    tag = row[self.__tag_column__]
-                    count = row[self.__count_column__]
-                    if tag in exist_tags:
-                        continue
+            options = []
+            for tag, count in self._yield_name_count(ch.names):
+                tag_words = self._split_tag_to_words(tag)
+                tag_words_n = self._split_name_to_words(tag)
+                sim = max([
+                    *(self._words_compare(name_words, tag_words) for name_words in name_words_sets),
+                    *(self._words_compare(name_words, tag_words_n) for name_words in name_words_sets),
+                ])
+                kw = self._keyword_check(tag)
 
-                    tag_words = self._split_tag_to_words(tag)
-                    tag_words_n = self._split_name_to_words(tag)
-                    filter_sim = max([
-                        *(self._words_filter(name_words, tag_words) for name_words in name_words_sets),
-                        *(self._words_filter(name_words, tag_words_n) for name_words in name_words_sets),
-                    ])
-                    if filter_sim < self.__min_similarity__:
-                        continue
-                    sim = max([
-                        *(self._words_compare(name_words, tag_words) for name_words in name_words_sets),
-                        *(self._words_compare(name_words, tag_words_n) for name_words in name_words_sets),
-                    ])
-                    kw = self._keyword_check(tag)
+                options.append((tag, count, sim, kw))
 
-                    options.append((tag, count, sim, kw))
-                    exist_tags.add(tag)
-
-                    tag_tpl = tuple(tag_words)
-                    tag_tpl_n = tuple(tag_words_n)
-                    best_sim_for_tag_words[tag_tpl] = max(best_sim_for_tag_words.get(tag_tpl, 0.0), sim)
-                    best_sim_for_tag_words[tag_tpl_n] = max(best_sim_for_tag_words.get(tag_tpl_n, 0.0), sim)
+                tag_tpl = tuple(tag_words)
+                tag_tpl_n = tuple(tag_words_n)
+                best_sim_for_tag_words[tag_tpl] = max(best_sim_for_tag_words.get(tag_tpl, 0.0), sim)
+                best_sim_for_tag_words[tag_tpl_n] = max(best_sim_for_tag_words.get(tag_tpl_n, 0.0), sim)
 
             options = sorted(options, key=lambda x: (0 if x[3] else 1, -x[2], -x[1], len(x[0]), x[0]))
             ch_options[ch.index] = options
@@ -354,13 +366,10 @@ class TagMatcher(HuggingfaceDeployable):
             options = ops
 
             # mapping tags to aliases
-            ops, _exist_names = [], set()
+            ops = []
             for tag, count, sim, kw, status in options:
                 if status.visible:
-                    tag, count = self._alias_replace(tag, count)
-                    if tag not in _exist_names:
-                        ops.append((tag, count, sim, kw, status))
-                        _exist_names.add(tag)
+                    ops.append((tag, count, sim, kw, status))
                 elif status == ValidationStatus.BAN:
                     blacklist.add(tag)
 
