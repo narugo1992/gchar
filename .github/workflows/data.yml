@@ -143,6 +143,8 @@ jobs:
 
   data_crawl_upload:
     name: Data Crawl Upload
+    needs:
+      - data_crawl
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
