@@ -11,18 +11,23 @@ from huggingface_hub import hf_hub_download, hf_hub_url
 
 from ...games import get_character
 from ...games.base import Character
-from ...games.dispatch.access import GAME_CHARS
 from ...utils import get_requests_session, srequest
 
 
 @lru_cache()
 def _load_pixiv_alias_for_game(cls: Type[Character]) -> Dict[Union[int, str], List[str]]:
     game_name = cls.__game_name__
-    resource_url = hf_hub_url('deepghs/game_characters', filename=f'{game_name}/pixiv_alias.yaml', repo_type='dataset')
+    resource_url = hf_hub_url(
+        'deepghs/game_characters',
+        filename=f'{game_name}/pixiv_alias.yaml',
+        repo_type='dataset'
+    )
     session = get_requests_session()
     if srequest(session, 'HEAD', resource_url, raise_for_status=False).ok:
         with open(hf_hub_download(
-                'deepghs/game_characters', filename=f'{game_name}/pixiv_alias.yaml', repo_type='dataset'
+                'deepghs/game_characters',
+                filename=f'{game_name}/pixiv_alias.yaml',
+                repo_type='dataset'
         ), 'r', encoding='utf-8') as f:
             data = yaml.load(f, Loader)
 
@@ -83,9 +88,11 @@ def _load_pixiv_names_for_game(cls: Type[Character]) -> Dict[str, Tuple[int, flo
 
 @lru_cache()
 def _load_pixiv_characters_for_game(cls: Type[Character]) -> Dict[str, Tuple[int, int]]:
-    game_name = GAME_CHARS[cls.__game_name__]
+    game_name = cls.__game_name__
     with open(hf_hub_download(
-            'deepghs/game_characters', filename=f'{game_name}/pixiv_names.json', repo_type='dataset'
+            'deepghs/game_characters',
+            filename=f'{game_name}/pixiv_characters.json',
+            repo_type='dataset'
     ), 'r', encoding='utf-8') as f:
         chs = json.load(f)['characters']
 
