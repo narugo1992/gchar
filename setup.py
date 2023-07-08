@@ -21,10 +21,12 @@ def _load_req(file: str):
 
 requirements = _load_req('requirements.txt')
 
+_REQ_BLACKLIST = ['crawl']
 _REQ_PATTERN = re.compile('^requirements-([a-zA-Z0-9_]+)\\.txt$')
 group_requirements = {
     item.group(1): _load_req(item.group(0))
-    for item in [_REQ_PATTERN.fullmatch(reqpath) for reqpath in os.listdir()] if item
+    for item in [_REQ_PATTERN.fullmatch(reqpath) for reqpath in os.listdir()]
+    if item and item.group(1) not in _REQ_BLACKLIST
 }
 
 with open('README.md', 'r', 'utf-8') as f:
