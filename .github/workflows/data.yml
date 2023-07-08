@@ -45,13 +45,13 @@ jobs:
       fail-fast: false
       matrix:
         game:
-          - 'bluearchive'
-          - 'arknights'
-          - 'fgo'
-          - 'azurlane'
-          - 'girlsfrontline'
+#          - 'bluearchive'
+#          - 'arknights'
+#          - 'fgo'
+#          - 'azurlane'
+#          - 'girlsfrontline'
           - 'genshin'
-          - 'neuralcloud'
+#          - 'neuralcloud'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -75,30 +75,12 @@ jobs:
         with:
           fetch-depth: 20
           submodules: 'recursive'
-      - name: Set up system dependences on Linux
+      - name: Set up system dependencies on Linux
         if: ${{ env.OS_NAME == 'Linux' }}
         shell: bash
         run: |
           sudo apt-get update
           sudo apt-get install -y tree cloc wget curl make zip
-      - name: Install chrome stable
-        if: ${{ env.OS_NAME == 'Linux' }}
-        shell: bash
-        env:
-          DEBIAN_FRONTEND: noninteractive
-        run: |
-          wget -qO- https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-          sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
-          sudo apt-get update -y
-          sudo apt-get install -y --no-install-recommends google-chrome-stable unzip
-      - name: Install chrome driver
-        if: ${{ env.OS_NAME == 'Linux' }}
-        shell: bash
-        run: |
-          wget -qO /tmp/chromedriver.zip "http://chromedriver.storage.googleapis.com/$(wget -qO- chromedriver.storage.googleapis.com/LATEST_RELEASE)/chromedriver_linux64.zip"
-          sudo unzip -qq /tmp/chromedriver.zip chromedriver -d /usr/local/bin/
-          chromedriver --help
-          chromedriver --version
       - name: Set up python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
@@ -115,12 +97,12 @@ jobs:
         if: ${{ github.event_name != 'workflow_dispatch' }}
         shell: bash
         run: |
-          echo "SCHEDULED=$(python -m gchar schedule -g ${{ matrix.game }})" >> $GITHUB_ENV
+          echo "SCHEDULED=$(python -m zoo schedule -g ${{ matrix.game }})" >> $GITHUB_ENV
       - name: Check if is scheduled when is workflow dispatched
         if: ${{ github.event_name == 'workflow_dispatch' && !github.event.inputs.skip_crawl }}
         shell: bash
         run: |
-          echo "SCHEDULED=$(python -m gchar scheck -g ${{ matrix.game }} -s ${{ github.event.inputs.games }})" >> $GITHUB_ENV
+          echo "SCHEDULED=$(python -m zoo scheck -g ${{ matrix.game }} -s ${{ github.event.inputs.games }})" >> $GITHUB_ENV
       - name: Check if is scheduled when is workflow dispatched and skipped
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.skip_crawl }}
         shell: bash
@@ -134,13 +116,6 @@ jobs:
           pip list
           tree .
           mkdir -p ${{ matrix.game }}
-      - name: Clone from huggingface
-        shell: bash
-        run: |
-          git clone https://huggingface.co/datasets/deepghs/game_characters
-          ls -al game_characters
-          cp -rf game_characters/${{ matrix.game }}/* ${{ matrix.game }}
-          cp -rf game_characters/${{ matrix.game }}/* gchar/games/${{ matrix.game }}
       - name: Run Game Crawler
         if: ${{ env.SCHEDULED == 'yes' }}
         uses: nick-fields/retry@v2
@@ -152,17 +127,8 @@ jobs:
           max_attempts: 5
           retry_on: any
           command: |
-            python -m gchar.games.${{ matrix.game }} --help && \
-              python -m gchar.games.${{ matrix.game }} update -o ${{ matrix.game }}/index.json && \
-              cp ${{ matrix.game }}/index.json gchar/games/${{ matrix.game }}/index.json
-      - name: Run Danbooru Tags Crawler
-        if: ${{ env.SCHEDULED == 'yes' }}
-        env:
-          CI: 'true'
-        shell: bash
-        run: |
-          python -m gchar.resources.danbooru update -g ${{ matrix.game }} -o ${{ matrix.game }}/danbooru_tags.json
-          cp ${{ matrix.game }}/danbooru_tags.json gchar/games/${{ matrix.game }}/danbooru_tags.json
+            python -m zoo.games.${{ matrix.game }} --help && \
+              python -m zoo.games.${{ matrix.game }} index_export -O ${{ matrix.game }}
       - name: Package The Data
         env:
           CI: 'true'
@@ -175,23 +141,64 @@ jobs:
           name: character-database
           path: ${{ matrix.game }}.zip
 
+  data_crawl_upload:
+    name: Data Crawl Upload
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - 'ubuntu-latest'
+        python-version:
+          - '3.8'
+
+    steps:
+      - name: Prepare the repository
+        shell: bash
+        run: |
+          sudo apt-get install -y tree
+          git clone https://huggingface.co/datasets/deepghs/game_characters
+          ls -al game_characters
+      - name: Download from artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: character-database
+          path: game_characters
+      - name: See what is in this path
+        shell: bash
+        run: |
+          cd game_characters
+          for zfile in *.zip; do unzip -o $zfile; done
+          rm -rf *.zip
+          tree .
+      - name: Push models to hugging face repostory
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          cd game_characters
+          git config user.name 'narugo1992'
+          git config user.email 'narugo@126.com'
+          git add -A
+          git diff-index --quiet HEAD || git commit -a -m "dev(narugo): auto sync $(date -R)"
+          git push https://narugo:$HF_TOKEN@huggingface.co/datasets/deepghs/game_characters main
+
   skin_crawl:
     name: Skin Crawl
     runs-on: ${{ matrix.os }}
     needs:
-      - data_crawl
+      - data_crawl_upload
     strategy:
       fail-fast: false
       max-parallel: 1
       matrix:
         game:
-          - 'bluearchive'
-          - 'arknights'
-          - 'fgo'
-          - 'azurlane'
-          - 'girlsfrontline'
+#          - 'bluearchive'
+#          - 'arknights'
+#          - 'fgo'
+#          - 'azurlane'
+#          - 'girlsfrontline'
           - 'genshin'
-          - 'neuralcloud'
+#          - 'neuralcloud'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -215,7 +222,7 @@ jobs:
         with:
           fetch-depth: 20
           submodules: 'recursive'
-      - name: Set up system dependences on Linux
+      - name: Set up system dependencies on Linux
         if: ${{ env.OS_NAME == 'Linux' }}
         shell: bash
         run: |
@@ -237,40 +244,17 @@ jobs:
         if: ${{ github.event_name != 'workflow_dispatch' }}
         shell: bash
         run: |
-          echo "SCHEDULED=$(python -m gchar schedule -g ${{ matrix.game }})" >> $GITHUB_ENV
+          echo "SCHEDULED=$(python -m zoo schedule -g ${{ matrix.game }})" >> $GITHUB_ENV
       - name: Check if is scheduled when is workflow dispatched
         if: ${{ github.event_name == 'workflow_dispatch' && !github.event.inputs.skip_skin_crawl }}
         shell: bash
         run: |
-          echo "SCHEDULED=$(python -m gchar scheck -g ${{ matrix.game }} -s ${{ github.event.inputs.games }})" >> $GITHUB_ENV
+          echo "SCHEDULED=$(python -m zoo scheck -g ${{ matrix.game }} -s ${{ github.event.inputs.games }})" >> $GITHUB_ENV
       - name: Check if is scheduled when is workflow dispatched and skipped
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.skip_skin_crawl }}
         shell: bash
         run: |
           echo "SCHEDULED=no" >> $GITHUB_ENV
-      - name: Download from artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: character-database
-      - name: Load Index file from upstream
-        shell: bash
-        run: |
-          ls -al ${{ matrix.game }}.zip
-          unzip -o ${{ matrix.game }}.zip
-          git clone https://huggingface.co/datasets/deepghs/game_characters
-          ls -al game_characters
-          if [ -f game_characters/${{ matrix.game }}/pixiv_alias.yaml ]; then \
-            cp -rf game_characters/${{ matrix.game }}/pixiv_alias.yaml ${{ matrix.game }}; \
-          else \
-            echo "alias: []" > ${{ matrix.game }}/pixiv_alias.yaml; \
-          fi
-          if [ -f game_characters/${{ matrix.game }}/pixiv_names.json ]; then \
-            cp -rf game_characters/${{ matrix.game }}/pixiv_names.json ${{ matrix.game }}; \
-          fi
-          tree ${{ matrix.game }}
-          cp ${{ matrix.game }}/* gchar/games/${{ matrix.game }}
-          ls -al gchar/games/${{ matrix.game }}
-          rm -rf ${{ matrix.game }}
       - name: Test the basic environment
         shell: bash
         run: |
@@ -290,25 +274,25 @@ jobs:
           max_attempts: 5
           retry_on: any
           command: |
-            python -m gchar skins -g ${{ matrix.game }}
+            python -m zoo.skins -g ${{ matrix.game }}
 
   names_crawl:
     name: Names Crawl
     runs-on: ${{ matrix.os }}
     needs:
-      - data_crawl
+      - data_crawl_upload
     strategy:
       fail-fast: false
       max-parallel: 1
       matrix:
         game:
-          - 'bluearchive'
-          - 'arknights'
-          - 'fgo'
-          - 'azurlane'
-          - 'girlsfrontline'
+#          - 'bluearchive'
+#          - 'arknights'
+#          - 'fgo'
+#          - 'azurlane'
+#          - 'girlsfrontline'
           - 'genshin'
-          - 'neuralcloud'
+#          - 'neuralcloud'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -354,39 +338,17 @@ jobs:
         if: ${{ github.event_name != 'workflow_dispatch' }}
         shell: bash
         run: |
-          echo "SCHEDULED=$(python -m gchar schedule -g ${{ matrix.game }})" >> $GITHUB_ENV
+          echo "SCHEDULED=$(python -m zoo schedule -g ${{ matrix.game }})" >> $GITHUB_ENV
       - name: Check if is scheduled when is workflow dispatched
         if: ${{ github.event_name == 'workflow_dispatch' && !github.event.inputs.skip_pixiv_names }}
         shell: bash
         run: |
-          echo "SCHEDULED=$(python -m gchar scheck -g ${{ matrix.game }} -s ${{ github.event.inputs.games }})" >> $GITHUB_ENV
+          echo "SCHEDULED=$(python -m zoo scheck -g ${{ matrix.game }} -s ${{ github.event.inputs.games }})" >> $GITHUB_ENV
       - name: Check if is scheduled when is workflow dispatched and skipped
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.skip_pixiv_names }}
         shell: bash
         run: |
           echo "SCHEDULED=no" >> $GITHUB_ENV
-      - name: Download from artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: character-database
-      - name: Load Index file from upstream
-        shell: bash
-        run: |
-          ls -al ${{ matrix.game }}.zip
-          unzip -o ${{ matrix.game }}.zip
-          git clone https://huggingface.co/datasets/deepghs/game_characters
-          ls -al game_characters
-          if [ -f game_characters/${{ matrix.game }}/pixiv_alias.yaml ]; then \
-            cp -rf game_characters/${{ matrix.game }}/pixiv_alias.yaml ${{ matrix.game }}; \
-          else \
-            echo "alias: []" > ${{ matrix.game }}/pixiv_alias.yaml; \
-          fi
-          if [ -f game_characters/${{ matrix.game }}/pixiv_names.json ]; then \
-            cp -rf game_characters/${{ matrix.game }}/pixiv_names.json ${{ matrix.game }}; \
-          fi
-          tree ${{ matrix.game }}
-          cp ${{ matrix.game }}/* gchar/games/${{ matrix.game }}
-          ls -al gchar/games/${{ matrix.game }}
       - name: Test the basic environment
         shell: bash
         run: |
@@ -401,15 +363,15 @@ jobs:
           REMOTE_PIXIV_SESSION_INDEX_URL: ${{ secrets.REMOTE_PIXIV_SESSION_INDEX_URL }}
         shell: bash
         run: |
-          python -m gchar.resources.pixiv names \
-            -g ${{ matrix.game }} \
-            -o ${{ matrix.game }}/pixiv_names.json \
-            --interval ${{ env.PIXIV_INTERVAL }} \
-            --min_interval ${{ env.PIXIV_MIN_INTERVAL }} \
-            --sleep_time ${{ env.PIXIV_SLEEP_TIME }} \
-            --sleep_every ${{ env.PIXIV_SLEEP_EVERY }} \
-            --ensure_times ${{ env.PIXIV_ENSURE_TIMES }}
-          cp ${{ matrix.game }}/pixiv_names.json gchar/games/${{ matrix.game }}/pixiv_names.json
+          mkdir -p ${{ matrix.game }} &&\
+            python -m zoo.resources.pixiv names \
+              -g ${{ matrix.game }} \
+              -o ${{ matrix.game }}/pixiv_names.json \
+              --interval ${{ env.PIXIV_INTERVAL }} \
+              --min_interval ${{ env.PIXIV_MIN_INTERVAL }} \
+              --sleep_time ${{ env.PIXIV_SLEEP_TIME }} \
+              --sleep_every ${{ env.PIXIV_SLEEP_EVERY }} \
+              --ensure_times ${{ env.PIXIV_ENSURE_TIMES }}
       - name: Package The Data
         env:
           CI: 'true'
@@ -421,25 +383,30 @@ jobs:
         with:
           name: character-database
           path: ${{ matrix.game }}.zip
+      - name: Upload the specific database
+        uses: actions/upload-artifact@v3
+        with:
+          name: character-names-db-${{ matrix.game }}
+          path: ${{ matrix.game }}.zip
 
   chars_crawl:
     name: Chars Crawl
     runs-on: ${{ matrix.os }}
     needs:
-      - data_crawl
+      - data_crawl_upload
       - names_crawl
     strategy:
       fail-fast: false
       max-parallel: 1
       matrix:
         game:
-          - 'bluearchive'
-          - 'arknights'
-          - 'fgo'
-          - 'azurlane'
-          - 'girlsfrontline'
+#          - 'bluearchive'
+#          - 'arknights'
+#          - 'fgo'
+#          - 'azurlane'
+#          - 'girlsfrontline'
           - 'genshin'
-          - 'neuralcloud'
+#          - 'neuralcloud'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -485,12 +452,12 @@ jobs:
         if: ${{ github.event_name != 'workflow_dispatch' }}
         shell: bash
         run: |
-          echo "SCHEDULED=$(python -m gchar schedule -g ${{ matrix.game }})" >> $GITHUB_ENV
+          echo "SCHEDULED=$(python -m zoo schedule -g ${{ matrix.game }})" >> $GITHUB_ENV
       - name: Check if is scheduled when is workflow dispatched
         if: ${{ github.event_name == 'workflow_dispatch' && !github.event.inputs.skip_pixiv_characters }}
         shell: bash
         run: |
-          echo "SCHEDULED=$(python -m gchar scheck -g ${{ matrix.game }} -s ${{ github.event.inputs.games }})" >> $GITHUB_ENV
+          echo "SCHEDULED=$(python -m zoo scheck -g ${{ matrix.game }} -s ${{ github.event.inputs.games }})" >> $GITHUB_ENV
       - name: Check if is scheduled when is workflow dispatched and skipped
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.skip_pixiv_characters }}
         shell: bash
@@ -499,20 +466,13 @@ jobs:
       - name: Download from artifact
         uses: actions/download-artifact@v3
         with:
-          name: character-database
+          name: character-names-db-${{ matrix.game }}
       - name: Load Index file from upstream
         shell: bash
         run: |
           ls -al ${{ matrix.game }}.zip
           unzip -o ${{ matrix.game }}.zip
-          git clone https://huggingface.co/datasets/deepghs/game_characters
-          ls -al game_characters
-          if [ -f game_characters/${{ matrix.game }}/pixiv_characters.json ]; then \
-            cp -rf game_characters/${{ matrix.game }}/pixiv_characters.json ${{ matrix.game }}; \
-          fi
-          tree ${{ matrix.game }}
-          cp ${{ matrix.game }}/* gchar/games/${{ matrix.game }}
-          ls -al gchar/games/${{ matrix.game }}
+          ls -al ${{ matrix.game }}
       - name: Test the basic environment
         shell: bash
         run: |
@@ -527,15 +487,16 @@ jobs:
           REMOTE_PIXIV_SESSION_INDEX_URL: ${{ secrets.REMOTE_PIXIV_SESSION_INDEX_URL }}
         shell: bash
         run: |
-          python -m gchar.resources.pixiv characters \
-            -g ${{ matrix.game }} \
-            -o ${{ matrix.game }}/pixiv_characters.json \
-            --interval ${{ env.PIXIV_INTERVAL }} \
-            --min_interval ${{ env.PIXIV_MIN_INTERVAL }} \
-            --sleep_time ${{ env.PIXIV_SLEEP_TIME }} \
-            --sleep_every ${{ env.PIXIV_SLEEP_EVERY }} \
-            --ensure_times ${{ env.PIXIV_ENSURE_TIMES }}
-          cp ${{ matrix.game }}/pixiv_characters.json gchar/games/${{ matrix.game }}/pixiv_characters.json
+          mkdir -p ${{ matrix.game }} && \
+            python -m zoo.resources.pixiv characters \
+              -g ${{ matrix.game }} \
+              -i ${{ matrix.game }}/pixiv_names.json \
+              -o ${{ matrix.game }}/pixiv_characters.json \
+              --interval ${{ env.PIXIV_INTERVAL }} \
+              --min_interval ${{ env.PIXIV_MIN_INTERVAL }} \
+              --sleep_time ${{ env.PIXIV_SLEEP_TIME }} \
+              --sleep_every ${{ env.PIXIV_SLEEP_EVERY }} \
+              --ensure_times ${{ env.PIXIV_ENSURE_TIMES }}
       - name: Package The Data
         env:
           CI: 'true'
@@ -552,7 +513,7 @@ jobs:
     name: Data Upload
     runs-on: ${{ matrix.os }}
     needs:
-      - data_crawl
+      - data_crawl_upload
       - names_crawl
       - chars_crawl
     strategy:

@@ -9,7 +9,7 @@ from typing import Optional, Iterator, Any, ContextManager, List
 import click
 import requests
 from ditk import logging
-from hbutils.system import TemporaryDirectory
+from hbutils.system import TemporaryDirectory, copy
 from huggingface_hub import HfApi, CommitOperationAdd
 
 from gchar.utils import get_requests_session, GLOBAL_CONTEXT_SETTINGS
@@ -89,5 +89,20 @@ class GameIndexer:
         def index(timeout: int, maxcnt: Optional[int], repository: str, revision: str):
             logging.try_init_root(logging.INFO)
             self.deploy_to_huggingface(repository, revision, maxcnt, timeout)
+
+        @cli.command('index_export', help='Index the game characters to local.',
+                     context_settings={**GLOBAL_CONTEXT_SETTINGS})
+        @click.option('--timeout', '-t', 'timeout', type=int, default=5,
+                      help='Timeout of this update.', show_default=True)
+        @click.option('--maxcnt', '-n', 'maxcnt', type=int, default=None,
+                      help='Max count to crawler (only used for debugging and testing).', show_default=True)
+        @click.option('--output_directory', '-O', 'output_directory', type=str, required=True,
+                      help='Output target file.', show_default=True)
+        def index_export(timeout: int, maxcnt: Optional[int], output_directory: str):
+            logging.try_init_root(logging.INFO)
+            with self.crawl_index_to_local(maxcnt, timeout) as files:
+                os.makedirs(output_directory, exist_ok=True)
+                for file in files:
+                    copy(file, os.path.join(output_directory, os.path.basename(file)))
 
         return cli
