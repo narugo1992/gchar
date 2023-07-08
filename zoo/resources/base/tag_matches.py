@@ -236,8 +236,7 @@ class TagMatcher(HuggingfaceDeployable):
         for name_words in name_words_sets:
             word_count = len(name_words)
             f_word_count = min(max(word_count // 2, 2), word_count)
-            for start in range(len(name_words) + 1 - f_word_count):
-                word_cmbs = name_words[start: start + f_word_count]
+            for word_cmbs in itertools.combinations(name_words, f_word_count):
                 if sum(map(len, word_cmbs)) >= 7:
                     for words in itertools.permutations(word_cmbs):
                         origin_text = '_'.join(words)
@@ -291,6 +290,9 @@ class TagMatcher(HuggingfaceDeployable):
 
         return tag, count
 
+    def _get_ch_names(self, ch: Character) -> List[str]:
+        return sorted(set(map(str, [*ch.names, *ch.alias_names])))
+
     def _yield_name_count(self, names: List[str]) -> Iterator[Tuple[str, int]]:
         name_words_sets = [self._split_name_to_words(name) for name in names]
         exist_tags = set()
@@ -327,9 +329,10 @@ class TagMatcher(HuggingfaceDeployable):
         ns_tqdm = tqdm(all_chs, desc='Name Searching')
         for ch in ns_tqdm:
             ns_tqdm.set_description(f'Name Search: {ch!r}')
-            name_words_sets = [self._split_name_to_words(name) for name in ch.names]
+            ch_names = self._get_ch_names(ch)
+            name_words_sets = [self._split_name_to_words(name) for name in ch_names]
             options = []
-            for tag, count in self._yield_name_count(ch.names):
+            for tag, count in self._yield_name_count(ch_names):
                 tag_words = self._split_tag_to_words(tag)
                 tag_words_n = self._split_name_to_words(tag)
                 sim = max([
