@@ -7,13 +7,14 @@ from gchar.resources.pixiv import get_pixiv_keywords
 class TestResourcesPixivTag:
     @pytest.mark.parametrize(['ch', 'keyword'], [
         ('lin', 'アークナイツ 林雨霞'),
-        ('ling', 'アークナイツ (ling OR リィン OR 令) -dressupdarling -lingerie -smilinggirl -tickling '
-                 '-令人想摸的肚子 -令人想摸的腿 -博令'),
+        ('ling', 'アークナイツ (ling OR リィン OR 令) -cuddling -dressupdarling -lingerie -smilinggirl '
+                 '-tickling -令人想摸的肚子 -令人想摸的腿 -博令'),
         ('blazer', 'アークナイツ (blaze OR ブレイズ OR 煌) -博煌 -敦煌 -煌博'),
-        ('w', 'w アークナイツ -beeswax -chainsawman -crownslayer -drawing -firewatch -firewhistle -goldenglow '
-              '-schwarz -shaw -snowsant -steward -swire -waai_fu -warfarin -weedy -whislash -whisperain -whitehair '
-              '-wild_mane -windflit'),
-        ('シー', 'アークナイツ (dusk OR シー OR 夕) -ケルシー -シージ -シーボーン -シーメール -シーン -ドロシー -夕張 -夕方 -夕陽'),
+        ('w', 'w アークナイツ -beeswax -drawing -firewatch -firewhistle -goldenglow -nsfw -schwarz '
+              '-shaw -snowsant -steward -swire -waai_fu -wallpaper -warfarin -weed -weedy -whislash '
+              '-whisperain -wild_mane -windflit'),
+        ('シー', 'アークナイツ (dusk OR シー OR 夕) -ケルシー -シージ -シーメール -シーン '
+               '-ドロシー -ルーシー -夕張 -夕日 -夕焼け -夕陽'),
         ('多萝西', 'アークナイツ (dorothy OR ドロシー OR 多萝西)'),
         ('CEO', 'Fate/GrandOrder (berserker_of_el_dorado OR penthesilea OR エルドラドのバーサーカー '
                 'OR ペンテシレイア OR 彭忒西勒亚 OR 黄金国的berserker)'),
@@ -29,7 +30,7 @@ class TestResourcesPixivTag:
             with pytest.raises(ValueError):
                 _ = get_pixiv_keywords(ch)
         else:
-            assert get_pixiv_keywords(ch, ) == keyword
+            assert get_pixiv_keywords(ch) == keyword
 
     @pytest.mark.parametrize(['ch', 'keyword', 'warn'], [
         ('lin', 'アークナイツ 林雨霞', True),
