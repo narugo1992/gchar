@@ -2,8 +2,8 @@ hbutils>=0.9.1
 tqdm>=4.0.0
 click>=7.0.0
 transliterate>=1.10.2
+huggingface_hub>=0.14.0
 unidecode
-pyquery
 thefuzz
 editdistance
 requests

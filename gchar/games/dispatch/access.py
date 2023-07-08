@@ -46,13 +46,13 @@ register_game(BlueArchiveCharacter)
 
 @optional_lru_cache()
 def _all_characters(**kwargs) -> List[Character]:
-    from ...resources.pixiv import query_pixiv_illustration_count_by_character
+    from ...resources.pixiv import get_pixiv_posts
 
     chs: List[Tuple[Character, int, bool, int]] = []
     cnt = 0
     for _, _ch_set in GAME_CHARS.items():
         for ch in _ch_set.all(**kwargs, sorted=False):
-            counts = query_pixiv_illustration_count_by_character(ch)
+            counts = get_pixiv_posts(ch)
             if counts:
                 all_count, _ = counts
             else:

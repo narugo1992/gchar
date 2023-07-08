@@ -5,8 +5,8 @@ from typing import Optional, Dict, Union, List
 
 import requests
 
-from ...utils import get_requests_session, sget
-from ...utils.session import DEFAULT_TIMEOUT
+from gchar.utils import get_requests_session, sget
+from gchar.utils.session import DEFAULT_TIMEOUT
 
 REMOTE_PIXIV_SESSION_INDEX_URL = 'REMOTE_PIXIV_SESSION_INDEX_URL'
 

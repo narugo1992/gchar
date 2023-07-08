@@ -3,7 +3,7 @@ import warnings
 from itertools import chain
 from typing import Iterable, Iterator, Union, List, Tuple, Type, Mapping, Optional
 
-from .games import _get_items_from_ch_type
+from .base import _GAMES
 from .keyword import _load_pixiv_names_for_game, _load_pixiv_alias_for_game
 from ...games import get_character
 from ...games.base import Character
@@ -188,7 +188,8 @@ def _get_char_pool(cls: Type[Character], **kwargs):
     return PixivCharPool(cls.all(**kwargs), names_dict, names_alias)
 
 
-def get_pixiv_keywords(char, simple: bool = False, use_english: bool = True, includes=None, exclude=None,
+def get_pixiv_keywords(char: Union[Character, str], simple: bool = False, use_english: bool = True,
+                       includes=None, exclude=None,
                        allow_fuzzy: bool = True, fuzzy_threshold: int = 70, max_exclude: int = 20,
                        max_pollution_ratio: float = 0.8, max_length: int = PIXIV_TAG_MAX_LENGTH, **kwargs):
     original_char = char
@@ -202,7 +203,7 @@ def get_pixiv_keywords(char, simple: bool = False, use_english: bool = True, inc
                                   f'This may result in no search results.'), stacklevel=2)
 
     pool = _get_char_pool(type(char), **kwargs)
-    _, game_tag, base_tag = _get_items_from_ch_type(type(char))
+    game_tag, base_tag = _GAMES[char.__game_name__]
 
     try:
         if simple:
