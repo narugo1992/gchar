@@ -20,7 +20,7 @@ class GameIndexer:
     __game_name__ = 'default'
     __root_website__ = 'https://root.website.com'
 
-    def _create_session(self, timeout: int = 5, retries: int = 3, headers=None, **kwargs):
+    def _create_session(self, timeout: int = 10, retries: int = 5, headers=None, **kwargs):
         _ = kwargs
         return get_requests_session(max_retries=retries, timeout=timeout, headers=headers)
 
@@ -29,7 +29,7 @@ class GameIndexer:
         raise NotImplementedError
 
     @contextmanager
-    def crawl_index_to_local(self, maxcnt: Optional[int] = None, timeout: int = 5, retries: int = 3, **kwargs) \
+    def crawl_index_to_local(self, maxcnt: Optional[int] = None, timeout: int = 10, retries: int = 5, **kwargs) \
             -> ContextManager[List[str]]:
         session = self._create_session(timeout, retries, **kwargs)
         data = list(self._crawl_index_from_online(session, maxcnt, **kwargs))
@@ -44,7 +44,7 @@ class GameIndexer:
             yield [index_file]
 
     def deploy_to_huggingface(self, repository: str = 'deepghs/game_characters', revision: str = 'main',
-                              maxcnt: Optional[int] = None, timeout: int = 5, retries: int = 3, **kwargs):
+                              maxcnt: Optional[int] = None, timeout: int = 10, retries: int = 5, **kwargs):
         logging.info(f'Initializing repository {repository!r} ...')
         hf_client = HfApi(token=os.environ['HF_TOKEN'])
         hf_client.create_repo(repo_id=repository, repo_type='dataset', exist_ok=True)
