@@ -5,7 +5,7 @@ from urllib.parse import quote
 import requests
 from pyquery import PyQuery as pq
 
-from ...utils import get_requests_session, sget
+from gchar.utils import get_requests_session, sget
 
 _MOEGIRL_WEBSITE = 'https://zh.moegirl.org.cn'
 

@@ -19,6 +19,10 @@ on:
         description: 'Skip Skin Crawl (Type Anything for Yes)'
         required: false
         default: ''
+      skip_tag_matches:
+        description: 'Skip Tag Matches (Type Anything for Yes)'
+        required: false
+        default: ''
       skip_pixiv_names:
         description: 'Skip Pixiv Names (Type Anything for Yes)'
         required: false
@@ -586,6 +590,21 @@ jobs:
           pip install -r requirements.txt
           pip install -r requirements-test.txt
           pip install -r requirements-crawl.txt
+      - name: Check if is scheduled when not workflow dispatched
+        if: ${{ github.event_name != 'workflow_dispatch' }}
+        shell: bash
+        run: |
+          echo "SCHEDULED=$(python -m zoo schedule -g ${{ matrix.game }})" >> $GITHUB_ENV
+      - name: Check if is scheduled when is workflow dispatched
+        if: ${{ github.event_name == 'workflow_dispatch' && !github.event.inputs.skip_tag_matches }}
+        shell: bash
+        run: |
+          echo "SCHEDULED=$(python -m zoo scheck -g ${{ matrix.game }} -s ${{ github.event.inputs.games }})" >> $GITHUB_ENV
+      - name: Check if is scheduled when is workflow dispatched and skipped
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.skip_tag_matches }}
+        shell: bash
+        run: |
+          echo "SCHEDULED=no" >> $GITHUB_ENV
       - name: Test the basic environment
         shell: bash
         run: |
@@ -595,6 +614,7 @@ jobs:
           tree .
       - name: Run Game Crawler
         uses: nick-fields/retry@v2
+        if: ${{ env.SCHEDULED == 'yes' }}
         env:
           CI: 'true'
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
