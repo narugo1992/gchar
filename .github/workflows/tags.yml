@@ -97,10 +97,12 @@ jobs:
           max_attempts: 5
           retry_on: any
           command: |
-            python -m zoo.resources.${{ matrix.resource }} tags_export -o tags_db
+            python -m zoo.resources.${{ matrix.resource }} tags_export -o tags_db && \
+              echo "CRAWL_SUCCESS=yes" >> $GITHUB_ENV
             ls -al tags_db
       - name: Package Data to Zip Archive
         shell: bash
+        if: ${{ env.CRAWL_SUCCESS == 'yes' }}
         run: |
           cd tags_db
           zip -r ${{ matrix.resource }}.zip *
@@ -108,6 +110,7 @@ jobs:
           tree tags_db
       - name: Upload the character databases
         uses: actions/upload-artifact@v3
+        if: ${{ env.CRAWL_SUCCESS == 'yes' }}
         with:
           name: character-database
           path: tags_db/${{ matrix.resource }}.zip
