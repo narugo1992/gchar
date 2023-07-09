@@ -18,8 +18,8 @@ jobs:
       matrix:
         resource:
 #          - 'anime_pictures'
-#          - 'zerochan'
-          - 'danbooru'
+          - 'zerochan'
+#          - 'danbooru'
 #          - 'safebooru'
 #          - 'atfbooru'
 #          - 'sankaku'
