@@ -1,5 +1,7 @@
-from typing import Optional, List, Mapping, Any
+from typing import Optional, List, Mapping, Any, Tuple
 
+import pandas as pd
+from huggingface_hub import hf_hub_download
 from pyquery import PyQuery as pq
 
 from gchar.utils import srequest
@@ -14,6 +16,14 @@ class ZerochanTagCrawler(ParallelTagCrawler):
     def __init__(self, site_url: str = 'https://zerochan.net'):
         ParallelTagCrawler.__init__(self, site_url)
         self.session.headers.update({'User-Agent': 'Tag Crawler - narugo1992'})
+
+    def get_tag_aliases_json(self) -> List[Tuple[str, str]]:
+        offline_alias = pd.read_csv(hf_hub_download(
+            'deepghs/site_tags',
+            filename='zerochan.net/alias_offline.csv',
+            repo_type='dataset',
+        ))
+        return list(zip(offline_alias['alias'], offline_alias['tag']))
 
     def get_tags_from_page(self, p, **kwargs) -> Optional[List[Mapping[str, Any]]]:
         resp = srequest(self.session, 'GET', f'{self.site_url}/tags', params={
