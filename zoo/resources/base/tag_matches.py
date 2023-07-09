@@ -421,6 +421,7 @@ class TagMatcher(HuggingfaceDeployable):
             find_tags = [(tag, count, status.value) for tag, count, sim, kw, status in options]
             logging.info(f'Tags found for character {ch!r} - {find_tags!r}')
             logging.info(f'Blacklisted tags of character {ch!r}: {sorted(blacklist)!r}')
+            logging.info(f'Whitelisted tags of character {ch!r}: {sorted(whitelist)!r}')
 
         return retval
 
