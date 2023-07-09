@@ -116,7 +116,7 @@ jobs:
     name: Data Upload
     runs-on: ${{ matrix.os }}
     needs:
-      - tag_match
+      - data_crawl
     strategy:
       fail-fast: false
       matrix:
