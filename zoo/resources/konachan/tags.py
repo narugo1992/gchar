@@ -12,11 +12,11 @@ class _BaseKonachanTagCrawler(ParallelTagCrawler):
     __id_key__ = 'id'
     __max_workers__ = 8
 
-    def __init__(self, site_url: str):
-        TagCrawler.__init__(self, site_url, get_requests_session(timeout=60))
+    def __init__(self):
+        TagCrawler.__init__(self, get_requests_session(timeout=60))
 
     def _get_tag_aliases_from_page(self, p):
-        resp = srequest(self.session, 'GET', f'{self.site_url}/tag_alias', params={'page': str(p)})
+        resp = srequest(self.session, 'GET', f'{self.__site_url__}/tag_alias', params={'page': str(p)})
         resp.raise_for_status()
 
         page = pq(resp.text)
@@ -42,7 +42,7 @@ class _BaseKonachanTagCrawler(ParallelTagCrawler):
         )
 
     def get_tags_from_page(self, p, **kwargs) -> Optional[List[Mapping[str, Any]]]:
-        resp = srequest(self.session, 'GET', f'{self.site_url}/tag.json', params={
+        resp = srequest(self.session, 'GET', f'{self.__site_url__}/tag.json', params={
             'limit': '100',
             'page': str(p),
         })
@@ -53,9 +53,10 @@ class _BaseKonachanTagCrawler(ParallelTagCrawler):
 
 
 class KonachanDirectTagCrawler(_BaseKonachanTagCrawler):
+    __site_url__ = 'https://konachan.com'
 
     def get_tags_json(self) -> List[Mapping[str, Any]]:
-        resp = srequest(self.session, 'GET', f'{self.site_url}/tag.json', params={
+        resp = srequest(self.session, 'GET', f'{self.__site_url__}/tag.json', params={
             'limit': '0',
         })
         resp.raise_for_status()
@@ -63,4 +64,4 @@ class KonachanDirectTagCrawler(_BaseKonachanTagCrawler):
 
 
 class KonachanTagCrawler(_BaseKonachanTagCrawler):
-    pass
+    __site_url__ = 'https://konachan.com'

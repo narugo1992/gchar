@@ -8,8 +8,7 @@ from ..base import TagCrawler
 
 
 class AnimePicturesTagCrawler(TagCrawler):
-    def __init__(self):
-        TagCrawler.__init__(self, 'https://anime-pictures.net')
+    __site_url__ = 'https://anime-pictures.net'
 
     def get_tags_json(self) -> List[Mapping[str, Any]]:
         session = get_requests_session()
@@ -19,7 +18,7 @@ class AnimePicturesTagCrawler(TagCrawler):
         exist_ids = set()
         while True:
             resp = srequest(
-                session, 'GET', f'{self.site_url}/api/v3/tags',
+                session, 'GET', f'{self.__site_url__}/api/v3/tags',
                 params={
                     'lang': 'en',
                     'offset': str(offset),

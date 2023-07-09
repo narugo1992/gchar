@@ -6,13 +6,14 @@ from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from typing import List, Mapping, Any, Optional, ContextManager, Tuple
 
+import click
 import pandas as pd
 import requests
 from ditk import logging
 from hbutils.system import TemporaryDirectory, urlsplit
 from tqdm.auto import tqdm
 
-from gchar.utils import get_requests_session
+from gchar.utils import get_requests_session, GLOBAL_CONTEXT_SETTINGS
 from .base import HuggingfaceDeployable
 
 
@@ -21,8 +22,10 @@ class NoTagAlias(Exception):
 
 
 class TagCrawler(HuggingfaceDeployable):
-    def __init__(self, site_url: str, session: Optional[requests.Session] = None):
-        self.site_url = site_url
+    __site_url__: str
+    __site_name__: Optional[str] = None
+
+    def __init__(self, session: Optional[requests.Session] = None):
         self.session = session or get_requests_session()
 
     def get_tags_json(self) -> List[Mapping[str, Any]]:
@@ -112,7 +115,34 @@ class TagCrawler(HuggingfaceDeployable):
             yield files
 
     def get_default_namespace(self, **kwargs) -> str:
-        return urlsplit(self.site_url).host
+        namespace = self.__site_name__ or urlsplit(self.__site_url__).host
+        return namespace
+
+    @classmethod
+    def add_commands(cls, cli):
+        @cli.command('tags', help='Crawl tags database',
+                     context_settings={**GLOBAL_CONTEXT_SETTINGS})
+        @click.option('--repository', '-r', 'repository', type=str, default='deepghs/site_tags',
+                      help='Repository to publish to.', show_default=True)
+        @click.option('--namespace', '-n', 'namespace', type=str, default=None,
+                      help='Namespace to publish to, default to site\' host.', show_default=True)
+        @click.option('--revision', '-R', 'revision', type=str, default='main',
+                      help='Revision for pushing the model.', show_default=True)
+        def tags(repository: str, namespace: str, revision: str):
+            logging.try_init_root(logging.INFO)
+            crawler = cls()
+            crawler.deploy_to_huggingface(repository, namespace, revision)
+
+        @cli.command('tags_export', help='Crawl tags database to local',
+                     context_settings={**GLOBAL_CONTEXT_SETTINGS})
+        @click.option('--output_directory', '-o', 'output_directory', type=str, default='.',
+                      help='Output directory', show_default=True)
+        @click.option('--namespace', '-n', 'namespace', type=str, default=None,
+                      help='Namespace to publish to, default to site\' host.', show_default=True)
+        def tags_export(output_directory: str, namespace: str):
+            logging.try_init_root(logging.INFO)
+            crawler = cls()
+            crawler.export_to_directory(output_directory, namespace)
 
 
 class ParallelTagCrawler(TagCrawler):

@@ -13,7 +13,10 @@ class SankakuTagCrawler(ParallelTagCrawler):
     __id_key__ = 'id'
     __max_workers__ = 8
 
-    def __init__(self, site_url: str = 'https://capi-v2.sankakucomplex.com', limit: int = 100):
+    __site_url__ = 'https://capi-v2.sankakucomplex.com'
+    __site_name__ = 'chan.sankakucomplex.com'
+
+    def __init__(self, limit: int = 100):
         session = get_requests_session(headers={
             "User-Agent": (
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
@@ -25,11 +28,11 @@ class SankakuTagCrawler(ParallelTagCrawler):
             "Accept-Encoding": "gzip, deflate, br",
             "Host": "capi-v2.sankakucomplex.com"
         })
-        ParallelTagCrawler.__init__(self, site_url, session)
+        ParallelTagCrawler.__init__(self, session)
         self.limit = limit
 
     def get_tags_from_page(self, p, **kwargs) -> Optional[List[Mapping[str, Any]]]:
-        resp = srequest(self.session, 'GET', f'{self.site_url}/tags', params={
+        resp = srequest(self.session, 'GET', f'{self.__site_url__}/tags', params={
             'lang': 'en',
             'page': str(p),
             'limit': str(self.limit),

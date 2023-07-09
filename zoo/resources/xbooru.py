@@ -1,7 +1,6 @@
 from functools import partial
 
 import click
-from ditk import logging
 from waifuc.source import BaseDataSource, XbooruSource
 
 from gchar.utils import GLOBAL_CONTEXT_SETTINGS
@@ -11,6 +10,10 @@ from .rule34.tag_matches import Rule34TagMatcher
 from .rule34.tags import Rule34TagCrawler
 
 print_version = partial(_origin_print_version, 'zoo.resources.xbooru')
+
+
+class XbooruTagCrawler(Rule34TagCrawler):
+    __site_url__ = 'https://xbooru.com'
 
 
 class XbooruTagFeatureExtract(TagFeatureExtract):
@@ -30,20 +33,7 @@ def cli():
     pass  # pragma: no cover
 
 
-@cli.command('tags', help='Crawl tags database',
-             context_settings={**GLOBAL_CONTEXT_SETTINGS})
-@click.option('--repository', '-r', 'repository', type=str, default='deepghs/site_tags',
-              help='Repository to publish to.', show_default=True)
-@click.option('--namespace', '-n', 'namespace', type=str, default=None,
-              help='Namespace to publish to, default to site\' host.', show_default=True)
-@click.option('--revision', '-R', 'revision', type=str, default='main',
-              help='Revision for pushing the model.', show_default=True)
-def tags(repository: str, namespace: str, revision: str):
-    logging.try_init_root(logging.INFO)
-    crawler = Rule34TagCrawler('https://xbooru.com')
-    crawler.deploy_to_huggingface(repository, namespace, revision)
-
-
+XbooruTagCrawler.add_commands(cli)
 XbooruTagMatcher.add_commands(cli)
 
 if __name__ == '__main__':

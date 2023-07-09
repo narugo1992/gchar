@@ -4,7 +4,7 @@ permissions:
   contents: write
 
 on:
-#  push:
+  push:
   workflow_dispatch:
 #  schedule:
 #    - cron: '30 14 * * *'
@@ -18,8 +18,8 @@ jobs:
       matrix:
         resource:
 #          - 'anime_pictures'
-          - 'zerochan'
-#          - 'danbooru'
+#          - 'zerochan'
+          - 'danbooru'
 #          - 'safebooru'
 #          - 'atfbooru'
 #          - 'sankaku'
@@ -79,8 +79,13 @@ jobs:
           pip --version
           pip list
           tree .
-      - name: Run Game Crawler
+      - name: Prepare Data Directory
+        shell: bash
+        run: |
+          mkdir -p tags_db
+      - name: Run Tag Crawlers
         uses: nick-fields/retry@v2
+        continue-on-error: true
         env:
           CI: 'true'
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
@@ -92,4 +97,60 @@ jobs:
           max_attempts: 5
           retry_on: any
           command: |
-            python -m zoo.resources.${{ matrix.resource }} tags
+            python -m zoo.resources.${{ matrix.resource }} tags_export -o tags_db
+            ls -al tags_db
+      - name: Package Data to Zip Archive
+        shell: bash
+        run: |
+          cd tags_db
+          zip -r ${{ matrix.resource }}.zip *
+          cd ..
+          tree tags_db
+      - name: Upload the character databases
+        uses: actions/upload-artifact@v3
+        with:
+          name: character-database
+          path: tags_db/${{ matrix.resource }}.zip
+
+  data_upload:
+    name: Data Upload
+    runs-on: ${{ matrix.os }}
+    needs:
+      - tag_match
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - 'ubuntu-latest'
+        python-version:
+          - '3.8'
+
+    steps:
+      - name: Prepare the repository
+        shell: bash
+        run: |
+          sudo apt-get install -y tree
+          git clone https://huggingface.co/datasets/deepghs/site_tags
+          ls -al site_tags
+      - name: Download from artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: character-database
+          path: site_tags
+      - name: See what is in this path
+        shell: bash
+        run: |
+          cd site_tags
+          for zfile in *.zip; do unzip -o $zfile; done
+          rm -rf *.zip
+          tree .
+      - name: Push models to hugging face repository
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          cd site_tags
+          git config user.name 'narugo1992'
+          git config user.email 'narugo@126.com'
+          git add -A
+          git diff-index --quiet HEAD || git commit -a -m "dev(narugo): auto sync $(date -R)"
+          git push https://narugo:$HF_TOKEN@huggingface.co/datasets/deepghs/site_tags main

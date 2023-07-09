@@ -15,11 +15,10 @@ class GelbooruTagCrawler(ParallelTagCrawler):
     __max_workers__ = 4
     __id_key__ = 'name'
 
-    def __init__(self):
-        ParallelTagCrawler.__init__(self, 'https://gelbooru.com')
+    __site_url__ = 'https://gelbooru.com'
 
     def _get_tag_aliases_from_page(self, p, **kwargs) -> List[Tuple[str, str]]:
-        resp = srequest(self.session, 'GET', f'{self.site_url}/index.php', params={
+        resp = srequest(self.session, 'GET', f'{self.__site_url__}/index.php', params={
             'page': 'alias',
             's': 'list',
             'pid': str((p - 1) * 50),
@@ -61,7 +60,7 @@ class GelbooruTagCrawler(ParallelTagCrawler):
         )
 
     def get_tags_from_page(self, p, **kwargs) -> Optional[List[Mapping[str, Any]]]:
-        resp = srequest(self.session, 'GET', f'{self.site_url}/index.php', params={
+        resp = srequest(self.session, 'GET', f'{self.__site_url__}/index.php', params={
             'page': 'tags',
             's': 'list',
             'pid': str((p - 1) * 50),

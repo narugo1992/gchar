@@ -16,8 +16,10 @@ class DanbooruTagCrawler(HeaderParallelTagCrawler):
     __id_key__ = 'id'
     __max_workers__ = 4
 
-    def __init__(self, site_url: str = 'https://danbooru.donmai.us'):
-        HeaderParallelTagCrawler.__init__(self, site_url)
+    __site_url__: str = 'https://danbooru.donmai.us'
+
+    def __init__(self):
+        HeaderParallelTagCrawler.__init__(self)
         self.session.headers.update({
             "User-Agent": f"{__TITLE__}/{__VERSION__}",
             'Content-Type': 'application/json; charset=utf-8',
@@ -25,7 +27,7 @@ class DanbooruTagCrawler(HeaderParallelTagCrawler):
 
     def get_tags_from_page(self, p, **kwargs) -> Optional[List[Mapping[str, Any]]]:
         name_pattern = kwargs['name_pattern']
-        resp = srequest(self.session, 'GET', f'{self.site_url}/tags.json', params={
+        resp = srequest(self.session, 'GET', f'{self.__site_url__}/tags.json', params={
             'limit': '1000',
             'page': str(p),
             'search[name_matches]': name_pattern,
@@ -36,7 +38,7 @@ class DanbooruTagCrawler(HeaderParallelTagCrawler):
 
     def get_tag_aliases_from_page(self, p, **kwargs) -> List[Tuple[str, str]]:
         name_pattern = kwargs['name_pattern']
-        resp = srequest(self.session, 'GET', f'{self.site_url}/tag_aliases.json', params={
+        resp = srequest(self.session, 'GET', f'{self.__site_url__}/tag_aliases.json', params={
             'limit': '1000',
             'page': str(p),
             'search[name_matches]': name_pattern,

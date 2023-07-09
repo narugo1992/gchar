@@ -13,8 +13,10 @@ class ZerochanTagCrawler(ParallelTagCrawler):
     __id_key__ = 'tag'
     __init_page__ = 1
 
-    def __init__(self, site_url: str = 'https://zerochan.net'):
-        ParallelTagCrawler.__init__(self, site_url)
+    __site_url__ = 'https://zerochan.net'
+
+    def __init__(self):
+        ParallelTagCrawler.__init__(self)
         self.session.headers.update({'User-Agent': 'Tag Crawler - narugo1992'})
 
     def get_tag_aliases_json(self) -> List[Tuple[str, str]]:
@@ -26,7 +28,7 @@ class ZerochanTagCrawler(ParallelTagCrawler):
         return list(zip(offline_alias['alias'], offline_alias['tag']))
 
     def get_tags_from_page(self, p, **kwargs) -> Optional[List[Mapping[str, Any]]]:
-        resp = srequest(self.session, 'GET', f'{self.site_url}/tags', params={
+        resp = srequest(self.session, 'GET', f'{self.__site_url__}/tags', params={
             's': 'count',
             'm': 'details',
             'q': '',
