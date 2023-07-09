@@ -325,7 +325,12 @@ class TagMatcher(HuggingfaceDeployable):
 
     def try_matching(self):
         best_sim_for_tag_words, ch_options = {}, {}
-        all_chs = self.game_cls.all(contains_extra=False)
+        origin_chs = self.game_cls.all(contains_extra=True)
+        all_chs, _exist_chids = [], set()
+        for ch in origin_chs:
+            if ch.index not in _exist_chids:
+                all_chs.append(ch)
+                _exist_chids.add(ch.index)
         ch_blacklists, ch_whitelists = self.get_premarked_lists()
 
         ns_tqdm = tqdm(all_chs, desc='Name Searching')
