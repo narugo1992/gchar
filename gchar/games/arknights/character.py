@@ -97,7 +97,7 @@ class Character(_BaseCharacter):
     def _jpname(self):
         return self.__raw_data.get('data-jp') or self.__raw_data.get('data-ja') or None
 
-    def _alias_names(self):
+    def _custom_alias_names(self):
         return list(self.__origin_raw_data.get('alias', []) or [])
 
     def _skins(self) -> List[Tuple[str, str]]:

@@ -74,7 +74,7 @@ class Character(_BaseCharacter):
     def _ennames(self):
         return self.__raw_data['ennames']
 
-    def _alias_names(self):
+    def _custom_alias_names(self):
         return self.__raw_data['alias']
 
     def _is_extra(self) -> bool:

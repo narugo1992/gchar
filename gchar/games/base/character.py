@@ -4,12 +4,20 @@ from functools import lru_cache
 from itertools import chain
 from typing import List, Union, Type, Iterator, Optional, Tuple, Dict
 
-from huggingface_hub import hf_hub_download
+from huggingface_hub import hf_hub_download, HfFileSystem
 
-from .name import _BaseName, ChineseName, EnglishName, JapaneseName
+from .name import _BaseName, ChineseName, EnglishName, JapaneseName, GenericAliasName
 from .property import Gender
 from .skin import Skin
 from ...utils import Comparable
+
+try:
+    from yaml import CLoader as Loader, CDumper as Dumper
+except ImportError:
+    from yaml import Loader, Dumper
+import yaml
+
+hf_fs = HfFileSystem()
 
 
 class Character(Comparable):
@@ -79,12 +87,18 @@ class Character(Comparable):
         names = [self.__enname_class__(name) for name in self._ennames() if name]
         return [name for name in names if name]
 
-    def _alias_names(self):
+    def _custom_alias_names(self):
         return []
+
+    def _generic_alias_names(self):
+        return sorted(self._get_alias_index().get(self.index, None) or [])
 
     @property
     def alias_names(self):
-        return [self.__alias_name_class__(name) for name in self._alias_names()]
+        return [
+            *(self.__alias_name_class__(name) for name in self._custom_alias_names()),
+            *(GenericAliasName(name) for name in self._generic_alias_names()),
+        ]
 
     def _names(self) -> List[_BaseName]:
         return [*self.cnnames, *self.ennames, *self.jpnames]
@@ -151,6 +165,25 @@ class Character(Comparable):
                 repo_type='dataset',
         ), 'r', encoding='utf-8') as f:
             return json.load(f)['data']
+
+    @classmethod
+    @lru_cache()
+    def _get_alias_index(cls):
+        if hf_fs.exists(f'datasets/{cls.__repository__}/{cls.__game_name__}/index_alias.yaml'):
+            with open(hf_hub_download(
+                    repo_id=cls.__repository__,
+                    filename=f'{cls.__game_name__}/index_alias.yaml',
+                    repo_type='dataset',
+            ), 'r', encoding='utf-8') as f:
+                data = yaml.load(f, Loader)
+
+            return {
+                item['id']: item['alias']
+                for item in data['alias']
+            }
+
+        else:
+            return {}
 
     @classmethod
     @lru_cache()

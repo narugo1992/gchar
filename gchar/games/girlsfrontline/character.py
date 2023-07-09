@@ -33,7 +33,7 @@ class Character(_BaseCharacter):
     def _jpname(self):
         return self.__raw_data['jpname']
 
-    def _alias_names(self):
+    def _custom_alias_names(self):
         return self.__raw_data['alias']
 
     def _gender(self):

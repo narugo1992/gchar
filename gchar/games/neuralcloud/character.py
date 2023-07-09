@@ -52,7 +52,7 @@ class Character(_BaseCharacter):
             names.extend(self.gf_char.ennames)
         return [name for name in names if name]
 
-    def _alias_names(self):
+    def _custom_alias_names(self):
         return self.__raw_data['alias']
 
     def _gender(self):

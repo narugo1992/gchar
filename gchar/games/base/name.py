@@ -129,3 +129,9 @@ class EnglishName(SegmentName):
             raise TypeError(f'Invalid name type - {name!r}.')
 
         return SegmentName._preprocess(name)
+
+
+class GenericAliasName(TextName):
+    @classmethod
+    def _eqprocess(cls, name: str) -> str:
+        return ' '.join(filter(bool, re.split(r'[\W_]+', TextName._eqprocess(name))))
