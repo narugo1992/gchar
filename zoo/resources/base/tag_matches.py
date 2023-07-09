@@ -85,7 +85,7 @@ class TagMatcher(HuggingfaceDeployable):
     __strict_similarity__: float = 0.95
     __yes_min_vsim__: float = 0.60
     __no_max_vsim__: float = 0.20
-    __max_validate__: int = 15
+    __max_validate__: int = 10
     __sure_min_samples__: int = 8
     __game_keywords__: dict = GAME_KEYWORDS
     __default_repository__ = 'deepghs/game_characters'
@@ -373,19 +373,37 @@ class TagMatcher(HuggingfaceDeployable):
             # filter visual not matches
             ops, validate_cnt = [], 0
             has_kw = options and options[0][3]
+            ref_status, ref_sim = None, None
             for tag, count, sim, kw in options:
                 # when xxx_(game) exist, tags like (xxx)_(yyy) will be dropped.
                 if has_kw and not kw and \
                         sorted(set(self._split_name_to_words(tag)) - set(self._split_tag_to_words(tag))):
                     continue
+
                 if tag in blacklist:
                     continue
                 elif tag in whitelist:
                     ops.append((tag, count, sim, kw, ValidationStatus.YES))
+                    ref_status = ValidationStatus.YES
+                    ref_sim = sim if ref_sim is None else min(sim, ref_sim)
                 else:
+                    if not kw and ref_status is not None:
+                        if ref_status.sure and sim < ref_sim - 0.05:
+                            continue
+                        if not ref_status.sure and sim < ref_sim - 0.10:
+                            continue
+
                     status = self._tag_validate(ch, tag, count, sim, kw)
                     logging.info(f'Validate result of {tag!r}: {status}')
+
                     ops.append((tag, count, sim, kw, status))
+                    if status.visible:
+                        if status.sure:
+                            ref_status = ValidationStatus.YES
+                        elif ref_status is None or not ref_status.sure:
+                            ref_status = ValidationStatus.UNCERTAIN
+                        ref_sim = sim if ref_sim is None else min(sim, ref_sim)
+
                     validate_cnt += 1
                     if validate_cnt >= self.__max_validate__:
                         break
