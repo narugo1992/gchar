@@ -80,7 +80,7 @@ class TagMatcher(HuggingfaceDeployable):
     __tag_column__: str = 'name'
     __count_column__: str = 'count'
     __extra_filters__: dict = {'type': 4}
-    __case_insensitive__: bool = False
+    __case_insensitive__: bool = True
     __min_similarity__: float = 0.7
     __strict_similarity__: float = 0.95
     __yes_min_vsim__: float = 0.60
