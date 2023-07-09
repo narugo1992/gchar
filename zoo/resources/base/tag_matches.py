@@ -36,6 +36,7 @@ GAME_KEYWORDS = {
 
 
 class ValidationStatus(str, Enum):
+    TRUST = 'trust'
     YES = 'yes'
     UNCERTAIN = 'uncertain'
     NO = 'no'
@@ -43,7 +44,9 @@ class ValidationStatus(str, Enum):
 
     @property
     def order(self):
-        if self == self.YES:
+        if self == self.TRUST:
+            return 1
+        elif self == self.YES:
             return 1
         elif self == self.UNCERTAIN:
             return 2
@@ -54,11 +57,11 @@ class ValidationStatus(str, Enum):
 
     @property
     def visible(self) -> bool:
-        return self in {self.YES, self.UNCERTAIN}
+        return self in {self.TRUST, self.YES, self.UNCERTAIN}
 
     @property
     def sure(self) -> bool:
-        return self == self.YES
+        return self in {self.TRUST, self.YES}
 
 
 def remove_curves(text) -> str:
@@ -82,7 +85,8 @@ class TagMatcher(HuggingfaceDeployable):
     __strict_similarity__: float = 0.95
     __yes_min_vsim__: float = 0.60
     __no_max_vsim__: float = 0.20
-    __sure_threshold__: int = 8
+    __max_validate__: int = 15
+    __sure_min_samples__: int = 8
     __game_keywords__: dict = GAME_KEYWORDS
     __default_repository__ = 'deepghs/game_characters'
     __tag_fe__: Type[TagFeatureExtract]
@@ -107,7 +111,7 @@ class TagMatcher(HuggingfaceDeployable):
         self.ch_feats = {}
         self.repository = repository or self.__default_repository__
 
-    def get_blacklists(self) -> Mapping[Union[int, str], List[str]]:
+    def get_premarked_lists(self) -> Tuple[Mapping[Union[int, str], List[str]], Mapping[Union[int, str], List[str]]]:
         file_url = hf_hub_url(
             self.repository,
             filename=f'{self.game_name}/tags_{self.__site_name__}.json',
@@ -123,13 +127,18 @@ class TagMatcher(HuggingfaceDeployable):
             with open(json_file, 'r', encoding='utf-8') as f:
                 data = json.load(f)['data']
 
-            return {
+            blacklists = {
                 item['index']: list(item.get('blacklist', None) or [])
                 for item in data
             }
+            whitelists = {
+                item['index']: list(item.get('whitelist', None) or [])
+                for item in data
+            }
+            return blacklists, whitelists
 
         else:
-            return {}
+            return {}, {}
 
     def _query_via_pattern(self, pattern, *patterns):
         query = self.db.table('tags').select('*')
@@ -190,17 +199,10 @@ class TagMatcher(HuggingfaceDeployable):
     def _tag_name_validate(self, character, tag, count, similarity, has_keyword: bool) -> bool:
         return has_keyword and similarity >= self.__strict_similarity__
 
-    def _tag_validate(self, character, tag, count, similarity, has_keyword: bool,
-                      quick_ref_sim: Optional[float] = None, quick_ref_status: Optional[ValidationStatus] = None) \
+    def _tag_validate(self, character, tag, count, similarity, has_keyword: bool) \
             -> ValidationStatus:
         if self._tag_name_validate(character, tag, count, similarity, has_keyword):
             return ValidationStatus.YES
-
-        if quick_ref_sim is not None and not has_keyword:
-            if quick_ref_status == ValidationStatus.YES and similarity < quick_ref_sim - 0.05:
-                return ValidationStatus.NO
-            if quick_ref_status == ValidationStatus.UNCERTAIN and similarity < quick_ref_sim - 0.10:
-                return ValidationStatus.NO
 
         if self.__tag_fe__ is None:
             return ValidationStatus.UNCERTAIN
@@ -215,12 +217,12 @@ class TagMatcher(HuggingfaceDeployable):
                     ratio = smatrix.astype(np.float32).mean().item()
                     logging.info(f'Visual matching of {character!r} and tag {tag!r}: {ratio}')
                     if ratio >= self.__yes_min_vsim__:
-                        if total < self.__sure_threshold__:
+                        if total < self.__sure_min_samples__:
                             return ValidationStatus.UNCERTAIN
                         else:
-                            return ValidationStatus.YES
+                            return ValidationStatus.TRUST
                     elif ratio < self.__no_max_vsim__:
-                        if total < self.__sure_threshold__:
+                        if total < self.__sure_min_samples__:
                             return ValidationStatus.NO
                         else:
                             return ValidationStatus.BAN
@@ -324,7 +326,7 @@ class TagMatcher(HuggingfaceDeployable):
     def try_matching(self):
         best_sim_for_tag_words, ch_options = {}, {}
         all_chs = self.game_cls.all(contains_extra=False)
-        ch_blacklists = self.get_blacklists()
+        ch_blacklists, ch_whitelists = self.get_premarked_lists()
 
         ns_tqdm = tqdm(all_chs, desc='Name Searching')
         for ch in ns_tqdm:
@@ -356,6 +358,7 @@ class TagMatcher(HuggingfaceDeployable):
         for ch in tqdm(all_chs, desc='Tag Matching'):
             options = ch_options[ch.index]
             blacklist = set(ch_blacklists.get(ch.index, None) or [])
+            whitelist = set(ch_whitelists.get(ch.index, None) or [])
 
             # remove non-best matches
             ops = []
@@ -365,12 +368,11 @@ class TagMatcher(HuggingfaceDeployable):
                 if np.isclose(sim, _best_sim_tag) or np.isclose(sim, _best_sim_name) or \
                         max(_best_sim_tag, _best_sim_tag) < self.__strict_similarity__:
                     ops.append((tag, count, sim, kw))
-            options = ops
+            options = sorted(ops, key=lambda x: (0 if x[3] else 1, -x[1], len(x[0]), x[0]))
 
             # filter visual not matches
-            ops = []
+            ops, validate_cnt = [], 0
             has_kw = options and options[0][3]
-            ref_sim, ref_status = None, None
             for tag, count, sim, kw in options:
                 # when xxx_(game) exist, tags like (xxx)_(yyy) will be dropped.
                 if has_kw and not kw and \
@@ -378,15 +380,15 @@ class TagMatcher(HuggingfaceDeployable):
                     continue
                 if tag in blacklist:
                     continue
-
-                status = self._tag_validate(ch, tag, count, sim, kw, ref_sim, ref_status)
-                logging.info(f'Validate result of {tag!r}: {status}')
-                if status == ValidationStatus.YES:
-                    ref_sim, ref_status = (sim if ref_sim is None else min(ref_sim, sim)), status
-                if status == ValidationStatus.UNCERTAIN and ref_status != ValidationStatus.YES:
-                    ref_sim, ref_status = (sim if ref_sim is None else min(ref_sim, sim)), status
-
-                ops.append((tag, count, sim, kw, status))
+                elif tag in whitelist:
+                    ops.append((tag, count, sim, kw, ValidationStatus.YES))
+                else:
+                    status = self._tag_validate(ch, tag, count, sim, kw)
+                    logging.info(f'Validate result of {tag!r}: {status}')
+                    ops.append((tag, count, sim, kw, status))
+                    validate_cnt += 1
+                    if validate_cnt >= self.__max_validate__:
+                        break
 
             options = ops
 
@@ -395,6 +397,8 @@ class TagMatcher(HuggingfaceDeployable):
             for tag, count, sim, kw, status in options:
                 if status.visible:
                     ops.append((tag, count, sim, kw, status))
+                    if status == ValidationStatus.TRUST:
+                        whitelist.add(tag)
                 elif status == ValidationStatus.BAN:
                     blacklist.add(tag)
 
@@ -408,10 +412,11 @@ class TagMatcher(HuggingfaceDeployable):
                     {
                         'name': option[0],
                         'count': option[1],
-                        'sure': option[4] == ValidationStatus.YES,
+                        'sure': option[4].sure,
                     } for option in options
                 ],
                 'blacklist': sorted(blacklist),
+                'whitelist': sorted(whitelist),
             })
             find_tags = [(tag, count, status.value) for tag, count, sim, kw, status in options]
             logging.info(f'Tags found for character {ch!r} - {find_tags!r}')
