@@ -364,27 +364,12 @@ class TagMatcher(HuggingfaceDeployable):
             options = ch_options[ch.index]
             blacklist = set(ch_blacklists.get(ch.index, None) or [])
             whitelist = set(ch_whitelists.get(ch.index, None) or [])
-
-            # remove non-best matches (deprecated)
-            # ops = []
-            # for tag, count, sim, kw in options:
-            #     _best_sim_tag = best_sim_for_tag_words[tuple(self._split_tag_to_words(tag))]
-            #     _best_sim_name = best_sim_for_tag_words[tuple(self._split_name_to_words(tag))]
-            #     if np.isclose(sim, _best_sim_tag) or np.isclose(sim, _best_sim_name) or \
-            #             max(_best_sim_tag, _best_sim_name) < self.__strict_similarity__:
-            #         ops.append((tag, count, sim, kw))
             options = sorted(options, key=lambda x: (0 if x[3] else 1, -x[1], len(x[0]), x[0]))
 
             # filter visual not matches
             ops, validate_cnt = [], 0
-            has_kw = options and options[0][3]
             ref_status, ref_sim = None, None
             for tag, count, sim, kw in options:
-                # when xxx_(game) exist, tags like (xxx)_(yyy) will be dropped.
-                if has_kw and not kw and \
-                        sorted(set(self._split_name_to_words(tag)) - set(self._split_tag_to_words(tag))):
-                    continue
-
                 if tag in blacklist:
                     continue
                 elif tag in whitelist:
