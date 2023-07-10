@@ -388,6 +388,8 @@ class TagMatcher(HuggingfaceDeployable):
                             continue
                         if not ref_status.sure and sim < ref_sim - 0.10:
                             continue
+                    if validate_cnt >= self.__max_validate__:
+                        continue
 
                     status = self._tag_validate(ch, tag, count, sim, kw)
                     logging.info(f'Validate result of {tag!r}: {status}')
@@ -401,8 +403,6 @@ class TagMatcher(HuggingfaceDeployable):
                         ref_sim = sim if ref_sim is None else min(sim, ref_sim)
 
                     validate_cnt += 1
-                    if validate_cnt >= self.__max_validate__:
-                        break
 
             options = ops
 
