@@ -31,8 +31,8 @@ on:
         description: 'Skip Pixiv Characters (Type Anything for Yes)'
         required: false
         default: ''
-  schedule:
-    - cron: '30 16 * * *'
+#  schedule:
+#    - cron: '30 16 * * *'
 
 env:
   PIXIV_INTERVAL: '1.7'
