@@ -1,3 +1,4 @@
+import json
 import os.path
 import re
 from typing import Iterator, Tuple, Union, List
@@ -5,6 +6,7 @@ from typing import Iterator, Tuple, Union, List
 import numpy as np
 from PIL import Image
 from hbutils.system import urlsplit
+from huggingface_hub import HfFileSystem, hf_hub_url
 from imgutils.metrics import ccip_extract_feature
 from tqdm.auto import tqdm
 from waifuc.action import ModeConvertAction, FaceCountAction, PersonSplitAction, PaddingAlignAction, NoMonochromeAction
@@ -60,24 +62,38 @@ class CharacterSkinSource(WebDataSource):
     def __init__(self, ch: Character, download_silent: bool = True):
         WebDataSource.__init__(self, ch.__game_name__, download_silent=download_silent)
         self.ch = ch
+        self.hf_fs = HfFileSystem()
 
     def _yield_skins(self):
         yielder = _SKIN_YIELDERS.get(self.ch.__game_name__, _yield_skin_default)
         yield from yielder(self.ch)
 
     def _iter_data(self) -> Iterator[Tuple[Union[str, int], str, dict]]:
-        for skin in self._yield_skins():
-            _, ext = os.path.splitext(urlsplit(skin.url).filename)
-            name = re.sub(r'[\W_]+', '', skin.name).strip('_')
-            meta = {
-                'skin': {
-                    'name': skin.name,
-                    'url': skin.url,
-                },
-                'group_id': f'{self.group_name}_{name}',
-                'filename': f'{self.group_name}_{name}{ext}',
-            }
-            yield skin.name, skin.url, meta
+        skin_dir = f'datasets/deepghs/game_character_skins/{self.ch.__game_name__}/{self.ch.index}'
+        meta_json = f'{skin_dir}/.meta.json'
+        if self.hf_fs.exists(meta_json):
+            meta = json.loads(self.hf_fs.read_text(meta_json))
+            skin_files = {item['metadata']['name']: item['name'] for item in meta['files']}
+
+            for skin in self._yield_skins():
+                if skin.name in skin_files:
+                    url = hf_hub_url(
+                        'deepghs/game_character_skins',
+                        filename=f'{self.ch.__game_name__}/{self.ch.index}/{skin_files[skin.name]}',
+                        repo_type='dataset',
+                    )
+
+                    _, ext = os.path.splitext(urlsplit(url).filename)
+                    name = re.sub(r'[\W_]+', '', skin.name).strip('_')
+                    meta = {
+                        'skin': {
+                            'name': skin.name,
+                            'url': skin.url,
+                        },
+                        'group_id': f'{self.group_name}_{name}',
+                        'filename': f'{self.group_name}_{name}{ext}',
+                    }
+                    yield skin.name, url, meta
 
 
 def get_ccip_features_of_character(ch: Character, maxcnt: int = 10) -> List[np.ndarray]:
