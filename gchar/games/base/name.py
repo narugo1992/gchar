@@ -55,7 +55,7 @@ class TextName(_BaseName):
 
     @classmethod
     def _eqprocess(cls, name: str) -> str:
-        return name.lower()
+        return re.sub(r'[\W_]+', '', name.lower())
 
     def _key(self):
         return self._eqprocess(_BaseName._key(self))

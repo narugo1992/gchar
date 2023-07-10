@@ -34,7 +34,9 @@ class TestGamesFgoName:
     def test_chinese_name(self, fgo_mashu_cnname: ChineseName):
         assert fgo_mashu_cnname == '玛修·基列莱特'
         assert fgo_mashu_cnname == '玛修・基列莱特'
-        assert fgo_mashu_cnname != '玛修 基列莱特'
+        assert fgo_mashu_cnname == '玛修 基列莱特'
+        assert fgo_mashu_cnname == '玛修基列莱特'
+        assert fgo_mashu_cnname != '修玛·基列莱特'
 
     def test_chinese_alias_name(self, fgo_mashu_alias1: ChineseAliasName, fgo_mashu_alias2: ChineseAliasName):
         assert fgo_mashu_alias1 == '盾娘'
