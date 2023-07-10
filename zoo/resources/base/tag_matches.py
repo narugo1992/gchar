@@ -368,8 +368,14 @@ class TagMatcher(HuggingfaceDeployable):
 
             # filter visual not matches
             ops, validate_cnt = [], 0
+            has_kw = options and options[0][3]
             ref_status, ref_sim = None, None
             for tag, count, sim, kw in options:
+                # when xxx_(game) exist, tags like (xxx)_(yyy) will be dropped.
+                if has_kw and not kw and ref_status and ref_status.sure and \
+                        sorted(set(self._split_name_to_words(tag)) - set(self._split_tag_to_words(tag))):
+                    continue
+
                 if tag in blacklist:
                     continue
                 elif tag in whitelist:
