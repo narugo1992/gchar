@@ -481,6 +481,6 @@ class TagMatcher(HuggingfaceDeployable):
         @click.option('--game', '-g', 'game_name', type=click.Choice(list_available_game_names()), required=True,
                       help='Game to deploy.', show_default=True)
         def chtags_export(output_directory: str, namespace: str, game_name: str):
-            logging.try_init_root(logging.INFO)
+            logging.try_init_root(logging.DEBUG)
             matcher = cls(game_name)
             matcher.export_to_directory(output_directory, namespace)

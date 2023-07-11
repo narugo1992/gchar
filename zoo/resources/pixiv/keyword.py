@@ -13,11 +13,11 @@ except ImportError:
     from yaml import Loader, Dumper
 from tqdm.auto import tqdm
 
-from .base import _GAMES
 from .session import get_pixiv_sessions
 from ditk import logging
 from gchar.games.base import Character
 from gchar.utils import sget
+from gchar.resources.pixiv.base import _GAMES
 from gchar.resources.pixiv.tag import get_pixiv_keywords
 from gchar.resources.pixiv.keyword import _load_pixiv_alias_for_game, _parse_pixiv_names_file
 

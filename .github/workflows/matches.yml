@@ -4,7 +4,7 @@ permissions:
   contents: write
 
 on:
-#  push:
+  push:
   workflow_dispatch:
 #  schedule:
 #    - cron: '30 14 * * *'
@@ -33,12 +33,13 @@ jobs:
           - 'gelbooru'
         game:
 #          - 'bluearchive'
-          - 'arknights'
-          - 'fgo'
+#          - 'arknights'
+#          - 'fgo'
 #          - 'azurlane'
 #          - 'girlsfrontline'
 #          - 'genshin'
 #          - 'neuralcloud'
+          - 'pathtonowhere'
         os:
           - 'ubuntu-latest'
         python-version:
