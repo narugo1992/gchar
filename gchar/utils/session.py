@@ -58,7 +58,7 @@ def srequest(session: requests.Session, method, url, *, max_retries: int = 5,
             time.sleep(sleep_time)
         else:
             break
-    assert resp is not None
+    assert resp is not None, f'Request failed for {max_retries} time(s).'
     if raise_for_status:
         resp.raise_for_status()
 

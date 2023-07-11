@@ -126,7 +126,7 @@ class Character(Comparable):
 
     @property
     def skins(self) -> List[Skin]:
-        return [Skin(name, url) for name, url in self._skins()]
+        return [Skin(self.__game_name__, self._index(), name, url) for name, url in self._skins()]
 
     def _release_time(self):
         raise NotImplementedError  # pragma: no cover
