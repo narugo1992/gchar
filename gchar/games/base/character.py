@@ -122,7 +122,7 @@ class Character(Comparable):
         return bool(self._is_extra())
 
     def _skins(self) -> List[Tuple[str, str]]:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @property
     def skins(self) -> List[Skin]:

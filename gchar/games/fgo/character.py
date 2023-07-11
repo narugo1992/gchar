@@ -18,10 +18,6 @@ class Character(_BaseCharacter):
     def __init__(self, raw_data: dict):
         self.__raw_data = raw_data
 
-    @property
-    def raw_data(self) -> dict:
-        return dict(self.__raw_data)
-
     def _index(self) -> int:
         return self.__raw_data['id']
 

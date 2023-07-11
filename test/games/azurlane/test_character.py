@@ -25,6 +25,8 @@ class TestGamesAzurlaneCharacter:
         assert not azl_new_jersey.is_extra
         assert repr(azl_new_jersey) == '<Character 068 - 新泽西/new_jersey/ニュージャージー, ' \
                                        '海上传奇(5*****), group: Group.USS>'
+        assert azl_new_jersey.release_time == pytest.approx(1622106000.0)
+        assert len(azl_new_jersey.skins) >= 7
 
         assert azl_maury == '010'
         assert azl_maury == '莫里'
@@ -42,6 +44,7 @@ class TestGamesAzurlaneCharacter:
         assert not azl_maury.is_chibi
         assert not azl_maury.is_extra
         assert repr(azl_maury) == '<Character 010 - 莫里/maury/モーリー, 精锐(3***), group: Group.USS>'
+        assert azl_maury.release_time == pytest.approx(1495702800.0)
 
         assert azl_fuso_meta == 'META005'
         assert azl_fuso_meta == '扶桑·meta'
@@ -144,3 +147,6 @@ class TestGamesAzurlaneCharacter:
         assert not azl_azuma.is_chibi
         assert not azl_azuma.is_extra
         assert repr(azl_azuma) == '<Character Plan010 - 吾妻/azuma/吾妻/あづま, 决战方案(5*****), group: Group.IJN>'
+
+        assert sorted([azl_new_jersey, azl_maury, azl_azuma, azl_san_diego_refit]) == \
+               [azl_maury, azl_san_diego_refit, azl_azuma, azl_new_jersey]
