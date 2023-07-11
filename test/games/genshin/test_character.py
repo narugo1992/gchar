@@ -1,9 +1,12 @@
 import pytest
 
+from gchar.games.genshin import Character
+
 
 @pytest.mark.unittest
 class TestGamesGenshinCharacter:
-    def test_basic(self, genshin_keqing, genshin_yoimiya, genshin_zhongli):
+    def test_basic(self, genshin_keqing: Character, genshin_yoimiya: Character,
+                   genshin_zhongli: Character, genshin_traveller: Character):
         assert genshin_keqing.index == 'keqing'
         assert genshin_keqing == '刻晴'
         assert genshin_keqing.cnname == '刻晴'
@@ -18,6 +21,8 @@ class TestGamesGenshinCharacter:
         assert genshin_keqing.element == 'electro'
         assert repr(genshin_keqing) == '<Character 刻晴/keqing/刻晴/こくせい, female, 5*****, ' \
                                        'weapon: Weapon.SWORD, element: Element.ELECTRO>'
+        assert genshin_keqing.release_time == pytest.approx(1601265600.0)
+        assert len(genshin_keqing.skins) >= 3
 
         assert genshin_yoimiya == 'yoimiya'
         assert genshin_yoimiya == '宵宫'
@@ -48,3 +53,7 @@ class TestGamesGenshinCharacter:
         assert genshin_zhongli.element == 'geo'
         assert repr(genshin_zhongli) == '<Character 钟离/zhongli/鍾離/しょうり, male, 5*****, ' \
                                         'weapon: Weapon.POLEARM, element: Element.GEO>'
+
+        assert genshin_traveller.element is None
+        assert sorted([genshin_keqing, genshin_yoimiya, genshin_zhongli, genshin_traveller]) == \
+               [genshin_keqing, genshin_traveller, genshin_zhongli, genshin_yoimiya]

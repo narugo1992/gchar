@@ -42,6 +42,8 @@ class TestGamesFgoProperty:
         assert Clazz.loads(5) == Clazz.MEDIC
         assert Clazz.loads(Clazz.MEDIC) == 5
 
+        assert Clazz.loads('guard') == Clazz.GUARD
+
         with pytest.raises(ValueError):
             _ = Clazz.loads(10)
         with pytest.raises(ValueError):
@@ -51,3 +53,4 @@ class TestGamesFgoProperty:
         assert Clazz.GUARD != 10
         assert Clazz.GUARD != '10'
         assert Clazz.GUARD != None
+        assert Clazz.GUARD != []

@@ -17,6 +17,8 @@ class TestGamesGirlsfrontlineCharacter:
         assert gfl_grizzly.rarity == 5
         assert gfl_grizzly.clazz == 'HG'
         assert repr(gfl_grizzly) == '<Character 96 - 灰熊MkⅤ/灰熊MKV/grizzly/グリズリー, 5*****, clazz: Clazz.HG>'
+        assert gfl_grizzly.release_time == pytest.approx(1463734800.0)
+        assert len(gfl_grizzly.skins) >= 8
 
         assert gfl_a416 == 1029
         assert gfl_a416 == "特工416"
@@ -29,6 +31,8 @@ class TestGamesGirlsfrontlineCharacter:
         assert gfl_a416.rarity == 'extra'
         assert gfl_a416.clazz == 'ar'
         assert repr(gfl_a416) == '<Character 1029 - 特工416/agent_416/エージェント416, EXTRA, clazz: Clazz.AR>'
+        assert gfl_a416.release_time == pytest.approx(1606381200.0)
+        assert len(gfl_a416.skins) >= 4
 
         assert gfl_bronya == 1005
         assert gfl_bronya == "布洛妮娅·扎伊切克"
@@ -41,3 +45,6 @@ class TestGamesGirlsfrontlineCharacter:
         assert gfl_bronya.rarity == 'extra'
         assert gfl_bronya.clazz == 'rf'
         assert repr(gfl_bronya) == '<Character 1005 - 布洛妮娅/布洛妮娅·扎伊切克, EXTRA, clazz: Clazz.RF>'
+
+        assert sorted([gfl_grizzly, gfl_bronya, gfl_a416]) == \
+               [gfl_grizzly, gfl_bronya, gfl_a416]

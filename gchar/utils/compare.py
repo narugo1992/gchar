@@ -9,7 +9,7 @@ class Comparable:
             raise TypeError(f'Invalid type for compare - {other!r}.')
 
     def _key(self):
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     def __eq__(self, other):
         try:

@@ -49,9 +49,14 @@ def chen_extra():
     return Character.get('假日威龙陈')
 
 
+@pytest.fixture(scope='module')
+def pozyomka():
+    return Character.get('R145')
+
+
 @pytest.mark.unittest
 class TestGamesArknightsCharacter:
-    def test_chars(self, amiya, amiya_guard, specter, specter_extra, silverash, chen, chen_extra, fang):
+    def test_chars(self, amiya, amiya_guard, specter, specter_extra, silverash, chen, chen_extra, fang, pozyomka):
         assert amiya == 'amiya'
         assert amiya_guard == 'amiya'
         assert amiya == amiya_guard
@@ -128,6 +133,10 @@ class TestGamesArknightsCharacter:
 
         assert chen_extra > amiya
         assert amiya_guard > fang
+
+        assert pozyomka == '鸿雪'
+        assert pozyomka == 'pozemka'
+        assert pozyomka == 'pozyomka'
 
     def test_chars_get(self):
         assert Character.get('what_the_fxxk') is None

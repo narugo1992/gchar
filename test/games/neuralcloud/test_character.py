@@ -17,6 +17,8 @@ class TestGamesNeuralcloudCharacter:
         assert nc_daiyan.clazz == '射手'
         assert nc_daiyan.company == '赛博传媒'
         assert repr(nc_daiyan) == '<Character 1046 - 黛烟/95式/daiyan/type95/95式, rarity: 3***, clazz: SHOOTER>'
+        assert nc_daiyan.release_time == pytest.approx(1643619600.0)
+        assert len(nc_daiyan.skins) >= 5
 
         assert nc_suer.index == 1003
         assert nc_suer == '苏尔'
@@ -28,6 +30,8 @@ class TestGamesNeuralcloudCharacter:
         assert nc_suer.clazz == '战士'
         assert nc_suer.company == '42LAB'
         assert repr(nc_suer) == '<Character 1003 - 苏尔/sol, rarity: 2**, clazz: WARRIOR>'
+        assert nc_suer.release_time == pytest.approx(1602234000.0)
+        assert len(nc_suer.skins) >= 5
 
         assert nc_wlns.index == 1056
         assert nc_wlns == '乌拉诺斯'
@@ -39,3 +43,6 @@ class TestGamesNeuralcloudCharacter:
         assert nc_wlns.clazz == '射手'
         assert nc_wlns.company == '火神重工'
         assert repr(nc_wlns) == '<Character 1056 - 乌拉诺斯/uranus, rarity: 2**, clazz: SHOOTER>'
+
+        assert sorted([nc_daiyan, nc_suer, nc_wlns]) == \
+               [nc_suer, nc_daiyan, nc_wlns]
