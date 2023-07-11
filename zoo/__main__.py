@@ -28,7 +28,7 @@ SCHEDULE_TABLE = [
     ('girlsfrontline',),
     ('arknights',),
     ('azurlane',),
-    ('genshin', 'neuralcloud', 'bluearchive'),
+    ('genshin', 'neuralcloud', 'bluearchive', 'pathtonowhere'),
 ]
 GAMES = list(itertools.chain(*SCHEDULE_TABLE))
 if set(GAMES) - set(_KNOWN_GAMES):

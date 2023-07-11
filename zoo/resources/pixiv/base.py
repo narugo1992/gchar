@@ -6,4 +6,5 @@ _GAMES = {
     'girlsfrontline': ('ドールズフロントライン', 'ドールズフロントライン'),
     'neuralcloud': ('云图计划', '云图计划'),
     'bluearchive': ('ブルーアーカイブ', 'ブルーアーカイブ'),
+    'pathtonowhere': ('無期迷途', '無期迷途'),
 }
