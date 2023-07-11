@@ -10,7 +10,7 @@ on:
       games:
         description: 'Game to Crawl'
         required: true
-        default: 'arknights,fgo,girlsfrontline,genshin,azurlane,neuralcloud,bluearchive'
+        default: 'arknights,fgo,girlsfrontline,genshin,azurlane,neuralcloud,bluearchive,pathtonowhere'
       skip_crawl:
         description: 'Skip Crawl (Type Anything for Yes)'
         required: false
@@ -49,13 +49,14 @@ jobs:
       fail-fast: false
       matrix:
         game:
-          - 'bluearchive'
-          - 'arknights'
-          - 'fgo'
-          - 'azurlane'
-          - 'girlsfrontline'
-          - 'genshin'
-          - 'neuralcloud'
+#          - 'bluearchive'
+#          - 'arknights'
+#          - 'fgo'
+#          - 'azurlane'
+#          - 'girlsfrontline'
+#          - 'genshin'
+#          - 'neuralcloud'
+          - 'pathtonowhere'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -199,13 +200,14 @@ jobs:
       max-parallel: 1
       matrix:
         game:
-          - 'bluearchive'
-          - 'arknights'
-          - 'fgo'
-          - 'azurlane'
-          - 'girlsfrontline'
-          - 'genshin'
-          - 'neuralcloud'
+#          - 'bluearchive'
+#          - 'arknights'
+#          - 'fgo'
+#          - 'azurlane'
+#          - 'girlsfrontline'
+#          - 'genshin'
+#          - 'neuralcloud'
+          - 'pathtonowhere'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -293,13 +295,14 @@ jobs:
       max-parallel: 1
       matrix:
         game:
-          - 'bluearchive'
-          - 'arknights'
-          - 'fgo'
-          - 'azurlane'
-          - 'girlsfrontline'
-          - 'genshin'
-          - 'neuralcloud'
+#          - 'bluearchive'
+#          - 'arknights'
+#          - 'fgo'
+#          - 'azurlane'
+#          - 'girlsfrontline'
+#          - 'genshin'
+#          - 'neuralcloud'
+          - 'pathtonowhere'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -408,13 +411,14 @@ jobs:
       max-parallel: 1
       matrix:
         game:
-          - 'bluearchive'
-          - 'arknights'
-          - 'fgo'
-          - 'azurlane'
-          - 'girlsfrontline'
-          - 'genshin'
-          - 'neuralcloud'
+#          - 'bluearchive'
+#          - 'arknights'
+#          - 'fgo'
+#          - 'azurlane'
+#          - 'girlsfrontline'
+#          - 'genshin'
+#          - 'neuralcloud'
+          - 'pathtonowhere'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -542,13 +546,14 @@ jobs:
           - 'lolibooru'
           - 'gelbooru'
         game:
-          - 'bluearchive'
-          - 'arknights'
-          - 'fgo'
-          - 'azurlane'
-          - 'girlsfrontline'
-          - 'genshin'
-          - 'neuralcloud'
+#          - 'bluearchive'
+#          - 'arknights'
+#          - 'fgo'
+#          - 'azurlane'
+#          - 'girlsfrontline'
+#          - 'genshin'
+#          - 'neuralcloud'
+          - 'pathtonowhere'
         os:
           - 'ubuntu-latest'
         python-version:
