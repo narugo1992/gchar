@@ -10,6 +10,26 @@ DEFAULT_TIMEOUT = 10  # seconds
 
 
 class TimeoutHTTPAdapter(HTTPAdapter):
+    """
+    Custom HTTP adapter that sets a default timeout for requests.
+
+    Inherits from `HTTPAdapter`.
+
+    Usage:
+    - Create an instance of `TimeoutHTTPAdapter` and pass it to a `requests.Session` object's `mount` method.
+
+    Example:
+    ```python
+    session = requests.Session()
+    adapter = TimeoutHTTPAdapter(timeout=10)
+    session.mount('http://', adapter)
+    session.mount('https://', adapter)
+    ```
+
+    :param timeout: The default timeout value in seconds. (default: 10)
+    :type timeout: int
+    """
+
     def __init__(self, *args, **kwargs):
         self.timeout = DEFAULT_TIMEOUT
         if "timeout" in kwargs:
@@ -18,6 +38,16 @@ class TimeoutHTTPAdapter(HTTPAdapter):
         super().__init__(*args, **kwargs)
 
     def send(self, request, **kwargs):
+        """
+        Sends a request with the provided timeout value.
+
+        :param request: The request to send.
+        :type request: PreparedRequest
+        :param kwargs: Additional keyword arguments.
+        :type kwargs: dict
+        :returns: The response from the request.
+        :rtype: Response
+        """
         timeout = kwargs.get("timeout")
         if timeout is None:
             kwargs["timeout"] = self.timeout
@@ -27,6 +57,20 @@ class TimeoutHTTPAdapter(HTTPAdapter):
 def get_requests_session(max_retries: int = 5, timeout: int = DEFAULT_TIMEOUT,
                          headers: Optional[Dict[str, str]] = None, session: Optional[requests.Session] = None) \
         -> requests.Session:
+    """
+    Returns a requests Session object configured with retry and timeout settings.
+
+    :param max_retries: The maximum number of retries. (default: 5)
+    :type max_retries: int
+    :param timeout: The default timeout value in seconds. (default: 10)
+    :type timeout: int
+    :param headers: Additional headers to be added to the session. (default: None)
+    :type headers: Optional[Dict[str, str]]
+    :param session: An existing requests Session object to use. If not provided, a new Session object is created. (default: None)
+    :type session: Optional[requests.Session]
+    :returns: The requests Session object.
+    :rtype: requests.Session
+    """
     session = session or requests.session()
     retries = Retry(
         total=max_retries, backoff_factor=1,
@@ -47,6 +91,26 @@ def get_requests_session(max_retries: int = 5, timeout: int = DEFAULT_TIMEOUT,
 
 def srequest(session: requests.Session, method, url, *, max_retries: int = 5,
              sleep_time: float = 5.0, raise_for_status: bool = True, **kwargs) -> requests.Response:
+    """
+    Send a request using the provided session object with retry and timeout settings.
+
+    :param session: The requests Session object to use for the request.
+    :type session: requests.Session
+    :param method: The HTTP method for the request.
+    :type method: str
+    :param url: The URL for the request.
+    :type url: str
+    :param max_retries: The maximum number of retries. (default: 5)
+    :type max_retries: int
+    :param sleep_time: The sleep time between retries in seconds. (default: 5.0)
+    :type sleep_time: float
+    :param raise_for_status: Whether to raise an exception for non-successful response status codes. (default: True)
+    :type raise_for_status: bool
+    :param kwargs: Additional keyword arguments for the request.
+    :type kwargs: dict
+    :returns: The response from the request.
+    :rtype: requests.Response
+    """
     if isinstance(session, (list, tuple)):
         session = random.choice(session)
 
@@ -67,6 +131,24 @@ def srequest(session: requests.Session, method, url, *, max_retries: int = 5,
 
 def sget(session: requests.Session, url, *, max_retries: int = 5,
          sleep_time: float = 5.0, raise_for_status: bool = True, **kwargs) -> requests.Response:
+    """
+    Send a GET request using the provided session object with retry and timeout settings.
+
+    :param session: The requests Session object to use for the request.
+    :type session: requests.Session
+    :param url: The URL for the request.
+    :type url: str
+    :param max_retries: The maximum number of retries. (default: 5)
+    :type max_retries: int
+    :param sleep_time: The sleep time between retries in seconds. (default: 5.0)
+    :type sleep_time: float
+    :param raise_for_status: Whether to raise an exception for non-successful response status codes. (default: True)
+    :type raise_for_status: bool
+    :param kwargs: Additional keyword arguments for the request.
+    :type kwargs: dict
+    :returns: The response from the request.
+    :rtype: requests.Response
+    """
     return srequest(
         session, 'GET', url,
         max_retries=max_retries,

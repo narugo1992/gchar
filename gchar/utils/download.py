@@ -14,6 +14,16 @@ class _FakeClass:
 
 @contextmanager
 def _with_tqdm(expected_size, desc, silent: bool = False):
+    """
+    Context manager that provides a tqdm progress bar for tracking the download progress.
+
+    :param expected_size: The expected size of the file being downloaded.
+    :type expected_size: int
+    :param desc: The description of the progress bar.
+    :type desc: str
+    :param silent: Whether to silence the progress bar. If True, a fake progress bar is used. (default: False)
+    :type silent: bool
+    """
     if not silent:
         with tqdm(total=expected_size, unit='B', unit_scale=True, unit_divisor=1024, desc=desc) as pbar:
             yield pbar
@@ -22,6 +32,26 @@ def _with_tqdm(expected_size, desc, silent: bool = False):
 
 
 def download_file(url, filename, expected_size: int = None, desc=None, session=None, silent: bool = False, **kwargs):
+    """
+    Downloads a file from the given URL and saves it to the specified filename.
+
+    :param url: The URL of the file to download.
+    :type url: str
+    :param filename: The filename to save the downloaded file to.
+    :type filename: str
+    :param expected_size: The expected size of the file in bytes. (default: None)
+    :type expected_size: int
+    :param desc: The description of the download progress. If not provided, the filename is used. (default: None)
+    :type desc: str
+    :param session: An existing requests Session object to use for the download. If not provided, a new Session object is created. (default: None)
+    :type session: requests.Session
+    :param silent: Whether to silence the progress bar. If True, no progress bar is displayed. (default: False)
+    :type silent: bool
+    :param kwargs: Additional keyword arguments to pass to the `srequest` function.
+    :type kwargs: dict
+    :returns: The filename of the downloaded file.
+    :rtype: str
+    """
     session = session or get_requests_session()
     response = srequest(session, 'GET', url, stream=True, allow_redirects=True, **kwargs)
     expected_size = expected_size or response.headers.get('Content-Length', None)
