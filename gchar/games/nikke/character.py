@@ -90,7 +90,10 @@ class Character(_BaseCharacter):
         return self.__raw_data['release']['time']
 
     def _order(self):
-        return self._release_time() or 0.0,
+        return self._release_time() or 0.0, 1 if self._is_extra() else 0
+
+    def _is_extra(self) -> bool:
+        return self._enname() and ':' in self._enname()
 
     def __repr__(self):
         return f'<{type(self).__name__} {"/".join(map(str, self._names()))}, ' \
