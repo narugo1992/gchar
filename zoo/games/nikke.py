@@ -289,7 +289,7 @@ class NikkeIndexer(GameIndexer):
                 'enname': list(en_item['names'].get('name_en') or []),
                 'krname': list(en_item['names'].get('name_kr') or []),
                 **en_item['info'],
-                'skins': en_item['skins'],
+                'skins': skins,
                 'release': en_item['release'],
                 'diff': {
                     'type': diff_type,
