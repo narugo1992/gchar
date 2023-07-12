@@ -34,6 +34,7 @@ GAME_KEYWORDS = {
     'bluearchive': ['blue_archive'],
     'pathtonowhere': ['path_to_nowhere'],
     'nikke': ['nikke'],
+    'starrail': ['star_rail'],
 }
 
 

@@ -14,6 +14,7 @@ from ..girlsfrontline import Character as GirlsFrontLineCharacter
 from ..neuralcloud import Character as NeuralCloudCharacter
 from ..nikke import Character as NikkeCharacter
 from ..pathtonowhere import Character as PathToNowhereCharacter
+from ..starrail import Character as StarRailCharacter
 from ...utils import optional_lru_cache
 
 GAME_CHARS = {}
@@ -46,6 +47,7 @@ register_game(NeuralCloudCharacter)
 register_game(BlueArchiveCharacter)
 register_game(PathToNowhereCharacter)
 register_game(NikkeCharacter)
+register_game(StarRailCharacter)
 
 
 @optional_lru_cache()

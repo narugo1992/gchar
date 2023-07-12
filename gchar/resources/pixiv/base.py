@@ -8,4 +8,5 @@ _GAMES = {
     'bluearchive': ('ブルーアーカイブ', 'ブルーアーカイブ'),
     'pathtonowhere': ('無期迷途', '無期迷途'),
     'nikke': ('勝利の女神:NIKKE', '勝利の女神:NIKKE'),
+    'starrail': ('崩壊スターレイル', 'スターレイル'),
 }
