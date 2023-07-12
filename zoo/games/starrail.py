@@ -55,13 +55,13 @@ class StarRailIndexer(GameIndexer):
 
         tabs1, *_ = page('.resp-tabs').items()
         names = [item.text().strip() for item in tabs1('ul > li').items()]
-        urls = [item('.floatnone a').attr('href') for item in
+        urls = [item('.floatnone img').attr('src') for item in
                 tabs1('.resp-tabs-container .resp-tab-content').items()]
         assert len(names) == len(urls), f'Names ({names!r}) not match with urls ({urls!r})'
 
         skins = []
         for name, url in zip(names, urls):
-            if url:
+            if url and '动作' not in name:
                 skins.append({'name': name, 'url': urljoin(resp.request.url, url)})
 
         return {

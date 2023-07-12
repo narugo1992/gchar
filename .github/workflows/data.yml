@@ -10,7 +10,7 @@ on:
       games:
         description: 'Game to Crawl'
         required: true
-        default: 'arknights,fgo,girlsfrontline,genshin,azurlane,neuralcloud,bluearchive,pathtonowhere,nikke'
+        default: 'arknights,fgo,girlsfrontline,genshin,azurlane,neuralcloud,bluearchive,pathtonowhere,nikke,starrail'
       skip_crawl:
         description: 'Skip Crawl (Type Anything for Yes)'
         required: false
@@ -57,7 +57,8 @@ jobs:
 #          - 'genshin'
 #          - 'neuralcloud'
 #          - 'pathtonowhere'
-          - 'nikke'
+#          - 'nikke'
+          - 'starrail'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -209,7 +210,8 @@ jobs:
 #          - 'genshin'
 #          - 'neuralcloud'
 #          - 'pathtonowhere'
-          - 'nikke'
+#          - 'nikke'
+          - 'starrail'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -305,7 +307,8 @@ jobs:
 #          - 'genshin'
 #          - 'neuralcloud'
 #          - 'pathtonowhere'
-          - 'nikke'
+#          - 'nikke'
+          - 'starrail'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -422,7 +425,8 @@ jobs:
 #          - 'genshin'
 #          - 'neuralcloud'
 #          - 'pathtonowhere'
-          - 'nikke'
+#          - 'nikke'
+          - 'starrail'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -558,7 +562,8 @@ jobs:
 #          - 'genshin'
 #          - 'neuralcloud'
 #          - 'pathtonowhere'
-          - 'nikke'
+#          - 'nikke'
+          - 'starrail'
         os:
           - 'ubuntu-latest'
         python-version:
