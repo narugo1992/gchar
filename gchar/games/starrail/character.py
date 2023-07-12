@@ -66,6 +66,19 @@ class Character(_BaseCharacter):
     def rarity(self):
         return Rarity.loads(self.__raw_data['rarity'])
 
+    @property
+    def destiny(self):
+        return self.__raw_data['destiny']
+
+    @property
+    def element(self):
+        return self.__raw_data['element']
+
+    @property
+    def group(self):
+        return self.__raw_data['group']
+
     def __repr__(self):
         return f'<{type(self).__name__} {"/".join(map(str, self._names()))}, ' \
-               f'{self.rarity.name}({int(self.rarity)}{"*" * self.rarity})>'
+               f'{self.rarity.name}({int(self.rarity)}{"*" * self.rarity}), ' \
+               f'element: {self.element}, destiny: {self.destiny}>'
