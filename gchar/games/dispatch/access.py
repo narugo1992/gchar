@@ -12,6 +12,7 @@ from ..fgo import Character as FateGrandOrderCharacter
 from ..genshin import Character as GenshinImpactCharacter
 from ..girlsfrontline import Character as GirlsFrontLineCharacter
 from ..neuralcloud import Character as NeuralCloudCharacter
+from ..nikke import Character as NikkeCharacter
 from ..pathtonowhere import Character as PathToNowhereCharacter
 from ...utils import optional_lru_cache
 
@@ -44,6 +45,7 @@ register_game(GirlsFrontLineCharacter)
 register_game(NeuralCloudCharacter)
 register_game(BlueArchiveCharacter)
 register_game(PathToNowhereCharacter)
+register_game(NikkeCharacter)
 
 
 @optional_lru_cache()

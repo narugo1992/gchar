@@ -33,6 +33,7 @@ GAME_KEYWORDS = {
     'neuralcloud': ['girls\'_frontline_nc', 'girls\'_frontline', 'neural_cloud'],
     'bluearchive': ['blue_archive'],
     'pathtonowhere': ['path_to_nowhere'],
+    'nikke': ['nikke'],
 }
 
 

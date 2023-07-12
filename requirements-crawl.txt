@@ -3,10 +3,12 @@ hfmirror>=0.0.6
 pandas<2
 GitPython
 pillow
-dghs-imgutils>=0.2.0
+dghs-imgutils>=0.2.1
 DI-toolkit
 xmltodict
 orator
 thefuzz[speedup]
 huggingface_hub>=0.14.0
 git+https://github.com/deepghs/waifuc.git
+dateparser>=1.1.8
+scipy
