@@ -17,7 +17,7 @@ class TestResourcesPixivTag:
         ('CEO', 'Fate/GrandOrder (berserker_of_el_dorado OR penthesilea OR エルドラドのバーサーカー '
                 'OR ペンテシレイア OR 彭忒西勒亚 OR 黄金国的berserker)', []),
         ('saber', 'Fate/GrandOrder (altria_pendragon OR アルトリア・ペンドラゴン OR 阿尔托莉雅·潘德拉贡)', []),
-        ('character_not_found_hahahaha', None, [])
+        ('character_not_found_hahahaha' * 20, None, [])
     ])
     def test_get_pixiv_keywords(self, ch, keyword: str, forbidden_words: List[str]):
         if keyword is None:
