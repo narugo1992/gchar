@@ -64,7 +64,7 @@ SegmentName
 Gender
 ---------------------------------------------
 
-.. autoclass:: Gender
+.. autoenum:: Gender
     :members:
 
 

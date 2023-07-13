@@ -1,0 +1,361 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gchar.games.arknights.character &mdash; gchar 0.0.10 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> gchar
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.10
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/installation/index.html">Installation</a></li>
+</ul>
+<p><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_doc/config/index.html">gchar.config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_doc/games/index.html">gchar.games</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_doc/utils/index.html">gchar.utils</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">gchar</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>gchar.games.arknights.character</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+    
+    
+  <h1>Source code for gchar.games.arknights.character</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">from</span> <span class="nn">.name</span> <span class="kn">import</span> <span class="n">EnglishName</span><span class="p">,</span> <span class="n">JapaneseName</span><span class="p">,</span> <span class="n">ChineseName</span><span class="p">,</span> <span class="n">ChineseAliasName</span>
+<span class="kn">from</span> <span class="nn">.property</span> <span class="kn">import</span> <span class="n">Rarity</span><span class="p">,</span> <span class="n">Clazz</span>
+<span class="kn">from</span> <span class="nn">..base</span> <span class="kn">import</span> <span class="n">Character</span> <span class="k">as</span> <span class="n">_BaseCharacter</span>
+
+<span class="n">_KNOWN_DATA_FIELDS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;data-adapt&#39;</span><span class="p">,</span> <span class="s1">&#39;data-atk&#39;</span><span class="p">,</span> <span class="s1">&#39;data-birth_place&#39;</span><span class="p">,</span> <span class="s1">&#39;data-block&#39;</span><span class="p">,</span> <span class="s1">&#39;data-cost&#39;</span><span class="p">,</span> <span class="s1">&#39;data-def&#39;</span><span class="p">,</span> <span class="s1">&#39;data-en&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;data-flex&#39;</span><span class="p">,</span> <span class="s1">&#39;data-group&#39;</span><span class="p">,</span> <span class="s1">&#39;data-hp&#39;</span><span class="p">,</span> <span class="s1">&#39;data-id&#39;</span><span class="p">,</span> <span class="s1">&#39;data-interval&#39;</span><span class="p">,</span> <span class="s1">&#39;data-ja&#39;</span><span class="p">,</span> <span class="s1">&#39;data-logo&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;data-nation&#39;</span><span class="p">,</span> <span class="s1">&#39;data-obtain_method&#39;</span><span class="p">,</span> <span class="s1">&#39;data-phy&#39;</span><span class="p">,</span> <span class="s1">&#39;data-plan&#39;</span><span class="p">,</span> <span class="s1">&#39;data-position&#39;</span><span class="p">,</span> <span class="s1">&#39;data-potential&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;data-profession&#39;</span><span class="p">,</span> <span class="s1">&#39;data-race&#39;</span><span class="p">,</span> <span class="s1">&#39;data-rarity&#39;</span><span class="p">,</span> <span class="s1">&#39;data-re_deploy&#39;</span><span class="p">,</span> <span class="s1">&#39;data-res&#39;</span><span class="p">,</span> <span class="s1">&#39;data-sex&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;data-skill&#39;</span><span class="p">,</span> <span class="s1">&#39;data-sortid&#39;</span><span class="p">,</span> <span class="s1">&#39;data-subprofession&#39;</span><span class="p">,</span> <span class="s1">&#39;data-tag&#39;</span><span class="p">,</span> <span class="s1">&#39;data-team&#39;</span><span class="p">,</span> <span class="s1">&#39;data-tolerance&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;data-trust&#39;</span><span class="p">,</span> <span class="s1">&#39;data-zh&#39;</span>
+<span class="p">]</span>
+
+
+<div class="viewcode-block" id="Character"><a class="viewcode-back" href="../../../../api_doc/games/arknights.html#gchar.games.arknights.Character">[docs]</a><span class="k">class</span> <span class="nc">Character</span><span class="p">(</span><span class="n">_BaseCharacter</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class for modeling characters in the Arknights game.</span>
+
+<span class="sd">    Here is an example of operator data from prts.wiki</span>
+
+<span class="sd">    .. code-block:: json</span>
+<span class="sd">        :linenos:</span>
+
+<span class="sd">        {</span>
+<span class="sd">            &quot;data-adapt&quot;: &quot;普通&quot;,</span>
+<span class="sd">            &quot;data-atk&quot;: &quot;102&quot;,</span>
+<span class="sd">            &quot;data-birth_place&quot;: &quot;未公开&quot;,</span>
+<span class="sd">            &quot;data-block&quot;: &quot;1&quot;,</span>
+<span class="sd">            &quot;data-cost&quot;: &quot;3&quot;,</span>
+<span class="sd">            &quot;data-def&quot;: &quot;28&quot;,</span>
+<span class="sd">            &quot;data-en&quot;: &quot;U-Official&quot;,</span>
+<span class="sd">            &quot;data-flex&quot;: &quot;缺陷&quot;,</span>
+<span class="sd">            &quot;data-group&quot;: &quot;&quot;,</span>
+<span class="sd">            &quot;data-hp&quot;: &quot;385&quot;,</span>
+<span class="sd">            &quot;data-id&quot;: &quot;U007&quot;,</span>
+<span class="sd">            &quot;data-interval&quot;: &quot;1.3s&quot;,</span>
+<span class="sd">            &quot;data-ja&quot;: &quot;&quot;,</span>
+<span class="sd">            &quot;data-logo&quot;: &quot;罗德岛&quot;,</span>
+<span class="sd">            &quot;data-nation&quot;: &quot;罗德岛&quot;,</span>
+<span class="sd">            &quot;data-obtain_method&quot;: &quot;活动获得&quot;,</span>
+<span class="sd">            &quot;data-phy&quot;: &quot;普通&quot;,</span>
+<span class="sd">            &quot;data-plan&quot;: &quot;缺陷&quot;,</span>
+<span class="sd">            &quot;data-position&quot;: &quot;远程位&quot;,</span>
+<span class="sd">            &quot;data-potential&quot;: &quot;`&quot;,</span>
+<span class="sd">            &quot;data-profession&quot;: &quot;辅助&quot;,</span>
+<span class="sd">            &quot;data-race&quot;: &quot;札拉克&quot;,</span>
+<span class="sd">            &quot;data-rarity&quot;: &quot;0&quot;,</span>
+<span class="sd">            &quot;data-re_deploy&quot;: &quot;200s&quot;,</span>
+<span class="sd">            &quot;data-res&quot;: &quot;0&quot;,</span>
+<span class="sd">            &quot;data-sex&quot;: &quot;女&quot;,</span>
+<span class="sd">            &quot;data-skill&quot;: &quot;缺陷&quot;,</span>
+<span class="sd">            &quot;data-sortid&quot;: &quot;274&quot;,</span>
+<span class="sd">            &quot;data-subprofession&quot;: &quot;吟游者&quot;,</span>
+<span class="sd">            &quot;data-tag&quot;: &quot;控场&quot;,</span>
+<span class="sd">            &quot;data-team&quot;: &quot;&quot;,</span>
+<span class="sd">            &quot;data-tolerance&quot;: &quot;普通&quot;,</span>
+<span class="sd">            &quot;data-trust&quot;: &quot;120,20,0&quot;,</span>
+<span class="sd">            &quot;data-zh&quot;: &quot;U-Official&quot;</span>
+<span class="sd">        }</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">__game_name__</span> <span class="o">=</span> <span class="s1">&#39;arknights&#39;</span>
+    <span class="n">__official_name__</span> <span class="o">=</span> <span class="s1">&#39;Arknights&#39;</span>
+    <span class="n">__cnname_class__</span> <span class="o">=</span> <span class="n">ChineseName</span>
+    <span class="n">__enname_class__</span> <span class="o">=</span> <span class="n">EnglishName</span>
+    <span class="n">__jpname_class__</span> <span class="o">=</span> <span class="n">JapaneseName</span>
+    <span class="n">__alias_name_class__</span> <span class="o">=</span> <span class="n">ChineseAliasName</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a character with the raw data.</span>
+
+<span class="sd">        :param raw_data: The raw data of the character.</span>
+<span class="sd">        :type raw_data: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__origin_raw_data</span> <span class="o">=</span> <span class="n">raw_data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span> <span class="o">=</span> <span class="n">raw_data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__skins</span> <span class="o">=</span> <span class="n">raw_data</span><span class="p">[</span><span class="s1">&#39;skins&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__is_extra</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data-index&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data-id&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_gender</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="p">[</span><span class="s1">&#39;data-sex&#39;</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">rarity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Rarity</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the rarity of the character.</span>
+
+<span class="sd">        :return: The rarity of the character.</span>
+<span class="sd">        :rtype: Rarity</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Rarity</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="p">[</span><span class="s1">&#39;data-rarity&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">clazz</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Clazz</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the class of the character.</span>
+
+<span class="sd">        :return: The class of the character.</span>
+<span class="sd">        :rtype: Clazz</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Clazz</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data-class&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data-profession&#39;</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_cnname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data-cn&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data-zh&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_enname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data-en&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_jpname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data-jp&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data-ja&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_custom_alias_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__origin_raw_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;alias&#39;</span><span class="p">,</span> <span class="p">[])</span> <span class="ow">or</span> <span class="p">[])</span>
+
+    <span class="k">def</span> <span class="nf">_skins</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+        <span class="k">return</span> <span class="p">[(</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">])</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__skins</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;data-&#39;</span> <span class="o">+</span> <span class="n">item</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">_KNOWN_DATA_FIELDS</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">object</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_is_extra</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">enname</span> <span class="ow">and</span> <span class="s1">&#39;the&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">enname</span><span class="p">)</span> <span class="ow">or</span> \
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">enname</span> <span class="o">==</span> <span class="s1">&#39;amiya&#39;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">cnname</span> <span class="o">!=</span> <span class="s1">&#39;阿米娅&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_order</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">release_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__origin_raw_data</span><span class="p">[</span><span class="s1">&#39;release&#39;</span><span class="p">]</span>
+        <span class="n">_release_time</span> <span class="o">=</span> <span class="n">release_info</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">release_info</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">math</span><span class="o">.</span><span class="n">inf</span>
+        <span class="n">_release_index</span> <span class="o">=</span> <span class="n">release_info</span><span class="p">[</span><span class="s1">&#39;index&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">release_info</span><span class="p">[</span><span class="s1">&#39;index&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">math</span><span class="o">.</span><span class="n">inf</span>
+        <span class="k">return</span> <span class="n">_release_time</span><span class="p">,</span> <span class="n">_release_index</span>
+
+    <span class="k">def</span> <span class="nf">_release_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">_release_time</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_order</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">_release_time</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&lt;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="si">}</span><span class="s1"> - </span><span class="si">{</span><span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_names</span><span class="p">()))</span><span class="si">}</span><span class="s1">, &#39;</span> \
+               <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">gender</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rarity</span><span class="si">}{</span><span class="s2">&quot;*&quot;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">rarity</span><span class="si">}</span><span class="s1">&gt;&#39;</span></div>
+</pre></div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2023, narugo1992
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+    <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: main
+    <span class="fa fa-caret-down"></span>
+  </span>
+        <div class="rst-other-versions">
+                <dl>
+                    <dt>Branches</dt>
+                        <dd><a href="character.html">main</a></dd>
+                </dl>
+        </div>
+    </div>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

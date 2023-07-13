@@ -1,0 +1,536 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gchar.games.arknights &mdash; gchar 0.0.10 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="gchar.games.azurlane" href="azurlane.html" />
+    <link rel="prev" title="gchar.games" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> gchar
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.10
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/installation/index.html">Installation</a></li>
+</ul>
+<p><span class="caption-text">API Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html">gchar.config</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">gchar.games</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">gchar.games.arknights</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#character">Character</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#englishname">EnglishName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#japanesename">JapaneseName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#chinesename">ChineseName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#chinesealiasname">ChineseAliasName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rarity">Rarity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#clazz">Clazz</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="azurlane.html">gchar.games.azurlane</a></li>
+<li class="toctree-l2"><a class="reference internal" href="base.html">gchar.games.base</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../utils/index.html">gchar.utils</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">gchar</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">gchar.games</a> &raquo;</li>
+        
+      <li>gchar.games.arknights</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/api_doc/games/arknights.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+    
+    
+  <section id="module-gchar.games.arknights">
+<span id="gchar-games-arknights"></span><h1>gchar.games.arknights<a class="headerlink" href="#module-gchar.games.arknights" title="Permalink to this headline">¶</a></h1>
+<section id="character">
+<h2>Character<a class="headerlink" href="#character" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gchar.games.arknights.Character">
+<em class="property">class </em><code class="sig-prename descclassname">gchar.games.arknights.</code><code class="sig-name descname">Character</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">raw_data</span><span class="p">:</span> <span class="n">dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/arknights/character.html#Character"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.arknights.Character" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class for modeling characters in the Arknights game.</p>
+<p>Here is an example of operator data from prts.wiki</p>
+<div class="highlight-json notranslate"><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span></pre></div></td><td class="code"><div><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;data-adapt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;普通&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data-atk&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;102&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data-birth_place&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;未公开&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data-block&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data-cost&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;3&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data-def&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;28&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data-en&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;U-Official&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data-flex&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;缺陷&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data-group&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data-hp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;385&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data-id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;U007&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data-interval&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.3s&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data-ja&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data-logo&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;罗德岛&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data-nation&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;罗德岛&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data-obtain_method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;活动获得&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data-phy&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;普通&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data-plan&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;缺陷&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data-position&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;远程位&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data-potential&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;`&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data-profession&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;辅助&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data-race&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;札拉克&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data-rarity&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data-re_deploy&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;200s&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data-res&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data-sex&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;女&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data-skill&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;缺陷&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data-sortid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;274&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data-subprofession&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;吟游者&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data-tag&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;控场&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data-team&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data-tolerance&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;普通&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data-trust&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;120,20,0&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data-zh&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;U-Official&quot;</span>
+<span class="p">}</span>
+</pre></div></td></tr></table></div>
+</div>
+<dl class="py method">
+<dt id="gchar.games.arknights.Character.clazz">
+<em class="property">property </em><code class="sig-name descname">clazz</code><a class="headerlink" href="#gchar.games.arknights.Character.clazz" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the class of the character.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The class of the character.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#gchar.games.arknights.Clazz" title="gchar.games.arknights.Clazz">Clazz</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gchar.games.arknights.Character.rarity">
+<em class="property">property </em><code class="sig-name descname">rarity</code><a class="headerlink" href="#gchar.games.arknights.Character.rarity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the rarity of the character.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The rarity of the character.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#gchar.games.arknights.Rarity" title="gchar.games.arknights.Rarity">Rarity</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="englishname">
+<h2>EnglishName<a class="headerlink" href="#englishname" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gchar.games.arknights.EnglishName">
+<em class="property">class </em><code class="sig-prename descclassname">gchar.games.arknights.</code><code class="sig-name descname">EnglishName</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>List<span class="p">[</span>str<span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/arknights/name.html#EnglishName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.arknights.EnglishName" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class for modeling English names of characters in the Arknights game.</p>
+</dd></dl>
+
+</section>
+<section id="japanesename">
+<h2>JapaneseName<a class="headerlink" href="#japanesename" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gchar.games.arknights.JapaneseName">
+<em class="property">class </em><code class="sig-prename descclassname">gchar.games.arknights.</code><code class="sig-name descname">JapaneseName</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/arknights/name.html#JapaneseName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.arknights.JapaneseName" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class for modeling Japanese names of characters in the Arknights game.</p>
+</dd></dl>
+
+</section>
+<section id="chinesename">
+<h2>ChineseName<a class="headerlink" href="#chinesename" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gchar.games.arknights.ChineseName">
+<em class="property">class </em><code class="sig-prename descclassname">gchar.games.arknights.</code><code class="sig-name descname">ChineseName</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/arknights/name.html#ChineseName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.arknights.ChineseName" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class for modeling Chinese names of characters in the Arknights game.</p>
+</dd></dl>
+
+</section>
+<section id="chinesealiasname">
+<h2>ChineseAliasName<a class="headerlink" href="#chinesealiasname" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gchar.games.arknights.ChineseAliasName">
+<em class="property">class </em><code class="sig-prename descclassname">gchar.games.arknights.</code><code class="sig-name descname">ChineseAliasName</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/arknights/name.html#ChineseAliasName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.arknights.ChineseAliasName" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class for modeling Chinese alias names of characters in the Arknights game.</p>
+</dd></dl>
+
+</section>
+<section id="rarity">
+<h2>Rarity<a class="headerlink" href="#rarity" title="Permalink to this headline">¶</a></h2>
+<dl class="py class enum">
+<dt id="gchar.games.arknights.Rarity">
+<em class="property">enum </em><code class="sig-prename descclassname">gchar.games.arknights.</code><code class="sig-name descname">Rarity</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/arknights/property.html#Rarity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.arknights.Rarity" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class for modeling the rarity of characters in the Arknights game.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Member Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
+</dd>
+</dl>
+<p>Valid values are as follows:</p>
+<dl class="py attribute">
+<dt id="gchar.games.arknights.Rarity.ONE">
+<code class="sig-name descname">ONE</code><em class="property"> = &lt;Rarity.ONE: 1&gt;</em><a class="headerlink" href="#gchar.games.arknights.Rarity.ONE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.arknights.Rarity.TWO">
+<code class="sig-name descname">TWO</code><em class="property"> = &lt;Rarity.TWO: 2&gt;</em><a class="headerlink" href="#gchar.games.arknights.Rarity.TWO" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.arknights.Rarity.THREE">
+<code class="sig-name descname">THREE</code><em class="property"> = &lt;Rarity.THREE: 3&gt;</em><a class="headerlink" href="#gchar.games.arknights.Rarity.THREE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.arknights.Rarity.FOUR">
+<code class="sig-name descname">FOUR</code><em class="property"> = &lt;Rarity.FOUR: 4&gt;</em><a class="headerlink" href="#gchar.games.arknights.Rarity.FOUR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.arknights.Rarity.FIVE">
+<code class="sig-name descname">FIVE</code><em class="property"> = &lt;Rarity.FIVE: 5&gt;</em><a class="headerlink" href="#gchar.games.arknights.Rarity.FIVE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.arknights.Rarity.SIX">
+<code class="sig-name descname">SIX</code><em class="property"> = &lt;Rarity.SIX: 6&gt;</em><a class="headerlink" href="#gchar.games.arknights.Rarity.SIX" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code> and its members also have the following methods:</p>
+<dl class="py method">
+<dt id="gchar.games.arknights.Rarity.loads">
+<em class="property">classmethod </em><code class="sig-name descname">loads</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val</span></em><span class="sig-paren">)</span> &#x2192; gchar.games.arknights.property.Rarity<a class="reference internal" href="../../_modules/gchar/games/arknights/property.html#Rarity.loads"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.arknights.Rarity.loads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the rarity from a value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>val</strong> (<em>int</em>) – The value representing the rarity.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The rarity enum.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#gchar.games.arknights.Rarity" title="gchar.games.arknights.Rarity">Rarity</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If the value is invalid.</p></li>
+<li><p><strong>TypeError</strong> – If the type of the value is invalid.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="clazz">
+<h2>Clazz<a class="headerlink" href="#clazz" title="Permalink to this headline">¶</a></h2>
+<dl class="py class enum">
+<dt id="gchar.games.arknights.Clazz">
+<em class="property">enum </em><code class="sig-prename descclassname">gchar.games.arknights.</code><code class="sig-name descname">Clazz</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/arknights/property.html#Clazz"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.arknights.Clazz" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class for modeling the class of characters in the Arknights game.</p>
+<p>Valid values are as follows:</p>
+<dl class="py attribute">
+<dt id="gchar.games.arknights.Clazz.GUARD">
+<code class="sig-name descname">GUARD</code><em class="property"> = &lt;Clazz.GUARD: 1&gt;</em><a class="headerlink" href="#gchar.games.arknights.Clazz.GUARD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.arknights.Clazz.DEFENDER">
+<code class="sig-name descname">DEFENDER</code><em class="property"> = &lt;Clazz.DEFENDER: 2&gt;</em><a class="headerlink" href="#gchar.games.arknights.Clazz.DEFENDER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.arknights.Clazz.CASTER">
+<code class="sig-name descname">CASTER</code><em class="property"> = &lt;Clazz.CASTER: 3&gt;</em><a class="headerlink" href="#gchar.games.arknights.Clazz.CASTER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.arknights.Clazz.SNIPER">
+<code class="sig-name descname">SNIPER</code><em class="property"> = &lt;Clazz.SNIPER: 4&gt;</em><a class="headerlink" href="#gchar.games.arknights.Clazz.SNIPER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.arknights.Clazz.SPECIALIST">
+<code class="sig-name descname">SPECIALIST</code><em class="property"> = &lt;Clazz.SPECIALIST: 5&gt;</em><a class="headerlink" href="#gchar.games.arknights.Clazz.SPECIALIST" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.arknights.Clazz.SUPPORTER">
+<code class="sig-name descname">SUPPORTER</code><em class="property"> = &lt;Clazz.SUPPORTER: 6&gt;</em><a class="headerlink" href="#gchar.games.arknights.Clazz.SUPPORTER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.arknights.Clazz.MEDIC">
+<code class="sig-name descname">MEDIC</code><em class="property"> = &lt;Clazz.MEDIC: 7&gt;</em><a class="headerlink" href="#gchar.games.arknights.Clazz.MEDIC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.arknights.Clazz.VANGUARD">
+<code class="sig-name descname">VANGUARD</code><em class="property"> = &lt;Clazz.VANGUARD: 8&gt;</em><a class="headerlink" href="#gchar.games.arknights.Clazz.VANGUARD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code> and its members also have the following methods:</p>
+<dl class="py method">
+<dt id="gchar.games.arknights.Clazz.loads">
+<em class="property">classmethod </em><code class="sig-name descname">loads</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val</span></em><span class="sig-paren">)</span> &#x2192; gchar.games.arknights.property.Clazz<a class="reference internal" href="../../_modules/gchar/games/arknights/property.html#Clazz.loads"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.arknights.Clazz.loads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the class from a value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>val</strong> (<em>str</em>) – The value representing the class.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The class enum.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#gchar.games.arknights.Clazz" title="gchar.games.arknights.Clazz">Clazz</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If the value is invalid.</p></li>
+<li><p><strong>TypeError</strong> – If the type of the value is invalid.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="azurlane.html" class="btn btn-neutral float-right" title="gchar.games.azurlane" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="gchar.games" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2023, narugo1992
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+    <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: main
+    <span class="fa fa-caret-down"></span>
+  </span>
+        <div class="rst-other-versions">
+                <dl>
+                    <dt>Branches</dt>
+                        <dd><a href="arknights.html">main</a></dd>
+                </dl>
+        </div>
+    </div>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

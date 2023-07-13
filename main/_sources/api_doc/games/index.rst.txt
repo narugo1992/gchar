@@ -8,5 +8,7 @@ gchar.games
 .. toctree::
     :maxdepth: 3
 
+    arknights
+    azurlane
     base
 
