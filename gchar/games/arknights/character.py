@@ -1,9 +1,8 @@
+import math
 from typing import List, Tuple
 
-import math
-
 from .name import EnglishName, JapaneseName, ChineseName, ChineseAliasName
-from .property import Level, Clazz
+from .property import Rarity, Clazz
 from ..base import Character as _BaseCharacter
 
 _KNOWN_DATA_FIELDS = [
@@ -18,11 +17,12 @@ _KNOWN_DATA_FIELDS = [
 
 class Character(_BaseCharacter):
     """
+    A class for modeling characters in the Arknights game.
+
     Here is an example of operator data from prts.wiki
 
-    .. code-block::
+    .. code-block:: json
         :linenos:
-        :language: text
 
         {
             "data-adapt": "普通",
@@ -69,6 +69,12 @@ class Character(_BaseCharacter):
     __alias_name_class__ = ChineseAliasName
 
     def __init__(self, raw_data: dict):
+        """
+        Initialize a character with the raw data.
+
+        :param raw_data: The raw data of the character.
+        :type raw_data: dict
+        """
         self.__origin_raw_data = raw_data
         self.__raw_data = raw_data['data']
         self.__skins = raw_data['skins']
@@ -81,11 +87,23 @@ class Character(_BaseCharacter):
         return self.__raw_data['data-sex']
 
     @property
-    def rarity(self) -> Level:
-        return Level.loads(int(self.__raw_data['data-rarity']) + 1)
+    def rarity(self) -> Rarity:
+        """
+        Get the rarity of the character.
+
+        :return: The rarity of the character.
+        :rtype: Rarity
+        """
+        return Rarity.loads(int(self.__raw_data['data-rarity']) + 1)
 
     @property
     def clazz(self) -> Clazz:
+        """
+        Get the class of the character.
+
+        :return: The class of the character.
+        :rtype: Clazz
+        """
         return Clazz.loads(self.__raw_data.get('data-class') or self.__raw_data.get('data-profession'))
 
     def _cnname(self):

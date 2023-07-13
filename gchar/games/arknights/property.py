@@ -2,7 +2,11 @@ from enum import IntEnum, unique, Enum
 
 
 @unique
-class Level(IntEnum):
+class Rarity(IntEnum):
+    """
+    A class for modeling the rarity of characters in the Arknights game.
+    """
+
     ONE = 0x1
     TWO = 0x2
     THREE = 0x3
@@ -11,21 +15,35 @@ class Level(IntEnum):
     SIX = 0x6
 
     @classmethod
-    def loads(cls, val) -> 'Level':
+    def loads(cls, val) -> 'Rarity':
+        """
+        Load the rarity from a value.
+
+        :param val: The value representing the rarity.
+        :type val: int
+        :returns: The rarity enum.
+        :rtype: Rarity
+        :raises ValueError: If the value is invalid.
+        :raises TypeError: If the type of the value is invalid.
+        """
         if isinstance(val, cls):
             return val
         elif isinstance(val, int):
             for name, item in cls.__members__.items():
                 if item.value == val:
-                    return item.value
+                    return item
 
-            raise ValueError(f'Invalid level value - {val!r}.')
+            raise ValueError(f'Invalid rarity value - {val!r}.')
         else:
-            raise TypeError(f'Invalid level type - {val!r}.')
+            raise TypeError(f'Invalid rarity type - {val!r}.')
 
 
 @unique
 class Clazz(Enum):
+    """
+    A class for modeling the class of characters in the Arknights game.
+    """
+
     GUARD = 0x1
     DEFENDER = 0x2
     CASTER = 0x3
@@ -46,6 +64,16 @@ class Clazz(Enum):
 
     @classmethod
     def loads(cls, val) -> 'Clazz':
+        """
+        Load the class from a value.
+
+        :param val: The value representing the class.
+        :type val: str
+        :returns: The class enum.
+        :rtype: Clazz
+        :raises ValueError: If the value is invalid.
+        :raises TypeError: If the type of the value is invalid.
+        """
         if isinstance(val, cls):
             return val
         elif isinstance(val, str):

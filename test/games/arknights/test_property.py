@@ -1,21 +1,21 @@
 import pytest
 
-from gchar.games.arknights import Level, Clazz
+from gchar.games.arknights import Rarity, Clazz
 
 
 @pytest.mark.unittest
 class TestGamesArknightsProperty:
     def test_level(self):
-        assert Level.loads(6) == 6
-        assert Level.loads(Level.FOUR) == 4
+        assert Rarity.loads(6) == 6
+        assert Rarity.loads(Rarity.FOUR) == 4
         with pytest.raises(TypeError):
-            _ = Level.loads(None)
+            _ = Rarity.loads(None)
         with pytest.raises(ValueError):
-            _ = Level.loads(20)
+            _ = Rarity.loads(20)
 
-        assert Level.SIX == 6
-        assert Level.ONE == 1
-        assert 3 < Level.FOUR < 5
+        assert Rarity.SIX == 6
+        assert Rarity.ONE == 1
+        assert 3 < Rarity.FOUR < 5
 
     def test_clazz(self):
         assert Clazz.VANGUARD == 'vanguard'

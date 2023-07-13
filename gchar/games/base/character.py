@@ -28,7 +28,7 @@ class Character(Comparable):
     It also provides class methods for retrieving and listing characters.
 
     Usage:
-    - Inherit from the Character class and implement the required methods to customize the character model.
+    - Inherit from the gchar.games.base.Character class and implement the required methods to customize the character model.
 
     :var __repository__: The repository name for the character data.
     :var __game_name__: The name of the game.
@@ -97,7 +97,7 @@ class Character(Comparable):
         Get the Chinese name of the character.
 
         :returns: The Chinese name of the character.
-        :rtype: ChineseName
+        :rtype: gchar.games.base.ChineseName
         """
         cnname = self._cnname()
         return self.__cnname_class__(cnname) if cnname else None
@@ -108,7 +108,7 @@ class Character(Comparable):
         Get additional Chinese names of the character.
 
         :returns: The additional Chinese names of the character.
-        :rtype: List[ChineseName]
+        :rtype: List[gchar.games.base.ChineseName]
         """
         names = [self.__cnname_class__(name) for name in self._cnnames() if name]
         return [name for name in names if name]
@@ -142,7 +142,7 @@ class Character(Comparable):
         Get the Japanese name of the character.
 
         :returns: The Japanese name of the character.
-        :rtype: JapaneseName
+        :rtype: gchar.games.base.JapaneseName
         """
         jpname = self._jpname()
         return self.__jpname_class__(jpname) if jpname else None
@@ -153,7 +153,7 @@ class Character(Comparable):
         Get additional Japanese names of the character.
 
         :returns: The additional Japanese names of the character.
-        :rtype: List[JapaneseName]
+        :rtype: List[gchar.games.base.JapaneseName]
         """
         names = [self.__jpname_class__(name) for name in self._jpnames() if name]
         return [name for name in names if name]
@@ -187,7 +187,7 @@ class Character(Comparable):
         Get the English name of the character.
 
         :returns: The English name of the character.
-        :rtype: EnglishName
+        :rtype: gchar.games.base.EnglishName
         """
         enname = self._enname()
         return self.__enname_class__(enname) if enname else None
@@ -198,7 +198,7 @@ class Character(Comparable):
         Get additional English names of the character.
 
         :returns: The additional English names of the character.
-        :rtype: List[EnglishName]
+        :rtype: List[gchar.games.base.EnglishName]
         """
         names = [self.__enname_class__(name) for name in self._ennames() if name]
         return [name for name in names if name]
@@ -231,7 +231,7 @@ class Character(Comparable):
         Get all alias names of the character.
 
         :returns: The alias names of the character.
-        :rtype: List[Union[ChineseName, GenericAliasName]]
+        :rtype: List[Union[gchar.games.base.ChineseName, gchar.games.base.GenericAliasName]]
         """
         return [
             *(self.__alias_name_class__(name) for name in self._custom_alias_names()),
@@ -245,7 +245,7 @@ class Character(Comparable):
         This method should be implemented by the subclasses.
 
         :returns: The names of the character.
-        :rtype: List[_BaseName]
+        :rtype: List[_gchar.games.base.BaseName]
         """
         return [*self.cnnames, *self.ennames, *self.jpnames]
 
@@ -368,7 +368,7 @@ class Character(Comparable):
         Compare the character with another character or a name.
 
         :param other: The character or name to compare.
-        :type other: Union[Character, str]
+        :type other: Union[gchar.games.base.Character, str]
         :returns: True if the character is equal to the other character or name, False otherwise.
         :rtype: bool
         """
@@ -388,7 +388,7 @@ class Character(Comparable):
         Compare the character with another character or a name for inequality.
 
         :param other: The character or name to compare.
-        :type other: Union[Character, str]
+        :type other: Union[gchar.games.base.Character, str]
         :returns: True if the character is not equal to the other character or name, False otherwise.
         :rtype: bool
         """
@@ -444,7 +444,7 @@ class Character(Comparable):
         :param contains_extra: Whether to include extra characters in the result.
         :type contains_extra: bool
         :returns: All characters.
-        :rtype: List[Character]
+        :rtype: List[gchar.games.base.Character]
         """
         all_chs = [cls(data) for data in cls._get_index()]
         chs = [ch for ch in all_chs if contains_extra or not ch.is_extra]
@@ -460,7 +460,7 @@ class Character(Comparable):
         :param sorted: Whether to sort the characters by order.
         :type sorted: bool
         :returns: All characters.
-        :rtype: List[Character]
+        :rtype: List[gchar.games.base.Character]
         """
         chs = cls._simple_all(contains_extra)
         if sorted:
@@ -476,7 +476,7 @@ class Character(Comparable):
         :param name: The name of the character.
         :type name: str
         :returns: The character with the given name, or None if not found.
-        :rtype: Optional[Character]
+        :rtype: Optional[gchar.games.base.Character]
         """
         for item in cls._simple_all(**kwargs):
             if item == name:
@@ -490,9 +490,9 @@ def _yield_all_characters(ch: Union[Character, list, tuple, Type[Character]], **
     Helper function to recursively yield all characters.
 
     :param ch: The character or list of characters.
-    :type ch: Union[Character, list, tuple, Type[Character]]
+    :type ch: Union[gchar.games.base.Character, list, tuple, Type[gchar.games.base.Character]]
     :returns: An iterator over all characters.
-    :rtype: Iterator[Character]
+    :rtype: Iterator[gchar.games.base.Character]
     """
     if isinstance(ch, Character):
         yield ch
@@ -508,10 +508,10 @@ def list_all_characters(*chs: Union[Character, list, tuple, Type[Character]], **
     List all characters.
 
     :param chs: The characters or lists of characters.
-    :type chs: Union[Character, list, tuple, Type[Character]]
+    :type chs: Union[gchar.games.base.Character, list, tuple, Type[gchar.games.base.Character]]
     :param contains_extra: Whether to include extra characters in the result.
     :type contains_extra: bool
     :returns: All characters.
-    :rtype: List[Character]
+    :rtype: List[gchar.games.base.Character]
     """
     return list(_yield_all_characters(chs, **kwargs))

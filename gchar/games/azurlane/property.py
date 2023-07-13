@@ -3,6 +3,10 @@ from enum import unique, IntEnum, Enum
 
 @unique
 class Group(Enum):
+    """
+    An enumeration representing the groups in the Azur Lane game.
+    """
+
     USS = 0x1
     HMS = 0x2
     IJN = 0x3
@@ -24,6 +28,14 @@ class Group(Enum):
 
     @classmethod
     def loads(cls, val) -> 'Group':
+        """
+        Load a Group value from a string or an int.
+
+        :param val: The value to load.
+        :type val: Union[str, int]
+        :return: The loaded Group value.
+        :rtype: Group
+        """
         if isinstance(val, cls):
             return val
         elif isinstance(val, str):
@@ -53,6 +65,10 @@ class Group(Enum):
 
 @unique
 class BasicRarity(IntEnum):
+    """
+    An enumeration representing the basic rarity levels in the Azur Lane game.
+    """
+
     COMMON = 0x1
     RARE = 0x2
     ELITE = 0x3
@@ -61,6 +77,12 @@ class BasicRarity(IntEnum):
 
     @property
     def label(self) -> str:
+        """
+        Get the label corresponding to the rarity level.
+
+        :return: The label of the rarity level.
+        :rtype: str
+        """
         if self == self.COMMON:
             return '普通'
         elif self == self.RARE:
@@ -88,6 +110,14 @@ class BasicRarity(IntEnum):
 
     @classmethod
     def loads(cls, val) -> 'BasicRarity':
+        """
+        Load a BasicRarity value from a string or an int.
+
+        :param val: The value to load.
+        :type val: Union[str, int]
+        :return: The loaded BasicRarity value.
+        :rtype: BasicRarity
+        """
         if isinstance(val, cls):
             return val
         elif isinstance(val, int):
@@ -115,11 +145,21 @@ class BasicRarity(IntEnum):
 
 @unique
 class ResearchRarity(IntEnum):
+    """
+    An enumeration representing the research rarity levels in the Azur Lane game.
+    """
+
     TOP = 0x4
     DECISIVE = 0x5
 
     @property
     def label(self) -> str:
+        """
+        Get the label corresponding to the research rarity level.
+
+        :return: The label of the research rarity level.
+        :rtype: str
+        """
         if self == self.TOP:
             return '最高方案'
         elif self == self.DECISIVE:
@@ -141,6 +181,14 @@ class ResearchRarity(IntEnum):
 
     @classmethod
     def loads(cls, val) -> 'ResearchRarity':
+        """
+        Load a ResearchRarity value from a string or an int.
+
+        :param val: The value to load.
+        :type val: Union[str, int]
+        :return: The loaded ResearchRarity value.
+        :rtype: ResearchRarity
+        """
         if isinstance(val, cls):
             return val
         elif isinstance(val, int):
