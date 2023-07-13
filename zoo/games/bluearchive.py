@@ -107,11 +107,19 @@ class BlueArchiveIndexer(GameIndexer):
             "game-id": "0",
         })
         data = resp.json()
-        ch_list = data['data']['entry_list'][4]
-        assert ch_list['name'] == "学生图鉴"
+        for chitem in data['data']['entry_list']:
+            if chitem['name'] == "学生图鉴":
+                ch_list = chitem
+                break
+        else:
+            assert False, '学生图鉴 not found.'
 
-        ch_all = ch_list['child'][2]
-        assert ch_all['name'] == "所有学生"
+        for chitem in ch_list['child']:
+            if chitem['name'] == "所有学生":
+                ch_all = chitem
+                break
+        else:
+            assert False, '所有学生 not found.'
 
         items = []
         for ch_info in tqdm(ch_all['child']):

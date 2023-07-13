@@ -88,10 +88,10 @@ class PixivTagCrawler(ParallelTagCrawler):
             )
 
             for item in data:
-                if item['name'] not in record_categories:
-                    record_categories[item['name']] = []
-                record_categories[item['name']].append(category)
-                record_items[item['name']] = item
+                if item[self.__id_key__] not in record_categories:
+                    record_categories[item[self.__id_key__]] = []
+                record_categories[item[self.__id_key__]].append(category)
+                record_items[item[self.__id_key__]] = item
 
         retval = []
         for key in sorted(record_items.keys()):
