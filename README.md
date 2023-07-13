@@ -174,6 +174,7 @@ Currently supported sites:
 ## FAQ
 
 Q: How timely is the data?
+
 A: The data is updated approximately once a day and is hosted on Github Action, ensuring its timeliness. In the event of
 a malfunction on the crawled Wiki site that prevents data updates, the corresponding Wiki team will be contacted to
 resolve the issue.
