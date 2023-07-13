@@ -20,4 +20,11 @@ get_pixiv_keywords
 
 
 
+PixivCharPool
+--------------------------------------
+
+.. autoclass:: PixivCharPool
+    :members:
+
+
 

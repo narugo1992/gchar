@@ -18,4 +18,16 @@ SITES = {
 
 
 def list_available_sites() -> List[str]:
+    """
+    List the available supported image website names.
+
+    :return: The list of supported website names.
+    :rtype: List[str]
+
+    Examples::
+        >>> from gchar.resources.sites import list_available_sites
+        >>>
+        >>> list_available_sites()
+        ['anime_pictures', 'atfbooru', 'danbooru', 'hypnohub', 'konachan', 'konachan_net', 'lolibooru', 'rule34', 'safebooru', 'sankaku', 'xbooru', 'yande', 'zerochan']
+    """
     return sorted(SITES.keys())

@@ -11,6 +11,14 @@ from ...utils import optional_lru_cache
 
 
 def _yield_tags(tags: Union[Tuple[str], List[str], str]) -> Iterator[str]:
+    """
+    Yield individual tags from a string or a list of tags.
+
+    :param tags: The tags to yield.
+    :type tags: Union[Tuple[str], List[str], str]
+    :returns: An iterator of individual tags.
+    :rtype: Iterator[str]
+    """
     if isinstance(tags, str):
         for item in re.split(r'\s+', tags):
             if item:
@@ -21,6 +29,18 @@ def _yield_tags(tags: Union[Tuple[str], List[str], str]) -> Iterator[str]:
 
 
 def _format_tags(positive, negative, or_clause=None):
+    """
+    Format the positive and negative tags into a valid Pixiv search tag string.
+
+    :param positive: The positive tags.
+    :type positive: Union[Tuple[str], List[str], str]
+    :param negative: The negative tags.
+    :type negative: Union[Tuple[str], List[str], str]
+    :param or_clause: The OR clause tags.
+    :type or_clause: Optional[Union[Tuple[str], List[str], str]]
+    :returns: The formatted Pixiv search tag string.
+    :rtype: str
+    """
     positive_tags = list(_yield_tags(positive))
     negative_tags = list(_yield_tags(negative))
     or_clause_tags = list(_yield_tags(or_clause or ''))
@@ -53,6 +73,16 @@ class PixivCharPool:
     def __init__(self, chars: Iterable[Character],
                  names_dict: Mapping[str, Tuple[int, float, List[Tuple[str, int]]]],
                  names_alias: Mapping[Union[str, int], List[str]]):
+        """
+        Initialize the Pixiv character pool.
+
+        :param chars: The iterable of Character instances.
+        :type chars: Iterable[Character]
+        :param names_dict: The mapping of character names to their Pixiv data.
+        :type names_dict: Mapping[str, Tuple[int, float, List[Tuple[str, int]]]]
+        :param names_alias: The mapping of character IDs or names to their Pixiv aliases.
+        :type names_alias: Mapping[Union[str, int], List[str]]
+        """
         self.__chars = list(chars)
         self.__names_dict = names_dict
         self.__names_alias = names_alias
@@ -62,9 +92,25 @@ class PixivCharPool:
         )
 
     def __get_name_item(self, name) -> Optional[Tuple[int, float, List[Tuple[str, int]]]]:
+        """
+        Get the Pixiv data for a specific character name.
+
+        :param name: The character name.
+        :type name: str
+        :returns: The Pixiv data tuple.
+        :rtype: Optional[Tuple[int, float, List[Tuple[str, int]]]]
+        """
         return self.__names_dict.get(name, None)
 
     def __get_name_count(self, name) -> int:
+        """
+        Get the count of illustrations for a specific character name.
+
+        :param name: The character name.
+        :type name: str
+        :returns: The count of illustrations.
+        :rtype: int
+        """
         tpl = self.__get_name_item(name)
         if tpl:
             count, _, _ = tpl
@@ -73,6 +119,14 @@ class PixivCharPool:
             return 0
 
     def __get_name_pollution_ratio(self, name) -> float:
+        """
+        Get the pollution ratio for a specific character name.
+
+        :param name: The character name.
+        :type name: str
+        :returns: The pollution ratio.
+        :rtype: float
+        """
         tpl = self.__get_name_item(name)
         if tpl:
             _, ratio, _ = tpl
@@ -81,6 +135,14 @@ class PixivCharPool:
             return 0.0
 
     def __get_name_pollution_words(self, name) -> List[Tuple[str, int]]:
+        """
+        Get the pollution words and their counts for a specific character name.
+
+        :param name: The character name.
+        :type name: str
+        :returns: A list of pollution word-count tuples.
+        :rtype: List[Tuple[str, int]]
+        """
         tpl = self.__get_name_item(name)
         if tpl:
             _, _, pollution = tpl
@@ -89,6 +151,14 @@ class PixivCharPool:
             return []
 
     def _iter_dup_names(self, name: str) -> Iterator[str]:
+        """
+        Iterate over duplicate names that contain the given name.
+
+        :param name: The name to search for.
+        :type name: str
+        :returns: An iterator of duplicate names.
+        :rtype: Iterator[str]
+        """
         for sname in self.__all_names:
             if name != sname and name in sname:
                 yield sname
@@ -96,8 +166,30 @@ class PixivCharPool:
     def get_tag(self, char: Character, use_english: bool = False, positive=None, negative=None,
                 max_exclude_per_word: int = 20, max_exclude: int = 20, max_pollution_ratio: float = 0.8,
                 max_length: int = PIXIV_TAG_MAX_LENGTH):
+        """
+        Generate a Pixiv search tag for a specific character.
+
+        :param char: The character instance or name.
+        :type char: Union[Character, str]
+        :param use_english: Whether to use English names in the tag.
+        :type use_english: bool
+        :param positive: The positive tags to include.
+        :type positive: Optional[Union[Tuple[str], List[str], str]]
+        :param negative: The negative tags to exclude.
+        :type negative: Optional[Union[Tuple[str], List[str], str]]
+        :param max_exclude_per_word: The maximum number of excluded tags per word.
+        :type max_exclude_per_word: int
+        :param max_exclude: The maximum number of excluded tags.
+        :type max_exclude: int
+        :param max_pollution_ratio: The maximum pollution ratio for including tags.
+        :type max_pollution_ratio: float
+        :param max_length: The maximum length of the generated tag.
+        :type max_length: int
+        :returns: The generated Pixiv search tag.
+        :rtype: str
+        """
         if not isinstance(char, Character):
-            raise TypeError(f'Invalid character type - {char!r}.')  # pragma: no cover
+            raise TypeError(f'Invalid character type - {char!r}.')
 
         char_names = [*char.cnnames, *char.jpnames]
         if use_english:
@@ -154,13 +246,33 @@ class PixivCharPool:
                                 max_exclude_per_word, max_exclude, max_pollution_ratio=min_pollution + 0.015)
 
     def _iter_end_dup_names(self, name: str) -> Iterator[str]:
+        """
+        Iterate over names that end with the given name.
+
+        :param name: The name to search for.
+        :type name: str
+        :returns: An iterator of names.
+        :rtype: Iterator[str]
+        """
         for sname in self.__all_names:
             if name != sname and sname.endswith(name):
                 yield sname
 
     def get_simple_tag(self, char: Character, base_tag: str, max_exclude: int = 20):
+        """
+        Generate a simplified Pixiv search tag for a specific character.
+
+        :param char: The character instance.
+        :type char: Character
+        :param base_tag: The base tag to append to the character name.
+        :type base_tag: str
+        :param max_exclude: The maximum number of excluded tags.
+        :type max_exclude: int
+        :returns: The generated simplified Pixiv search tag.
+        :rtype: str
+        """
         if not isinstance(char, Character):
-            raise TypeError(f'Invalid character type - {char!r}.')  # pragma: no cover
+            raise TypeError(f'Invalid character type - {char!r}.')
 
         positive = set()
         negative = set()
@@ -183,6 +295,14 @@ class PixivCharPool:
 
 @optional_lru_cache()
 def _get_char_pool(cls: Type[Character], **kwargs):
+    """
+    Get the Pixiv character pool for a specific character class.
+
+    :param cls: The character class.
+    :type cls: Type[Character]
+    :returns: The PixivCharPool instance.
+    :rtype: PixivCharPool
+    """
     names_dict = _load_pixiv_names_for_game(cls)
     names_alias = _load_pixiv_alias_for_game(cls)
     return PixivCharPool(cls.all(**kwargs), names_dict, names_alias)
@@ -192,6 +312,43 @@ def get_pixiv_keywords(char: Union[Character, str], simple: bool = False, use_en
                        includes=None, exclude=None,
                        allow_fuzzy: bool = True, fuzzy_threshold: int = 70, max_exclude: int = 20,
                        max_pollution_ratio: float = 0.8, max_length: int = PIXIV_TAG_MAX_LENGTH, **kwargs):
+    """
+    Get the Pixiv search keywords for a specific character.
+
+    :param char: The character instance or name.
+    :type char: Union[Character, str]
+    :param simple: Whether to generate a simplified tag.
+    :type simple: bool
+    :param use_english: Whether to use English names in the tag.
+    :type use_english: bool
+    :param includes: The positive tags to include.
+    :type includes: Optional[Union[Tuple[str], List[str], str]]
+    :param exclude: The negative tags to exclude.
+    :type exclude: Optional[Union[Tuple[str], List[str], str]]
+    :param allow_fuzzy: Whether to allow fuzzy matching of character names.
+    :type allow_fuzzy: bool
+    :param fuzzy_threshold: The threshold for fuzzy matching.
+    :type fuzzy_threshold: int
+    :param max_exclude: The maximum number of excluded tags.
+    :type max_exclude: int
+    :param max_pollution_ratio: The maximum pollution ratio for including tags.
+    :type max_pollution_ratio: float
+    :param max_length: The maximum length of the generated tag.
+    :type max_length: int
+    :returns: The generated Pixiv search keywords.
+    :rtype: str
+    :raises ValueError: If the character is unknown.
+
+    Examples::
+        >>> from gchar.resources.pixiv import get_pixiv_keywords
+        >>>
+        >>> get_pixiv_keywords('amiya')
+        'アークナイツ (amiya OR アーミヤ OR 阿米娅)'
+        >>> get_pixiv_keywords('surtr')
+        'アークナイツ (surtr OR スルト OR 史尔特尔) -明日方舟スルト'
+        >>> get_pixiv_keywords('dusk')  # ケルシー and ドロシー way cause search noises
+        'アークナイツ (dusk OR シー OR 夕) -ケルシー -シージ -シーン -ドロシー -ルーシー -夕張 -夕日 -夕焼け'
+    """
     original_char = char
     if not isinstance(char, Character):
         char = get_character(char, allow_fuzzy, fuzzy_threshold, **kwargs)
