@@ -19,7 +19,7 @@ def _parse_int(x):
 
 
 class PixivTagCrawler(ParallelTagCrawler):
-    __max_workers__ = 12
+    __max_workers__ = 24
     __id_key__ = 'name'
     __init_page__ = 1
 
