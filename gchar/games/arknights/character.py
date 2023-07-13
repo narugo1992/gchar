@@ -92,7 +92,7 @@ class Character(_BaseCharacter):
         Get the rarity of the character.
 
         :return: The rarity of the character.
-        :rtype: Rarity
+        :rtype: :class:`Rarity`
         """
         return Rarity.loads(int(self.__raw_data['data-rarity']) + 1)
 

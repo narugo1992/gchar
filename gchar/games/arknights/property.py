@@ -22,7 +22,7 @@ class Rarity(IntEnum):
         :param val: The value representing the rarity.
         :type val: int
         :returns: The rarity enum.
-        :rtype: Rarity
+        :rtype: :class:`Rarity`
         :raises ValueError: If the value is invalid.
         :raises TypeError: If the type of the value is invalid.
         """

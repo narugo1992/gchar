@@ -4,12 +4,26 @@ from enum import IntEnum, unique, Enum
 
 @unique
 class Rarity(IntEnum):
+    """
+    Enum representing the rarity of a character in Blue Archive.
+    """
+
     R = 0x1
     SR = 0x2
     SSR = 0x3
 
     @classmethod
     def loads(cls, val) -> 'Rarity':
+        """
+        Load a rarity value.
+
+        :param val: The rarity value to load.
+        :type val: Union[int, :class:`Rarity`]
+        :return: The loaded rarity.
+        :rtype: :class:`Rarity`
+        :raises ValueError: If the value is invalid.
+        :raises TypeError: If the type is invalid.
+        """
         if isinstance(val, cls):
             return val
         elif isinstance(val, int):
@@ -24,6 +38,10 @@ class Rarity(IntEnum):
 
 @unique
 class WeaponType(Enum):
+    """
+    Enum representing the weapon type of a character in Blue Archive.
+    """
+
     SMG = 'SMG'
     RL = 'RL'
     HG = 'HG'
@@ -38,6 +56,16 @@ class WeaponType(Enum):
 
     @classmethod
     def loads(cls, val) -> 'WeaponType':
+        """
+        Load a weapon type value.
+
+        :param val: The weapon type value to load.
+        :type val: Union[str, WeaponType]
+        :return: The loaded weapon type.
+        :rtype: WeaponType
+        :raises ValueError: If the value is invalid.
+        :raises TypeError: If the type is invalid.
+        """
         if isinstance(val, cls):
             return val
         elif isinstance(val, str):
@@ -61,6 +89,10 @@ class WeaponType(Enum):
 
 @unique
 class Role(Enum):
+    """
+    Enum representing the role of a character in Blue Archive.
+    """
+
     ATTACKER = 'ATTACKER'
     TACTICAL_SUPPORT = 'TACTICAL SUPPORT'
     HEALER = 'HEALER'
@@ -69,6 +101,16 @@ class Role(Enum):
 
     @classmethod
     def loads(cls, val) -> 'Role':
+        """
+        Load a role value.
+
+        :param val: The role value to load.
+        :type val: Union[str, Role]
+        :return: The loaded role.
+        :rtype: Role
+        :raises ValueError: If the value is invalid.
+        :raises TypeError: If the type is invalid.
+        """
         if isinstance(val, cls):
             return val
         elif isinstance(val, str):
@@ -92,12 +134,26 @@ class Role(Enum):
 
 @unique
 class AttackType(Enum):
+    """
+    Enum representing the attack type of a character in Blue Archive.
+    """
+
     PENETRATION = 'PENETRATION'
     EXPLOSIVE = 'EXPLOSIVE'
     MYSTIC = 'MYSTIC'
 
     @classmethod
     def loads(cls, val) -> 'AttackType':
+        """
+        Load an attack type value.
+
+        :param val: The attack type value to load.
+        :type val: Union[str, AttackType]
+        :return: The loaded attack type.
+        :rtype: AttackType
+        :raises ValueError: If the value is invalid.
+        :raises TypeError: If the type is invalid.
+        """
         if isinstance(val, cls):
             return val
         elif isinstance(val, str):
