@@ -11,4 +11,12 @@ gchar.games
     arknights
     azurlane
     base
+    bluearchive
+    fgo
+    genshin
+    girlsfrontline
+    neuralcloud
+    nikke
+    pathtonowhere
+    starrail
 

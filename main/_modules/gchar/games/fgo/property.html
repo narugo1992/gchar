@@ -1,0 +1,333 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gchar.games.fgo.property &mdash; gchar 0.0.10 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> gchar
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.10
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/installation/index.html">Installation</a></li>
+</ul>
+<p><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_doc/config/index.html">gchar.config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_doc/games/index.html">gchar.games</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_doc/utils/index.html">gchar.utils</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">gchar</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>gchar.games.fgo.property</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+    
+    
+  <h1>Source code for gchar.games.fgo.property</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">IntEnum</span><span class="p">,</span> <span class="n">unique</span><span class="p">,</span> <span class="n">Enum</span>
+
+
+<div class="viewcode-block" id="Rarity"><a class="viewcode-back" href="../../../../api_doc/games/fgo.html#gchar.games.fgo.Rarity">[docs]</a><span class="nd">@unique</span>
+<span class="k">class</span> <span class="nc">Rarity</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Enum representing the rarity of FGO characters.</span>
+
+<span class="sd">    :cvar ZERO: Rarity 0</span>
+<span class="sd">    :cvar ONE: Rarity 1</span>
+<span class="sd">    :cvar TWO: Rarity 2</span>
+<span class="sd">    :cvar THREE: Rarity 3</span>
+<span class="sd">    :cvar FOUR: Rarity 4</span>
+<span class="sd">    :cvar FIVE: Rarity 5</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">ZERO</span> <span class="o">=</span> <span class="mh">0x0</span>
+    <span class="n">ONE</span> <span class="o">=</span> <span class="mh">0x1</span>
+    <span class="n">TWO</span> <span class="o">=</span> <span class="mh">0x2</span>
+    <span class="n">THREE</span> <span class="o">=</span> <span class="mh">0x3</span>
+    <span class="n">FOUR</span> <span class="o">=</span> <span class="mh">0x4</span>
+    <span class="n">FIVE</span> <span class="o">=</span> <span class="mh">0x5</span>
+
+<div class="viewcode-block" id="Rarity.loads"><a class="viewcode-back" href="../../../../api_doc/games/fgo.html#gchar.games.fgo.Rarity.loads">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">loads</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Rarity&#39;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load a rarity from a value.</span>
+
+<span class="sd">        :param val: The value to load the rarity from.</span>
+<span class="sd">        :type val: Union[int, :class:`Rarity`]</span>
+<span class="sd">        :returns: The loaded rarity.</span>
+<span class="sd">        :rtype: :class:`Rarity`</span>
+<span class="sd">        :raises ValueError: If the value is invalid.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">val</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__members__</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="n">val</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">item</span><span class="o">.</span><span class="n">value</span>
+
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Invalid level value - </span><span class="si">{</span><span class="n">val</span><span class="si">!r}</span><span class="s1">.&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Invalid level type - </span><span class="si">{</span><span class="n">val</span><span class="si">!r}</span><span class="s1">.&#39;</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="Clazz"><a class="viewcode-back" href="../../../../api_doc/games/fgo.html#gchar.games.fgo.Clazz">[docs]</a><span class="nd">@unique</span>
+<span class="k">class</span> <span class="nc">Clazz</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Enum representing the class of FGO characters.</span>
+
+<span class="sd">    :cvar SABER: Saber class</span>
+<span class="sd">    :cvar LANCER: Lancer class</span>
+<span class="sd">    :cvar ARCHER: Archer class</span>
+<span class="sd">    :cvar RIDER: Rider class</span>
+<span class="sd">    :cvar CASTER: Caster class</span>
+<span class="sd">    :cvar ASSASSIN: Assassin class</span>
+<span class="sd">    :cvar BERSERKER: Berserker class</span>
+<span class="sd">    :cvar AVENGER: Avenger class</span>
+<span class="sd">    :cvar RULER: Ruler class</span>
+<span class="sd">    :cvar MOONCANCER: MoonCancer class</span>
+<span class="sd">    :cvar SHIELDER: Shielder class</span>
+<span class="sd">    :cvar ALTEREGO: AlterEgo class</span>
+<span class="sd">    :cvar PRETENDER: Pretender class</span>
+<span class="sd">    :cvar FOREIGNER: Foreigner class</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">SABER</span> <span class="o">=</span> <span class="mh">0x1</span>
+    <span class="n">LANCER</span> <span class="o">=</span> <span class="mh">0x2</span>
+    <span class="n">ARCHER</span> <span class="o">=</span> <span class="mh">0x3</span>
+    <span class="n">RIDER</span> <span class="o">=</span> <span class="mh">0x4</span>
+    <span class="n">CASTER</span> <span class="o">=</span> <span class="mh">0x5</span>
+    <span class="n">ASSASSIN</span> <span class="o">=</span> <span class="mh">0x6</span>
+    <span class="n">BERSERKER</span> <span class="o">=</span> <span class="mh">0x7</span>
+    <span class="n">AVENGER</span> <span class="o">=</span> <span class="mh">0x8</span>
+    <span class="n">RULER</span> <span class="o">=</span> <span class="mh">0x9</span>
+    <span class="n">MOONCANCER</span> <span class="o">=</span> <span class="mh">0xa</span>
+    <span class="n">SHIELDER</span> <span class="o">=</span> <span class="mh">0xb</span>
+    <span class="n">ALTEREGO</span> <span class="o">=</span> <span class="mh">0xc</span>
+    <span class="n">PRETENDER</span> <span class="o">=</span> <span class="mh">0xd</span>
+    <span class="n">FOREIGNER</span> <span class="o">=</span> <span class="mh">0xe</span>
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compare the class with another class.</span>
+
+<span class="sd">        :param other: The other class to compare.</span>
+<span class="sd">        :type other: Union[:class:`Clazz`, str]</span>
+<span class="sd">        :returns: True if the classes are equal, False otherwise.</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Clazz</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="Clazz.loads"><a class="viewcode-back" href="../../../../api_doc/games/fgo.html#gchar.games.fgo.Clazz.loads">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">loads</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Clazz&#39;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load a class from a value.</span>
+
+<span class="sd">        :param val: The value to load the class from.</span>
+<span class="sd">        :type val: Union[str, :class:`Clazz`]</span>
+<span class="sd">        :returns: The loaded class.</span>
+<span class="sd">        :rtype: :class:`Clazz`</span>
+<span class="sd">        :raises ValueError: If the value is invalid.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">val</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__members__</span><span class="p">[</span><span class="n">val</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Invalid class value - </span><span class="si">{</span><span class="n">val</span><span class="si">!r}</span><span class="s1">.&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Invalid class type - </span><span class="si">{</span><span class="n">val</span><span class="si">!r}</span><span class="s1">.&#39;</span><span class="p">)</span></div></div>
+</pre></div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2023, narugo1992
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+    <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: main
+    <span class="fa fa-caret-down"></span>
+  </span>
+        <div class="rst-other-versions">
+                <dl>
+                    <dt>Branches</dt>
+                        <dd><a href="property.html">main</a></dd>
+                </dl>
+        </div>
+    </div>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
