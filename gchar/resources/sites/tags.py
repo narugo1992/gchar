@@ -6,6 +6,7 @@ from huggingface_hub import hf_hub_download
 
 from gchar.games import get_character
 from gchar.games.base import Character
+from gchar.games.dispatch.access import GAME_CHARS
 from .base import SITES
 
 _AVAIL_SITE_NAMES = set(SITES.keys())
@@ -14,7 +15,7 @@ _AVAIL_SITE_NAMES = set(SITES.keys())
 @lru_cache()
 def _get_tags_for_game_site(game: str, site: str):
     with open(hf_hub_download(
-            'deepghs/game_characters',
+            GAME_CHARS[game].__repository__,
             filename=f'{game}/tags_{SITES[site]}.json',
             repo_type='dataset'
     ), 'r', encoding='utf-8') as f:

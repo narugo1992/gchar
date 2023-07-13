@@ -1,6 +1,6 @@
 from functools import lru_cache
 from itertools import islice
-from typing import Iterator, Tuple, Optional, List, Type
+from typing import Iterator, Tuple, Optional, List, Type, Dict
 
 from thefuzz import fuzz
 
@@ -17,7 +17,7 @@ from ..pathtonowhere import Character as PathToNowhereCharacter
 from ..starrail import Character as StarRailCharacter
 from ...utils import optional_lru_cache
 
-GAME_CHARS = {}
+GAME_CHARS: Dict[str, Type[Character]] = {}
 
 
 def register_game(cls: Type[Character]):

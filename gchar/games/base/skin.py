@@ -23,13 +23,16 @@ def _read_hf_skins_meta(game: str, ch_index: Union[int, str]):
     :returns: A dictionary mapping skin names to their Hugging Face Hub URLs.
     :rtype: dict
     """
-    online_dir = f'datasets/deepghs/game_characters/{game}/{ch_index}'
+    from gchar.games.dispatch.access import GAME_CHARS
+    repository = GAME_CHARS[game].__repository__
+
+    online_dir = f'datasets/{repository}/{game}/{ch_index}'
     meta_file = f'{online_dir}/.meta.json'
     if hf_fs.exists(meta_file):
         raw = json.loads(hf_fs.read_text(meta_file))
         return {
             skin['metadata']['name']: hf_hub_url(
-                'deepghs/game_characters',
+                repository,
                 filename=f'{game}/{ch_index}/{skin["name"]}',
                 repo_type='dataset'
             ) for skin in raw['files']
