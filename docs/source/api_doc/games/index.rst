@@ -8,9 +8,9 @@ gchar.games
 .. toctree::
     :maxdepth: 3
 
+    base
     arknights
     azurlane
-    base
     bluearchive
     fgo
     genshin
@@ -19,4 +19,5 @@ gchar.games
     nikke
     pathtonowhere
     starrail
+    dispatch
 

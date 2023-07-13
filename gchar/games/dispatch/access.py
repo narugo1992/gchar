@@ -21,6 +21,13 @@ GAME_CHARS: Dict[str, Type[Character]] = {}
 
 
 def register_game(cls: Type[Character]):
+    """
+    Register a game and its corresponding character class.
+
+    :param cls: The character class.
+    :type cls: Type[Character]
+    :raises KeyError: If the game is already registered.
+    """
     if cls.__game_name__ in GAME_CHARS:
         raise KeyError(f'Game {cls.__game_name__!r} already exist.')
     else:
@@ -28,10 +35,31 @@ def register_game(cls: Type[Character]):
 
 
 def list_available_game_names() -> List[str]:
+    """
+    Get a list of available game names.
+
+    :return: The list of game names.
+    :rtype: List[str]
+
+    Examples::
+        >>> from gchar.games import list_available_game_names
+        >>>
+        >>> list_available_game_names()
+        ['arknights', 'azurlane', 'bluearchive', 'fgo', 'genshin', 'girlsfrontline', 'neuralcloud', 'nikke', 'pathtonowhere', 'starrail']
+    """
     return sorted(GAME_CHARS.keys())
 
 
 def get_character_class(game_name: str) -> Type[Character]:
+    """
+    Get the character class for a given game name.
+
+    :param game_name: The name of the game.
+    :type game_name: str
+    :return: The character class.
+    :rtype: Type[Character]
+    :raises KeyError: If the game is not found.
+    """
     if game_name in GAME_CHARS:
         return GAME_CHARS[game_name]
     else:
@@ -52,6 +80,13 @@ register_game(StarRailCharacter)
 
 @optional_lru_cache()
 def _all_characters(**kwargs) -> List[Character]:
+    """
+    Get a list of all characters from all registered games.
+
+    :param kwargs: Additional arguments for character retrieval.
+    :return: The list of characters.
+    :rtype: List[Character]
+    """
     from ...resources.pixiv import get_pixiv_posts
 
     chs: List[Tuple[Character, int, bool, int]] = []
@@ -77,11 +112,32 @@ _NAME_MATCH = 400
 
 
 def _name_trim(name: str) -> str:
+    """
+    Trim a character name by removing spaces, dashes, underscores, and special characters.
+
+    :param name: The character name.
+    :type name: str
+    :return: The trimmed character name.
+    :rtype: str
+    """
     return name.replace(' ', '').replace('-', '').replace('_', '').replace(chr(160), '').replace('\t', '')
 
 
 def _yield_characters(name: str, allow_fuzzy: bool = False, fuzzy_threshold: int = 80, **kwargs) \
         -> Iterator[Tuple[Character, int]]:
+    """
+    Yield characters that match the given name.
+
+    :param name: The character name.
+    :type name: str
+    :param allow_fuzzy: Whether to allow fuzzy matching of character names.
+    :type allow_fuzzy: bool
+    :param fuzzy_threshold: The threshold for fuzzy matching.
+    :type fuzzy_threshold: int
+    :param kwargs: Additional arguments for character retrieval.
+    :return: The iterator of matching characters and their match scores.
+    :rtype: Iterator[Tuple[Character, int]]
+    """
     all_chs = _all_characters(**kwargs)
     for ch in all_chs:
         if any([_name == name for _name in ch._names()]):
@@ -130,6 +186,21 @@ def _yield_characters(name: str, allow_fuzzy: bool = False, fuzzy_threshold: int
 
 def list_character(name: str, limit: Optional[int] = None, allow_fuzzy: bool = False,
                    fuzzy_threshold: int = 80, **kwargs) -> List[Character]:
+    """
+    List characters that match the given name.
+
+    :param name: The character name.
+    :type name: str
+    :param limit: The maximum number of characters to return.
+    :type limit: Optional[int]
+    :param allow_fuzzy: Whether to allow fuzzy matching of character names.
+    :type allow_fuzzy: bool
+    :param fuzzy_threshold: The threshold for fuzzy matching.
+    :type fuzzy_threshold: int
+    :param kwargs: Additional arguments for character retrieval.
+    :return: The list of matching characters.
+    :rtype: List[Character]
+    """
     iterator = _yield_characters(name, allow_fuzzy, fuzzy_threshold, **kwargs)
     if limit is not None:
         iterator = islice(iterator, limit)
@@ -141,6 +212,33 @@ def list_character(name: str, limit: Optional[int] = None, allow_fuzzy: bool = F
 
 def get_character(name: str, allow_fuzzy: bool = False, fuzzy_threshold: int = 80,
                   contains_extra: bool = True, **kwargs) -> Optional[Character]:
+    """
+    Get a character that matches the given name.
+
+    :param name: The character name.
+    :type name: str
+    :param allow_fuzzy: Whether to allow fuzzy matching of character names.
+    :type allow_fuzzy: bool
+    :param fuzzy_threshold: The threshold for fuzzy matching.
+    :type fuzzy_threshold: int
+    :param contains_extra: Whether to include extra characters.
+    :type contains_extra: bool
+    :param kwargs: Additional arguments for character retrieval.
+    :return: The matching character, or None if not found.
+    :rtype: Optional[Character]
+
+    Examples::
+        >>> from gchar.games import get_character
+        >>>
+        >>> get_character('amiya')
+        <Character R001 - 阿米娅/amiya/アーミヤ, female, 5*****>
+        >>> get_character('surtr')
+        <Character R111 - 史尔特尔/surtr/スルト, female, 6******>
+        >>> get_character('dusk')
+        <Character NM02 - 夕/dusk/シー, female, 6******>
+        >>> get_character('yae_miko')
+        <Character 八重神子/yae_miko/八重神子/やえみこ, female, 5*****, weapon: Weapon.CATALYST, element: Element.ELECTRO>
+    """
     _items = list_character(name, limit=1, allow_fuzzy=allow_fuzzy, fuzzy_threshold=fuzzy_threshold,
                             contains_extra=contains_extra, **kwargs)
     if _items:
