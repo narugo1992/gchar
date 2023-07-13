@@ -1,0 +1,386 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gchar.resources.pixiv &mdash; gchar 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="gchar.resources.sites" href="sites.html" />
+    <link rel="prev" title="gchar.resources" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> gchar
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/installation/index.html">Installation</a></li>
+</ul>
+<p><span class="caption-text">API Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html">gchar.config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../games/index.html">gchar.games</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">gchar.resources</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">gchar.resources.pixiv</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#get-pixiv-posts">get_pixiv_posts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get-pixiv-keywords">get_pixiv_keywords</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pixivcharpool">PixivCharPool</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sites.html">gchar.resources.sites</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../utils/index.html">gchar.utils</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">gchar</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">gchar.resources</a> &raquo;</li>
+        
+      <li>gchar.resources.pixiv</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/api_doc/resources/pixiv.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+    
+    
+  <section id="module-gchar.resources.pixiv">
+<span id="gchar-resources-pixiv"></span><h1>gchar.resources.pixiv<a class="headerlink" href="#module-gchar.resources.pixiv" title="Permalink to this headline">¶</a></h1>
+<section id="get-pixiv-posts">
+<h2>get_pixiv_posts<a class="headerlink" href="#get-pixiv-posts" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="gchar.resources.pixiv.get_pixiv_posts">
+<code class="sig-prename descclassname">gchar.resources.pixiv.</code><code class="sig-name descname">get_pixiv_posts</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">char</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>gchar.games.base.character.Character<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">allow_fuzzy</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">fuzzy_threshold</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">70</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span> &#x2192; Optional<span class="p">[</span>Tuple<span class="p">[</span>int<span class="p">, </span>int<span class="p">]</span><span class="p">]</span><a class="reference internal" href="../../_modules/gchar/resources/pixiv/keyword.html#get_pixiv_posts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.resources.pixiv.get_pixiv_posts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the number of Pixiv posts for a given character.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>char</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="../games/arknights.html#gchar.games.arknights.Character" title="gchar.games.arknights.Character"><em>Character</em></a><em>]</em>) – The character name or instance of Character class.</p></li>
+<li><p><strong>allow_fuzzy</strong> (<em>bool</em>) – Whether to allow fuzzy matching of character names.</p></li>
+<li><p><strong>fuzzy_threshold</strong> (<em>int</em>) – The threshold for fuzzy matching.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple containing the number of all illustrations and R18 illustrations, or None if the character is unknown.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[Tuple[int, int]]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the character is unknown.</p>
+</dd>
+</dl>
+<dl>
+<dt>Examples::</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gchar.resources.pixiv</span> <span class="kn">import</span> <span class="n">get_pixiv_posts</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_pixiv_posts</span><span class="p">(</span><span class="s1">&#39;amiya&#39;</span><span class="p">)</span>
+<span class="go">(14130, 1113)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_pixiv_posts</span><span class="p">(</span><span class="s1">&#39;surtr&#39;</span><span class="p">)</span>
+<span class="go">(5579, 787)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="get-pixiv-keywords">
+<h2>get_pixiv_keywords<a class="headerlink" href="#get-pixiv-keywords" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="gchar.resources.pixiv.get_pixiv_keywords">
+<code class="sig-prename descclassname">gchar.resources.pixiv.</code><code class="sig-name descname">get_pixiv_keywords</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">char</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>gchar.games.base.character.Character<span class="p">, </span>str<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">simple</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">use_english</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">includes</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">exclude</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">allow_fuzzy</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">fuzzy_threshold</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">70</span></em>, <em class="sig-param"><span class="n">max_exclude</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">20</span></em>, <em class="sig-param"><span class="n">max_pollution_ratio</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.8</span></em>, <em class="sig-param"><span class="n">max_length</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">256</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/resources/pixiv/tag.html#get_pixiv_keywords"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.resources.pixiv.get_pixiv_keywords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the Pixiv search keywords for a specific character.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>char</strong> (<em>Union</em><em>[</em><a class="reference internal" href="../games/arknights.html#gchar.games.arknights.Character" title="gchar.games.arknights.Character"><em>Character</em></a><em>, </em><em>str</em><em>]</em>) – The character instance or name.</p></li>
+<li><p><strong>simple</strong> (<em>bool</em>) – Whether to generate a simplified tag.</p></li>
+<li><p><strong>use_english</strong> (<em>bool</em>) – Whether to use English names in the tag.</p></li>
+<li><p><strong>includes</strong> (<em>Optional</em><em>[</em><em>Union</em><em>[</em><em>Tuple</em><em>[</em><em>str</em><em>]</em><em>, </em><em>List</em><em>[</em><em>str</em><em>]</em><em>, </em><em>str</em><em>]</em><em>]</em>) – The positive tags to include.</p></li>
+<li><p><strong>exclude</strong> (<em>Optional</em><em>[</em><em>Union</em><em>[</em><em>Tuple</em><em>[</em><em>str</em><em>]</em><em>, </em><em>List</em><em>[</em><em>str</em><em>]</em><em>, </em><em>str</em><em>]</em><em>]</em>) – The negative tags to exclude.</p></li>
+<li><p><strong>allow_fuzzy</strong> (<em>bool</em>) – Whether to allow fuzzy matching of character names.</p></li>
+<li><p><strong>fuzzy_threshold</strong> (<em>int</em>) – The threshold for fuzzy matching.</p></li>
+<li><p><strong>max_exclude</strong> (<em>int</em>) – The maximum number of excluded tags.</p></li>
+<li><p><strong>max_pollution_ratio</strong> (<em>float</em>) – The maximum pollution ratio for including tags.</p></li>
+<li><p><strong>max_length</strong> (<em>int</em>) – The maximum length of the generated tag.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The generated Pixiv search keywords.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the character is unknown.</p>
+</dd>
+</dl>
+<dl>
+<dt>Examples::</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gchar.resources.pixiv</span> <span class="kn">import</span> <span class="n">get_pixiv_keywords</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_pixiv_keywords</span><span class="p">(</span><span class="s1">&#39;amiya&#39;</span><span class="p">)</span>
+<span class="go">&#39;アークナイツ (amiya OR アーミヤ OR 阿米娅)&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_pixiv_keywords</span><span class="p">(</span><span class="s1">&#39;surtr&#39;</span><span class="p">)</span>
+<span class="go">&#39;アークナイツ (surtr OR スルト OR 史尔特尔) -明日方舟スルト&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_pixiv_keywords</span><span class="p">(</span><span class="s1">&#39;dusk&#39;</span><span class="p">)</span>  <span class="c1"># ケルシー and ドロシー way cause search noises</span>
+<span class="go">&#39;アークナイツ (dusk OR シー OR 夕) -ケルシー -シージ -シーン -ドロシー -ルーシー -夕張 -夕日 -夕焼け&#39;</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="pixivcharpool">
+<h2>PixivCharPool<a class="headerlink" href="#pixivcharpool" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gchar.resources.pixiv.PixivCharPool">
+<em class="property">class </em><code class="sig-prename descclassname">gchar.resources.pixiv.</code><code class="sig-name descname">PixivCharPool</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chars</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span>gchar.games.base.character.Character<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">names_dict</span><span class="p">:</span> <span class="n">Mapping<span class="p">[</span>str<span class="p">, </span>Tuple<span class="p">[</span>int<span class="p">, </span>float<span class="p">, </span>List<span class="p">[</span>Tuple<span class="p">[</span>str<span class="p">, </span>int<span class="p">]</span><span class="p">]</span><span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">names_alias</span><span class="p">:</span> <span class="n">Mapping<span class="p">[</span>Union<span class="p">[</span>str<span class="p">, </span>int<span class="p">]</span><span class="p">, </span>List<span class="p">[</span>str<span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/resources/pixiv/tag.html#PixivCharPool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.resources.pixiv.PixivCharPool" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="gchar.resources.pixiv.PixivCharPool.get_simple_tag">
+<code class="sig-name descname">get_simple_tag</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">char</span><span class="p">:</span> <span class="n">gchar.games.base.character.Character</span></em>, <em class="sig-param"><span class="n">base_tag</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">max_exclude</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">20</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/resources/pixiv/tag.html#PixivCharPool.get_simple_tag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.resources.pixiv.PixivCharPool.get_simple_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a simplified Pixiv search tag for a specific character.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>char</strong> (<a class="reference internal" href="../games/arknights.html#gchar.games.arknights.Character" title="gchar.games.arknights.Character"><em>Character</em></a>) – The character instance.</p></li>
+<li><p><strong>base_tag</strong> (<em>str</em>) – The base tag to append to the character name.</p></li>
+<li><p><strong>max_exclude</strong> (<em>int</em>) – The maximum number of excluded tags.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The generated simplified Pixiv search tag.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gchar.resources.pixiv.PixivCharPool.get_tag">
+<code class="sig-name descname">get_tag</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">char</span><span class="p">:</span> <span class="n">gchar.games.base.character.Character</span></em>, <em class="sig-param"><span class="n">use_english</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">positive</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">negative</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max_exclude_per_word</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">20</span></em>, <em class="sig-param"><span class="n">max_exclude</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">20</span></em>, <em class="sig-param"><span class="n">max_pollution_ratio</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.8</span></em>, <em class="sig-param"><span class="n">max_length</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">256</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/resources/pixiv/tag.html#PixivCharPool.get_tag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.resources.pixiv.PixivCharPool.get_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a Pixiv search tag for a specific character.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>char</strong> (<em>Union</em><em>[</em><a class="reference internal" href="../games/arknights.html#gchar.games.arknights.Character" title="gchar.games.arknights.Character"><em>Character</em></a><em>, </em><em>str</em><em>]</em>) – The character instance or name.</p></li>
+<li><p><strong>use_english</strong> (<em>bool</em>) – Whether to use English names in the tag.</p></li>
+<li><p><strong>positive</strong> (<em>Optional</em><em>[</em><em>Union</em><em>[</em><em>Tuple</em><em>[</em><em>str</em><em>]</em><em>, </em><em>List</em><em>[</em><em>str</em><em>]</em><em>, </em><em>str</em><em>]</em><em>]</em>) – The positive tags to include.</p></li>
+<li><p><strong>negative</strong> (<em>Optional</em><em>[</em><em>Union</em><em>[</em><em>Tuple</em><em>[</em><em>str</em><em>]</em><em>, </em><em>List</em><em>[</em><em>str</em><em>]</em><em>, </em><em>str</em><em>]</em><em>]</em>) – The negative tags to exclude.</p></li>
+<li><p><strong>max_exclude_per_word</strong> (<em>int</em>) – The maximum number of excluded tags per word.</p></li>
+<li><p><strong>max_exclude</strong> (<em>int</em>) – The maximum number of excluded tags.</p></li>
+<li><p><strong>max_pollution_ratio</strong> (<em>float</em>) – The maximum pollution ratio for including tags.</p></li>
+<li><p><strong>max_length</strong> (<em>int</em>) – The maximum length of the generated tag.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The generated Pixiv search tag.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="sites.html" class="btn btn-neutral float-right" title="gchar.resources.sites" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="gchar.resources" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2023, narugo1992
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+    <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: v0.1.0
+    <span class="fa fa-caret-down"></span>
+  </span>
+        <div class="rst-other-versions">
+                <dl>
+                    <dt>Tags</dt>
+                        <dd><a href="pixiv.html">v0.1.0</a></dd>
+                </dl>
+                <dl>
+                    <dt>Branches</dt>
+                        <dd><a href="../../../main/api_doc/resources/pixiv.html">main</a></dd>
+                </dl>
+        </div>
+    </div>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

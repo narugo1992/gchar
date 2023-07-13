@@ -1,0 +1,497 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gchar.games.fgo &mdash; gchar 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="gchar.games.genshin" href="genshin.html" />
+    <link rel="prev" title="gchar.games.bluearchive" href="bluearchive.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> gchar
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/installation/index.html">Installation</a></li>
+</ul>
+<p><span class="caption-text">API Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html">gchar.config</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">gchar.games</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="base.html">gchar.games.base</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arknights.html">gchar.games.arknights</a></li>
+<li class="toctree-l2"><a class="reference internal" href="azurlane.html">gchar.games.azurlane</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bluearchive.html">gchar.games.bluearchive</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">gchar.games.fgo</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#character">Character</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#englishname">EnglishName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#japanesename">JapaneseName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#chinesename">ChineseName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#chinesealiasname">ChineseAliasName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rarity">Rarity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#clazz">Clazz</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="genshin.html">gchar.games.genshin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="girlsfrontline.html">gchar.games.girlsfrontline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neuralcloud.html">gchar.games.neuralcloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nikke.html">gchar.games.nikke</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pathtonowhere.html">gchar.games.pathtonowhere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="starrail.html">gchar.games.starrail</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dispatch.html">gchar.games.dispatch</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/index.html">gchar.resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils/index.html">gchar.utils</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">gchar</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">gchar.games</a> &raquo;</li>
+        
+      <li>gchar.games.fgo</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/api_doc/games/fgo.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+    
+    
+  <section id="module-gchar.games.fgo">
+<span id="gchar-games-fgo"></span><h1>gchar.games.fgo<a class="headerlink" href="#module-gchar.games.fgo" title="Permalink to this headline">¶</a></h1>
+<section id="character">
+<h2>Character<a class="headerlink" href="#character" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gchar.games.fgo.Character">
+<em class="property">class </em><code class="sig-prename descclassname">gchar.games.fgo.</code><code class="sig-name descname">Character</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">raw_data</span><span class="p">:</span> <span class="n">dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/fgo/character.html#Character"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.fgo.Character" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="englishname">
+<h2>EnglishName<a class="headerlink" href="#englishname" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gchar.games.fgo.EnglishName">
+<em class="property">class </em><code class="sig-prename descclassname">gchar.games.fgo.</code><code class="sig-name descname">EnglishName</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>List<span class="p">[</span>str<span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/fgo/name.html#EnglishName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.fgo.EnglishName" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="japanesename">
+<h2>JapaneseName<a class="headerlink" href="#japanesename" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gchar.games.fgo.JapaneseName">
+<em class="property">class </em><code class="sig-prename descclassname">gchar.games.fgo.</code><code class="sig-name descname">JapaneseName</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/fgo/name.html#JapaneseName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.fgo.JapaneseName" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="chinesename">
+<h2>ChineseName<a class="headerlink" href="#chinesename" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gchar.games.fgo.ChineseName">
+<em class="property">class </em><code class="sig-prename descclassname">gchar.games.fgo.</code><code class="sig-name descname">ChineseName</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/fgo/name.html#ChineseName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.fgo.ChineseName" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="chinesealiasname">
+<h2>ChineseAliasName<a class="headerlink" href="#chinesealiasname" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gchar.games.fgo.ChineseAliasName">
+<em class="property">class </em><code class="sig-prename descclassname">gchar.games.fgo.</code><code class="sig-name descname">ChineseAliasName</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/fgo/name.html#ChineseAliasName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.fgo.ChineseAliasName" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="rarity">
+<h2>Rarity<a class="headerlink" href="#rarity" title="Permalink to this headline">¶</a></h2>
+<dl class="py class enum">
+<dt id="gchar.games.fgo.Rarity">
+<em class="property">enum </em><code class="sig-prename descclassname">gchar.games.fgo.</code><code class="sig-name descname">Rarity</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/fgo/property.html#Rarity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.fgo.Rarity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enum representing the rarity of FGO characters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#gchar.games.fgo.Rarity.ZERO" title="gchar.games.fgo.Rarity.ZERO"><strong>ZERO</strong></a> – Rarity 0</p></li>
+<li><p><a class="reference internal" href="arknights.html#gchar.games.arknights.Rarity.ONE" title="gchar.games.arknights.Rarity.ONE"><strong>ONE</strong></a> – Rarity 1</p></li>
+<li><p><a class="reference internal" href="arknights.html#gchar.games.arknights.Rarity.TWO" title="gchar.games.arknights.Rarity.TWO"><strong>TWO</strong></a> – Rarity 2</p></li>
+<li><p><a class="reference internal" href="arknights.html#gchar.games.arknights.Rarity.THREE" title="gchar.games.arknights.Rarity.THREE"><strong>THREE</strong></a> – Rarity 3</p></li>
+<li><p><a class="reference internal" href="arknights.html#gchar.games.arknights.Rarity.FOUR" title="gchar.games.arknights.Rarity.FOUR"><strong>FOUR</strong></a> – Rarity 4</p></li>
+<li><p><a class="reference internal" href="arknights.html#gchar.games.arknights.Rarity.FIVE" title="gchar.games.arknights.Rarity.FIVE"><strong>FIVE</strong></a> – Rarity 5</p></li>
+</ul>
+</dd>
+<dt class="field-even">Member Type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
+</dd>
+</dl>
+<p>Valid values are as follows:</p>
+<dl class="py attribute">
+<dt id="gchar.games.fgo.Rarity.ZERO">
+<code class="sig-name descname">ZERO</code><em class="property"> = &lt;Rarity.ZERO: 0&gt;</em><a class="headerlink" href="#gchar.games.fgo.Rarity.ZERO" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.fgo.Rarity.ONE">
+<code class="sig-name descname">ONE</code><em class="property"> = &lt;Rarity.ONE: 1&gt;</em><a class="headerlink" href="#gchar.games.fgo.Rarity.ONE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.fgo.Rarity.TWO">
+<code class="sig-name descname">TWO</code><em class="property"> = &lt;Rarity.TWO: 2&gt;</em><a class="headerlink" href="#gchar.games.fgo.Rarity.TWO" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.fgo.Rarity.THREE">
+<code class="sig-name descname">THREE</code><em class="property"> = &lt;Rarity.THREE: 3&gt;</em><a class="headerlink" href="#gchar.games.fgo.Rarity.THREE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.fgo.Rarity.FOUR">
+<code class="sig-name descname">FOUR</code><em class="property"> = &lt;Rarity.FOUR: 4&gt;</em><a class="headerlink" href="#gchar.games.fgo.Rarity.FOUR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.fgo.Rarity.FIVE">
+<code class="sig-name descname">FIVE</code><em class="property"> = &lt;Rarity.FIVE: 5&gt;</em><a class="headerlink" href="#gchar.games.fgo.Rarity.FIVE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code> and its members also have the following methods:</p>
+<dl class="py method">
+<dt id="gchar.games.fgo.Rarity.loads">
+<em class="property">classmethod </em><code class="sig-name descname">loads</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val</span></em><span class="sig-paren">)</span> &#x2192; gchar.games.fgo.property.Rarity<a class="reference internal" href="../../_modules/gchar/games/fgo/property.html#Rarity.loads"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.fgo.Rarity.loads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a rarity from a value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>val</strong> (Union[int, <a class="reference internal" href="#gchar.games.fgo.Rarity" title="gchar.games.fgo.Rarity"><code class="xref py py-class docutils literal notranslate"><span class="pre">Rarity</span></code></a>]) – The value to load the rarity from.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The loaded rarity.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#gchar.games.fgo.Rarity" title="gchar.games.fgo.Rarity"><code class="xref py py-class docutils literal notranslate"><span class="pre">Rarity</span></code></a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the value is invalid.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="clazz">
+<h2>Clazz<a class="headerlink" href="#clazz" title="Permalink to this headline">¶</a></h2>
+<dl class="py class enum">
+<dt id="gchar.games.fgo.Clazz">
+<em class="property">enum </em><code class="sig-prename descclassname">gchar.games.fgo.</code><code class="sig-name descname">Clazz</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/fgo/property.html#Clazz"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.fgo.Clazz" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enum representing the class of FGO characters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#gchar.games.fgo.Clazz.SABER" title="gchar.games.fgo.Clazz.SABER"><strong>SABER</strong></a> – Saber class</p></li>
+<li><p><a class="reference internal" href="#gchar.games.fgo.Clazz.LANCER" title="gchar.games.fgo.Clazz.LANCER"><strong>LANCER</strong></a> – Lancer class</p></li>
+<li><p><a class="reference internal" href="#gchar.games.fgo.Clazz.ARCHER" title="gchar.games.fgo.Clazz.ARCHER"><strong>ARCHER</strong></a> – Archer class</p></li>
+<li><p><a class="reference internal" href="#gchar.games.fgo.Clazz.RIDER" title="gchar.games.fgo.Clazz.RIDER"><strong>RIDER</strong></a> – Rider class</p></li>
+<li><p><a class="reference internal" href="arknights.html#gchar.games.arknights.Clazz.CASTER" title="gchar.games.arknights.Clazz.CASTER"><strong>CASTER</strong></a> – Caster class</p></li>
+<li><p><a class="reference internal" href="#gchar.games.fgo.Clazz.ASSASSIN" title="gchar.games.fgo.Clazz.ASSASSIN"><strong>ASSASSIN</strong></a> – Assassin class</p></li>
+<li><p><a class="reference internal" href="#gchar.games.fgo.Clazz.BERSERKER" title="gchar.games.fgo.Clazz.BERSERKER"><strong>BERSERKER</strong></a> – Berserker class</p></li>
+<li><p><a class="reference internal" href="#gchar.games.fgo.Clazz.AVENGER" title="gchar.games.fgo.Clazz.AVENGER"><strong>AVENGER</strong></a> – Avenger class</p></li>
+<li><p><a class="reference internal" href="#gchar.games.fgo.Clazz.RULER" title="gchar.games.fgo.Clazz.RULER"><strong>RULER</strong></a> – Ruler class</p></li>
+<li><p><a class="reference internal" href="#gchar.games.fgo.Clazz.MOONCANCER" title="gchar.games.fgo.Clazz.MOONCANCER"><strong>MOONCANCER</strong></a> – MoonCancer class</p></li>
+<li><p><a class="reference internal" href="#gchar.games.fgo.Clazz.SHIELDER" title="gchar.games.fgo.Clazz.SHIELDER"><strong>SHIELDER</strong></a> – Shielder class</p></li>
+<li><p><a class="reference internal" href="#gchar.games.fgo.Clazz.ALTEREGO" title="gchar.games.fgo.Clazz.ALTEREGO"><strong>ALTEREGO</strong></a> – AlterEgo class</p></li>
+<li><p><a class="reference internal" href="#gchar.games.fgo.Clazz.PRETENDER" title="gchar.games.fgo.Clazz.PRETENDER"><strong>PRETENDER</strong></a> – Pretender class</p></li>
+<li><p><a class="reference internal" href="#gchar.games.fgo.Clazz.FOREIGNER" title="gchar.games.fgo.Clazz.FOREIGNER"><strong>FOREIGNER</strong></a> – Foreigner class</p></li>
+</ul>
+</dd>
+</dl>
+<p>Valid values are as follows:</p>
+<dl class="py attribute">
+<dt id="gchar.games.fgo.Clazz.SABER">
+<code class="sig-name descname">SABER</code><em class="property"> = &lt;Clazz.SABER: 1&gt;</em><a class="headerlink" href="#gchar.games.fgo.Clazz.SABER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.fgo.Clazz.LANCER">
+<code class="sig-name descname">LANCER</code><em class="property"> = &lt;Clazz.LANCER: 2&gt;</em><a class="headerlink" href="#gchar.games.fgo.Clazz.LANCER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.fgo.Clazz.ARCHER">
+<code class="sig-name descname">ARCHER</code><em class="property"> = &lt;Clazz.ARCHER: 3&gt;</em><a class="headerlink" href="#gchar.games.fgo.Clazz.ARCHER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.fgo.Clazz.RIDER">
+<code class="sig-name descname">RIDER</code><em class="property"> = &lt;Clazz.RIDER: 4&gt;</em><a class="headerlink" href="#gchar.games.fgo.Clazz.RIDER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.fgo.Clazz.CASTER">
+<code class="sig-name descname">CASTER</code><em class="property"> = &lt;Clazz.CASTER: 5&gt;</em><a class="headerlink" href="#gchar.games.fgo.Clazz.CASTER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.fgo.Clazz.ASSASSIN">
+<code class="sig-name descname">ASSASSIN</code><em class="property"> = &lt;Clazz.ASSASSIN: 6&gt;</em><a class="headerlink" href="#gchar.games.fgo.Clazz.ASSASSIN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.fgo.Clazz.BERSERKER">
+<code class="sig-name descname">BERSERKER</code><em class="property"> = &lt;Clazz.BERSERKER: 7&gt;</em><a class="headerlink" href="#gchar.games.fgo.Clazz.BERSERKER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.fgo.Clazz.AVENGER">
+<code class="sig-name descname">AVENGER</code><em class="property"> = &lt;Clazz.AVENGER: 8&gt;</em><a class="headerlink" href="#gchar.games.fgo.Clazz.AVENGER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.fgo.Clazz.RULER">
+<code class="sig-name descname">RULER</code><em class="property"> = &lt;Clazz.RULER: 9&gt;</em><a class="headerlink" href="#gchar.games.fgo.Clazz.RULER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.fgo.Clazz.MOONCANCER">
+<code class="sig-name descname">MOONCANCER</code><em class="property"> = &lt;Clazz.MOONCANCER: 10&gt;</em><a class="headerlink" href="#gchar.games.fgo.Clazz.MOONCANCER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.fgo.Clazz.SHIELDER">
+<code class="sig-name descname">SHIELDER</code><em class="property"> = &lt;Clazz.SHIELDER: 11&gt;</em><a class="headerlink" href="#gchar.games.fgo.Clazz.SHIELDER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.fgo.Clazz.ALTEREGO">
+<code class="sig-name descname">ALTEREGO</code><em class="property"> = &lt;Clazz.ALTEREGO: 12&gt;</em><a class="headerlink" href="#gchar.games.fgo.Clazz.ALTEREGO" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.fgo.Clazz.PRETENDER">
+<code class="sig-name descname">PRETENDER</code><em class="property"> = &lt;Clazz.PRETENDER: 13&gt;</em><a class="headerlink" href="#gchar.games.fgo.Clazz.PRETENDER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.fgo.Clazz.FOREIGNER">
+<code class="sig-name descname">FOREIGNER</code><em class="property"> = &lt;Clazz.FOREIGNER: 14&gt;</em><a class="headerlink" href="#gchar.games.fgo.Clazz.FOREIGNER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code> and its members also have the following methods:</p>
+<dl class="py method">
+<dt id="gchar.games.fgo.Clazz.loads">
+<em class="property">classmethod </em><code class="sig-name descname">loads</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val</span></em><span class="sig-paren">)</span> &#x2192; gchar.games.fgo.property.Clazz<a class="reference internal" href="../../_modules/gchar/games/fgo/property.html#Clazz.loads"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.fgo.Clazz.loads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a class from a value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>val</strong> (Union[str, <a class="reference internal" href="#gchar.games.fgo.Clazz" title="gchar.games.fgo.Clazz"><code class="xref py py-class docutils literal notranslate"><span class="pre">Clazz</span></code></a>]) – The value to load the class from.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The loaded class.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#gchar.games.fgo.Clazz" title="gchar.games.fgo.Clazz"><code class="xref py py-class docutils literal notranslate"><span class="pre">Clazz</span></code></a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the value is invalid.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="genshin.html" class="btn btn-neutral float-right" title="gchar.games.genshin" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="bluearchive.html" class="btn btn-neutral float-left" title="gchar.games.bluearchive" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2023, narugo1992
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+    <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: v0.1.0
+    <span class="fa fa-caret-down"></span>
+  </span>
+        <div class="rst-other-versions">
+                <dl>
+                    <dt>Tags</dt>
+                        <dd><a href="fgo.html">v0.1.0</a></dd>
+                </dl>
+                <dl>
+                    <dt>Branches</dt>
+                        <dd><a href="../../../main/api_doc/games/fgo.html">main</a></dd>
+                </dl>
+        </div>
+    </div>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
