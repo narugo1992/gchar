@@ -31,6 +31,7 @@ jobs:
           - 'yande'
           - 'lolibooru'
           - 'gelbooru'
+          - 'pixiv'
         os:
           - 'ubuntu-latest'
         python-version:
