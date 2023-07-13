@@ -1,0 +1,382 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gchar.resources.sites.tags &mdash; gchar 0.0.10 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> gchar
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.10
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/installation/index.html">Installation</a></li>
+</ul>
+<p><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_doc/config/index.html">gchar.config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_doc/games/index.html">gchar.games</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_doc/resources/index.html">gchar.resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_doc/utils/index.html">gchar.utils</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">gchar</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>gchar.resources.sites.tags</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+    
+    
+  <h1>Source code for gchar.resources.sites.tags</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">lru_cache</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">from</span> <span class="nn">huggingface_hub</span> <span class="kn">import</span> <span class="n">hf_hub_download</span>
+
+<span class="kn">from</span> <span class="nn">gchar.games</span> <span class="kn">import</span> <span class="n">get_character</span>
+<span class="kn">from</span> <span class="nn">gchar.games.base</span> <span class="kn">import</span> <span class="n">Character</span>
+<span class="kn">from</span> <span class="nn">gchar.games.dispatch.access</span> <span class="kn">import</span> <span class="n">GAME_CHARS</span>
+<span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">SITES</span>
+
+<span class="n">_AVAIL_SITE_NAMES</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">SITES</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+
+<span class="nd">@lru_cache</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">_get_tags_for_game_site</span><span class="p">(</span><span class="n">game</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">site</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the tags for a specific game and site.</span>
+
+<span class="sd">    :param game: The name of the game.</span>
+<span class="sd">    :type game: str</span>
+<span class="sd">    :param site: The name of the site.</span>
+<span class="sd">    :type site: str</span>
+<span class="sd">    :return: The tags for the game and site.</span>
+<span class="sd">    :rtype: List[dict]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">hf_hub_download</span><span class="p">(</span>
+            <span class="n">GAME_CHARS</span><span class="p">[</span><span class="n">game</span><span class="p">]</span><span class="o">.</span><span class="n">__repository__</span><span class="p">,</span>
+            <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">game</span><span class="si">}</span><span class="s1">/tags_</span><span class="si">{</span><span class="n">SITES</span><span class="p">[</span><span class="n">site</span><span class="p">]</span><span class="si">}</span><span class="s1">.json&#39;</span><span class="p">,</span>
+            <span class="n">repo_type</span><span class="o">=</span><span class="s1">&#39;dataset&#39;</span>
+    <span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+
+
+<span class="nd">@lru_cache</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">_get_tag_mapping</span><span class="p">(</span><span class="n">game</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">site</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the mapping of tags for a specific game and site.</span>
+
+<span class="sd">    :param game: The name of the game.</span>
+<span class="sd">    :type game: str</span>
+<span class="sd">    :param site: The name of the site.</span>
+<span class="sd">    :type site: str</span>
+<span class="sd">    :return: The mapping of tags.</span>
+<span class="sd">    :rtype: Mapping[Union[str, int], List[dict]]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">tags</span> <span class="o">=</span> <span class="n">_get_tags_for_game_site</span><span class="p">(</span><span class="n">game</span><span class="p">,</span> <span class="n">site</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">tag</span><span class="p">[</span><span class="s1">&#39;index&#39;</span><span class="p">]:</span> <span class="n">tag</span><span class="p">[</span><span class="s1">&#39;tags&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">_get_raw_site_tags</span><span class="p">(</span><span class="n">ch</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Character</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">site</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sure_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                       <span class="n">allow_fuzzy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the raw tags for a character and site.</span>
+
+<span class="sd">    :param ch: The character instance or name.</span>
+<span class="sd">    :type ch: Union[Character, str]</span>
+<span class="sd">    :param site: The name of the site.</span>
+<span class="sd">    :type site: str</span>
+<span class="sd">    :param sure_only: Whether to include only sure tags.</span>
+<span class="sd">    :type sure_only: bool</span>
+<span class="sd">    :param allow_fuzzy: Whether to allow fuzzy matching of character names.</span>
+<span class="sd">    :type allow_fuzzy: bool</span>
+<span class="sd">    :param kwargs: Additional arguments for character retrieval.</span>
+<span class="sd">    :return: The raw tags for the character and site.</span>
+<span class="sd">    :rtype: List[dict]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">site</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_AVAIL_SITE_NAMES</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unsupported site - </span><span class="si">{</span><span class="n">site</span><span class="si">!r}</span><span class="s1">.</span><span class="se">\n</span><span class="s1">&#39;</span>
+                         <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">SITES</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">!r}</span><span class="s1"> are supported.&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ch</span><span class="p">,</span> <span class="n">Character</span><span class="p">):</span>
+        <span class="n">ch</span> <span class="o">=</span> <span class="n">get_character</span><span class="p">(</span><span class="n">ch</span><span class="p">,</span> <span class="n">allow_fuzzy</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="n">_tag_mapping</span> <span class="o">=</span> <span class="n">_get_tag_mapping</span><span class="p">(</span><span class="n">ch</span><span class="o">.</span><span class="n">__game_name__</span><span class="p">,</span> <span class="n">site</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ch</span><span class="o">.</span><span class="n">index</span> <span class="ow">in</span> <span class="n">_tag_mapping</span><span class="p">:</span>
+        <span class="n">tags</span> <span class="o">=</span> <span class="n">_tag_mapping</span><span class="p">[</span><span class="n">ch</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">sure_only</span><span class="p">:</span>
+            <span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="n">tag</span> <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span> <span class="k">if</span> <span class="n">tag</span><span class="p">[</span><span class="s1">&#39;sure&#39;</span><span class="p">]]</span>
+        <span class="k">return</span> <span class="n">tags</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[]</span>
+
+
+<div class="viewcode-block" id="list_site_tags"><a class="viewcode-back" href="../../../../api_doc/resources/sites.html#gchar.resources.sites.list_site_tags">[docs]</a><span class="k">def</span> <span class="nf">list_site_tags</span><span class="p">(</span><span class="n">ch</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Character</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">site</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sure_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                   <span class="n">with_posts</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">allow_fuzzy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> \
+        <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    List the tags for a character and site.</span>
+
+<span class="sd">    :param ch: The character instance or name.</span>
+<span class="sd">    :type ch: Union[Character, str]</span>
+<span class="sd">    :param site: The name of the site.</span>
+<span class="sd">    :type site: str</span>
+<span class="sd">    :param sure_only: Whether to include only sure tags.</span>
+<span class="sd">    :type sure_only: bool</span>
+<span class="sd">    :param with_posts: Whether to include the number of posts for each tag.</span>
+<span class="sd">    :type with_posts: bool</span>
+<span class="sd">    :param allow_fuzzy: Whether to allow fuzzy matching of character names.</span>
+<span class="sd">    :type allow_fuzzy: bool</span>
+<span class="sd">    :param kwargs: Additional arguments for character retrieval.</span>
+<span class="sd">    :return: The list of tags for the character and site.</span>
+<span class="sd">    :rtype: Union[List[str], List[Tuple[str, int]]]</span>
+
+<span class="sd">    Examples::</span>
+<span class="sd">        &gt;&gt;&gt; from gchar.resources.sites import list_site_tags</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; list_site_tags(&#39;amiya&#39;, &#39;danbooru&#39;)</span>
+<span class="sd">        [&#39;amiya_(arknights)&#39;, &#39;amiya_(guard)_(arknights)&#39;, &#39;amiya_(newsgirl)_(arknights)&#39;, &#39;amiya_(fresh_fastener)_(arknights)&#39;, &#39;amiya_(planter)_(arknights)&#39;, &#39;amiya_(guard)_(touch_the_stars)_(arknights)&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; list_site_tags(&#39;surtr&#39;, &#39;danbooru&#39;)</span>
+<span class="sd">        [&#39;surtr_(arknights)&#39;, &#39;surtr_(colorful_wonderland)_(arknights)&#39;, &#39;surtr_(liberte_echec)_(arknights)&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; list_site_tags(&#39;surtr&#39;, &#39;danbooru&#39;, with_posts=True)</span>
+<span class="sd">        [(&#39;surtr_(arknights)&#39;, 2666), (&#39;surtr_(colorful_wonderland)_(arknights)&#39;, 483), (&#39;surtr_(liberte_echec)_(arknights)&#39;, 306)]</span>
+<span class="sd">        &gt;&gt;&gt; list_site_tags(&#39;surtr&#39;, &#39;zerochan&#39;)</span>
+<span class="sd">        [&#39;Surtr (Arknights)&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; list_site_tags(&#39;surtr&#39;, &#39;anime_pictures&#39;)</span>
+<span class="sd">        [&#39;surtr (arknights)&#39;, &#39;surtr (liberte echec) (arknights)&#39;, &#39;surtr (colorful wonderland) (arknights)&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; list_site_tags(&#39;surtr&#39;, &#39;anime_pictures&#39;, with_posts=True)</span>
+<span class="sd">        [(&#39;surtr (arknights)&#39;, 471), (&#39;surtr (liberte echec) (arknights)&#39;, 75), (&#39;surtr (colorful wonderland) (arknights)&#39;, 49)]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">tags</span> <span class="o">=</span> <span class="n">_get_raw_site_tags</span><span class="p">(</span><span class="n">ch</span><span class="p">,</span> <span class="n">site</span><span class="p">,</span> <span class="n">sure_only</span><span class="p">,</span> <span class="n">allow_fuzzy</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">with_posts</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[(</span><span class="n">tag</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">tag</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">])</span> <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">tag</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="get_site_tag"><a class="viewcode-back" href="../../../../api_doc/resources/sites.html#gchar.resources.sites.get_site_tag">[docs]</a><span class="k">def</span> <span class="nf">get_site_tag</span><span class="p">(</span><span class="n">ch</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Character</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">site</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sure_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                 <span class="n">with_posts</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">allow_fuzzy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> \
+        <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get a single tag for a character and site.</span>
+
+<span class="sd">    :param ch: The character instance or name.</span>
+<span class="sd">    :type ch: Union[Character, str]</span>
+<span class="sd">    :param site: The name of the site.</span>
+<span class="sd">    :type site: str</span>
+<span class="sd">    :param sure_only: Whether to include only sure tags.</span>
+<span class="sd">    :type sure_only: bool</span>
+<span class="sd">    :param with_posts: Whether to include the number of posts for the tag.</span>
+<span class="sd">    :type with_posts: bool</span>
+<span class="sd">    :param allow_fuzzy: Whether to allow fuzzy matching of character names.</span>
+<span class="sd">    :type allow_fuzzy: bool</span>
+<span class="sd">    :param kwargs: Additional arguments for character retrieval.</span>
+<span class="sd">    :return: The tag for the character and site.</span>
+<span class="sd">    :rtype: Union[str, Tuple[str, int], None]</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; from gchar.resources.sites import get_site_tag</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; get_site_tag(&#39;amiya&#39;, &#39;danbooru&#39;)</span>
+<span class="sd">        &#39;amiya_(arknights)&#39;</span>
+<span class="sd">        &gt;&gt;&gt; get_site_tag(&#39;surtr&#39;, &#39;danbooru&#39;)</span>
+<span class="sd">        &#39;surtr_(arknights)&#39;</span>
+<span class="sd">        &gt;&gt;&gt; get_site_tag(&#39;surtr&#39;, &#39;danbooru&#39;, with_posts=True)</span>
+<span class="sd">        (&#39;surtr_(arknights)&#39;, 2666)</span>
+<span class="sd">        &gt;&gt;&gt; get_site_tag(&#39;surtr&#39;, &#39;zerochan&#39;)</span>
+<span class="sd">        &#39;Surtr (Arknights)&#39;</span>
+<span class="sd">        &gt;&gt;&gt; get_site_tag(&#39;surtr&#39;, &#39;anime_pictures&#39;)</span>
+<span class="sd">        &#39;surtr (arknights)&#39;</span>
+<span class="sd">        &gt;&gt;&gt; get_site_tag(&#39;surtr&#39;, &#39;anime_pictures&#39;, with_posts=True)</span>
+<span class="sd">        (&#39;surtr (arknights)&#39;, 471)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">tags</span> <span class="o">=</span> <span class="n">list_site_tags</span><span class="p">(</span><span class="n">ch</span><span class="p">,</span> <span class="n">site</span><span class="p">,</span> <span class="n">sure_only</span><span class="p">,</span> <span class="n">with_posts</span><span class="p">,</span> <span class="n">allow_fuzzy</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">tags</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">tags</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+</pre></div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2023, narugo1992
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+    <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: main
+    <span class="fa fa-caret-down"></span>
+  </span>
+        <div class="rst-other-versions">
+                <dl>
+                    <dt>Branches</dt>
+                        <dd><a href="tags.html">main</a></dd>
+                </dl>
+        </div>
+    </div>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

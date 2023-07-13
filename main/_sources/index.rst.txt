@@ -23,6 +23,7 @@ The `gchar` framework provides a user-friendly set of resources for mirroring it
 
     api_doc/config/index
     api_doc/games/index
+    api_doc/resources/index
     api_doc/utils/index
 
 
