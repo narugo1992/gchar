@@ -2,13 +2,13 @@ from enum import Enum
 
 
 class Rarity(Enum):
-    def __init__(self, text: str, number: int):
-        self.number = number
-        self.text = text
-
     R = ('普', 1)
     SR = ('危', 2)
     SSR = ('狂', 3)
+
+    def __init__(self, text: str, number: int):
+        self.number = number
+        self.text = text
 
     @classmethod
     def loads(cls, obj) -> 'Rarity':
@@ -35,7 +35,3 @@ class Rarity(Enum):
                 return self == self.loads(other)
             except (TypeError, ValueError, KeyError):
                 return False
-
-
-class Job(Enum):
-    pass
