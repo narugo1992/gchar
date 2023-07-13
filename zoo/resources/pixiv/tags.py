@@ -13,7 +13,7 @@ from ..base.tags import ParallelTagCrawler
 
 def _parse_int(x):
     if x == 'N/A':
-        return None
+        return 0
     else:
         return int(x)
 
@@ -30,9 +30,9 @@ class PixivTagCrawler(ParallelTagCrawler):
         ParallelTagCrawler.__init__(self)
 
     CATEGORY_NAME_MAP = {
-        'アニメ': 'animation', 'マンガ': 'manga', 'ラノベ': 'light novel', 'ゲーム': 'game', 'フィギュア': 'figure',
+        'アニメ': 'animation', 'マンガ': 'manga', 'ラノベ': 'light_novel', 'ゲーム': 'game', 'フィギュア': 'figure',
         '音楽': 'music', 'アート': 'art', 'デザイン': 'design', '一般': 'general', '人物': 'person',
-        'キャラクター': 'character', 'セリフ': 'dialogue', 'イベント': 'event', '同人サークル': 'doujin circle'
+        'キャラクター': 'character', 'セリフ': 'dialogue', 'イベント': 'event', '同人サークル': 'doujin_circle'
     }
 
     def get_category_index(self):
@@ -63,7 +63,6 @@ class PixivTagCrawler(ParallelTagCrawler):
 
             data.append({
                 'name': name,
-                'category': category,
                 'wiki_url': wiki_url,
                 'updated_at': ritems['更新'],
                 'views': _parse_int(ritems['閲覧数']),
@@ -74,19 +73,34 @@ class PixivTagCrawler(ParallelTagCrawler):
         return data
 
     def get_tags_json(self) -> List[Mapping[str, Any]]:
-        data, exist_ids = [], set()
         pg_pages = tqdm(desc='Total pages')
         pg_tags = tqdm(desc='Total tags')
+        record_categories = {}
+        record_items = {}
         for category, category_index_url in self.get_category_index():
             logging.info(f'Finding max pages for category {category!r} ...')
-            return self._load_data_with_pages(
+            data, exist_ids = [], set()
+            self._load_data_with_pages(
                 self.get_tags_from_page,
                 lambda x: x[self.__id_key__],
                 data, exist_ids, pg_pages, pg_tags,
                 base_url=category_index_url, category=category,
             )
 
-        return data
+            for item in data:
+                if item['name'] not in record_categories:
+                    record_categories[item['name']] = []
+                record_categories[item['name']].append(category)
+                record_items[item['name']] = item
+
+        retval = []
+        for key in sorted(record_items.keys()):
+            item = dict(record_items[key])
+            for cate in self.CATEGORY_NAME_MAP.values():
+                item[f'is_{cate}'] = cate in record_categories[key]
+            retval.append(item)
+
+        return retval
 
     def tags_json_to_df(self, json_) -> pd.DataFrame:
         df = ParallelTagCrawler.tags_json_to_df(self, json_).astype({
@@ -97,4 +111,7 @@ class PixivTagCrawler(ParallelTagCrawler):
         df['updated_at'] = pd.to_datetime(df['updated_at'])
         return df
 
-    __sqlite_indices__ = ['name', 'category', 'updated_at', 'views', 'posts', 'checklists']
+    __sqlite_indices__ = [
+        'name', 'updated_at', 'views', 'posts', 'checklists',
+        *(f'is_{cate}' for cate in CATEGORY_NAME_MAP.values()),
+    ]
