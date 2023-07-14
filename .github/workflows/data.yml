@@ -553,6 +553,7 @@ jobs:
           - 'yande'
           - 'lolibooru'
           - 'gelbooru'
+          - 'wallhaven'
         game:
           - 'bluearchive'
           - 'arknights'

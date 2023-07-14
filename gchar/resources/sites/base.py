@@ -14,6 +14,7 @@ SITES = {
     'xbooru': 'xbooru.com',
     'yande': 'yande.re',
     'zerochan': 'zerochan.net',
+    'wallhaven': 'wallhaven.cc',
 }
 
 
