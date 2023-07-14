@@ -4,7 +4,7 @@ permissions:
   contents: write
 
 on:
-#  push:
+  push:
   workflow_dispatch:
 #  schedule:
 #    - cron: '30 14 * * *'
@@ -15,7 +15,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
-      max-parallel: 1
+#      max-parallel: 1
       matrix:
         resource:
 #          - 'anime_pictures'
@@ -32,7 +32,8 @@ jobs:
 #          - 'yande'
 #          - 'lolibooru'
 #          - 'gelbooru'
-          - 'pixiv'
+#          - 'pixiv'
+          - 'wallhaven'
         game:
           - 'bluearchive'
           - 'arknights'

@@ -26,10 +26,10 @@ from .character import get_ccip_features_of_character, TagFeatureExtract
 
 GAME_KEYWORDS = {
     'arknights': ['arknights', 'アークナイツ'],
-    'fgo': ['fate/grand_order', 'fate', 'Fate/GrandOrder'],
-    'azurlane': ['azur_lane', 'アズールレーン'],
+    'fgo': ['fate/grand_order', 'fate', 'Fate/GrandOrder', 'FGO'],
+    'azurlane': ['azur_lane', 'アズールレーン', 'azurlane'],
     'genshin': ['genshin_impact', '原神', 'GenshinImpact'],
-    'girlsfrontline': ['girls\'_frontline', 'ドールズフロントライン'],
+    'girlsfrontline': ['girls\'_frontline', 'ドールズフロントライン', 'gfl', 'girlsfrontline'],
     'neuralcloud': ['girls\'_frontline_nc', 'girls\'_frontline', 'neural_cloud', '云图计划', 'ニューラルクラウド'],
     'bluearchive': ['blue_archive', 'ブルーアーカイブ', 'BlueArchive'],
     'pathtonowhere': ['path_to_nowhere', '無期迷途', '無期迷途'],
@@ -146,7 +146,10 @@ class TagMatcher(HuggingfaceDeployable):
     def _query_via_pattern(self, pattern, *patterns):
         query = self.db.table('tags').select('*')
         for key, value in self.__extra_filters__.items():
-            query = query.where(key, '=', value)
+            if isinstance(value, (list, tuple, set)):
+                query = query.where_in(key, value)
+            else:
+                query = query.where(key, '=', value)
 
         or_clause = self.db.query()
         for i, p in enumerate([pattern, *patterns]):
@@ -295,6 +298,9 @@ class TagMatcher(HuggingfaceDeployable):
 
         return tag, count
 
+    def _yield_mapped_tags(self, tag) -> Iterator[Tuple[str, dict]]:
+        yield tag, {}
+
     def _get_ch_names(self, ch: Character) -> List[str]:
         return sorted(set(map(str, [*ch.names, *ch.alias_names])))
 
@@ -327,7 +333,7 @@ class TagMatcher(HuggingfaceDeployable):
                 yield tag, count
 
     def try_matching(self):
-        best_sim_for_tag_words, ch_options = {}, {}
+        ch_options = {}
         origin_chs = self.game_cls.all(contains_extra=True)
         all_chs, _exist_chids = [], set()
         for ch in origin_chs:
@@ -351,12 +357,8 @@ class TagMatcher(HuggingfaceDeployable):
                 ])
                 kw = self._keyword_check(tag)
 
-                options.append((tag, count, sim, kw))
-
-                tag_tpl = tuple(tag_words)
-                tag_tpl_n = tuple(tag_words_n)
-                best_sim_for_tag_words[tag_tpl] = max(best_sim_for_tag_words.get(tag_tpl, 0.0), sim)
-                best_sim_for_tag_words[tag_tpl_n] = max(best_sim_for_tag_words.get(tag_tpl_n, 0.0), sim)
+                for mapped_tag, meta in self._yield_mapped_tags(tag):
+                    options.append((mapped_tag, count, sim, kw, meta))
 
             options = sorted(options, key=lambda x: (0 if x[3] else 1, -x[2], -x[1], len(x[0]), x[0]))
             ch_options[ch.index] = options
@@ -373,7 +375,7 @@ class TagMatcher(HuggingfaceDeployable):
             ops, validate_cnt = [], 0
             has_kw = options and options[0][3]
             ref_status, ref_sim = None, None
-            for tag, count, sim, kw in options:
+            for tag, count, sim, kw, meta in options:
                 # when xxx_(game) exist, tags like (xxx)_(yyy) will be dropped.
                 if has_kw and not kw and ref_status and ref_status.sure and \
                         sorted(set(self._split_name_to_words(tag)) - set(self._split_tag_to_words(tag))):
@@ -382,7 +384,7 @@ class TagMatcher(HuggingfaceDeployable):
                 if tag in blacklist:
                     continue
                 elif tag in whitelist:
-                    ops.append((tag, count, sim, kw, ValidationStatus.YES))
+                    ops.append((tag, count, sim, kw, meta, ValidationStatus.YES))
                     ref_status = ValidationStatus.YES
                     ref_sim = sim if ref_sim is None else min(sim, ref_sim)
                 else:
@@ -397,7 +399,7 @@ class TagMatcher(HuggingfaceDeployable):
                     status = self._tag_validate(ch, tag, count, sim, kw)
                     logging.info(f'Validate result of {tag!r}: {status}')
 
-                    ops.append((tag, count, sim, kw, status))
+                    ops.append((tag, count, sim, kw, meta, status))
                     if status.visible:
                         if status.sure:
                             ref_status = ValidationStatus.YES
@@ -411,15 +413,15 @@ class TagMatcher(HuggingfaceDeployable):
 
             # mapping tags to aliases
             ops = []
-            for tag, count, sim, kw, status in options:
+            for tag, count, sim, kw, meta, status in options:
                 if status.visible:
-                    ops.append((tag, count, sim, kw, status))
+                    ops.append((tag, count, sim, kw, meta, status))
                     if status == ValidationStatus.TRUST:
                         whitelist.add(tag)
                 elif status == ValidationStatus.BAN:
                     blacklist.add(tag)
 
-            options = sorted(ops, key=lambda x: (x[4].order, -x[1], len(x[0]), x[0]))
+            options = sorted(ops, key=lambda x: (x[5].order, -x[1], len(x[0]), x[0]))
             retval.append({
                 'index': ch.index,
                 'cnname': str(ch.cnname) if ch.cnname else None,
@@ -427,15 +429,16 @@ class TagMatcher(HuggingfaceDeployable):
                 'jpname': str(ch.jpname) if ch.jpname else None,
                 'tags': [
                     {
-                        'name': option[0],
-                        'count': option[1],
-                        'sure': option[4].sure,
-                    } for option in options
+                        'name': tag,
+                        'count': count,
+                        'sure': status.sure,
+                        'meta': meta,
+                    } for tag, count, sim, kw, meta, status in options
                 ],
                 'blacklist': sorted(blacklist),
                 'whitelist': sorted(whitelist),
             })
-            find_tags = [(tag, count, status.value) for tag, count, sim, kw, status in options]
+            find_tags = [(tag, count, status.value) for tag, count, sim, kw, meta, status in options]
             logging.info(f'Tags found for character {ch!r} - {find_tags!r}')
             logging.info(f'Blacklisted tags of character {ch!r}: {sorted(blacklist)!r}')
             logging.info(f'Whitelisted tags of character {ch!r}: {sorted(whitelist)!r}')
@@ -483,6 +486,6 @@ class TagMatcher(HuggingfaceDeployable):
         @click.option('--game', '-g', 'game_name', type=click.Choice(list_available_game_names()), required=True,
                       help='Game to deploy.', show_default=True)
         def chtags_export(output_directory: str, namespace: str, game_name: str):
-            logging.try_init_root(logging.INFO)
+            logging.try_init_root(logging.DEBUG)
             matcher = cls(game_name)
             matcher.export_to_directory(output_directory, namespace)

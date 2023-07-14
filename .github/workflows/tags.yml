@@ -32,6 +32,7 @@ jobs:
           - 'lolibooru'
           - 'gelbooru'
           - 'pixiv'
+          - 'wallhaven'
         os:
           - 'ubuntu-latest'
         python-version:
