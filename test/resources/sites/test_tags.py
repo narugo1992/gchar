@@ -58,3 +58,22 @@ class TestResourcesSitesTags:
         for site in supported_sites:
             assert site in sp_sites, \
                 f'Site {site!r} should be supported but not found in supported sites - {sp_sites!r}.'
+
+    @pytest.mark.parametrize(['site', 'tag'], [
+        ('anime_pictures', 'yae miko'),
+        ('atfbooru', 'yae_miko_(genshin_impact)'),
+        ('danbooru', 'yae_miko'),
+        ('hypnohub', 'yae_miko'),
+        ('konachan', 'yae_miko'),
+        ('konachan_net', 'yae_miko'),
+        ('lolibooru', 'yae_miko'),
+        ('rule34', 'yae_miko'),
+        ('safebooru', 'yae_miko'),
+        ('sankaku', 'yae_miko_(genshin_impact)'),
+        ('wallhaven', 'id:123704'),
+        ('xbooru', 'yae_miko_(genshin_impact)'),
+        ('yande', 'yae_miko'),
+        ('zerochan', 'Yae Miko'),
+    ])
+    def test_tag_for_yae_miko(self, site, tag):
+        assert get_site_tag('yae_miko', site) == tag
