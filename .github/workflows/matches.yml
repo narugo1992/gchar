@@ -97,6 +97,7 @@ jobs:
         env:
           CI: 'true'
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          REMOTE_PIXIV_SESSION_INDEX_URL: ${{ secrets.REMOTE_PIXIV_SESSION_INDEX_URL }}
         with:
           shell: bash
           timeout_minutes: 360
