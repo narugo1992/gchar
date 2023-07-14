@@ -4,7 +4,7 @@ permissions:
   contents: write
 
 on:
-#  push:
+  push:
   workflow_dispatch:
 #  schedule:
 #    - cron: '30 14 * * *'
@@ -15,31 +15,34 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
+      max-parallel: 1
       matrix:
         resource:
-          - 'anime_pictures'
-          - 'zerochan'
-          - 'danbooru'
-          - 'safebooru'
-          - 'atfbooru'
-          - 'sankaku'
-          - 'rule34'
-          - 'hypnohub'
-          - 'xbooru'
-          - 'konachan'
-          - 'konachan_net'
-          - 'yande'
-          - 'lolibooru'
-          - 'gelbooru'
+#          - 'anime_pictures'
+#          - 'zerochan'
+#          - 'danbooru'
+#          - 'safebooru'
+#          - 'atfbooru'
+#          - 'sankaku'
+#          - 'rule34'
+#          - 'hypnohub'
+#          - 'xbooru'
+#          - 'konachan'
+#          - 'konachan_net'
+#          - 'yande'
+#          - 'lolibooru'
+#          - 'gelbooru'
+          - 'pixiv'
         game:
-#          - 'bluearchive'
-#          - 'arknights'
-#          - 'fgo'
-#          - 'azurlane'
-#          - 'girlsfrontline'
-#          - 'genshin'
-#          - 'neuralcloud'
+          - 'bluearchive'
+          - 'arknights'
+          - 'fgo'
+          - 'azurlane'
+          - 'girlsfrontline'
+          - 'genshin'
+          - 'neuralcloud'
           - 'pathtonowhere'
+          - 'nikke'
           - 'starrail'
         os:
           - 'ubuntu-latest'

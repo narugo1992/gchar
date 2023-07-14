@@ -42,6 +42,11 @@ def get_pixiv_sessions(max_retries: int = 5, timeout: int = DEFAULT_TIMEOUT,
     return sessions
 
 
+def get_pixiv_refresh_token() -> str:
+    for session_item in _get_remote_session_index_raw():
+        return session_item['refresh_token']
+
+
 def _is_single_pixiv_session_okay(session: requests.Session) -> bool:
     resp = session.get(
         'https://www.pixiv.net/rpc/notify_count.php?'

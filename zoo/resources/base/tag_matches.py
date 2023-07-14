@@ -25,16 +25,16 @@ from .base import HuggingfaceDeployable
 from .character import get_ccip_features_of_character, TagFeatureExtract
 
 GAME_KEYWORDS = {
-    'arknights': ['arknights'],
-    'fgo': ['fate/grand_order', 'fate'],
-    'azurlane': ['azur_lane'],
-    'genshin': ['genshin_impact'],
-    'girlsfrontline': ['girls\'_frontline'],
-    'neuralcloud': ['girls\'_frontline_nc', 'girls\'_frontline', 'neural_cloud'],
-    'bluearchive': ['blue_archive'],
-    'pathtonowhere': ['path_to_nowhere'],
-    'nikke': ['nikke'],
-    'starrail': ['star_rail'],
+    'arknights': ['arknights', 'アークナイツ'],
+    'fgo': ['fate/grand_order', 'fate', 'Fate/GrandOrder'],
+    'azurlane': ['azur_lane', 'アズールレーン'],
+    'genshin': ['genshin_impact', '原神', 'GenshinImpact'],
+    'girlsfrontline': ['girls\'_frontline', 'ドールズフロントライン'],
+    'neuralcloud': ['girls\'_frontline_nc', 'girls\'_frontline', 'neural_cloud', '云图计划', 'ニューラルクラウド'],
+    'bluearchive': ['blue_archive', 'ブルーアーカイブ', 'BlueArchive'],
+    'pathtonowhere': ['path_to_nowhere', '無期迷途', '無期迷途'],
+    'nikke': ['nikke', '勝利の女神:NIKKE'],
+    'starrail': ['star_rail', '崩壊スターレイル', 'スターレイル'],
 }
 
 

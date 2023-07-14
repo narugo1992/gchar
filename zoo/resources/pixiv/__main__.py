@@ -12,6 +12,7 @@ from gchar.utils import GLOBAL_CONTEXT_SETTINGS
 from gchar.utils import print_version as _origin_print_version
 from .keyword import _get_pixiv_search_count_by_name, _get_pixiv_character_search_counts_by_game
 from .session import is_pixiv_session_okay, get_pixiv_sessions
+from .tag_matches import PixivTagMatcher
 from .tags import PixivTagCrawler
 
 print_version = partial(_origin_print_version, 'zoo.resources.pixiv')
@@ -122,6 +123,7 @@ def characters(game, input_file: Optional[str], output: str, interval: float, mi
 
 
 PixivTagCrawler.add_commands(cli)
+PixivTagMatcher.add_commands(cli)
 
 if __name__ == '__main__':
     cli()  # pragma: no cover
