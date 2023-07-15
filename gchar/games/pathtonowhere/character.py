@@ -21,7 +21,11 @@ class Character(_BaseCharacter):
         return self.__raw_data['cnname']
 
     def _jpname(self):
-        return []
+        jpnames = self.__raw_data['jpnames']
+        return jpnames[0] if jpnames else None
+
+    def _jpnames(self):
+        return self.__raw_data['jpnames']
 
     def _enname(self):
         return self.__raw_data['enname']

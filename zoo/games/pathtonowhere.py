@@ -1,3 +1,4 @@
+import logging
 import re
 from typing import Optional, Iterator, Any, Tuple
 from urllib.parse import urljoin
@@ -15,7 +16,7 @@ class PathToNowhereIndexer(GameIndexer):
     __root_website__ = 'https://wiki.biligame.com/wqmt'
     __jp_website__ = 'https://wikiwiki.jp/ptn'
 
-    def _get_index_info(self, session: requests.Session) -> Iterator[Tuple[str, str, str, str, str, str]]:
+    def _get_index_from_cnsite(self, session: requests.Session) -> Iterator[Tuple[str, str, str, str, str, str]]:
         index_page = srequest(
             session, 'GET',
             f'{self.__root_website__}/%E7%A6%81%E9%97%AD%E8%80%85'
@@ -45,7 +46,7 @@ class PathToNowhereIndexer(GameIndexer):
 
             yield name, page_url, id_, job, rarity, group
 
-    def _get_info_from_page(self, session: requests.Session, url: str):
+    def _get_info_from_cnpage(self, session: requests.Session, url: str):
         resp = srequest(session, 'GET', url)
         page = pq(resp.text)
 
@@ -95,6 +96,7 @@ class PathToNowhereIndexer(GameIndexer):
             'id': id_,
             'cnname': cnname,
             'enname': enname,
+            'jpnames': [],
             'gender': gender,
             'job': job,
             'group': group,
@@ -103,12 +105,52 @@ class PathToNowhereIndexer(GameIndexer):
             'skins': skins,
         }
 
+    def _get_index_from_jpsite(self, session: requests.Session):
+        resp = srequest(session, 'GET',
+                        f'{self.__jp_website__}/%E3%82%B3%E3%83%B3%E3%83%93%E3%82%AF%E3%83%88%E4%B8%80%E8%A6%A7')
+        table_1, *_ = pq(resp.text)('table').items()
+        for item in table_1('td > a.rel-wiki-page').items():
+            name = item.attr('title')
+            url = urljoin(resp.request.url, item.attr('href'))
+            yield name, url
+
+    def _get_info_from_jppage(self, session: requests.Session, url: str):
+        resp = srequest(session, 'GET', url)
+        table_1, *_ = pq(resp.text)('table').items()
+
+        name_row = table_1('tbody > tr:nth-child(2)')
+        assert name_row('th:nth-child(2)').text().strip() == '名前'
+        jpname = name_row('td:nth-child(3)').text().strip()
+
+        id_row = table_1('tbody > tr:nth-child(3)')
+        assert id_row('th:nth-child(1)').text().strip() == 'コード'
+        id_ = id_row('td:nth-child(2)').text().strip()
+
+        jpnames = [
+            line for line in jpname.splitlines(keepends=False)
+            if re.sub(r'[\W_]+', '', line)
+        ]
+        return {'jpnames': jpnames, 'id': id_}
+
     def _crawl_index_from_online(self, session: requests.Session, maxcnt: Optional[int] = None, **kwargs) \
             -> Iterator[Any]:
-        pg = tqdm(list(self._get_index_info(session)))
+        jp_names = {}
+        for name, url in tqdm(list(self._get_index_from_jpsite(session))):
+            jp_item = self._get_info_from_jppage(session, url)
+            jp_names[jp_item['id']] = jp_item['jpnames']
+
+        pg = tqdm(list(self._get_index_from_cnsite(session)))
         for name, page_url, id_, job, rarity, group in pg:
             pg.set_description(f'{name} - {id_}')
-            yield self._get_info_from_page(session, page_url)
+            cn_item = self._get_info_from_cnpage(session, page_url)
+            if cn_item['id'] in jp_names:
+                cn_item['jpnames'] = jp_names[cn_item['id']]
+                logging.debug(f'Japanese name {jp_names[cn_item["id"]]!r} found for {name}({id_}).')
+            else:
+                cn_item['jpnames'] = []
+                logging.warning(f'No japanese name found for {name}({id_}).')
+
+            yield cn_item
 
 
 INDEXER = PathToNowhereIndexer()
