@@ -105,4 +105,12 @@ class GameIndexer:
                 for file in files:
                     copy(file, os.path.join(output_directory, os.path.basename(file)))
 
+        @cli.command('sites', help='Show sites for this indexer.',
+                     context_settings={**GLOBAL_CONTEXT_SETTINGS})
+        def sites():
+            cls = self.__class__
+            for name, value in cls.__dict__.items():
+                if name.startswith('__') and name.endswith('__') and 'site' in name:
+                    print(value)
+
         return cli

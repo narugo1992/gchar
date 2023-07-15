@@ -60,6 +60,12 @@ if not os.environ.get("NO_CONTENTS_BUILD"):
     if pip_docs.wait() != 0:
         raise ChildProcessError("Pip docs install failed with %d." % (pip.returncode,))
 
+    pip_crawls_cmd = (shutil.which('pip'), 'install', '-r', os.path.join(_PROJ_PATH, 'requirements-crawl.txt'))
+    print("Install pip crawls requirements {cmd}...".format(cmd=repr(pip_crawls_cmd)))
+    pip_crawls = Popen(pip_crawls_cmd, stdout=sys.stdout, stderr=sys.stderr, env=_env, cwd=_DOC_PATH)
+    if pip_crawls.wait() != 0:
+        raise ChildProcessError("Pip crawls install failed with %d." % (pip.returncode,))
+
     all_cmd = (shutil.which('make'), '-f', "all.mk", "build")
     print("Building all {cmd} at {cp}...".format(cmd=repr(all_cmd), cp=repr(_DOC_PATH)))
     all_ = Popen(all_cmd, stdout=sys.stdout, stderr=sys.stderr, env=_env, cwd=_DOC_PATH)

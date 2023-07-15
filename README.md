@@ -150,6 +150,7 @@ Currently supported sites:
 * [Xbooru](https://xbooru.com), named `xbooru`
 * [Yande](https://yande.re), named `yande`
 * [Zerochan](https://zerochan.net), named `zerochan`
+* [WallHaven](https://wallhaven.cc), named `wallhaven` (`id:xxxx` will be used for explicit searching)
 
 ```
 >>> from gchar.resources.sites import get_site_tag

@@ -8,7 +8,7 @@ from ..base.name import _BaseName
 
 class Character(_BaseCharacter):
     __game_name__ = 'starrail'
-    __official_name__ = 'Honkai Star Rail'
+    __official_name__ = 'Honkai: Star Rail'
     __cnname_class__ = ChineseName
     __enname_class__ = EnglishName
     __jpname_class__ = JapaneseName
