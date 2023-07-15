@@ -9,7 +9,8 @@ import requests
 from PIL import Image
 from hbutils.system import TemporaryDirectory, urlsplit
 from imgutils.data import load_image
-from imgutils.metrics import lpips_extract_feature, lpips_difference
+from imgutils.metrics import lpips_extract_feature, lpips_difference, ccip_extract_feature, ccip_batch_differences, \
+    ccip_default_threshold
 from imgutils.operate import squeeze_with_transparency
 from pyquery import PyQuery as pq
 from tqdm.auto import tqdm
@@ -206,7 +207,8 @@ class NeuralCloudIndexer(GameIndexer):
                 logging.warning(f'No skin found for {item["cnname"]}')
 
             if skin_url is not None:
-                cn_skins.append((i, lpips_extract_feature(_url_to_pil(skin_url))))
+                img = _url_to_pil(skin_url)
+                cn_skins.append((i, lpips_extract_feature(img), ccip_extract_feature(img)))
 
         jp_items = []
         jp_skins = []
@@ -214,36 +216,68 @@ class NeuralCloudIndexer(GameIndexer):
             info = self._get_info_from_jpsite(session, jp_page_url)
             info['jpname'] = jpname
             jp_items.append(info)
-            jp_skins.append((i, lpips_extract_feature(_url_to_pil(info['skin_url']))))
+            img = _url_to_pil(info['skin_url'])
+            jp_skins.append((i, lpips_extract_feature(img), ccip_extract_feature(img)))
 
         lpips_pairs = []
-        for i, cn_feat in cn_skins:
-            for j, jp_feat in jp_skins:
-                lpips_pairs.append((i, j, lpips_difference(cn_feat, jp_feat)))
+        for i, cn_lpips_feat, _ in cn_skins:
+            for j, jp_lpips_feat, _ in jp_skins:
+                lpips_pairs.append((i, j, lpips_difference(cn_lpips_feat, jp_lpips_feat)))
 
         _exist_is, _exist_js, mps = set(), set(), {}
         for i, j, diff in sorted(lpips_pairs, key=lambda x: x[2]):
-            if i in _exist_is or j in _exist_js:
+            if i in _exist_is or j in _exist_js or diff > 0.2:
                 continue
 
-            mps[i] = (j, diff)
+            mps[i] = (j, 'lpips', diff)
             _exist_is.add(i)
             _exist_js.add(j)
             cnname = cn_items[i]['cnname']
             jpname = jp_items[j]['jpname']
-            logging.info(f'{cnname!r} matched with {jpname!r}, diff is {diff!r}')
+            logging.info(f'{cnname!r} matched with {jpname!r}, lpips diff is {diff!r}')
+
+        ccip_feats = [
+            *(cn_ccip_feat for _, _, cn_ccip_feat in cn_skins),
+            *(jp_ccip_feat for _, _, jp_ccip_feat in jp_skins),
+        ]
+        ccip_diffs = ccip_batch_differences(ccip_feats)[0:len(cn_skins), len(cn_skins):len(cn_skins) + len(jp_skins)]
+        ccip_pairs = []
+        for ri, (i, _, _) in enumerate(cn_skins):
+            for rj, (j, _, _) in enumerate(jp_skins):
+                diff = ccip_diffs[ri, rj].item()
+                ccip_pairs.append((i, j, diff))
+
+        for i, j, diff in sorted(ccip_pairs, key=lambda x: x[2]):
+            if i in _exist_is or j in _exist_js or diff > ccip_default_threshold():
+                continue
+
+            mps[i] = (j, 'ccip', diff)
+            _exist_is.add(i)
+            _exist_js.add(j)
+            cnname = cn_items[i]['cnname']
+            jpname = jp_items[j]['jpname']
+            logging.info(f'{cnname!r} matched with {jpname!r}, ccip diff is {diff!r}')
 
         retval = []
         for i, item in enumerate(cn_items):
             if i in mps:
-                j, diff = mps[i]
+                j, method, diff = mps[i]
                 jpname = jp_items[j]['jpname']
             else:
-                jpname, diff = None, None
+                jpname, method, diff = None, None, None
 
             item['jpname'] = jpname
-            item['diff'] = diff
+            item['diff'] = {
+                'method': method,
+                'diff': diff
+            } if method else None
             retval.append(item)
+            if jpname is None:
+                logging.warning(f'Chinese character {item["cnname"]} not matched with jpname.')
+
+        for j, item in enumerate(jp_items):
+            if j not in _exist_js:
+                logging.warning(f'Japanese character {item["jpname"]} not matched with cnname.')
 
         return cn_items
 
