@@ -13,6 +13,7 @@ from .base import GameIndexer
 class PathToNowhereIndexer(GameIndexer):
     __game_name__ = 'pathtonowhere'
     __root_website__ = 'https://wiki.biligame.com/wqmt'
+    __jp_website__ = 'https://wikiwiki.jp/ptn'
 
     def _get_index_info(self, session: requests.Session) -> Iterator[Tuple[str, str, str, str, str, str]]:
         index_page = srequest(
