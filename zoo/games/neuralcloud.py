@@ -1,14 +1,38 @@
+import logging
+import os
 import re
 from datetime import datetime
 from typing import List, Optional, Iterator, Any
-from urllib.parse import quote
+from urllib.parse import quote, urljoin
 
 import requests
+from PIL import Image
+from hbutils.system import TemporaryDirectory, urlsplit
+from imgutils.data import load_image
+from imgutils.metrics import lpips_extract_feature, lpips_difference
+from imgutils.operate import squeeze_with_transparency
 from pyquery import PyQuery as pq
 from tqdm.auto import tqdm
+from waifuc.action import PaddingAlignAction
+from waifuc.model import ImageItem
 
-from gchar.utils import sget
+from gchar.utils import sget, download_file, srequest
 from .base import GameIndexer
+
+
+def _rgba_to_pil(image: Image.Image) -> Image.Image:
+    image = load_image(squeeze_with_transparency(image), force_background='white', mode='RGB')
+    action = PaddingAlignAction((512, 512))
+    image = action.process(ImageItem(image, {})).image
+    return image
+
+
+def _url_to_pil(url) -> Image.Image:
+    with TemporaryDirectory() as td:
+        file = os.path.join(td, urlsplit(url).filename)
+        download_file(url, file, silent=True)
+        return _rgba_to_pil(Image.open(file))
+
 
 _DATA_ITEMS = [
     'data-time-stamp', 'data-id', 'data-name', 'data-rarity', 'data-career-cn', 'data-career',
@@ -26,6 +50,7 @@ class NeuralCloudIndexer(GameIndexer):
     __game_name__ = 'neuralcloud'
     __official_name__ = 'project neural cloud'
     __root_website__ = 'http://wiki.42lab.cloud'
+    __jp_website__ = 'https://neural-cloud.wikiru.jp'
 
     def _get_alias_of_op(self, op, session: requests.Session, website_root: str, names: List[str]) -> List[str]:
         response = sget(
@@ -43,13 +68,11 @@ class NeuralCloudIndexer(GameIndexer):
 
         return alias_names
 
-    def _crawl_index_from_online(self, session: requests.Session, maxcnt: Optional[int] = None, **kwargs) \
-            -> Iterator[Any]:
+    def _crawl_index_from_cnsite(self, session: requests.Session) -> Iterator[Any]:
         response = sget(session, f'{self.__root_website__}/w/%E5%BF%83%E6%99%BA%E4%BA%BA%E5%BD%A2%E5%9B%BE%E9%89%B4')
         response.raise_for_status()
 
         index_page = pq(response.text)
-        retval = []
         all_ch_items = tqdm(list(index_page('.dolldata').items()))
         for item in all_ch_items:
             full_data = {
@@ -128,7 +151,7 @@ class NeuralCloudIndexer(GameIndexer):
                     'url': skin_url,
                 })
 
-            retval.append({
+            yield {
                 'data': full_data,
                 'id': id_,
                 'cnname': cnname,
@@ -148,11 +171,81 @@ class NeuralCloudIndexer(GameIndexer):
                     'time': release_time.timestamp(),
                 },
                 'skins': skins,
-            })
-            if maxcnt is not None and len(retval) >= maxcnt:
-                break
+            }
 
-        return retval
+    def _get_index_from_jpsite(self, session: requests.Session):
+        resp = srequest(session, 'GET',
+                        f'{self.__jp_website__}/?%E3%82%AD%E3%83%A3%E3%83%A9%E3%82%AF%E3%82%BF%E3%83%BC%E4%B8%80%E8%A6%A7#')
+        for item in pq(resp.text)("tr td.style_td:nth-child(2) a").items():
+            yield item.text().strip(), urljoin(resp.request.url, item.attr('href'))
+
+    def _get_info_from_jpsite(self, session: requests.Session, url):
+        resp = srequest(session, 'GET', url)
+        page = pq(resp.text)
+
+        tables = list(page('.style_table').items())
+        table_1 = tables[0]
+        url = urljoin(resp.request.url, table_1('tr:nth-child(2) td:nth-child(1) img').attr('data-src'))
+        return {
+            'skin_url': url,
+        }
+
+    def _crawl_index_from_online(self, session: requests.Session, maxcnt: Optional[int] = None, **kwargs) \
+            -> Iterator[Any]:
+        cn_items = []
+        cn_skins = []
+        for i, item in enumerate(tqdm(self._crawl_index_from_cnsite(session))):
+            cn_items.append(item)
+            skin_url = None
+            for skin in item['skins']:
+                if '默认' in skin['name']:
+                    skin_url = skin['url']
+                    logging.info(f'Skin {skin["name"]} selected for {item["cnname"]}')
+                    break
+            else:
+                logging.warning(f'No skin found for {item["cnname"]}')
+
+            if skin_url is not None:
+                cn_skins.append((i, lpips_extract_feature(_url_to_pil(skin_url))))
+
+        jp_items = []
+        jp_skins = []
+        for i, (jpname, jp_page_url) in enumerate(tqdm(list(self._get_index_from_jpsite(session)))):
+            info = self._get_info_from_jpsite(session, jp_page_url)
+            info['jpname'] = jpname
+            jp_items.append(info)
+            jp_skins.append((i, lpips_extract_feature(_url_to_pil(info['skin_url']))))
+
+        lpips_pairs = []
+        for i, cn_feat in cn_skins:
+            for j, jp_feat in jp_skins:
+                lpips_pairs.append((i, j, lpips_difference(cn_feat, jp_feat)))
+
+        _exist_is, _exist_js, mps = set(), set(), {}
+        for i, j, diff in sorted(lpips_pairs, key=lambda x: x[2]):
+            if i in _exist_is or j in _exist_js:
+                continue
+
+            mps[i] = (j, diff)
+            _exist_is.add(i)
+            _exist_js.add(j)
+            cnname = cn_items[i]['cnname']
+            jpname = jp_items[j]['jpname']
+            logging.info(f'{cnname!r} matched with {jpname!r}, diff is {diff!r}')
+
+        retval = []
+        for i, item in enumerate(cn_items):
+            if i in mps:
+                j, diff = mps[i]
+                jpname = jp_items[j]['jpname']
+            else:
+                jpname, diff = None, None
+
+            item['jpname'] = jpname
+            item['diff'] = diff
+            retval.append(item)
+
+        return cn_items
 
 
 INDEXER = NeuralCloudIndexer()

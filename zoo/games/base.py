@@ -99,7 +99,7 @@ class GameIndexer:
         @click.option('--output_directory', '-O', 'output_directory', type=str, required=True,
                       help='Output target file.', show_default=True)
         def index_export(timeout: int, maxcnt: Optional[int], output_directory: str):
-            logging.try_init_root(logging.INFO)
+            logging.try_init_root(logging.DEBUG)
             with self.crawl_index_to_local(maxcnt, timeout) as files:
                 os.makedirs(output_directory, exist_ok=True)
                 for file in files:
