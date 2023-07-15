@@ -17,6 +17,9 @@ The `gchar` framework provides a user-friendly set of resources for mirroring it
     :maxdepth: 2
     :caption: Best Practice
 
+    best_practice/supported/index
+
+
 .. toctree::
     :maxdepth: 2
     :caption: API Documentation
