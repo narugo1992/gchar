@@ -84,6 +84,8 @@ class PathToNowhereIndexer(GameIndexer):
             if rel_url:
                 skin_url = urljoin(resp.request.url, rel_url)
                 skins.append({'name': skin_name, 'url': skin_url})
+            else:
+                logging.warning(f'No image found for skin {skin_name!r} of character {cnname!r}.')
 
         rt2_row2 = list(r_table2('tr').items())[1]
         assert rt2_row2('th:nth-child(3)').text().strip() == '性别'
