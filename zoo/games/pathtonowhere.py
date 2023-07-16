@@ -77,10 +77,13 @@ class PathToNowhereIndexer(GameIndexer):
         for tab, ctx in zip(rt1_tabs, rt1_contents):
             skin_name = tab.text().strip()
             if list(ctx('.showOnImg').items()):
-                skin_url = urljoin(resp.request.url, ctx('.showOnImg img').attr('src'))
+                rel_url = ctx('.showOnImg img').attr('src')
             else:
-                skin_url = urljoin(resp.request.url, ctx('img').attr('src'))
-            skins.append({'name': skin_name, 'url': skin_url})
+                rel_url = ctx('img').attr('src')
+
+            if rel_url:
+                skin_url = urljoin(resp.request.url, rel_url)
+                skins.append({'name': skin_name, 'url': skin_url})
 
         rt2_row2 = list(r_table2('tr').items())[1]
         assert rt2_row2('th:nth-child(3)').text().strip() == '性别'
