@@ -21,6 +21,7 @@ def _load_req(file: str):
 
 requirements = _load_req('requirements.txt')
 
+# do not put requirements-crawl.txt inside
 _REQ_BLACKLIST = ['crawl']
 _REQ_PATTERN = re.compile('^requirements-([a-zA-Z0-9_]+)\\.txt$')
 group_requirements = {
