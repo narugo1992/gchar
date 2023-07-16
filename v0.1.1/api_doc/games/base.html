@@ -1,0 +1,736 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gchar.games.base &mdash; gchar 0.1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="gchar.games.arknights" href="arknights.html" />
+    <link rel="prev" title="gchar.games" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> gchar
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/installation/index.html">Installation</a></li>
+</ul>
+<p><span class="caption-text">Best Practice</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../best_practice/supported/index.html">Supported Games And Sites</a></li>
+</ul>
+<p><span class="caption-text">API Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html">gchar.config</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">gchar.games</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">gchar.games.base</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#character">Character</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#list-all-characters">list_all_characters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#chinesename">ChineseName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#englishname">EnglishName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#japanesename">JapaneseName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#textname">TextName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#segmentname">SegmentName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gender">Gender</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#skin">Skin</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="arknights.html">gchar.games.arknights</a></li>
+<li class="toctree-l2"><a class="reference internal" href="azurlane.html">gchar.games.azurlane</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bluearchive.html">gchar.games.bluearchive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fgo.html">gchar.games.fgo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="genshin.html">gchar.games.genshin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="girlsfrontline.html">gchar.games.girlsfrontline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neuralcloud.html">gchar.games.neuralcloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nikke.html">gchar.games.nikke</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pathtonowhere.html">gchar.games.pathtonowhere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="starrail.html">gchar.games.starrail</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dispatch.html">gchar.games.dispatch</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/index.html">gchar.resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils/index.html">gchar.utils</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">gchar</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">gchar.games</a> &raquo;</li>
+        
+      <li>gchar.games.base</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/api_doc/games/base.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+    
+    
+  <section id="module-gchar.games.base">
+<span id="gchar-games-base"></span><h1>gchar.games.base<a class="headerlink" href="#module-gchar.games.base" title="Permalink to this headline">¶</a></h1>
+<dl class="simple">
+<dt>Overview:</dt><dd><p>Character basic modeling, including the character model itself, the character name,
+the character gender, and the character skins.</p>
+</dd>
+</dl>
+<section id="character">
+<h2>Character<a class="headerlink" href="#character" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gchar.games.base.Character">
+<em class="property">class </em><code class="sig-prename descclassname">gchar.games.base.</code><code class="sig-name descname">Character</code><a class="reference internal" href="../../_modules/gchar/games/base/character.html#Character"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.base.Character" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for modeling characters in different games.</p>
+<p>The class provides methods for accessing and managing character attributes, such as name, gender, skins, etc.
+It also provides class methods for retrieving and listing characters.</p>
+<p>Usage:
+- Inherit from the gchar.games.base.Character class and implement the required methods to customize the character model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>__repository__</strong> – The repository name for the character data.</p></li>
+<li><p><strong>__game_name__</strong> – The name of the game.</p></li>
+<li><p><strong>__official_name__</strong> – The official name of the character.</p></li>
+<li><p><strong>__cnname_class__</strong> – The class for modeling Chinese character names.</p></li>
+<li><p><strong>__enname_class__</strong> – The class for modeling English character names.</p></li>
+<li><p><strong>__jpname_class__</strong> – The class for modeling Japanese character names.</p></li>
+<li><p><strong>__alias_name_class__</strong> – The optional class for modeling alias names.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="gchar.games.base.Character.alias_names">
+<em class="property">property </em><code class="sig-name descname">alias_names</code><a class="headerlink" href="#gchar.games.base.Character.alias_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all alias names of the character.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The alias names of the character.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[Union[<a class="reference internal" href="#gchar.games.base.ChineseName" title="gchar.games.base.ChineseName">gchar.games.base.ChineseName</a>, gchar.games.base.GenericAliasName]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gchar.games.base.Character.all">
+<em class="property">classmethod </em><code class="sig-name descname">all</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">contains_extra</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">sorted</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span> &#x2192; List<a class="reference internal" href="../../_modules/gchar/games/base/character.html#Character.all"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.base.Character.all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all characters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>contains_extra</strong> (<em>bool</em>) – Whether to include extra characters in the result.</p></li>
+<li><p><strong>sorted</strong> (<em>bool</em>) – Whether to sort the characters by order.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>All characters.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="#gchar.games.base.Character" title="gchar.games.base.Character">gchar.games.base.Character</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gchar.games.base.Character.cnname">
+<em class="property">property </em><code class="sig-name descname">cnname</code><a class="headerlink" href="#gchar.games.base.Character.cnname" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the Chinese name of the character.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The Chinese name of the character.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#gchar.games.base.ChineseName" title="gchar.games.base.ChineseName">gchar.games.base.ChineseName</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gchar.games.base.Character.cnnames">
+<em class="property">property </em><code class="sig-name descname">cnnames</code><a class="headerlink" href="#gchar.games.base.Character.cnnames" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get additional Chinese names of the character.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The additional Chinese names of the character.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[<a class="reference internal" href="#gchar.games.base.ChineseName" title="gchar.games.base.ChineseName">gchar.games.base.ChineseName</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gchar.games.base.Character.enname">
+<em class="property">property </em><code class="sig-name descname">enname</code><a class="headerlink" href="#gchar.games.base.Character.enname" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the English name of the character.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The English name of the character.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#gchar.games.base.EnglishName" title="gchar.games.base.EnglishName">gchar.games.base.EnglishName</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gchar.games.base.Character.ennames">
+<em class="property">property </em><code class="sig-name descname">ennames</code><a class="headerlink" href="#gchar.games.base.Character.ennames" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get additional English names of the character.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The additional English names of the character.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[<a class="reference internal" href="#gchar.games.base.EnglishName" title="gchar.games.base.EnglishName">gchar.games.base.EnglishName</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gchar.games.base.Character.gender">
+<em class="property">property </em><code class="sig-name descname">gender</code><a class="headerlink" href="#gchar.games.base.Character.gender" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the gender of the character.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The gender of the character.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#gchar.games.base.Gender" title="gchar.games.base.Gender">Gender</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gchar.games.base.Character.get">
+<em class="property">classmethod </em><code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/base/character.html#Character.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.base.Character.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a character by name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – The name of the character.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The character with the given name, or None if not found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[<a class="reference internal" href="#gchar.games.base.Character" title="gchar.games.base.Character">gchar.games.base.Character</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gchar.games.base.Character.index">
+<em class="property">property </em><code class="sig-name descname">index</code><a class="headerlink" href="#gchar.games.base.Character.index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the index of the character.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The index of the character.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gchar.games.base.Character.is_extra">
+<em class="property">property </em><code class="sig-name descname">is_extra</code><a class="headerlink" href="#gchar.games.base.Character.is_extra" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the character is an extra character.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the character is an extra character, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gchar.games.base.Character.jpname">
+<em class="property">property </em><code class="sig-name descname">jpname</code><a class="headerlink" href="#gchar.games.base.Character.jpname" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the Japanese name of the character.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The Japanese name of the character.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#gchar.games.base.JapaneseName" title="gchar.games.base.JapaneseName">gchar.games.base.JapaneseName</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gchar.games.base.Character.jpnames">
+<em class="property">property </em><code class="sig-name descname">jpnames</code><a class="headerlink" href="#gchar.games.base.Character.jpnames" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get additional Japanese names of the character.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The additional Japanese names of the character.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[<a class="reference internal" href="#gchar.games.base.JapaneseName" title="gchar.games.base.JapaneseName">gchar.games.base.JapaneseName</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gchar.games.base.Character.names">
+<em class="property">property </em><code class="sig-name descname">names</code><a class="headerlink" href="#gchar.games.base.Character.names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all names of the character as strings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The names of the character.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gchar.games.base.Character.release_time">
+<em class="property">property </em><code class="sig-name descname">release_time</code><a class="headerlink" href="#gchar.games.base.Character.release_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the release time of the character.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The release time of the character as a UNIX timestamp, or None if unknown.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Optional[float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gchar.games.base.Character.skins">
+<em class="property">property </em><code class="sig-name descname">skins</code><a class="headerlink" href="#gchar.games.base.Character.skins" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the skins of the character.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The skins of the character as a list of Skin objects.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[<a class="reference internal" href="#gchar.games.base.Skin" title="gchar.games.base.Skin">Skin</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="list-all-characters">
+<h2>list_all_characters<a class="headerlink" href="#list-all-characters" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="gchar.games.base.list_all_characters">
+<code class="sig-prename descclassname">gchar.games.base.</code><code class="sig-name descname">list_all_characters</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">chs</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>gchar.games.base.character.Character<span class="p">, </span>list<span class="p">, </span>tuple<span class="p">, </span>Type<span class="p">[</span>gchar.games.base.character.Character<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>gchar.games.base.character.Character<span class="p">]</span><a class="reference internal" href="../../_modules/gchar/games/base/character.html#list_all_characters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.base.list_all_characters" title="Permalink to this definition">¶</a></dt>
+<dd><p>List all characters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>chs</strong> (<em>Union</em><em>[</em><a class="reference internal" href="#gchar.games.base.Character" title="gchar.games.base.Character"><em>gchar.games.base.Character</em></a><em>, </em><em>list</em><em>, </em><em>tuple</em><em>, </em><em>Type</em><em>[</em><a class="reference internal" href="#gchar.games.base.Character" title="gchar.games.base.Character"><em>gchar.games.base.Character</em></a><em>]</em><em>]</em>) – The characters or lists of characters.</p></li>
+<li><p><strong>contains_extra</strong> (<em>bool</em>) – Whether to include extra characters in the result.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>All characters.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="#gchar.games.base.Character" title="gchar.games.base.Character">gchar.games.base.Character</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="chinesename">
+<h2>ChineseName<a class="headerlink" href="#chinesename" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gchar.games.base.ChineseName">
+<em class="property">class </em><code class="sig-prename descclassname">gchar.games.base.</code><code class="sig-name descname">ChineseName</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/base/name.html#ChineseName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.base.ChineseName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for modeling Chinese character names.</p>
+<p>The class inherits from TextName and represents character names written in Chinese.</p>
+<p>Usage:
+- Use the ChineseName class to model Chinese character names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – The name of the character.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="englishname">
+<h2>EnglishName<a class="headerlink" href="#englishname" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gchar.games.base.EnglishName">
+<em class="property">class </em><code class="sig-prename descclassname">gchar.games.base.</code><code class="sig-name descname">EnglishName</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>List<span class="p">[</span>str<span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/base/name.html#EnglishName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.base.EnglishName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for modeling English character names.</p>
+<p>The class inherits from SegmentName and represents character names written in English.</p>
+<p>Usage:
+- Use the EnglishName class to model English character names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>Union</em><em>[</em><a class="reference internal" href="#gchar.games.base.SegmentName" title="gchar.games.base.SegmentName"><em>SegmentName</em></a><em>, </em><a class="reference internal" href="#gchar.games.base.TextName" title="gchar.games.base.TextName"><em>TextName</em></a><em>, </em><em>str</em><em>, </em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em>) – The name of the character.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="japanesename">
+<h2>JapaneseName<a class="headerlink" href="#japanesename" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gchar.games.base.JapaneseName">
+<em class="property">class </em><code class="sig-prename descclassname">gchar.games.base.</code><code class="sig-name descname">JapaneseName</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/base/name.html#JapaneseName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.base.JapaneseName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for modeling Japanese character names.</p>
+<p>The class inherits from TextName and represents character names written in Japanese.</p>
+<p>Usage:
+- Use the JapaneseName class to model Japanese character names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – The name of the character.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="textname">
+<h2>TextName<a class="headerlink" href="#textname" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gchar.games.base.TextName">
+<em class="property">class </em><code class="sig-prename descclassname">gchar.games.base.</code><code class="sig-name descname">TextName</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/base/name.html#TextName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.base.TextName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for modeling character names based on text.</p>
+<p>The class inherits from _BaseName and provides methods for string representation and comparison.
+It supports containment check, length calculation, and item retrieval.</p>
+<dl class="simple">
+<dt>Usage:</dt><dd><ul class="simple">
+<li><p>Use the TextName class to model character names based on text.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – The name of the character.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="segmentname">
+<h2>SegmentName<a class="headerlink" href="#segmentname" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gchar.games.base.SegmentName">
+<em class="property">class </em><code class="sig-prename descclassname">gchar.games.base.</code><code class="sig-name descname">SegmentName</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>List<span class="p">[</span>str<span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/base/name.html#SegmentName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.base.SegmentName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for modeling character names based on segments.</p>
+<p>The class inherits from _BaseName and provides methods for string representation and comparison.
+It supports containment check, length calculation, and item retrieval.</p>
+<dl class="simple">
+<dt>Usage:</dt><dd><ul class="simple">
+<li><p>Use the SegmentName class to model character names based on segments.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em>) – The name of the character.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="gender">
+<h2>Gender<a class="headerlink" href="#gender" title="Permalink to this headline">¶</a></h2>
+<dl class="py class enum">
+<dt id="gchar.games.base.Gender">
+<em class="property">enum </em><code class="sig-prename descclassname">gchar.games.base.</code><code class="sig-name descname">Gender</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/base/property.html#Gender"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.base.Gender" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enumeration class representing the gender of a character.</p>
+<p>The class provides three gender options: OTHER, MALE, and FEMALE.
+It supports equality comparison with other Gender objects and string values.
+The class also provides a method <cite>loads</cite> for parsing and converting string values into Gender objects.</p>
+<dl class="simple">
+<dt>Usage:</dt><dd><ul class="simple">
+<li><p>Use the Gender enum to represent the gender of a character.</p></li>
+</ul>
+</dd>
+<dt>Supported string values for each gender:</dt><dd><ul class="simple">
+<li><p>OTHER: “OTHER”</p></li>
+<li><p>MALE: “MALE”, “男”, “男性”, “boy”, “man”, “male”</p></li>
+<li><p>FEMALE: “FEMALE”, “女”, “女性”, “girl”, “woman”, “female”</p></li>
+</ul>
+</dd>
+</dl>
+<p>Valid values are as follows:</p>
+<dl class="py attribute">
+<dt id="gchar.games.base.Gender.OTHER">
+<code class="sig-name descname">OTHER</code><em class="property"> = &lt;Gender.OTHER: 0&gt;</em><a class="headerlink" href="#gchar.games.base.Gender.OTHER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.base.Gender.MALE">
+<code class="sig-name descname">MALE</code><em class="property"> = &lt;Gender.MALE: 1&gt;</em><a class="headerlink" href="#gchar.games.base.Gender.MALE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.base.Gender.FEMALE">
+<code class="sig-name descname">FEMALE</code><em class="property"> = &lt;Gender.FEMALE: 2&gt;</em><a class="headerlink" href="#gchar.games.base.Gender.FEMALE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code> and its members also have the following methods:</p>
+<dl class="py method">
+<dt id="gchar.games.base.Gender.loads">
+<em class="property">classmethod </em><code class="sig-name descname">loads</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val</span></em><span class="sig-paren">)</span> &#x2192; gchar.games.base.property.Gender<a class="reference internal" href="../../_modules/gchar/games/base/property.html#Gender.loads"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.base.Gender.loads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse and convert a string value into a Gender object.</p>
+<p>The method accepts string values representing genders and converts them into the corresponding Gender enum object.
+If the input value is already a Gender object, it is returned as is.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>val</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="#gchar.games.base.Gender" title="gchar.games.base.Gender"><em>Gender</em></a><em>]</em>) – The value to parse and convert.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The Gender object corresponding to the input value.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#gchar.games.base.Gender" title="gchar.games.base.Gender">Gender</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>TypeError</strong> – If the input value is of an invalid type.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="skin">
+<h2>Skin<a class="headerlink" href="#skin" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gchar.games.base.Skin">
+<em class="property">class </em><code class="sig-prename descclassname">gchar.games.base.</code><code class="sig-name descname">Skin</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">game</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">ch_index</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>int<span class="p">, </span>str<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">url</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/base/skin.html#Skin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.base.Skin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents a skin of a game character.</p>
+<p>The class stores information about the game, character index, skin name, and original URL of the skin.
+It provides a property <cite>selected_url</cite> that returns the URL of the skin, which is either the Hugging Face Hub URL
+if the skin has been synchronized or the original URL.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>game</strong> (<em>str</em>) – The game name.</p></li>
+<li><p><strong>ch_index</strong> (<em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em>) – The index or ID of the game character.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – The name of the skin.</p></li>
+<li><p><strong>url</strong> (<em>str</em>) – The original URL of the skin.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="gchar.games.base.Skin.selected_url">
+<em class="property">property </em><code class="sig-name descname">selected_url</code><a class="headerlink" href="#gchar.games.base.Skin.selected_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the URL of the skin.</p>
+<p>If the skin has been synchronized to the Hugging Face Hub, the Hugging Face Hub URL is returned.
+Otherwise, the original URL is returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The URL of the skin.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="arknights.html" class="btn btn-neutral float-right" title="gchar.games.arknights" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="gchar.games" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2023, narugo1992
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+    <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: v0.1.1
+    <span class="fa fa-caret-down"></span>
+  </span>
+        <div class="rst-other-versions">
+                <dl>
+                    <dt>Tags</dt>
+                        <dd><a href="../../../v0.1.0/api_doc/games/base.html">v0.1.0</a></dd>
+                        <dd><a href="base.html">v0.1.1</a></dd>
+                </dl>
+                <dl>
+                    <dt>Branches</dt>
+                        <dd><a href="../../../main/api_doc/games/base.html">main</a></dd>
+                </dl>
+        </div>
+    </div>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

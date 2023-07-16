@@ -1,0 +1,624 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gchar.games.bluearchive &mdash; gchar 0.1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="gchar.games.fgo" href="fgo.html" />
+    <link rel="prev" title="gchar.games.azurlane" href="azurlane.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> gchar
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/installation/index.html">Installation</a></li>
+</ul>
+<p><span class="caption-text">Best Practice</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../best_practice/supported/index.html">Supported Games And Sites</a></li>
+</ul>
+<p><span class="caption-text">API Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html">gchar.config</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">gchar.games</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="base.html">gchar.games.base</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arknights.html">gchar.games.arknights</a></li>
+<li class="toctree-l2"><a class="reference internal" href="azurlane.html">gchar.games.azurlane</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">gchar.games.bluearchive</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#character">Character</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#englishname">EnglishName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#japanesename">JapaneseName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#chinesename">ChineseName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#chinesealiasname">ChineseAliasName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rarity">Rarity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#role">Role</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#attacktype">AttackType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#weapontype">WeaponType</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="fgo.html">gchar.games.fgo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="genshin.html">gchar.games.genshin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="girlsfrontline.html">gchar.games.girlsfrontline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neuralcloud.html">gchar.games.neuralcloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nikke.html">gchar.games.nikke</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pathtonowhere.html">gchar.games.pathtonowhere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="starrail.html">gchar.games.starrail</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dispatch.html">gchar.games.dispatch</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/index.html">gchar.resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils/index.html">gchar.utils</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">gchar</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">gchar.games</a> &raquo;</li>
+        
+      <li>gchar.games.bluearchive</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/api_doc/games/bluearchive.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+    
+    
+  <section id="module-gchar.games.bluearchive">
+<span id="gchar-games-bluearchive"></span><h1>gchar.games.bluearchive<a class="headerlink" href="#module-gchar.games.bluearchive" title="Permalink to this headline">¶</a></h1>
+<section id="character">
+<h2>Character<a class="headerlink" href="#character" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gchar.games.bluearchive.Character">
+<em class="property">class </em><code class="sig-prename descclassname">gchar.games.bluearchive.</code><code class="sig-name descname">Character</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">raw_data</span><span class="p">:</span> <span class="n">dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/bluearchive/character.html#Character"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.bluearchive.Character" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents a character in Blue Archive.
+Inherits from the base class _BaseCharacter.</p>
+<dl class="py method">
+<dt id="gchar.games.bluearchive.Character.attack_type">
+<em class="property">property </em><code class="sig-name descname">attack_type</code><a class="headerlink" href="#gchar.games.bluearchive.Character.attack_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the attack type of the character.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The attack type.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#gchar.games.bluearchive.AttackType" title="gchar.games.bluearchive.AttackType">AttackType</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gchar.games.bluearchive.Character.rarity">
+<em class="property">property </em><code class="sig-name descname">rarity</code><a class="headerlink" href="#gchar.games.bluearchive.Character.rarity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the rarity of the character.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The rarity.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#gchar.games.bluearchive.Rarity" title="gchar.games.bluearchive.Rarity"><code class="xref py py-class docutils literal notranslate"><span class="pre">Rarity</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gchar.games.bluearchive.Character.role">
+<em class="property">property </em><code class="sig-name descname">role</code><a class="headerlink" href="#gchar.games.bluearchive.Character.role" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the role of the character.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The role.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#gchar.games.bluearchive.Role" title="gchar.games.bluearchive.Role">Role</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gchar.games.bluearchive.Character.weapon_type">
+<em class="property">property </em><code class="sig-name descname">weapon_type</code><a class="headerlink" href="#gchar.games.bluearchive.Character.weapon_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the weapon type of the character.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The weapon type.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#gchar.games.bluearchive.WeaponType" title="gchar.games.bluearchive.WeaponType">WeaponType</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="englishname">
+<h2>EnglishName<a class="headerlink" href="#englishname" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gchar.games.bluearchive.EnglishName">
+<em class="property">class </em><code class="sig-prename descclassname">gchar.games.bluearchive.</code><code class="sig-name descname">EnglishName</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>List<span class="p">[</span>str<span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/bluearchive/name.html#EnglishName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.bluearchive.EnglishName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents the English name of a character in Blue Archive.
+Inherits from the base class _GenericEnglishName.</p>
+</dd></dl>
+
+</section>
+<section id="japanesename">
+<h2>JapaneseName<a class="headerlink" href="#japanesename" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gchar.games.bluearchive.JapaneseName">
+<em class="property">class </em><code class="sig-prename descclassname">gchar.games.bluearchive.</code><code class="sig-name descname">JapaneseName</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/bluearchive/name.html#JapaneseName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.bluearchive.JapaneseName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents the Japanese name of a character in Blue Archive.
+Inherits from the base class _GenericJapaneseName.</p>
+</dd></dl>
+
+</section>
+<section id="chinesename">
+<h2>ChineseName<a class="headerlink" href="#chinesename" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gchar.games.bluearchive.ChineseName">
+<em class="property">class </em><code class="sig-prename descclassname">gchar.games.bluearchive.</code><code class="sig-name descname">ChineseName</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/bluearchive/name.html#ChineseName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.bluearchive.ChineseName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents the Chinese name of a character in Blue Archive.
+Inherits from the base class _GenericChineseName.</p>
+</dd></dl>
+
+</section>
+<section id="chinesealiasname">
+<h2>ChineseAliasName<a class="headerlink" href="#chinesealiasname" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gchar.games.bluearchive.ChineseAliasName">
+<em class="property">class </em><code class="sig-prename descclassname">gchar.games.bluearchive.</code><code class="sig-name descname">ChineseAliasName</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/bluearchive/name.html#ChineseAliasName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.bluearchive.ChineseAliasName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents the Chinese alias name of a character in Blue Archive.
+Inherits from the base class _GenericChineseName.</p>
+</dd></dl>
+
+</section>
+<section id="rarity">
+<h2>Rarity<a class="headerlink" href="#rarity" title="Permalink to this headline">¶</a></h2>
+<dl class="py class enum">
+<dt id="gchar.games.bluearchive.Rarity">
+<em class="property">enum </em><code class="sig-prename descclassname">gchar.games.bluearchive.</code><code class="sig-name descname">Rarity</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/bluearchive/property.html#Rarity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.bluearchive.Rarity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enum representing the rarity of a character in Blue Archive.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Member Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
+</dd>
+</dl>
+<p>Valid values are as follows:</p>
+<dl class="py attribute">
+<dt id="gchar.games.bluearchive.Rarity.R">
+<code class="sig-name descname">R</code><em class="property"> = &lt;Rarity.R: 1&gt;</em><a class="headerlink" href="#gchar.games.bluearchive.Rarity.R" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.bluearchive.Rarity.SR">
+<code class="sig-name descname">SR</code><em class="property"> = &lt;Rarity.SR: 2&gt;</em><a class="headerlink" href="#gchar.games.bluearchive.Rarity.SR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.bluearchive.Rarity.SSR">
+<code class="sig-name descname">SSR</code><em class="property"> = &lt;Rarity.SSR: 3&gt;</em><a class="headerlink" href="#gchar.games.bluearchive.Rarity.SSR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code> and its members also have the following methods:</p>
+<dl class="py method">
+<dt id="gchar.games.bluearchive.Rarity.loads">
+<em class="property">classmethod </em><code class="sig-name descname">loads</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val</span></em><span class="sig-paren">)</span> &#x2192; gchar.games.bluearchive.property.Rarity<a class="reference internal" href="../../_modules/gchar/games/bluearchive/property.html#Rarity.loads"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.bluearchive.Rarity.loads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a rarity value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>val</strong> (Union[int, <a class="reference internal" href="#gchar.games.bluearchive.Rarity" title="gchar.games.bluearchive.Rarity"><code class="xref py py-class docutils literal notranslate"><span class="pre">Rarity</span></code></a>]) – The rarity value to load.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The loaded rarity.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#gchar.games.bluearchive.Rarity" title="gchar.games.bluearchive.Rarity"><code class="xref py py-class docutils literal notranslate"><span class="pre">Rarity</span></code></a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If the value is invalid.</p></li>
+<li><p><strong>TypeError</strong> – If the type is invalid.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="role">
+<h2>Role<a class="headerlink" href="#role" title="Permalink to this headline">¶</a></h2>
+<dl class="py class enum">
+<dt id="gchar.games.bluearchive.Role">
+<em class="property">enum </em><code class="sig-prename descclassname">gchar.games.bluearchive.</code><code class="sig-name descname">Role</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/bluearchive/property.html#Role"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.bluearchive.Role" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enum representing the role of a character in Blue Archive.</p>
+<p>Valid values are as follows:</p>
+<dl class="py attribute">
+<dt id="gchar.games.bluearchive.Role.ATTACKER">
+<code class="sig-name descname">ATTACKER</code><em class="property"> = &lt;Role.ATTACKER: 'ATTACKER'&gt;</em><a class="headerlink" href="#gchar.games.bluearchive.Role.ATTACKER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.bluearchive.Role.TACTICAL_SUPPORT">
+<code class="sig-name descname">TACTICAL_SUPPORT</code><em class="property"> = &lt;Role.TACTICAL_SUPPORT: 'TACTICAL SUPPORT'&gt;</em><a class="headerlink" href="#gchar.games.bluearchive.Role.TACTICAL_SUPPORT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.bluearchive.Role.HEALER">
+<code class="sig-name descname">HEALER</code><em class="property"> = &lt;Role.HEALER: 'HEALER'&gt;</em><a class="headerlink" href="#gchar.games.bluearchive.Role.HEALER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.bluearchive.Role.SUPPORT">
+<code class="sig-name descname">SUPPORT</code><em class="property"> = &lt;Role.SUPPORT: 'SUPPORT'&gt;</em><a class="headerlink" href="#gchar.games.bluearchive.Role.SUPPORT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.bluearchive.Role.TANK">
+<code class="sig-name descname">TANK</code><em class="property"> = &lt;Role.TANK: 'TANK'&gt;</em><a class="headerlink" href="#gchar.games.bluearchive.Role.TANK" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code> and its members also have the following methods:</p>
+<dl class="py method">
+<dt id="gchar.games.bluearchive.Role.loads">
+<em class="property">classmethod </em><code class="sig-name descname">loads</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val</span></em><span class="sig-paren">)</span> &#x2192; gchar.games.bluearchive.property.Role<a class="reference internal" href="../../_modules/gchar/games/bluearchive/property.html#Role.loads"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.bluearchive.Role.loads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a role value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>val</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="#gchar.games.bluearchive.Role" title="gchar.games.bluearchive.Role"><em>Role</em></a><em>]</em>) – The role value to load.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The loaded role.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#gchar.games.bluearchive.Role" title="gchar.games.bluearchive.Role">Role</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If the value is invalid.</p></li>
+<li><p><strong>TypeError</strong> – If the type is invalid.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="attacktype">
+<h2>AttackType<a class="headerlink" href="#attacktype" title="Permalink to this headline">¶</a></h2>
+<dl class="py class enum">
+<dt id="gchar.games.bluearchive.AttackType">
+<em class="property">enum </em><code class="sig-prename descclassname">gchar.games.bluearchive.</code><code class="sig-name descname">AttackType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/bluearchive/property.html#AttackType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.bluearchive.AttackType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enum representing the attack type of a character in Blue Archive.</p>
+<p>Valid values are as follows:</p>
+<dl class="py attribute">
+<dt id="gchar.games.bluearchive.AttackType.PENETRATION">
+<code class="sig-name descname">PENETRATION</code><em class="property"> = &lt;AttackType.PENETRATION: 'PENETRATION'&gt;</em><a class="headerlink" href="#gchar.games.bluearchive.AttackType.PENETRATION" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.bluearchive.AttackType.EXPLOSIVE">
+<code class="sig-name descname">EXPLOSIVE</code><em class="property"> = &lt;AttackType.EXPLOSIVE: 'EXPLOSIVE'&gt;</em><a class="headerlink" href="#gchar.games.bluearchive.AttackType.EXPLOSIVE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.bluearchive.AttackType.MYSTIC">
+<code class="sig-name descname">MYSTIC</code><em class="property"> = &lt;AttackType.MYSTIC: 'MYSTIC'&gt;</em><a class="headerlink" href="#gchar.games.bluearchive.AttackType.MYSTIC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code> and its members also have the following methods:</p>
+<dl class="py method">
+<dt id="gchar.games.bluearchive.AttackType.loads">
+<em class="property">classmethod </em><code class="sig-name descname">loads</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val</span></em><span class="sig-paren">)</span> &#x2192; gchar.games.bluearchive.property.AttackType<a class="reference internal" href="../../_modules/gchar/games/bluearchive/property.html#AttackType.loads"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.bluearchive.AttackType.loads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load an attack type value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>val</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="#gchar.games.bluearchive.AttackType" title="gchar.games.bluearchive.AttackType"><em>AttackType</em></a><em>]</em>) – The attack type value to load.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The loaded attack type.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#gchar.games.bluearchive.AttackType" title="gchar.games.bluearchive.AttackType">AttackType</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If the value is invalid.</p></li>
+<li><p><strong>TypeError</strong> – If the type is invalid.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="weapontype">
+<h2>WeaponType<a class="headerlink" href="#weapontype" title="Permalink to this headline">¶</a></h2>
+<dl class="py class enum">
+<dt id="gchar.games.bluearchive.WeaponType">
+<em class="property">enum </em><code class="sig-prename descclassname">gchar.games.bluearchive.</code><code class="sig-name descname">WeaponType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/bluearchive/property.html#WeaponType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.bluearchive.WeaponType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enum representing the weapon type of a character in Blue Archive.</p>
+<p>Valid values are as follows:</p>
+<dl class="py attribute">
+<dt id="gchar.games.bluearchive.WeaponType.SMG">
+<code class="sig-name descname">SMG</code><em class="property"> = &lt;WeaponType.SMG: 'SMG'&gt;</em><a class="headerlink" href="#gchar.games.bluearchive.WeaponType.SMG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.bluearchive.WeaponType.RL">
+<code class="sig-name descname">RL</code><em class="property"> = &lt;WeaponType.RL: 'RL'&gt;</em><a class="headerlink" href="#gchar.games.bluearchive.WeaponType.RL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.bluearchive.WeaponType.HG">
+<code class="sig-name descname">HG</code><em class="property"> = &lt;WeaponType.HG: 'HG'&gt;</em><a class="headerlink" href="#gchar.games.bluearchive.WeaponType.HG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.bluearchive.WeaponType.FT">
+<code class="sig-name descname">FT</code><em class="property"> = &lt;WeaponType.FT: 'FT'&gt;</em><a class="headerlink" href="#gchar.games.bluearchive.WeaponType.FT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.bluearchive.WeaponType.SG">
+<code class="sig-name descname">SG</code><em class="property"> = &lt;WeaponType.SG: 'SG'&gt;</em><a class="headerlink" href="#gchar.games.bluearchive.WeaponType.SG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.bluearchive.WeaponType.MT">
+<code class="sig-name descname">MT</code><em class="property"> = &lt;WeaponType.MT: 'MT'&gt;</em><a class="headerlink" href="#gchar.games.bluearchive.WeaponType.MT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.bluearchive.WeaponType.AR">
+<code class="sig-name descname">AR</code><em class="property"> = &lt;WeaponType.AR: 'AR'&gt;</em><a class="headerlink" href="#gchar.games.bluearchive.WeaponType.AR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.bluearchive.WeaponType.MG">
+<code class="sig-name descname">MG</code><em class="property"> = &lt;WeaponType.MG: 'MG'&gt;</em><a class="headerlink" href="#gchar.games.bluearchive.WeaponType.MG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.bluearchive.WeaponType.GL">
+<code class="sig-name descname">GL</code><em class="property"> = &lt;WeaponType.GL: 'GL'&gt;</em><a class="headerlink" href="#gchar.games.bluearchive.WeaponType.GL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.bluearchive.WeaponType.SR">
+<code class="sig-name descname">SR</code><em class="property"> = &lt;WeaponType.SR: 'SR'&gt;</em><a class="headerlink" href="#gchar.games.bluearchive.WeaponType.SR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.bluearchive.WeaponType.RG">
+<code class="sig-name descname">RG</code><em class="property"> = &lt;WeaponType.RG: 'RG'&gt;</em><a class="headerlink" href="#gchar.games.bluearchive.WeaponType.RG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code> and its members also have the following methods:</p>
+<dl class="py method">
+<dt id="gchar.games.bluearchive.WeaponType.loads">
+<em class="property">classmethod </em><code class="sig-name descname">loads</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val</span></em><span class="sig-paren">)</span> &#x2192; gchar.games.bluearchive.property.WeaponType<a class="reference internal" href="../../_modules/gchar/games/bluearchive/property.html#WeaponType.loads"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.bluearchive.WeaponType.loads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a weapon type value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>val</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="#gchar.games.bluearchive.WeaponType" title="gchar.games.bluearchive.WeaponType"><em>WeaponType</em></a><em>]</em>) – The weapon type value to load.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The loaded weapon type.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#gchar.games.bluearchive.WeaponType" title="gchar.games.bluearchive.WeaponType">WeaponType</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If the value is invalid.</p></li>
+<li><p><strong>TypeError</strong> – If the type is invalid.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="fgo.html" class="btn btn-neutral float-right" title="gchar.games.fgo" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="azurlane.html" class="btn btn-neutral float-left" title="gchar.games.azurlane" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2023, narugo1992
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+    <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: v0.1.1
+    <span class="fa fa-caret-down"></span>
+  </span>
+        <div class="rst-other-versions">
+                <dl>
+                    <dt>Tags</dt>
+                        <dd><a href="../../../v0.1.0/api_doc/games/bluearchive.html">v0.1.0</a></dd>
+                        <dd><a href="bluearchive.html">v0.1.1</a></dd>
+                </dl>
+                <dl>
+                    <dt>Branches</dt>
+                        <dd><a href="../../../main/api_doc/games/bluearchive.html">main</a></dd>
+                </dl>
+        </div>
+    </div>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,331 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gchar.utils.session &mdash; gchar 0.1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="prev" title="gchar.utils.download" href="download.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> gchar
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/installation/index.html">Installation</a></li>
+</ul>
+<p><span class="caption-text">Best Practice</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../best_practice/supported/index.html">Supported Games And Sites</a></li>
+</ul>
+<p><span class="caption-text">API Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html">gchar.config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../games/index.html">gchar.games</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/index.html">gchar.resources</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">gchar.utils</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cache.html">gchar.utils.cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html">gchar.utils.cli</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compare.html">gchar.utils.compare</a></li>
+<li class="toctree-l2"><a class="reference internal" href="download.html">gchar.utils.download</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">gchar.utils.session</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#get-requests-session">get_requests_session</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#srequest">srequest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sget">sget</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">gchar</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">gchar.utils</a> &raquo;</li>
+        
+      <li>gchar.utils.session</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/api_doc/utils/session.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+    
+    
+  <section id="module-gchar.utils.session">
+<span id="gchar-utils-session"></span><h1>gchar.utils.session<a class="headerlink" href="#module-gchar.utils.session" title="Permalink to this headline">¶</a></h1>
+<section id="get-requests-session">
+<h2>get_requests_session<a class="headerlink" href="#get-requests-session" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="gchar.utils.session.get_requests_session">
+<code class="sig-prename descclassname">gchar.utils.session.</code><code class="sig-name descname">get_requests_session</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">max_retries</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">5</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">10</span></em>, <em class="sig-param"><span class="n">headers</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Dict<span class="p">[</span>str<span class="p">, </span>str<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">session</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>requests.Session<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; requests.Session<a class="reference internal" href="../../_modules/gchar/utils/session.html#get_requests_session"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.utils.session.get_requests_session" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a requests Session object configured with retry and timeout settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>max_retries</strong> (<em>int</em>) – The maximum number of retries. (default: 5)</p></li>
+<li><p><strong>timeout</strong> (<em>int</em>) – The default timeout value in seconds. (default: 10)</p></li>
+<li><p><strong>headers</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em><em>]</em>) – Additional headers to be added to the session. (default: None)</p></li>
+<li><p><strong>session</strong> (<em>Optional</em><em>[</em><em>requests.Session</em><em>]</em>) – An existing requests Session object to use. If not provided, a new Session object is created. (default: None)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The requests Session object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>requests.Session</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="srequest">
+<h2>srequest<a class="headerlink" href="#srequest" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="gchar.utils.session.srequest">
+<code class="sig-prename descclassname">gchar.utils.session.</code><code class="sig-name descname">srequest</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">session</span><span class="p">:</span> <span class="n">requests.Session</span></em>, <em class="sig-param"><span class="n">method</span></em>, <em class="sig-param"><span class="n">url</span></em>, <em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">max_retries</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">5</span></em>, <em class="sig-param"><span class="n">sleep_time</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">5.0</span></em>, <em class="sig-param"><span class="n">raise_for_status</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span> &#x2192; requests.Response<a class="reference internal" href="../../_modules/gchar/utils/session.html#srequest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.utils.session.srequest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send a request using the provided session object with retry and timeout settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<em>requests.Session</em>) – The requests Session object to use for the request.</p></li>
+<li><p><strong>method</strong> (<em>str</em>) – The HTTP method for the request.</p></li>
+<li><p><strong>url</strong> (<em>str</em>) – The URL for the request.</p></li>
+<li><p><strong>max_retries</strong> (<em>int</em>) – The maximum number of retries. (default: 5)</p></li>
+<li><p><strong>sleep_time</strong> (<em>float</em>) – The sleep time between retries in seconds. (default: 5.0)</p></li>
+<li><p><strong>raise_for_status</strong> (<em>bool</em>) – Whether to raise an exception for non-successful response status codes. (default: True)</p></li>
+<li><p><strong>kwargs</strong> (<em>dict</em>) – Additional keyword arguments for the request.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The response from the request.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>requests.Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="sget">
+<h2>sget<a class="headerlink" href="#sget" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="gchar.utils.session.sget">
+<code class="sig-prename descclassname">gchar.utils.session.</code><code class="sig-name descname">sget</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">session</span><span class="p">:</span> <span class="n">requests.Session</span></em>, <em class="sig-param"><span class="n">url</span></em>, <em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">max_retries</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">5</span></em>, <em class="sig-param"><span class="n">sleep_time</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">5.0</span></em>, <em class="sig-param"><span class="n">raise_for_status</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span> &#x2192; requests.Response<a class="reference internal" href="../../_modules/gchar/utils/session.html#sget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.utils.session.sget" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send a GET request using the provided session object with retry and timeout settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<em>requests.Session</em>) – The requests Session object to use for the request.</p></li>
+<li><p><strong>url</strong> (<em>str</em>) – The URL for the request.</p></li>
+<li><p><strong>max_retries</strong> (<em>int</em>) – The maximum number of retries. (default: 5)</p></li>
+<li><p><strong>sleep_time</strong> (<em>float</em>) – The sleep time between retries in seconds. (default: 5.0)</p></li>
+<li><p><strong>raise_for_status</strong> (<em>bool</em>) – Whether to raise an exception for non-successful response status codes. (default: True)</p></li>
+<li><p><strong>kwargs</strong> (<em>dict</em>) – Additional keyword arguments for the request.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The response from the request.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>requests.Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="download.html" class="btn btn-neutral float-left" title="gchar.utils.download" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2023, narugo1992
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+    <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: v0.1.1
+    <span class="fa fa-caret-down"></span>
+  </span>
+        <div class="rst-other-versions">
+                <dl>
+                    <dt>Tags</dt>
+                        <dd><a href="../../../v0.1.0/api_doc/utils/session.html">v0.1.0</a></dd>
+                        <dd><a href="session.html">v0.1.1</a></dd>
+                </dl>
+                <dl>
+                    <dt>Branches</dt>
+                        <dd><a href="../../../main/api_doc/utils/session.html">main</a></dd>
+                </dl>
+        </div>
+    </div>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
