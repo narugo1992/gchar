@@ -29,7 +29,7 @@ class GirlsFrontLineIndexer(GameIndexer):
     __game_name__ = 'girlsfrontline'
     __official_name__ = 'girls\' front-line'
     __root_website__ = 'https://iopwiki.com'
-    __root_website_cn__ = 'https://www.gfwiki.org'
+    __root_website_cn__ = 'http://www.gfwiki.org'
 
     def _get_alias_of_op(self, op, session: requests.Session, website_root: str, names: List[str]) -> List[str]:
         response = sget(
