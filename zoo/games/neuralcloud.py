@@ -108,6 +108,7 @@ class NeuralCloudIndexer(GameIndexer):
                 gf_char_block = one_page('#后续经历').parent('h2').next('table.dollPageCloud')
                 *_, gf_char_element = gf_char_block('td > a.externalCloud').items()
                 gf_char_name, gf_char_page_url = gf_char_element.text().strip(), gf_char_element.attr('href')
+                gf_char_page_url = gf_char_page_url.replace('https://', 'http://')
 
                 gf_page = sget(session, gf_char_page_url)
                 pq_gf_page = pq(gf_page.text)
