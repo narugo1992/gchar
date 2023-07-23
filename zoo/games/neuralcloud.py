@@ -1,7 +1,9 @@
 import logging
 import os
 import re
+import warnings
 from datetime import datetime
+from functools import wraps
 from typing import List, Optional, Iterator, Any
 from urllib.parse import quote, urljoin
 
@@ -17,8 +19,17 @@ from tqdm.auto import tqdm
 from waifuc.action import PaddingAlignAction
 from waifuc.model import ImageItem
 
-from gchar.utils import sget, download_file, srequest
+from gchar.utils import download_file
+from gchar.utils import sget as _origin_sget
 from .base import GameIndexer
+
+
+@wraps(_origin_sget)
+def sget(*args, **kwargs):
+    kwargs = {**dict(verify=False), **kwargs}
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        return _origin_sget(*args, **kwargs)
 
 
 def _rgba_to_pil(image: Image.Image) -> Image.Image:
@@ -176,13 +187,13 @@ class NeuralCloudIndexer(GameIndexer):
             }
 
     def _get_index_from_jpsite(self, session: requests.Session):
-        resp = srequest(session, 'GET',
-                        f'{self.__jp_website__}/?%E3%82%AD%E3%83%A3%E3%83%A9%E3%82%AF%E3%82%BF%E3%83%BC%E4%B8%80%E8%A6%A7#')
+        resp = sget(session,
+                    f'{self.__jp_website__}/?%E3%82%AD%E3%83%A3%E3%83%A9%E3%82%AF%E3%82%BF%E3%83%BC%E4%B8%80%E8%A6%A7#')
         for item in pq(resp.text)("tr td.style_td:nth-child(2) a").items():
             yield item.text().strip(), urljoin(resp.request.url, item.attr('href'))
 
     def _get_info_from_jpsite(self, session: requests.Session, url):
-        resp = srequest(session, 'GET', url)
+        resp = sget(session, url)
         page = pq(resp.text)
 
         tables = list(page('.style_table').items())

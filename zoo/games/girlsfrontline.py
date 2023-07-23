@@ -1,5 +1,7 @@
 import re
+import warnings
 from datetime import datetime
+from functools import wraps
 from typing import Optional, List, Dict, Iterator, Any
 from urllib.parse import quote
 
@@ -7,8 +9,17 @@ import requests
 from pyquery import PyQuery as pq
 from tqdm import tqdm
 
-from gchar.utils import sget
+from gchar.utils import sget as _origin_sget
 from .base import GameIndexer
+
+
+@wraps(_origin_sget)
+def sget(*args, **kwargs):
+    kwargs = {**dict(verify=False), **kwargs}
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        return _origin_sget(*args, **kwargs)
+
 
 _STAR_PATTERN = re.compile(r'(?P<rarity>\d|EXTRA)star\.png')
 _CLASS_PATTERN = re.compile(r'_(?P<class>SMG|MG|RF|HG|AR|SG)_')
