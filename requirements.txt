@@ -7,4 +7,4 @@ unidecode
 thefuzz
 editdistance
 requests
-pyyaml
+pyyaml~=5.3.1
