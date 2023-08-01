@@ -1,31 +1,29 @@
+import json
 import os
 from functools import lru_cache
 from json import JSONDecodeError
 from typing import Optional, Dict, Union, List
 
 import requests
+from huggingface_hub import hf_hub_download
 
-from gchar.utils import get_requests_session, sget
+from gchar.utils import get_requests_session
 from gchar.utils.session import DEFAULT_TIMEOUT
 
-REMOTE_PIXIV_SESSION_INDEX_URL = 'REMOTE_PIXIV_SESSION_INDEX_URL'
+REMOTE_PIXIV_SESSION_REPO = 'REMOTE_PIXIV_SESSION_REPO'
 
 
 @lru_cache()
 def _get_remote_session_index_raw():
-    remote_index_url = os.environ.get(REMOTE_PIXIV_SESSION_INDEX_URL, None)
-    assert remote_index_url, f'{REMOTE_PIXIV_SESSION_INDEX_URL!r} not given in environment.'
-
-    session = get_requests_session()
-    resp = sget(session, remote_index_url)
-    resp.raise_for_status()
-    remote_urls = resp.json()
+    with open(hf_hub_download(os.environ[REMOTE_PIXIV_SESSION_REPO], filename='index.json',
+                              repo_type='dataset', token=os.environ.get('HF_TOKEN')), 'r', encoding='utf-8') as f:
+        files = json.load(f)
 
     items = []
-    for session_url in remote_urls:
-        resp = sget(session, session_url)
-        resp.raise_for_status()
-        items.append(resp.json())
+    for session_file in files:
+        with open(hf_hub_download(os.environ[REMOTE_PIXIV_SESSION_REPO], filename=session_file,
+                                  repo_type='dataset', token=os.environ.get('HF_TOKEN')), 'r', encoding='utf-8') as f:
+            items.append(json.load(f))
 
     return items
 

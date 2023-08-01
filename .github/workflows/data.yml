@@ -377,6 +377,7 @@ jobs:
         env:
           CI: 'true'
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          REMOTE_PIXIV_SESSION_REPO: ${{ secrets.REMOTE_PIXIV_SESSION_REPO }}
         shell: bash
         run: |
           mkdir -p ${{ matrix.game }} &&\
@@ -505,6 +506,7 @@ jobs:
         env:
           CI: 'true'
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          REMOTE_PIXIV_SESSION_REPO: ${{ secrets.REMOTE_PIXIV_SESSION_REPO }}
         shell: bash
         run: |
           mkdir -p ${{ matrix.game }} && \
