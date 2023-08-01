@@ -376,7 +376,7 @@ jobs:
         if: ${{ env.SCHEDULED == 'yes' }}
         env:
           CI: 'true'
-          REMOTE_PIXIV_SESSION_INDEX_URL: ${{ secrets.REMOTE_PIXIV_SESSION_INDEX_URL }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
         shell: bash
         run: |
           mkdir -p ${{ matrix.game }} &&\
@@ -504,7 +504,7 @@ jobs:
         if: ${{ env.SCHEDULED == 'yes' }}
         env:
           CI: 'true'
-          REMOTE_PIXIV_SESSION_INDEX_URL: ${{ secrets.REMOTE_PIXIV_SESSION_INDEX_URL }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
         shell: bash
         run: |
           mkdir -p ${{ matrix.game }} && \
