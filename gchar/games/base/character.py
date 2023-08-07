@@ -40,6 +40,7 @@ class Character(Comparable):
     """
 
     __repository__: str = 'deepghs/game_characters'
+    __skin_repository__: str = 'deepghs/game_character_skins'
     __game_name__: str
     __official_name__: str
     __cnname_class__: Type[ChineseName] = ChineseName

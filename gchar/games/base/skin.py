@@ -24,7 +24,7 @@ def _read_hf_skins_meta(game: str, ch_index: Union[int, str]):
     :rtype: dict
     """
     from gchar.games.dispatch.access import GAME_CHARS
-    repository = GAME_CHARS[game].__repository__
+    repository = GAME_CHARS[game].__skin_repository__
 
     online_dir = f'datasets/{repository}/{game}/{ch_index}'
     meta_file = f'{online_dir}/.meta.json'
