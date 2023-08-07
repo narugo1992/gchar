@@ -188,7 +188,7 @@
 <span class="sd">    :rtype: dict</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">from</span> <span class="nn">gchar.games.dispatch.access</span> <span class="kn">import</span> <span class="n">GAME_CHARS</span>
-    <span class="n">repository</span> <span class="o">=</span> <span class="n">GAME_CHARS</span><span class="p">[</span><span class="n">game</span><span class="p">]</span><span class="o">.</span><span class="n">__repository__</span>
+    <span class="n">repository</span> <span class="o">=</span> <span class="n">GAME_CHARS</span><span class="p">[</span><span class="n">game</span><span class="p">]</span><span class="o">.</span><span class="n">__skin_repository__</span>
 
     <span class="n">online_dir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;datasets/</span><span class="si">{</span><span class="n">repository</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">game</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">ch_index</span><span class="si">}</span><span class="s1">&#39;</span>
     <span class="n">meta_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">online_dir</span><span class="si">}</span><span class="s1">/.meta.json&#39;</span>
