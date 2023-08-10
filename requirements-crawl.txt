@@ -12,3 +12,4 @@ huggingface_hub>=0.14.0
 git+https://github.com/deepghs/waifuc.git
 dateparser>=1.1.8
 scipy
+zhon

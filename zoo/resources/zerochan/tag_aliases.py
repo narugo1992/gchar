@@ -12,22 +12,34 @@ from tqdm.auto import tqdm
 from gchar.utils import get_requests_session, srequest
 
 
-def get_alias_of_keyword(word: str):
-    session = get_requests_session()
-    resp = srequest(session, 'GET', f'https://www.zerochan.net/{quote_plus(word)}', raise_for_status=False)
+def get_info_of_keyword(word: str, session=None):
+    session = session or get_requests_session()
+    resp = srequest(
+        session, 'GET', f'https://www.zerochan.net/{quote_plus(word)}',
+        params={'q': word, 'strict': '1'},
+        headers={'Referer': f'https://www.zerochan.net/{quote_plus(word)}'},
+        raise_for_status=False,
+    )
     if resp.status_code == 404:
         return []
     else:
         resp.raise_for_status()
     page = pq(resp.text)
 
-    retval = []
+    alias_items = []
     for item in page('#aliases li').items():
         type_ = item('i').text().strip()
         alias_name = item('span').text().strip()
-        retval.append((type_, alias_name))
+        alias_items.append((type_, alias_name))
 
-    return retval
+    tag_items = []
+    for item in page('#tags li').items():
+        type_ = item.attr('class').strip()
+        assert ' ' not in type_
+        tag = item('a').text().strip()
+        tag_items.append((type_, tag))
+
+    return alias_items, tag_items
 
 
 def get_alias_table(max_workers: int = 4):
@@ -42,7 +54,7 @@ def get_alias_table(max_workers: int = 4):
     pg = tqdm(total=len(tags))
 
     def _get_alias(wd):
-        for type_, alias_name in get_alias_of_keyword(wd):
+        for type_, alias_name in get_info_of_keyword(wd)[0]:
             data.append((alias_name, wd, type_))
         pg.update()
 
