@@ -35,7 +35,7 @@ def get_alias_table(max_workers: int = 4):
         'deepghs/site_tags',
         filename='zerochan.net/tags.csv',
         repo_type='dataset'
-    ))['tag'][:50]
+    ))['tag']
 
     columns = ['alias', 'tag', 'type']
     data = []
