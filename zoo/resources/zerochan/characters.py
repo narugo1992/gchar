@@ -97,7 +97,7 @@ def get_character_list(min_strict: int = 20, max_workers: int = 4):
         if item['parent'] in all_ch_tags:
             pass
         else:
-            aliases, tags = get_info_of_keyword(item['tag'], session)
+            aliases, tags, desc_md = get_info_of_keyword(item['tag'], session)
             enname, ennames = item['tag'], []
             cnname, cnnames = None, []
             jpname, jpnames = None, []
@@ -175,6 +175,7 @@ def get_character_list(min_strict: int = 20, max_workers: int = 4):
                 'alias': alias_names,
                 'total': item['total'],
                 'strict': item['strict'],
+                'description': desc_md,
             })
 
         pg.update()

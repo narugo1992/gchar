@@ -1,8 +1,11 @@
 import logging
 import os
+import re
 from concurrent.futures import ThreadPoolExecutor
+from typing import List, Tuple
 from urllib.parse import quote_plus
 
+import markdownify
 import pandas as pd
 from hbutils.system import TemporaryDirectory
 from huggingface_hub import hf_hub_download, HfApi
@@ -12,7 +15,7 @@ from tqdm.auto import tqdm
 from gchar.utils import get_requests_session, srequest
 
 
-def get_info_of_keyword(word: str, session=None):
+def get_info_of_keyword(word: str, session=None) -> Tuple[List[Tuple[str, str]], List[Tuple[str, str]], str]:
     session = session or get_requests_session()
     resp = srequest(
         session, 'GET', f'https://www.zerochan.net/{quote_plus(word)}',
@@ -39,7 +42,10 @@ def get_info_of_keyword(word: str, session=None):
         tag = item('a').text().strip()
         tag_items.append((type_, tag))
 
-    return alias_items, tag_items
+    desc_md = markdownify.markdownify(page('#description').html(), strip=['iframe'])
+    desc_md = re.sub(r'((\r\n|\r|\n)\s*)+(\r\n|\r|\n)', '\n\n', desc_md)
+
+    return alias_items, tag_items, desc_md
 
 
 def get_alias_table(max_workers: int = 4):
