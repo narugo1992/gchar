@@ -177,7 +177,7 @@ def get_character_list(min_strict: int = 20, max_workers: int = 4):
                 'strict': item['strict'],
                 'description': desc_md,
                 'tags': [
-                    {'type': type_, 'tag': tag}
+                    {'type': type_, 'name': tag}
                     for type_, tag in tags
                 ],
             })
