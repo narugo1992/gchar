@@ -13,3 +13,4 @@ git+https://github.com/deepghs/waifuc.git
 dateparser>=1.1.8
 scipy
 zhon
+markdownify
