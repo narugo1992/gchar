@@ -35,7 +35,7 @@ class CharacterSkinSource(WebDataSource):
         if self.hf_fs.exists(meta_json):
             meta = json.loads(self.hf_fs.read_text(meta_json))
             skin_files = {item['metadata']['name']: item['name'] for item in meta['files']}
-
+ 
             for skin in self._yield_skins():
                 if skin.name in skin_files:
                     url = hf_hub_url(
