@@ -12,9 +12,11 @@ from hfmirror.sync import SyncTask
 from huggingface_hub import HfApi
 from tqdm.auto import tqdm
 
-from gchar.games.dispatch.access import GAME_CHARS
+from gchar.games.dispatch.access import GAME_CHARS, load_generic
 from gchar.utils import GLOBAL_CONTEXT_SETTINGS, srequest, get_requests_session
 from gchar.utils import print_version as _origin_print_version
+
+load_generic()
 
 
 class SkinResource(SyncResource):
@@ -58,13 +60,14 @@ print_version = partial(_origin_print_version, 'gchar')
 @click.option('-v', '--version', is_flag=True, callback=print_version, expose_value=False, is_eager=True)
 @click.option('--game', '-g', 'game', type=click.Choice(sorted(GAME_CHARS.keys())), required=True,
               help='Game to download all images.', show_default=True)
-@click.option('--repo', '-r', 'repo', type=str, default='deepghs/game_character_skins',
+@click.option('--repo', '-r', 'repo', type=str, default=None,
               help='Repository to upload.', show_default=True)
 def cli(game, repo):
     logging.try_init_root(logging.INFO)
     ch_class = GAME_CHARS[game]
     resource = SkinResource(ch_class.all(), ch_class)
 
+    repo = repo or ch_class.__skin_repository__
     api = HfApi(token=os.environ['HF_TOKEN'])
     api.create_repo(repo, repo_type='dataset', exist_ok=True)
     storage = HuggingfaceStorage(repo=repo, hf_client=api, namespace=game)

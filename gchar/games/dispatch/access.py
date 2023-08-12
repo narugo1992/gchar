@@ -2,6 +2,7 @@ from functools import lru_cache
 from itertools import islice
 from typing import Iterator, Tuple, Optional, List, Type, Dict
 
+from huggingface_hub.utils import EntryNotFoundError
 from thefuzz import fuzz
 
 from ..arknights import Character as ArknightsCharacter
@@ -78,6 +79,11 @@ register_game(NikkeCharacter)
 register_game(StarRailCharacter)
 
 
+def load_generic():
+    from ...generic import import_generic
+    import_generic()
+
+
 @optional_lru_cache()
 def _all_characters(**kwargs) -> List[Character]:
     """
@@ -93,10 +99,13 @@ def _all_characters(**kwargs) -> List[Character]:
     cnt = 0
     for _, _ch_set in GAME_CHARS.items():
         for ch in _ch_set.all(**kwargs, sorted=False):
-            counts = get_pixiv_posts(ch)
-            if counts:
-                all_count, _ = counts
-            else:
+            try:
+                counts = get_pixiv_posts(ch)
+                if counts:
+                    all_count, _ = counts
+                else:
+                    all_count = 0
+            except EntryNotFoundError:
                 all_count = 0
             chs.append((ch, all_count, ch.is_extra, cnt))
             cnt += 1

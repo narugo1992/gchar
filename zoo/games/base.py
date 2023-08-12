@@ -19,6 +19,7 @@ from gchar.utils import print_version as _origin_print_version
 class GameIndexer:
     __game_name__ = 'default'
     __root_website__ = 'https://root.website.com'
+    __repository__ = 'deepghs/game_characters'
 
     def _create_session(self, timeout: int = 10, retries: int = 5, headers=None, **kwargs):
         _ = kwargs
@@ -43,8 +44,9 @@ class GameIndexer:
 
             yield [index_file]
 
-    def deploy_to_huggingface(self, repository: str = 'deepghs/game_characters', revision: str = 'main',
+    def deploy_to_huggingface(self, repository: Optional[str] = None, revision: str = 'main',
                               maxcnt: Optional[int] = None, timeout: int = 10, retries: int = 5, **kwargs):
+        repository = repository or self.__repository__
         logging.info(f'Initializing repository {repository!r} ...')
         hf_client = HfApi(token=os.environ['HF_TOKEN'])
         hf_client.create_repo(repo_id=repository, repo_type='dataset', exist_ok=True)
@@ -82,7 +84,7 @@ class GameIndexer:
                       help='Timeout of this update.', show_default=True)
         @click.option('--maxcnt', '-n', 'maxcnt', type=int, default=None,
                       help='Max count to crawler (only used for debugging and testing).', show_default=True)
-        @click.option('--repository', '-r', 'repository', type=str, default='deepghs/game_characters',
+        @click.option('--repository', '-r', 'repository', type=str, default=self.__repository__,
                       help='Repository to publish to.', show_default=True)
         @click.option('--revision', '-R', 'revision', type=str, default='main',
                       help='Revision for pushing the model.', show_default=True)
