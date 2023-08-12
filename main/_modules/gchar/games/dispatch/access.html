@@ -166,6 +166,7 @@
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">islice</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Dict</span>
 
+<span class="kn">from</span> <span class="nn">huggingface_hub.utils</span> <span class="kn">import</span> <span class="n">EntryNotFoundError</span>
 <span class="kn">from</span> <span class="nn">thefuzz</span> <span class="kn">import</span> <span class="n">fuzz</span>
 
 <span class="kn">from</span> <span class="nn">..arknights</span> <span class="kn">import</span> <span class="n">Character</span> <span class="k">as</span> <span class="n">ArknightsCharacter</span>
@@ -257,10 +258,13 @@
     <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">_ch_set</span> <span class="ow">in</span> <span class="n">GAME_CHARS</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">_ch_set</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">,</span> <span class="nb">sorted</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-            <span class="n">counts</span> <span class="o">=</span> <span class="n">get_pixiv_posts</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">counts</span><span class="p">:</span>
-                <span class="n">all_count</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">counts</span>
-            <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">counts</span> <span class="o">=</span> <span class="n">get_pixiv_posts</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">counts</span><span class="p">:</span>
+                    <span class="n">all_count</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">counts</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">all_count</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">except</span> <span class="n">EntryNotFoundError</span><span class="p">:</span>
                 <span class="n">all_count</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="n">chs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">ch</span><span class="p">,</span> <span class="n">all_count</span><span class="p">,</span> <span class="n">ch</span><span class="o">.</span><span class="n">is_extra</span><span class="p">,</span> <span class="n">cnt</span><span class="p">))</span>
             <span class="n">cnt</span> <span class="o">+=</span> <span class="mi">1</span>

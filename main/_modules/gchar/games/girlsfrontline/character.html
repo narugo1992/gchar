@@ -162,18 +162,21 @@
     
     
   <h1>Source code for gchar.games.girlsfrontline.character</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Iterator</span>
 
 <span class="kn">import</span> <span class="nn">math</span>
 
 <span class="kn">from</span> <span class="nn">.name</span> <span class="kn">import</span> <span class="n">EnglishName</span><span class="p">,</span> <span class="n">JapaneseName</span><span class="p">,</span> <span class="n">ChineseName</span><span class="p">,</span> <span class="n">ChineseAliasName</span>
 <span class="kn">from</span> <span class="nn">.property</span> <span class="kn">import</span> <span class="n">Rarity</span><span class="p">,</span> <span class="n">Clazz</span>
-<span class="kn">from</span> <span class="nn">..base</span> <span class="kn">import</span> <span class="n">Character</span> <span class="k">as</span> <span class="n">_BaseCharacter</span>
+<span class="kn">from</span> <span class="nn">..base</span> <span class="kn">import</span> <span class="n">Character</span> <span class="k">as</span> <span class="n">_BaseCharacter</span><span class="p">,</span> <span class="n">Skin</span>
 
 
 <div class="viewcode-block" id="Character"><a class="viewcode-back" href="../../../../api_doc/games/girlsfrontline.html#gchar.games.girlsfrontline.Character">[docs]</a><span class="k">class</span> <span class="nc">Character</span><span class="p">(</span><span class="n">_BaseCharacter</span><span class="p">):</span>
     <span class="n">__game_name__</span> <span class="o">=</span> <span class="s1">&#39;girlsfrontline&#39;</span>
     <span class="n">__official_name__</span> <span class="o">=</span> <span class="s1">&#39;Girls</span><span class="se">\&#39;</span><span class="s1"> Frontline&#39;</span>
+    <span class="n">__game_keywords__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;girls</span><span class="se">\&#39;</span><span class="s1">_frontline&#39;</span><span class="p">,</span> <span class="s1">&#39;ドールズフロントライン&#39;</span><span class="p">,</span> <span class="s1">&#39;gfl&#39;</span><span class="p">,</span> <span class="s1">&#39;girlsfrontline&#39;</span><span class="p">]</span>
+    <span class="n">__pixiv_keyword__</span> <span class="o">=</span> <span class="s1">&#39;ドールズフロントライン&#39;</span>
+    <span class="n">__pixiv_suffix__</span> <span class="o">=</span> <span class="s1">&#39;ドールズフロントライン&#39;</span>
     <span class="n">__enname_class__</span> <span class="o">=</span> <span class="n">EnglishName</span>
     <span class="n">__cnname_class__</span> <span class="o">=</span> <span class="n">ChineseName</span>
     <span class="n">__jpname_class__</span> <span class="o">=</span> <span class="n">JapaneseName</span>
@@ -213,6 +216,11 @@
 
     <span class="k">def</span> <span class="nf">_skins</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
         <span class="k">return</span> <span class="p">[(</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;desc&#39;</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">])</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="p">[</span><span class="s1">&#39;skins&#39;</span><span class="p">]]</span>
+
+    <span class="k">def</span> <span class="nf">_iter_formal_skins</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Skin</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">skin</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">skins</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;profile&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skin</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+                <span class="k">yield</span> <span class="n">skin</span>
 
     <span class="k">def</span> <span class="nf">_release_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">release_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="p">[</span><span class="s1">&#39;release&#39;</span><span class="p">]</span>
