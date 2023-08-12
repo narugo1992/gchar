@@ -1,10 +1,10 @@
-from typing import List, Tuple
+from typing import List, Tuple, Iterator
 
 import math
 
 from .name import EnglishName, JapaneseName, ChineseName, ChineseAliasName
 from .property import Rarity, Clazz
-from ..base import Character as _BaseCharacter
+from ..base import Character as _BaseCharacter, Skin
 
 
 class Character(_BaseCharacter):
@@ -49,6 +49,11 @@ class Character(_BaseCharacter):
 
     def _skins(self) -> List[Tuple[str, str]]:
         return [(item['desc'], item['url']) for item in self.__raw_data['skins']]
+
+    def _iter_formal_skins(self) -> Iterator[Skin]:
+        for skin in self.skins:
+            if 'profile' not in skin.name.lower():
+                yield skin
 
     def _release_time(self):
         release_info = self.__raw_data['release']

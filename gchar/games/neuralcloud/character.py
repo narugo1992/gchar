@@ -1,8 +1,8 @@
-from typing import List, Tuple, Mapping, Optional
+from typing import List, Tuple, Mapping, Optional, Iterator
 
 from .name import EnglishName, ChineseName, ChineseAliasName, JapaneseName
 from .property import Clazz, Rarity
-from ..base import Character as _BaseCharacter
+from ..base import Character as _BaseCharacter, Skin
 from ..girlsfrontline import Character as GFCharacter
 from ...utils import optional_lru_cache
 
@@ -79,6 +79,11 @@ class Character(_BaseCharacter):
 
     def _skins(self) -> List[Tuple[str, str]]:
         return [(item['name'], item['url']) for item in self.__raw_data['skins']]
+
+    def _iter_formal_skins(self) -> Iterator[Skin]:
+        for skin in self.skins:
+            if '愚' not in skin.name and 'ZOO' not in skin.name:
+                yield skin
 
     def __repr__(self):
         # return f'233 {type(self).__name__} {self.index} {self._names()} {self.rarity} {self.clazz}'

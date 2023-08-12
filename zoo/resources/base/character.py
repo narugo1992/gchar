@@ -14,56 +14,7 @@ from waifuc.source import BaseDataSource
 from waifuc.source.web import WebDataSource
 from waifuc.utils import task_ctx
 
-from gchar.games.azurlane import Character as AzurLaneCharacter
 from gchar.games.base import Character
-from gchar.games.base import Skin
-from gchar.games.fgo import Character as FateGrandOrderCharacter
-from gchar.games.girlsfrontline import Character as GirlsFrontLineCharacter
-from gchar.games.neuralcloud import Character as NeuralCloudCharacter
-from gchar.games.nikke import Character as NikkeCharacter
-
-
-def _yield_skin_default(ch: Character) -> Iterator[Skin]:
-    yield from ch.skins
-
-
-def _yield_skin_girlsfrontline(ch: GirlsFrontLineCharacter) -> Iterator[Skin]:
-    for skin in ch.skins:
-        if 'profile' not in skin.name.lower():
-            yield skin
-
-
-def _yield_skin_fgo(ch: FateGrandOrderCharacter) -> Iterator[Skin]:
-    for skin in ch.skins:
-        if '愚人节' not in skin.name and 'Grail'.lower() not in skin.name.lower():
-            yield skin
-
-
-def _yield_skin_neuralcloud(ch: NeuralCloudCharacter) -> Iterator[Skin]:
-    for skin in ch.skins:
-        if '愚' not in skin.name and 'ZOO' not in skin.name:
-            yield skin
-
-
-def _yield_skin_azurlane(ch: AzurLaneCharacter) -> Iterator[Skin]:
-    for skin in ch.skins:
-        if 'chibi' not in skin.name.lower():
-            yield skin
-
-
-def _yield_skin_nikke(ch: NikkeCharacter) -> Iterator[Skin]:
-    for skin in ch.skins:
-        if 'anim' not in skin.name.lower():
-            yield skin
-
-
-_SKIN_YIELDERS = {
-    'girlsfrontline': _yield_skin_girlsfrontline,
-    'fgo': _yield_skin_fgo,
-    'neuralcloud': _yield_skin_neuralcloud,
-    'azurlane': _yield_skin_azurlane,
-    'nikke': _yield_skin_nikke,
-}
 
 
 class CharacterSkinSource(WebDataSource):
@@ -73,8 +24,7 @@ class CharacterSkinSource(WebDataSource):
         self.hf_fs = HfFileSystem()
 
     def _yield_skins(self):
-        yielder = _SKIN_YIELDERS.get(self.ch.__game_name__, _yield_skin_default)
-        yield from yielder(self.ch)
+        yield from self.ch.formal_skins
 
     def _iter_data(self) -> Iterator[Tuple[Union[str, int], str, dict]]:
         skin_dir = f'datasets/deepghs/game_character_skins/{self.ch.__game_name__}/{self.ch.index}'

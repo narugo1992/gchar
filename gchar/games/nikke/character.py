@@ -1,9 +1,9 @@
 import re
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, Iterator
 
 from .name import ChineseName, JapaneseName, KoreanName, EnglishName
 from .property import Rarity, Clazz, Burst
-from ..base import Character as _BaseCharacter, Gender
+from ..base import Character as _BaseCharacter, Gender, Skin
 from ..base.name import _BaseName
 
 
@@ -85,6 +85,11 @@ class Character(_BaseCharacter):
             (skin['name'], skin['url'])
             for skin in self.__raw_data['skins']
         ]
+
+    def _iter_formal_skins(self) -> Iterator[Skin]:
+        for skin in self.skins:
+            if 'anim' not in skin.name.lower():
+                yield skin
 
     def _release_time(self):
         return self.__raw_data['release']['time']

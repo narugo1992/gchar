@@ -323,6 +323,16 @@ class Character(Comparable):
         """
         return [Skin(self.__game_name__, self._index(), name, url) for name, url in self._skins()]
 
+    def _iter_formal_skins(self) -> Iterator[Skin]:
+        yield from self.skins
+
+    @property
+    def formal_skins(self) -> List[Skin]:
+        """
+        Get the formal skin of the character.
+        """
+        return list(self._iter_formal_skins())
+
     def _release_time(self):
         """
         Get the release time of the character.

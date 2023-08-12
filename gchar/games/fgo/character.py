@@ -1,10 +1,10 @@
 import re
 from functools import lru_cache
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Iterator
 
 from .name import ChineseName, JapaneseName, EnglishName, ChineseAliasName
 from .property import Rarity, Clazz
-from ..base import Character as _BaseCharacter
+from ..base import Character as _BaseCharacter, Skin
 
 
 class Character(_BaseCharacter):
@@ -92,6 +92,11 @@ class Character(_BaseCharacter):
 
     def _skins(self) -> List[Tuple[str, str]]:
         return [(item['name'], item['url']) for item in self.__raw_data['skins']]
+
+    def _iter_formal_skins(self) -> Iterator[Skin]:
+        for skin in self.skins:
+            if '愚人节' not in skin.name and 'Grail'.lower() not in skin.name.lower():
+                yield skin
 
     @classmethod
     @lru_cache()
