@@ -59,6 +59,7 @@ jobs:
           - 'pathtonowhere'
           - 'nikke'
           - 'starrail'
+          - 'naruto'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -212,6 +213,7 @@ jobs:
           - 'pathtonowhere'
           - 'nikke'
           - 'starrail'
+          - 'naruto'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -309,6 +311,7 @@ jobs:
           - 'pathtonowhere'
           - 'nikke'
           - 'starrail'
+          - 'naruto'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -428,6 +431,7 @@ jobs:
           - 'pathtonowhere'
           - 'nikke'
           - 'starrail'
+          - 'naruto'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -567,6 +571,7 @@ jobs:
           - 'pathtonowhere'
           - 'nikke'
           - 'starrail'
+          - 'naruto'
         os:
           - 'ubuntu-latest'
         python-version:
