@@ -31,7 +31,7 @@ jobs:
 #          - 'yande'
 #          - 'lolibooru'
 #          - 'gelbooru'
-          - 'pixiv'
+#          - 'pixiv'
           - 'pixiv_en'
 #          - 'wallhaven'
         os:
