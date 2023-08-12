@@ -77,10 +77,6 @@ class TagMatcher(HuggingfaceDeployable):
     __no_max_vsim__: float = 0.20
     __max_validate__: int = 10
     __sure_min_samples__: int = 8
-    __game_keywords__: dict = {
-        game_name: get_character_class(game_name).__game_keywords__
-        for game_name in list_available_game_names()
-    }
     __default_repository__ = 'deepghs/game_characters'
     __tag_fe__: Type[TagFeatureExtract]
 
@@ -100,7 +96,7 @@ class TagMatcher(HuggingfaceDeployable):
         self.db.connection().enable_query_log()
         self.game_name = game_name
         self.game_cls: Type[Character] = get_character_class(game_name)
-        self.game_keywords = list(game_keywords or self.__game_keywords__.get(game_name) or [])
+        self.game_keywords = list(game_keywords or get_character_class(game_name).__game_keywords__ or [])
         self.ch_feats = {}
         self.repository = repository or self.__default_repository__
 
