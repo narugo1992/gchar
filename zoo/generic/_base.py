@@ -53,7 +53,7 @@ class ZerochanBasedIndexer(GameIndexer):
             except JSONDecodeError as err:
                 logging.warning(repr(err))
                 continue
- 
+
             yield {
                 'ennames': item['enname']['names'],
                 'cnnames': item['cnname']['names'],
