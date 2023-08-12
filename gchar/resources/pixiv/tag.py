@@ -162,7 +162,8 @@ class PixivCharPool:
             if name != sname and name in sname:
                 yield sname
 
-    def get_tag(self, char: Character, use_english: bool = False, positive=None, negative=None,
+    def get_tag(self, char: Character, use_english: bool = False,
+                positive: Optional[List[str]] = None, negative: Optional[List[str]] = None,
                 max_exclude_per_word: int = 20, max_exclude: int = 20, max_pollution_ratio: float = 0.8,
                 max_length: int = PIXIV_TAG_MAX_LENGTH):
         """
@@ -173,9 +174,9 @@ class PixivCharPool:
         :param use_english: Whether to use English names in the tag.
         :type use_english: bool
         :param positive: The positive tags to include.
-        :type positive: Optional[Union[Tuple[str], List[str], str]]
+        :type positive: Optional[List[str]]
         :param negative: The negative tags to exclude.
-        :type negative: Optional[Union[Tuple[str], List[str], str]]
+        :type negative: Optional[List[str]
         :param max_exclude_per_word: The maximum number of excluded tags per word.
         :type max_exclude_per_word: int
         :param max_exclude: The maximum number of excluded tags.
@@ -279,7 +280,10 @@ class PixivCharPool:
         if char.jpnames:
             exclude_names = set()
             for jpname in char.jpnames:
-                positive.add(f'{jpname}({base_tag})')
+                if base_tag:
+                    positive.add(f'{jpname}({base_tag})')
+                else:
+                    positive.add(jpname)
                 for exname in self._iter_end_dup_names(str(jpname)):
                     exclude_names.add(exname)
 
@@ -308,7 +312,7 @@ def _get_char_pool(cls: Type[Character], **kwargs):
 
 
 def get_pixiv_keywords(char: Union[Character, str], simple: bool = False, use_english: bool = True,
-                       includes=None, exclude=None,
+                       includes: Optional[List[str]] = None, exclude: Optional[List[str]] = None,
                        allow_fuzzy: bool = True, fuzzy_threshold: int = 70, max_exclude: int = 20,
                        max_pollution_ratio: float = 0.8, max_length: int = PIXIV_TAG_MAX_LENGTH, **kwargs):
     """
@@ -368,5 +372,8 @@ def get_pixiv_keywords(char: Union[Character, str], simple: bool = False, use_en
     except ValueError:
         warnings.warn(UserWarning(f'No japanese name for {char!r}, falling back to full tag.'), stacklevel=2)
 
-    return pool.get_tag(char, use_english, positive=[includes, game_tag], negative=exclude,
+    pos = [*(includes or [])]
+    if game_tag:
+        pos.append(game_tag)
+    return pool.get_tag(char, use_english, positive=pos, negative=exclude,
                         max_exclude=max_exclude, max_pollution_ratio=max_pollution_ratio, max_length=max_length)
