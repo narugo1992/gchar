@@ -35,7 +35,7 @@ class PixivEnTagCrawler(PixivTagCrawler):
                 item[f'trans_{lang}'] = trans_item('a').attr('gtm-id')
                 item[f'trans_{lang}_wiki_url'] = urljoin(wiki_url, trans_item('a').attr('href'))
 
-            retval.append((idx, item)) 
+            retval.append((idx, item))
             pg.update()
 
         tp = ThreadPoolExecutor(max_workers=self.__max_workers__)
