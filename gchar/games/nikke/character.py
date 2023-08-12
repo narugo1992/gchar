@@ -10,6 +10,7 @@ from ..base.name import _BaseName
 class Character(_BaseCharacter):
     __game_name__ = 'nikke'
     __official_name__ = 'Nikke: Goddess of Victory'
+    __game_keywords__ = ['nikke', '勝利の女神:NIKKE']
     __cnname_class__ = ChineseName
     __jpname_class__ = JapaneseName
     __enname_class__ = EnglishName

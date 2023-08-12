@@ -63,6 +63,7 @@ class Character(_BaseCharacter):
     """
     __game_name__ = 'arknights'
     __official_name__ = 'Arknights'
+    __game_keywords__ = ['arknights', 'アークナイツ']
     __cnname_class__ = ChineseName
     __enname_class__ = EnglishName
     __jpname_class__ = JapaneseName

@@ -10,6 +10,7 @@ from ..base import Character as _BaseCharacter, Skin
 class Character(_BaseCharacter):
     __game_name__ = 'fgo'
     __official_name__ = 'Fate/Grand Order'
+    __game_keywords__ = ['fate/grand_order', 'fate', 'Fate/GrandOrder', 'FGO']
     __cnname_class__ = ChineseName
     __jpname_class__ = JapaneseName
     __enname_class__ = EnglishName

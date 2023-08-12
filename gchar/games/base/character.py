@@ -43,6 +43,7 @@ class Character(Comparable):
     __skin_repository__: str = 'deepghs/game_character_skins'
     __game_name__: str
     __official_name__: str
+    __game_keywords__: List[str]
     __cnname_class__: Type[ChineseName] = ChineseName
     __enname_class__: Type[EnglishName] = EnglishName
     __jpname_class__: Type[JapaneseName] = JapaneseName

@@ -8,6 +8,7 @@ from ..base import Character as _BaseCharacter
 class Character(_BaseCharacter):
     __game_name__ = 'genshin'
     __official_name__ = 'Genshin Impact'
+    __game_keywords__ = ['genshin_impact', '原神', 'GenshinImpact']
     __cnname_class__ = ChineseName
     __enname_class__ = EnglishName
     __jpname_class__ = JapaneseName

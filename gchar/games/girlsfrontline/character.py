@@ -10,6 +10,7 @@ from ..base import Character as _BaseCharacter, Skin
 class Character(_BaseCharacter):
     __game_name__ = 'girlsfrontline'
     __official_name__ = 'Girls\' Frontline'
+    __game_keywords__ = ['girls\'_frontline', 'ドールズフロントライン', 'gfl', 'girlsfrontline']
     __enname_class__ = EnglishName
     __cnname_class__ = ChineseName
     __jpname_class__ = JapaneseName

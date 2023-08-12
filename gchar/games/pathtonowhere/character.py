@@ -8,6 +8,7 @@ from ..base.character import Character as _BaseCharacter
 class Character(_BaseCharacter):
     __game_name__ = 'pathtonowhere'
     __official_name__ = 'Path To Nowhere'
+    __game_keywords__ = ['path_to_nowhere', '無期迷途', '無期迷途']
     __cnname_class__ = ChineseName
     __enname_class__ = EnglishName
 

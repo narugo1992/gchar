@@ -10,6 +10,7 @@ from ...utils import optional_lru_cache
 class Character(_BaseCharacter):
     __game_name__ = 'neuralcloud'
     __official_name__ = 'Neural Cloud'
+    __game_keywords__ = ['girls\'_frontline_nc', 'girls\'_frontline', 'neural_cloud', '云图计划', 'ニューラルクラウド']
     __enname_class__ = EnglishName
     __cnname_class__ = ChineseName
     __jpname_class__ = JapaneseName

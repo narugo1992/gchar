@@ -13,6 +13,7 @@ class Character(_BaseCharacter):
     """
     __game_name__ = 'bluearchive'
     __official_name__ = 'Blue Archive'
+    __game_keywords__ = ['blue_archive', 'ブルーアーカイブ', 'BlueArchive']
     __cnname_class__ = ChineseName
     __enname_class__ = EnglishName
     __jpname_class__ = JapaneseName

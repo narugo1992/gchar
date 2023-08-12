@@ -24,19 +24,6 @@ from gchar.utils import GLOBAL_CONTEXT_SETTINGS, srequest, get_requests_session
 from .base import HuggingfaceDeployable
 from .character import get_ccip_features_of_character, TagFeatureExtract
 
-GAME_KEYWORDS = {
-    'arknights': ['arknights', 'アークナイツ'],
-    'fgo': ['fate/grand_order', 'fate', 'Fate/GrandOrder', 'FGO'],
-    'azurlane': ['azur_lane', 'アズールレーン', 'azurlane'],
-    'genshin': ['genshin_impact', '原神', 'GenshinImpact'],
-    'girlsfrontline': ['girls\'_frontline', 'ドールズフロントライン', 'gfl', 'girlsfrontline'],
-    'neuralcloud': ['girls\'_frontline_nc', 'girls\'_frontline', 'neural_cloud', '云图计划', 'ニューラルクラウド'],
-    'bluearchive': ['blue_archive', 'ブルーアーカイブ', 'BlueArchive'],
-    'pathtonowhere': ['path_to_nowhere', '無期迷途', '無期迷途'],
-    'nikke': ['nikke', '勝利の女神:NIKKE'],
-    'starrail': ['star_rail', '崩壊スターレイル', 'スターレイル'],
-}
-
 
 class ValidationStatus(str, Enum):
     TRUST = 'trust'
@@ -90,7 +77,10 @@ class TagMatcher(HuggingfaceDeployable):
     __no_max_vsim__: float = 0.20
     __max_validate__: int = 10
     __sure_min_samples__: int = 8
-    __game_keywords__: dict = GAME_KEYWORDS
+    __game_keywords__: dict = {
+        game_name: get_character_class(game_name).__game_keywords__
+        for game_name in list_available_game_names()
+    }
     __default_repository__ = 'deepghs/game_characters'
     __tag_fe__: Type[TagFeatureExtract]
 
