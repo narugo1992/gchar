@@ -1,4 +1,4 @@
-name: Data Publish
+name: Generic Publish
 
 permissions:
   contents: write
@@ -7,10 +7,10 @@ on:
   #  push:
   workflow_dispatch:
     inputs:
-      games:
-        description: 'Game to Crawl'
+      generics:
+        description: 'Generic to Crawl'
         required: true
-        default: 'arknights,fgo,girlsfrontline,genshin,azurlane,neuralcloud,bluearchive,pathtonowhere,nikke,starrail'
+        default: 'naruto'
       skip_crawl:
         description: 'Skip Crawl (Type Anything for Yes)'
         required: false
@@ -31,8 +31,8 @@ on:
         description: 'Skip Pixiv Characters (Type Anything for Yes)'
         required: false
         default: ''
-  schedule:
-    - cron: '30 16 * * *'
+#  schedule:
+#    - cron: '30 16 * * *'
 
 env:
   PIXIV_INTERVAL: '1.7'
@@ -43,23 +43,13 @@ env:
 
 jobs:
   data_crawl:
-    name: Data Crawl
+    name: Generic Crawl
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         game:
-          - 'bluearchive'
-          - 'arknights'
-          - 'fgo'
-          - 'azurlane'
-          - 'girlsfrontline'
-          - 'genshin'
-          - 'neuralcloud'
-          - 'pathtonowhere'
-          - 'nikke'
-          - 'starrail'
-          
+          - 'naruto'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -110,7 +100,7 @@ jobs:
         if: ${{ github.event_name == 'workflow_dispatch' && !github.event.inputs.skip_crawl }}
         shell: bash
         run: |
-          echo "SCHEDULED=$(python -m zoo scheck -g ${{ matrix.game }} -s ${{ github.event.inputs.games }})" >> $GITHUB_ENV
+          echo "SCHEDULED=$(python -m zoo scheck -g ${{ matrix.game }} -s ${{ github.event.inputs.generics }})" >> $GITHUB_ENV
       - name: Check if is scheduled when is workflow dispatched and skipped
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.skip_crawl }}
         shell: bash
@@ -135,8 +125,8 @@ jobs:
           max_attempts: 5
           retry_on: any
           command: |
-            python -m zoo.games.${{ matrix.game }} --help && \
-              python -m zoo.games.${{ matrix.game }} index_export -O ${{ matrix.game }}
+            python -m zoo.generic.${{ matrix.game }} --help && \
+              python -m zoo.generic.${{ matrix.game }} index_export -O ${{ matrix.game }}
       - name: Package The Data
         env:
           CI: 'true'
@@ -151,7 +141,7 @@ jobs:
           path: ${{ matrix.game }}.zip
 
   data_crawl_upload:
-    name: Data Crawl Upload
+    name: Generic Crawl Upload
     needs:
       - data_crawl
     runs-on: ${{ matrix.os }}
@@ -168,17 +158,17 @@ jobs:
         shell: bash
         run: |
           sudo apt-get install -y tree
-          git clone https://huggingface.co/datasets/deepghs/game_characters
-          ls -al game_characters
+          git clone https://huggingface.co/datasets/deepghs/generic_characters
+          ls -al generic_characters
       - name: Download from artifact
         uses: actions/download-artifact@v3
         with:
           name: character-database
-          path: game_characters
+          path: generic_characters
       - name: See what is in this path
         shell: bash
         run: |
-          cd game_characters
+          cd generic_characters
           for zfile in *.zip; do unzip -o $zfile; done
           rm -rf *.zip
           tree .
@@ -186,12 +176,12 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          cd game_characters
+          cd generic_characters
           git config user.name 'narugo1992'
           git config user.email 'narugo@126.com'
           git add -A
           git diff-index --quiet HEAD || git commit -a -m "dev(narugo): auto sync $(date -R)"
-          git push https://narugo:$HF_TOKEN@huggingface.co/datasets/deepghs/game_characters main
+          git push https://narugo:$HF_TOKEN@huggingface.co/datasets/deepghs/generic_characters main
 
   skin_crawl:
     name: Skin Crawl
@@ -203,17 +193,7 @@ jobs:
       max-parallel: 1
       matrix:
         game:
-          - 'bluearchive'
-          - 'arknights'
-          - 'fgo'
-          - 'azurlane'
-          - 'girlsfrontline'
-          - 'genshin'
-          - 'neuralcloud'
-          - 'pathtonowhere'
-          - 'nikke'
-          - 'starrail'
-          
+          - 'naruto'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -264,7 +244,7 @@ jobs:
         if: ${{ github.event_name == 'workflow_dispatch' && !github.event.inputs.skip_skin_crawl }}
         shell: bash
         run: |
-          echo "SCHEDULED=$(python -m zoo scheck -g ${{ matrix.game }} -s ${{ github.event.inputs.games }})" >> $GITHUB_ENV
+          echo "SCHEDULED=$(python -m zoo scheck -g ${{ matrix.game }} -s ${{ github.event.inputs.generics }})" >> $GITHUB_ENV
       - name: Check if is scheduled when is workflow dispatched and skipped
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.skip_skin_crawl }}
         shell: bash
@@ -301,17 +281,7 @@ jobs:
       max-parallel: 1
       matrix:
         game:
-          - 'bluearchive'
-          - 'arknights'
-          - 'fgo'
-          - 'azurlane'
-          - 'girlsfrontline'
-          - 'genshin'
-          - 'neuralcloud'
-          - 'pathtonowhere'
-          - 'nikke'
-          - 'starrail'
-          
+          - 'naruto'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -362,7 +332,7 @@ jobs:
         if: ${{ github.event_name == 'workflow_dispatch' && !github.event.inputs.skip_pixiv_names }}
         shell: bash
         run: |
-          echo "SCHEDULED=$(python -m zoo scheck -g ${{ matrix.game }} -s ${{ github.event.inputs.games }})" >> $GITHUB_ENV
+          echo "SCHEDULED=$(python -m zoo scheck -g ${{ matrix.game }} -s ${{ github.event.inputs.generics }})" >> $GITHUB_ENV
       - name: Check if is scheduled when is workflow dispatched and skipped
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.skip_pixiv_names }}
         shell: bash
@@ -421,17 +391,7 @@ jobs:
       max-parallel: 1
       matrix:
         game:
-          - 'bluearchive'
-          - 'arknights'
-          - 'fgo'
-          - 'azurlane'
-          - 'girlsfrontline'
-          - 'genshin'
-          - 'neuralcloud'
-          - 'pathtonowhere'
-          - 'nikke'
-          - 'starrail'
-          
+          - 'naruto'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -482,7 +442,7 @@ jobs:
         if: ${{ github.event_name == 'workflow_dispatch' && !github.event.inputs.skip_pixiv_characters }}
         shell: bash
         run: |
-          echo "SCHEDULED=$(python -m zoo scheck -g ${{ matrix.game }} -s ${{ github.event.inputs.games }})" >> $GITHUB_ENV
+          echo "SCHEDULED=$(python -m zoo scheck -g ${{ matrix.game }} -s ${{ github.event.inputs.generics }})" >> $GITHUB_ENV
       - name: Check if is scheduled when is workflow dispatched and skipped
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.skip_pixiv_characters }}
         shell: bash
@@ -561,17 +521,7 @@ jobs:
           - 'gelbooru'
           - 'wallhaven'
         game:
-          - 'bluearchive'
-          - 'arknights'
-          - 'fgo'
-          - 'azurlane'
-          - 'girlsfrontline'
-          - 'genshin'
-          - 'neuralcloud'
-          - 'pathtonowhere'
-          - 'nikke'
-          - 'starrail'
-          
+          - 'naruto'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -622,7 +572,7 @@ jobs:
         if: ${{ github.event_name == 'workflow_dispatch' && !github.event.inputs.skip_tag_matches }}
         shell: bash
         run: |
-          echo "SCHEDULED=$(python -m zoo scheck -g ${{ matrix.game }} -s ${{ github.event.inputs.games }})" >> $GITHUB_ENV
+          echo "SCHEDULED=$(python -m zoo scheck -g ${{ matrix.game }} -s ${{ github.event.inputs.generics }})" >> $GITHUB_ENV
       - name: Check if is scheduled when is workflow dispatched and skipped
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.skip_tag_matches }}
         shell: bash
@@ -662,7 +612,7 @@ jobs:
           path: ${{ matrix.resource }}_${{ matrix.game }}.zip
 
   data_upload:
-    name: Data Upload
+    name: Generic Upload
     runs-on: ${{ matrix.os }}
     needs:
       - data_crawl_upload
@@ -682,17 +632,17 @@ jobs:
         shell: bash
         run: |
           sudo apt-get install -y tree
-          git clone https://huggingface.co/datasets/deepghs/game_characters
-          ls -al game_characters
+          git clone https://huggingface.co/datasets/deepghs/generic_characters
+          ls -al generic_characters
       - name: Download from artifact
         uses: actions/download-artifact@v3
         with:
           name: character-database
-          path: game_characters
+          path: generic_characters
       - name: See what is in this path
         shell: bash
         run: |
-          cd game_characters
+          cd generic_characters
           for zfile in *.zip; do unzip -o $zfile; done
           rm -rf *.zip
           tree .
@@ -700,12 +650,12 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          cd game_characters
+          cd generic_characters
           git config user.name 'narugo1992'
           git config user.email 'narugo@126.com'
           git add -A
           git diff-index --quiet HEAD || git commit -a -m "dev(narugo): auto sync $(date -R)"
-          git push https://narugo:$HF_TOKEN@huggingface.co/datasets/deepghs/game_characters main
+          git push https://narugo:$HF_TOKEN@huggingface.co/datasets/deepghs/generic_characters main
 
   final_complete:
     name: Final Complete
@@ -731,12 +681,6 @@ jobs:
           auth: ${{ secrets.GIST_SECRET }}
           gistID: ${{ secrets.BADGE_GIST_ID }}
           filename: data_last_update.json
-          label: Data Updated
+          label: Generic Updated
           message: ${{ env.UPDATE_DATE }}
           color: yellowgreen
-      - name: Repository Dispatch
-        uses: peter-evans/repository-dispatch@v2
-        with:
-          token: ${{ secrets.PAT }}
-          repository: narugo1992/games_character_ranking
-          event-type: data-refreshed
