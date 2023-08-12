@@ -30,7 +30,7 @@ class PixivEnTagCrawler(PixivTagCrawler):
             wiki_url = item['wiki_url']
             resp = srequest(self.session, 'GET', wiki_url)
             page = pq(resp.text)
-            for trans_item in page('#article-relation .interlang li'):
+            for trans_item in page('#article-relation .interlang li').items():
                 lang = trans_item('a').attr('lang')
                 item[f'trans_{lang}'] = trans_item('a').attr('gtm-id')
                 item[f'trans_{lang}_wiki_url'] = urljoin(wiki_url, trans_item('a').attr('href'))
