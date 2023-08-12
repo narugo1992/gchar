@@ -21,6 +21,11 @@ class PixivEnTagCrawler(PixivTagCrawler):
 
     __mark_tags__: Tuple[str, str, str, str] = ('Updated', 'View count', 'Submitted works', 'Checklist')
 
+    __sqlite_indices__ = [
+        'name', 'updated_at', 'views', 'posts', 'checklists', 'trans_ja',
+        *(f'is_{cate}' for cate in CATEGORY_NAME_MAP.values()),
+    ]
+
     def get_tags_json(self) -> List[Mapping[str, Any]]:
         json_data = PixivTagCrawler.get_tags_json(self)
         retval = []
