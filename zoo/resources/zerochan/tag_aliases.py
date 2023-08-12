@@ -3,7 +3,7 @@ import os
 import re
 from concurrent.futures import ThreadPoolExecutor
 from typing import List, Tuple
-from urllib.parse import quote_plus
+from urllib.parse import quote_plus, urljoin
 
 import markdownify
 import pandas as pd
@@ -24,7 +24,7 @@ def get_info_of_keyword(word: str, session=None) -> Tuple[List[Tuple[str, str]],
         raise_for_status=False,
     )
     if resp.status_code == 404:
-        return []
+        return [], [], ''
     else:
         resp.raise_for_status()
     page = pq(resp.text)
@@ -42,7 +42,20 @@ def get_info_of_keyword(word: str, session=None) -> Tuple[List[Tuple[str, str]],
         tag = item('a').text().strip()
         tag_items.append((type_, tag))
 
-    desc_md = markdownify.markdownify(page('#description').html(), strip=['iframe'])
+    class URLBlockConverter(markdownify.MarkdownConverter):
+        """
+        Create a custom MarkdownConverter that adds two newlines after an image
+        """
+
+        def convert_a(self, el, text, convert_as_inline):
+            el['href'] = urljoin(resp.request.url, el['href'])
+            return super().convert_a(el, text, convert_as_inline)
+
+        def convert_img(self, el, text, convert_as_inline):
+            el['src'] = urljoin(resp.request.url, el['src'])
+            return super().convert_a(el, text, convert_as_inline)
+
+    desc_md = URLBlockConverter(strip=['iframe']).convert(page('#description').html())
     desc_md = re.sub(r'((\r\n|\r|\n)\s*)+(\r\n|\r|\n)', '\n\n', desc_md)
 
     return alias_items, tag_items, desc_md

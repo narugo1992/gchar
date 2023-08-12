@@ -74,7 +74,7 @@ def _merge_names(main_name, names, no_space: bool = False):
     return retval, suffixes
 
 
-def get_character_list(min_strict: int = 20, max_workers: int = 4):
+def get_character_list(min_strict: int = 3, max_workers: int = 4):
     tags_df = pd.read_csv(hf_hub_download(
         'deepghs/site_tags',
         filename='zerochan.net/tags.csv',
@@ -202,7 +202,7 @@ def get_character_list(min_strict: int = 20, max_workers: int = 4):
 
 def deploy_generic_character_ds(repository: str = 'deepghs/generic_character_ds',
                                 filename: str = 'zerochan.net.json',
-                                min_strict: int = 5, max_workers: int = 4):
+                                min_strict: int = 3, max_workers: int = 4):
     logging.info(f'Initializing repository {repository!r} ...')
     hf_client = HfApi(token=os.environ['HF_TOKEN'])
     hf_client.create_repo(repo_id=repository, repo_type='dataset', exist_ok=True)
@@ -210,17 +210,17 @@ def deploy_generic_character_ds(repository: str = 'deepghs/generic_character_ds'
     with TemporaryDirectory() as td:
         logging.info('Getting character information ...')
         data = get_character_list(min_strict, max_workers)
-        csv_file = os.path.join(td, 'zerochan.net.json')
-        with open(csv_file, 'w', encoding='utf-8') as f:
+        json_file = os.path.join(td, 'zerochan.net.json')
+        with open(json_file, 'w', encoding='utf-8') as f:
             json.dump({
                 'data': data,
                 'last_updated': time.time(),
             }, f, sort_keys=True, indent=4, ensure_ascii=False)
 
-        logging.info(f'Uploading file {csv_file!r} to {repository!r} ({filename!r}) ...')
+        logging.info(f'Uploading file {json_file!r} to {repository!r} ({filename!r}) ...')
         hf_client.upload_file(
             repo_id=repository,
             repo_type='dataset',
-            path_or_fileobj=csv_file,
+            path_or_fileobj=json_file,
             path_in_repo=filename,
         )
