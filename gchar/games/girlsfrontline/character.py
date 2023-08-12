@@ -11,6 +11,8 @@ class Character(_BaseCharacter):
     __game_name__ = 'girlsfrontline'
     __official_name__ = 'Girls\' Frontline'
     __game_keywords__ = ['girls\'_frontline', 'ドールズフロントライン', 'gfl', 'girlsfrontline']
+    __pixiv_keyword__ = 'ドールズフロントライン'
+    __pixiv_suffix__ = 'ドールズフロントライン'
     __enname_class__ = EnglishName
     __cnname_class__ = ChineseName
     __jpname_class__ = JapaneseName

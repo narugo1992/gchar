@@ -44,6 +44,8 @@ class Character(Comparable):
     __game_name__: str
     __official_name__: str
     __game_keywords__: List[str]
+    __pixiv_keyword__: str
+    __pixiv_suffix__: str
     __cnname_class__: Type[ChineseName] = ChineseName
     __enname_class__: Type[EnglishName] = EnglishName
     __jpname_class__: Type[JapaneseName] = JapaneseName

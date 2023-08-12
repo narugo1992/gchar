@@ -12,11 +12,12 @@ from hfmirror.sync import SyncTask
 from huggingface_hub import HfApi
 from tqdm.auto import tqdm
 
-from gchar.games.dispatch.access import GAME_CHARS, load_generic
+from gchar.games.dispatch.access import GAME_CHARS
+from gchar.generic import import_generic
 from gchar.utils import GLOBAL_CONTEXT_SETTINGS, srequest, get_requests_session
 from gchar.utils import print_version as _origin_print_version
 
-load_generic()
+import_generic()
 
 
 class SkinResource(SyncResource):

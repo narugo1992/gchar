@@ -79,11 +79,6 @@ register_game(NikkeCharacter)
 register_game(StarRailCharacter)
 
 
-def load_generic():
-    from ...generic import import_generic
-    import_generic()
-
-
 @optional_lru_cache()
 def _all_characters(**kwargs) -> List[Character]:
     """

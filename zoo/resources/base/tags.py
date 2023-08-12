@@ -13,9 +13,11 @@ from ditk import logging
 from hbutils.system import TemporaryDirectory, urlsplit
 from tqdm.auto import tqdm
 
+from gchar.generic import import_generic
 from gchar.utils import get_requests_session, GLOBAL_CONTEXT_SETTINGS
 from .base import HuggingfaceDeployable
 
+import_generic()
 
 class NoTagAlias(Exception):
     pass

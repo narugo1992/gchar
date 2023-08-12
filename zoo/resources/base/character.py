@@ -15,6 +15,9 @@ from waifuc.source.web import WebDataSource
 from waifuc.utils import task_ctx
 
 from gchar.games.base import Character
+from gchar.generic import import_generic
+
+import_generic()
 
 
 class CharacterSkinSource(WebDataSource):

@@ -17,7 +17,6 @@ from .session import get_pixiv_sessions
 from ditk import logging
 from gchar.games.base import Character
 from gchar.utils import sget
-from gchar.resources.pixiv.base import _GAMES
 from gchar.resources.pixiv.tag import get_pixiv_keywords
 from gchar.resources.pixiv.keyword import _load_pixiv_alias_for_game, _parse_pixiv_names_file
 
@@ -124,7 +123,7 @@ def _get_interval_func(interval: float, min_interval: float):
 def _get_pixiv_search_count_by_name(
         cls: Type[Character], session=None, interval: float = 0.2, min_interval: float = 0.2,
         sleep_every: int = 70, sleep_time: float = 20, ensure_times: int = 2, maxcnt: Optional[int] = None, **kwargs):
-    base_tag, _ = _GAMES[cls.__game_name__]
+    base_tag = cls.__pixiv_keyword__
     session = session or get_pixiv_sessions(**kwargs)
 
     _all_names_set = set()
@@ -239,7 +238,7 @@ def _get_pixiv_character_search_counts_by_game(
         ensure_times: int = 2, maxcnt: Optional[int] = None,
         input_file: Optional[str] = None, **kwargs):
     with _try_mock_character_name_file(input_file):
-        base_tag, _ = _GAMES[cls.__game_name__]
+        base_tag = cls.__pixiv_keyword__
         session = session or get_pixiv_sessions(**kwargs)
 
         chs = cls.all(**kwargs)

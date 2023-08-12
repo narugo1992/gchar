@@ -20,9 +20,12 @@ from tqdm.auto import tqdm
 
 from gchar.games import get_character_class, list_available_game_names
 from gchar.games.base import Character
+from gchar.generic import import_generic
 from gchar.utils import GLOBAL_CONTEXT_SETTINGS, srequest, get_requests_session
 from .base import HuggingfaceDeployable
 from .character import get_ccip_features_of_character, TagFeatureExtract
+
+import_generic()
 
 
 class ValidationStatus(str, Enum):

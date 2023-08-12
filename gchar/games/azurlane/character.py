@@ -14,7 +14,8 @@ class Character(_BaseCharacter):
     __game_name__ = 'azurlane'
     __official_name__ = 'Azur Lane'
     __game_keywords__ = ['azur_lane', 'アズールレーン', 'azurlane']
-
+    __pixiv_keyword__ = 'アズールレーン'
+    __pixiv_suffix__ = 'アズールレーン'
     __cnname_class__ = ChineseName
     __enname_class__ = EnglishName
     __jpname_class__ = JapaneseName

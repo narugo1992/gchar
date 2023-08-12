@@ -3,7 +3,6 @@ import warnings
 from itertools import chain
 from typing import Iterable, Iterator, Union, List, Tuple, Type, Mapping, Optional
 
-from .base import _GAMES
 from .keyword import _load_pixiv_names_for_game, _load_pixiv_alias_for_game
 from ...games import get_character
 from ...games.base import Character
@@ -360,7 +359,8 @@ def get_pixiv_keywords(char: Union[Character, str], simple: bool = False, use_en
                                   f'This may result in no search results.'), stacklevel=2)
 
     pool = _get_char_pool(type(char), **kwargs)
-    game_tag, base_tag = _GAMES[char.__game_name__]
+    game_tag = char.__pixiv_keyword__
+    base_tag = char.__pixiv_suffix__
 
     try:
         if simple:

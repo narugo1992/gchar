@@ -11,6 +11,8 @@ class Character(_BaseCharacter):
     __game_name__ = 'fgo'
     __official_name__ = 'Fate/Grand Order'
     __game_keywords__ = ['fate/grand_order', 'fate', 'Fate/GrandOrder', 'FGO']
+    __pixiv_keyword__ = 'Fate/GrandOrder'
+    __pixiv_suffix__ = 'Fate'
     __cnname_class__ = ChineseName
     __jpname_class__ = JapaneseName
     __enname_class__ = EnglishName
