@@ -9,7 +9,6 @@ from huggingface_hub import HfApi, CommitOperationAdd
 
 
 class HuggingfaceDeployable:
-    __default_repository__: str
 
     @contextmanager
     def with_files(self, **kwargs) -> ContextManager[List[str]]:
@@ -28,9 +27,8 @@ class HuggingfaceDeployable:
                     os.makedirs(dst_dir, exist_ok=True)
                 shutil.copyfile(file, dst_file)
 
-    def deploy_to_huggingface(self, repository: Optional[str] = None,
+    def deploy_to_huggingface(self, repository: str,
                               namespace: Optional[str] = None, revision: str = 'main', **kwargs):
-        repository = repository or self.__default_repository__
         namespace = namespace or self.get_default_namespace(**kwargs)
         logging.info(f'Initializing repository {repository!r} ...')
         hf_client = HfApi(token=os.environ['HF_TOKEN'])

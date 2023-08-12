@@ -30,7 +30,7 @@ class CharacterSkinSource(WebDataSource):
         yield from self.ch.formal_skins
 
     def _iter_data(self) -> Iterator[Tuple[Union[str, int], str, dict]]:
-        skin_dir = f'datasets/deepghs/game_character_skins/{self.ch.__game_name__}/{self.ch.index}'
+        skin_dir = f'datasets/{self.ch.__skin_repository__}/{self.ch.__game_name__}/{self.ch.index}'
         meta_json = f'{skin_dir}/.meta.json'
         if self.hf_fs.exists(meta_json):
             meta = json.loads(self.hf_fs.read_text(meta_json))
@@ -39,7 +39,7 @@ class CharacterSkinSource(WebDataSource):
             for skin in self._yield_skins():
                 if skin.name in skin_files:
                     url = hf_hub_url(
-                        'deepghs/game_character_skins',
+                        self.ch.__skin_repository__,
                         filename=f'{self.ch.__game_name__}/{self.ch.index}/{skin_files[skin.name]}',
                         repo_type='dataset',
                     )

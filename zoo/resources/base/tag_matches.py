@@ -80,7 +80,6 @@ class TagMatcher(HuggingfaceDeployable):
     __no_max_vsim__: float = 0.20
     __max_validate__: int = 10
     __sure_min_samples__: int = 8
-    __default_repository__ = 'deepghs/game_characters'
     __tag_fe__: Type[TagFeatureExtract]
 
     def __init__(self, game_name: str, game_keywords: List[str] = None, repository: Optional[str] = None):
@@ -101,7 +100,7 @@ class TagMatcher(HuggingfaceDeployable):
         self.game_cls: Type[Character] = get_character_class(game_name)
         self.game_keywords = list(game_keywords or get_character_class(game_name).__game_keywords__ or [])
         self.ch_feats = {}
-        self.repository = repository or self.__default_repository__
+        self.repository = repository or self.game_cls.__repository__
 
     def get_premarked_lists(self) -> Tuple[Mapping[Union[int, str], List[str]], Mapping[Union[int, str], List[str]]]:
         file_url = hf_hub_url(
@@ -453,7 +452,7 @@ class TagMatcher(HuggingfaceDeployable):
     def add_commands(cls, cli):
         @cli.command('chtags', help='Match tags of characters from database.',
                      context_settings={**GLOBAL_CONTEXT_SETTINGS})
-        @click.option('--repository', '-r', 'repository', type=str, default='deepghs/game_characters',
+        @click.option('--repository', '-r', 'repository', type=str, default=None,
                       help='Repository to publish to.', show_default=True)
         @click.option('--namespace', '-n', 'namespace', type=str, default=None,
                       help='Namespace to publish to, default to game name.', show_default=True)
@@ -461,9 +460,10 @@ class TagMatcher(HuggingfaceDeployable):
                       help='Revision for pushing the model.', show_default=True)
         @click.option('--game', '-g', 'game_name', type=click.Choice(list_available_game_names()), required=True,
                       help='Game to deploy.', show_default=True)
-        def chtags(repository: str, namespace: str, revision: str, game_name: str):
+        def chtags(repository: Optional[str], namespace: str, revision: str, game_name: str):
             logging.try_init_root(logging.INFO)
             matcher = cls(game_name)
+            repository = repository or matcher.repository
             matcher.deploy_to_huggingface(repository, namespace, revision)
 
         @cli.command('chtags_export', help='Match tags of characters from database.',
