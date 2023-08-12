@@ -1,5 +1,5 @@
 import re
-from typing import Optional, List, Mapping, Any
+from typing import Optional, List, Mapping, Any, Tuple
 from urllib.parse import urljoin
 
 import pandas as pd
@@ -30,9 +30,9 @@ class PixivTagCrawler(ParallelTagCrawler):
         ParallelTagCrawler.__init__(self)
 
     CATEGORY_NAME_MAP = {
-        'アニメ': 'animation', 'マンガ': 'manga', 'ラノベ': 'light_novel', 'ゲーム': 'game', 'フィギュア': 'figure',
+        'アニメ': 'anime', 'マンガ': 'manga', 'ラノベ': 'novel', 'ゲーム': 'game', 'フィギュア': 'figure',
         '音楽': 'music', 'アート': 'art', 'デザイン': 'design', '一般': 'general', '人物': 'person',
-        'キャラクター': 'character', 'セリフ': 'dialogue', 'イベント': 'event', '同人サークル': 'doujin_circle'
+        'キャラクター': 'character', 'セリフ': 'quote', 'イベント': 'event', '同人サークル': 'doujin'
     }
 
     def get_category_index(self):
@@ -43,6 +43,8 @@ class PixivTagCrawler(ParallelTagCrawler):
             for item in page('nav#categories li a').items()
         ]
 
+    __mark_tags__: Tuple[str, str, str, str] = ('更新', '閲覧数', '作品数', 'チェックリスト数')
+
     def get_tags_from_page(self, p, **kwargs) -> Optional[List[Mapping[str, Any]]]:
         base_url = kwargs.pop('base_url')
         category = kwargs.pop('category')
@@ -51,6 +53,7 @@ class PixivTagCrawler(ParallelTagCrawler):
             return None
         resp.raise_for_status()
 
+        _updated_at_tag, _views_tag, _posts_tag, _cl_tag = self.__mark_tags__
         data = []
         for item in pq(resp.text)('#main section article').items():
             name = item('.info h2 a').text().strip()
@@ -64,10 +67,10 @@ class PixivTagCrawler(ParallelTagCrawler):
             data.append({
                 'name': name,
                 'wiki_url': wiki_url,
-                'updated_at': ritems['更新'],
-                'views': _parse_int(ritems['閲覧数']),
-                'posts': _parse_int(ritems['作品数']),
-                'checklists': _parse_int(ritems['チェックリスト数']),
+                'updated_at': ritems[_updated_at_tag],
+                'views': _parse_int(ritems[_views_tag]),
+                'posts': _parse_int(ritems[_posts_tag]),
+                'checklists': _parse_int(ritems[_cl_tag]),
             })
 
         return data
