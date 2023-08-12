@@ -1,10 +1,12 @@
 import json
+import logging
 from functools import lru_cache
 from itertools import islice
 from typing import Optional, Iterator, Any
 
 import requests
 from huggingface_hub import hf_hub_download
+from requests import JSONDecodeError
 from tqdm.auto import tqdm
 from waifuc.source import ZerochanSource
 
@@ -46,6 +48,12 @@ class ZerochanBasedIndexer(GameIndexer):
             all_items = all_items[:maxcnt]
 
         for item in tqdm(all_items, desc=self.__official_name__):
+            try:
+                skins = list(self._get_skin(item['name']))
+            except JSONDecodeError as err:
+                logging.warning(repr(err))
+                continue
+
             yield {
                 'ennames': item['enname']['names'],
                 'cnnames': item['cnname']['names'],
@@ -55,7 +63,7 @@ class ZerochanBasedIndexer(GameIndexer):
                 'gender': item['gender'],
                 'tags': item['tags'],
                 'desc_md': item['description'],
-                'skin': list(self._get_skin(item['name'])),
+                'skins': skins,
                 'total': item['total'],
                 'strict': item['strict'],
             }
