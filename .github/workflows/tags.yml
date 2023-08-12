@@ -10,7 +10,7 @@ on:
     - cron: '30 14 * * *'
 
 jobs:
-  data_crawl: 
+  data_crawl:
     name: Data Crawl
     runs-on: ${{ matrix.os }}
     strategy:
