@@ -7,9 +7,11 @@ from functools import partial
 import click
 
 from gchar.games.dispatch import list_available_game_names
+from gchar.generic import import_generic
 from gchar.utils import GLOBAL_CONTEXT_SETTINGS
 from gchar.utils import print_version as _origin_print_version
 
+import_generic()
 print_version = partial(_origin_print_version, 'zoo')
 
 _KNOWN_GAMES = list_available_game_names()
@@ -52,7 +54,7 @@ def schedule(game: str):
 
 
 @cli.command('scheck', help='String scheduled check')
-@click.option('--game', '-g', 'game', type=click.Choice(GAMES), required=True,
+@click.option('--game', '-g', 'game', type=click.Choice(_KNOWN_GAMES), required=True,
               help='Game to query.', show_default=True)
 @click.option('--string', '-s', 'string', type=str, required=True)
 def scheck(game: str, string: str):
