@@ -3,6 +3,7 @@ from typing import Tuple, List, Mapping, Any
 from urllib.parse import urljoin
 
 from pyquery import PyQuery as pq
+from tqdm.auto import tqdm
 
 from gchar.utils import srequest
 from ..pixiv.tags import PixivTagCrawler
@@ -23,6 +24,7 @@ class PixivEnTagCrawler(PixivTagCrawler):
     def get_tags_json(self) -> List[Mapping[str, Any]]:
         json_data = PixivTagCrawler.get_tags_json(self)
         retval = []
+        pg = tqdm(desc='Crawl Translation', total=len(json_data))
 
         def _get_info(idx, item):
             wiki_url = item['wiki_url']
@@ -34,6 +36,7 @@ class PixivEnTagCrawler(PixivTagCrawler):
                 item[f'trans_{lang}_wiki_url'] = urljoin(wiki_url, trans_item('a').attr('href'))
 
             retval.append((idx, item))
+            pg.update()
 
         tp = ThreadPoolExecutor(max_workers=self.__max_workers__)
         for i, item in enumerate(json_data):
