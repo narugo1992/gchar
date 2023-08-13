@@ -49,7 +49,12 @@ jobs:
       fail-fast: false
       matrix:
         game:
-          - 'naruto'
+          - 'lovelive'
+          - 'lovelivesunshine'
+          - 'pokemon'
+          - 'touhou'
+          - 'vocaloid'
+          - 'yugioh'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -193,7 +198,12 @@ jobs:
       max-parallel: 1
       matrix:
         game:
-          - 'naruto'
+          - 'lovelive'
+          - 'lovelivesunshine'
+          - 'pokemon'
+          - 'touhou'
+          - 'vocaloid'
+          - 'yugioh'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -281,7 +291,12 @@ jobs:
       max-parallel: 1
       matrix:
         game:
-          - 'naruto'
+          - 'lovelive'
+          - 'lovelivesunshine'
+          - 'pokemon'
+          - 'touhou'
+          - 'vocaloid'
+          - 'yugioh'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -391,7 +406,12 @@ jobs:
       max-parallel: 1
       matrix:
         game:
-          - 'naruto'
+          - 'lovelive'
+          - 'lovelivesunshine'
+          - 'pokemon'
+          - 'touhou'
+          - 'vocaloid'
+          - 'yugioh'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -520,7 +540,12 @@ jobs:
           - 'gelbooru'
           - 'wallhaven'
         game:
-          - 'naruto'
+          - 'lovelive'
+          - 'lovelivesunshine'
+          - 'pokemon'
+          - 'touhou'
+          - 'vocaloid'
+          - 'yugioh'
         os:
           - 'ubuntu-latest'
         python-version:
