@@ -1,3 +1,5 @@
+from .rezero import Character as ReZeroKaraHajimeruIsekaiSeikatsuCharacter
+from .bangdream import Character as BangDreamCharacter
 from .demonslayer import Character as KimetsuNoYaibaCharacter
 from .lovelive import Character as LoveLiveCharacter
 from .lovelivesunshine import Character as LoveLiveSunshineCharacter
