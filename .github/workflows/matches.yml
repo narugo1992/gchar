@@ -18,33 +18,40 @@ jobs:
 #      max-parallel: 1
       matrix:
         resource:
-#          - 'anime_pictures'
-#          - 'zerochan'
-#          - 'danbooru'
-#          - 'safebooru'
+          - 'anime_pictures'
+          - 'zerochan'
+          - 'danbooru'
+          - 'safebooru'
 #          - 'atfbooru'
-#          - 'sankaku'
-#          - 'rule34'
-#          - 'hypnohub'
-#          - 'xbooru'
-#          - 'konachan'
-#          - 'konachan_net'
-#          - 'yande'
-#          - 'lolibooru'
-#          - 'gelbooru'
+          - 'sankaku'
+          - 'rule34'
+          - 'hypnohub'
+          - 'xbooru'
+          - 'konachan'
+          - 'konachan_net'
+          - 'yande'
+          - 'lolibooru'
+          - 'gelbooru'
 #          - 'pixiv'
           - 'wallhaven'
         game:
-          - 'bluearchive'
-          - 'arknights'
-          - 'fgo'
-          - 'azurlane'
-          - 'girlsfrontline'
-          - 'genshin'
-          - 'neuralcloud'
-          - 'pathtonowhere'
-          - 'nikke'
-          - 'starrail'
+#          - 'bluearchive'
+#          - 'arknights'
+#          - 'fgo'
+#          - 'azurlane'
+#          - 'girlsfrontline'
+#          - 'genshin'
+#          - 'neuralcloud'
+#          - 'pathtonowhere'
+#          - 'nikke'
+#          - 'starrail'
+          - 'naruto'
+          - 'lovelive'
+          - 'lovelivesunshine'
+          - 'pokemon'
+          - 'touhou'
+          - 'vocaloid'
+          - 'yugioh'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -68,7 +75,7 @@ jobs:
         with:
           fetch-depth: 20
           submodules: 'recursive'
-      - name: Set up system dependences on Linux
+      - name: Set up system dependencies on Linux
         if: ${{ env.OS_NAME == 'Linux' }}
         shell: bash
         run: |
