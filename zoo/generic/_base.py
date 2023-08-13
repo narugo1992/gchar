@@ -62,16 +62,19 @@ class ZerochanBasedIndexer(GameIndexer):
                 logging.warning(repr(err))
                 continue
 
-            yield {
-                'ennames': item['enname']['names'],
-                'cnnames': item['cnname']['names'],
-                'jpnames': item['jpname']['names'],
-                'krnames': item['krname']['names'],
-                'alias': item['alias'],
-                'gender': item['gender'],
-                'tags': item['tags'],
-                'desc_md': item['description'],
-                'skins': skins,
-                'total': item['total'],
-                'strict': item['strict'],
-            }
+            if skins:
+                yield {
+                    'ennames': item['enname']['names'],
+                    'cnnames': item['cnname']['names'],
+                    'jpnames': item['jpname']['names'],
+                    'krnames': item['krname']['names'],
+                    'alias': item['alias'],
+                    'gender': item['gender'],
+                    'tags': item['tags'],
+                    'desc_md': item['description'],
+                    'skins': skins,
+                    'total': item['total'],
+                    'strict': item['strict'],
+                }
+            else:
+                logging.warning(f'No skin found for {item!r}, skipped.')
