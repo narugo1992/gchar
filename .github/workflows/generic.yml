@@ -49,6 +49,7 @@ jobs:
       fail-fast: false
       matrix:
         game:
+          - 'naruto'
           - 'lovelive'
           - 'lovelivesunshine'
           - 'pokemon'
@@ -198,6 +199,7 @@ jobs:
       max-parallel: 1
       matrix:
         game:
+          - 'naruto'
           - 'lovelive'
           - 'lovelivesunshine'
           - 'pokemon'
@@ -291,6 +293,7 @@ jobs:
       max-parallel: 1
       matrix:
         game:
+          - 'naruto'
           - 'lovelive'
           - 'lovelivesunshine'
           - 'pokemon'
@@ -406,6 +409,7 @@ jobs:
       max-parallel: 1
       matrix:
         game:
+          - 'naruto'
           - 'lovelive'
           - 'lovelivesunshine'
           - 'pokemon'
@@ -540,6 +544,7 @@ jobs:
           - 'gelbooru'
           - 'wallhaven'
         game:
+          - 'naruto'
           - 'lovelive'
           - 'lovelivesunshine'
           - 'pokemon'
