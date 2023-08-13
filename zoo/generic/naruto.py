@@ -7,7 +7,6 @@ class NARUTOIndexer(ZerochanBasedIndexer):
     __root_website__ = 'https://zerochan.net/NARUTO'
 
 
-
 INDEXER = NARUTOIndexer()
 
 if __name__ == '__main__':

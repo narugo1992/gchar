@@ -1,3 +1,4 @@
+from .touhou import Character as TouhouCharacter
 from .naruto import Character as NarutoCharacter
 
 

@@ -29,6 +29,7 @@ class ZerochanBasedIndexer(GameIndexer):
     __root_website__ = 'https://zerochan.net'  # Game main page from zerochan
     __repository__ = 'deepghs/generic_characters'
     __max_skins__: int = 10
+    __gender_check__: bool = False
 
     def _get_skin(self, keyword: str) -> Iterator[dict]:
         source = ZerochanSource(keyword, strict=True, select='full')
@@ -44,6 +45,8 @@ class ZerochanBasedIndexer(GameIndexer):
             item for item in _get_all_characters_data()
             if item['parent'] == self.__official_name__
         ]
+        if self.__gender_check__:
+            all_items = [item for item in all_items if item['gender'] in {'male', 'female'}]
         if maxcnt is not None:
             all_items = all_items[:maxcnt]
 
