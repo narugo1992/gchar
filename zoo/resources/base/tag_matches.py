@@ -78,7 +78,7 @@ class TagMatcher(HuggingfaceDeployable):
     __strict_similarity__: float = 0.95
     __yes_min_vsim__: float = 0.60
     __no_max_vsim__: float = 0.20
-    __max_validate__: int = 10
+    __max_validate__: int = 5
     __sure_min_samples__: int = 8
     __tag_fe__: Type[TagFeatureExtract]
 

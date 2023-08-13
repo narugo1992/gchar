@@ -1,13 +1,13 @@
 import json
 import logging
 from functools import lru_cache
-from itertools import islice
 from typing import Optional, Iterator, Any
 
 import requests
 from huggingface_hub import hf_hub_download
 from requests import JSONDecodeError
 from tqdm.auto import tqdm
+from waifuc.action import NoMonochromeAction, FaceCountAction, ClassFilterAction
 from waifuc.source import ZerochanSource
 
 from ..games.base import GameIndexer
@@ -28,15 +28,20 @@ class ZerochanBasedIndexer(GameIndexer):
     __official_name__ = 'Default Character'  # Name from zerochan
     __root_website__ = 'https://zerochan.net'  # Game main page from zerochan
     __repository__ = 'deepghs/generic_characters'
-    __max_skins__: int = 10
-    __gender_check__: bool = False
+    __max_skins__: int = 5
+    __gender_check__: bool = True
 
     def _get_skin(self, keyword: str) -> Iterator[dict]:
         source = ZerochanSource(keyword, strict=True, select='full')
-        for id_, url, meta in tqdm(islice(source._iter_data(), self.__max_skins__), desc=keyword):
+        source = source.attach(
+            NoMonochromeAction(),
+            ClassFilterAction(['illustration', 'bangumi']),
+            FaceCountAction(1, level='n'),
+        )[:self.__max_skins__]
+        for item in tqdm(source, desc=keyword):
             yield {
-                'name': f'Zerochan {id_}',
-                'url': url,
+                'name': f'Zerochan {item.meta["zerochan"]["id"]}',
+                'url': item.meta['url'],
             }
 
     def _crawl_index_from_online(self, session: requests.Session, maxcnt: Optional[int] = None, **kwargs) \
