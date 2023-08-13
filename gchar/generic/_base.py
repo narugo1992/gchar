@@ -1,6 +1,8 @@
 import re
 from typing import List, Tuple, Optional
 
+from unidecode import unidecode
+
 from ..games.base import Character, TextName
 from ..games.base import ChineseName as _GenericChineseName
 from ..games.base import EnglishName as _GenericEnglishName
@@ -39,7 +41,7 @@ class _BaseGenericCharacter(Character):
         self._data = data
 
     def _index(self):
-        return re.sub(r'[\W_]+', '_', self._enname().lower()).strip('_')
+        return re.sub(r'[\W_]+', '_', unidecode(self._enname().lower())).strip('_')
 
     def _cnname(self):
         _cnnames = self._data['cnnames']
