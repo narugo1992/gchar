@@ -509,7 +509,6 @@ jobs:
           - 'zerochan'
           - 'danbooru'
           - 'safebooru'
-          - 'atfbooru'
           - 'sankaku'
           - 'rule34'
           - 'hypnohub'

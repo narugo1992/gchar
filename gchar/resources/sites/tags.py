@@ -3,6 +3,7 @@ from functools import lru_cache
 from typing import Union, Mapping, List, Tuple
 
 from huggingface_hub import hf_hub_download
+from huggingface_hub.utils import EntryNotFoundError
 
 from gchar.games import get_character
 from gchar.games.base import Character
@@ -24,12 +25,15 @@ def _get_tags_for_game_site(game: str, site: str):
     :return: The tags for the game and site.
     :rtype: List[dict]
     """
-    with open(hf_hub_download(
-            GAME_CHARS[game].__repository__,
-            filename=f'{game}/tags_{SITES[site]}.json',
-            repo_type='dataset'
-    ), 'r', encoding='utf-8') as f:
-        return json.load(f)['data']
+    try:
+        with open(hf_hub_download(
+                GAME_CHARS[game].__repository__,
+                filename=f'{game}/tags_{SITES[site]}.json',
+                repo_type='dataset'
+        ), 'r', encoding='utf-8') as f:
+            return json.load(f)['data']
+    except EntryNotFoundError:
+        return []
 
 
 @lru_cache()
