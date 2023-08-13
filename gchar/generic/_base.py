@@ -22,7 +22,17 @@ class KoreanName(TextName):
 
 
 class EnglishName(_GenericEnglishName):
-    pass
+    @classmethod
+    def _word_trans(cls, text: str):
+        """
+        Perform word-based transliteration on the given text.
+
+        :param text: The text to transliterate.
+        :type text: str
+        :return: The transliterated text.
+        :rtype: str
+        """
+        return ' '.join(re.findall('[a-zA-Z0-9]+', unidecode(text.lower())))
 
 
 class AliasName(TextName):

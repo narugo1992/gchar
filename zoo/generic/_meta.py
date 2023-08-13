@@ -109,11 +109,19 @@ def _get_names_from_pixiv_en(all_names):
         for p in all_names:
             pname = re.sub(r'[\W_]+', '', p.lower())
             if item_name == pname or item_name_ja == pname:
-                pixiv_names.append((item['name'], item['posts']))
+                pixiv_names.append((item['name'], item['trans_ja'], item['posts']))
                 break
 
-    logging.info(f'Findings: {pixiv_names!r} ...')
-    return pixiv_names
+    jp_db = _get_pixiv_db()
+    p_names = []
+    for name, trans_ja, posts in pixiv_names:
+        records = list(jp_db.table('tags').where('name', trans_ja).get())
+        if records:
+            posts = records[0]['posts']
+        p_names.append((trans_ja, posts))
+
+    logging.info(f'Findings: {p_names!r} ...')
+    return p_names
 
 
 def get_game_info(game_name):
@@ -161,15 +169,16 @@ def get_full_info_for_datasource(game_name):
                             ch['krname']['suffixes'], ch['enname']['suffixes']):
             ch_suffix_records[suffix] = ch_suffix_records.get(suffix, 0) + 1
 
-    max_suffix_cnt = max(ch_suffix_records.values())
-    if max_suffix_cnt >= 15 or (max_suffix_cnt >= 3 and max_suffix_cnt >= len(ch_infos) * 0.3):
-        for name, cnt in ch_suffix_records.items():
-            name = name.strip()
-            if cnt == max_suffix_cnt:
-                if name not in all_names:
-                    all_names.append(name)
-                if name not in t_names:
-                    t_names.append(name)
+    if ch_suffix_records:
+        max_suffix_cnt = max(ch_suffix_records.values())
+        if max_suffix_cnt >= 15 or (max_suffix_cnt >= 3 and max_suffix_cnt >= len(ch_infos) * 0.3):
+            for name, cnt in ch_suffix_records.items():
+                name = name.strip()
+                if cnt == max_suffix_cnt:
+                    if name not in all_names:
+                        all_names.append(name)
+                    if name not in t_names:
+                        t_names.append(name)
 
     t_names = [(i, unidecode(name.lower().strip())) for i, name in enumerate(t_names)]
     t_names = sorted(t_names, key=lambda x: (len(x[1]), x[0]))
