@@ -10,7 +10,7 @@ on:
       generics:
         description: 'Generic to Crawl'
         required: true
-        default: 'naruto'
+        default: 'bangdream,demonslayer,eromangasensei,lovelive,lovelivesunshine,mahoushoujomadokamagica,naruto,pokemon,rezero,swordartonline,touhou,violetevergarden,vocaloid,yugioh'
       skip_crawl:
         description: 'Skip Crawl (Type Anything for Yes)'
         required: false
@@ -49,11 +49,18 @@ jobs:
       fail-fast: false
       matrix:
         game:
-          - 'naruto'
+          - 'bangdream'
+          - 'demonslayer'
+          - 'eromangasensei'
           - 'lovelive'
           - 'lovelivesunshine'
+          - 'mahoushoujomadokamagica'
+#          - 'naruto'
           - 'pokemon'
+          - 'rezero'
+          - 'swordartonline'
           - 'touhou'
+          - 'violetevergarden'
           - 'vocaloid'
           - 'yugioh'
         os:
@@ -199,11 +206,18 @@ jobs:
       max-parallel: 1
       matrix:
         game:
-          - 'naruto'
+          - 'bangdream'
+          - 'demonslayer'
+          - 'eromangasensei'
           - 'lovelive'
           - 'lovelivesunshine'
+          - 'mahoushoujomadokamagica'
+          - 'naruto'
           - 'pokemon'
+          - 'rezero'
+          - 'swordartonline'
           - 'touhou'
+          - 'violetevergarden'
           - 'vocaloid'
           - 'yugioh'
         os:
@@ -293,11 +307,18 @@ jobs:
       max-parallel: 1
       matrix:
         game:
-          - 'naruto'
+          - 'bangdream'
+          - 'demonslayer'
+          - 'eromangasensei'
           - 'lovelive'
           - 'lovelivesunshine'
+          - 'mahoushoujomadokamagica'
+          - 'naruto'
           - 'pokemon'
+          - 'rezero'
+          - 'swordartonline'
           - 'touhou'
+          - 'violetevergarden'
           - 'vocaloid'
           - 'yugioh'
         os:
@@ -409,11 +430,18 @@ jobs:
       max-parallel: 1
       matrix:
         game:
-          - 'naruto'
+          - 'bangdream'
+          - 'demonslayer'
+          - 'eromangasensei'
           - 'lovelive'
           - 'lovelivesunshine'
+          - 'mahoushoujomadokamagica'
+          - 'naruto'
           - 'pokemon'
+          - 'rezero'
+          - 'swordartonline'
           - 'touhou'
+          - 'violetevergarden'
           - 'vocaloid'
           - 'yugioh'
         os:
@@ -544,11 +572,18 @@ jobs:
           - 'gelbooru'
           - 'wallhaven'
         game:
-          - 'naruto'
+          - 'bangdream'
+          - 'demonslayer'
+          - 'eromangasensei'
           - 'lovelive'
           - 'lovelivesunshine'
+          - 'mahoushoujomadokamagica'
+          - 'naruto'
           - 'pokemon'
+          - 'rezero'
+          - 'swordartonline'
           - 'touhou'
+          - 'violetevergarden'
           - 'vocaloid'
           - 'yugioh'
         os:
