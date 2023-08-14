@@ -250,11 +250,14 @@ class TagMatcher(HuggingfaceDeployable):
 
     def _batch_iter_patterns(self, name_words_sets: List[List[str]]) -> Iterator[List[str]]:
         patterns = []
+        _exists_patterns = set()
         for p in self._iter_patterns_by_name_words(name_words_sets):
-            patterns.append(p)
-            if len(patterns) >= self.__pattern_batch__:
-                yield list(patterns)
-                patterns.clear()
+            if p not in _exists_patterns:
+                _exists_patterns.add(p)
+                patterns.append(p)
+                if len(patterns) >= self.__pattern_batch__:
+                    yield list(patterns)
+                    patterns.clear()
 
         if patterns:
             yield list(patterns)
