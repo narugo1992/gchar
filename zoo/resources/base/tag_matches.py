@@ -78,7 +78,7 @@ class TagMatcher(HuggingfaceDeployable):
     __strict_similarity__: float = 0.95
     __yes_min_vsim__: float = 0.60
     __no_max_vsim__: float = 0.20
-    __max_validate__: int = 5
+    __max_validate__: int = 10
     __sure_min_samples__: int = 8
     __tag_fe__: Type[TagFeatureExtract]
 
@@ -357,6 +357,8 @@ class TagMatcher(HuggingfaceDeployable):
             options = ch_options[ch.index]
             blacklist = set(ch_blacklists.get(ch.index, None) or [])
             whitelist = set(ch_whitelists.get(ch.index, None) or [])
+            options = sorted(options, key=lambda x: -x[1] * (3 if x[3] else 1) * (x[2] ** 2))
+            logging.info(f'Order for {ch!r}: {options!r}')
 
             # filter visual not matches
             ops, validate_cnt = [], 0
