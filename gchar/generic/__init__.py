@@ -1,3 +1,7 @@
+from .spyxfamily import Character as SpyFamilyCharacter
+from .isitwrongtotrytopickupgirlsinadungeon import Character as DungeonNiDeaiWoMotomeruNoWaMachigatteiruNoDarouKaCharacter
+from .toarumajutsunoindex import Character as ToAruMajutsuNoIndexCharacter
+from .konosuba import Character as KonoSubarashiiSekaiNiShukufukuWoCharacter
 from .bangdream import Character as BangDreamCharacter
 from .demonslayer import Character as KimetsuNoYaibaCharacter
 from .eromangasensei import Character as EromangaSenseiCharacter
