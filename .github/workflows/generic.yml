@@ -10,7 +10,7 @@ on:
       generics:
         description: 'Generic to Crawl'
         required: true
-        default: 'spyxfamily,isitwrongtotrytopickupgirlsinadungeon,toarumajutsunoindex,konosuba'
+        default: 'kantaicollection'
       skip_crawl:
         description: 'Skip Crawl (Type Anything for Yes)'
         required: false
@@ -63,10 +63,11 @@ jobs:
 #          - 'violetevergarden'
 #          - 'vocaloid'
 #          - 'yugioh'
-          - 'spyxfamily'
-          - 'isitwrongtotrytopickupgirlsinadungeon'
-          - 'toarumajutsunoindex'
-          - 'konosuba'
+#          - 'spyxfamily'
+#          - 'isitwrongtotrytopickupgirlsinadungeon'
+#          - 'toarumajutsunoindex'
+#          - 'konosuba'
+          - 'kantaicollection'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -224,10 +225,11 @@ jobs:
 #          - 'violetevergarden'
 #          - 'vocaloid'
 #          - 'yugioh'
-          - 'spyxfamily'
-          - 'isitwrongtotrytopickupgirlsinadungeon'
-          - 'toarumajutsunoindex'
-          - 'konosuba'
+#          - 'spyxfamily'
+#          - 'isitwrongtotrytopickupgirlsinadungeon'
+#          - 'toarumajutsunoindex'
+#          - 'konosuba'
+          - 'kantaicollection'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -329,10 +331,11 @@ jobs:
 #          - 'violetevergarden'
 #          - 'vocaloid'
 #          - 'yugioh'
-          - 'spyxfamily'
-          - 'isitwrongtotrytopickupgirlsinadungeon'
-          - 'toarumajutsunoindex'
-          - 'konosuba'
+#          - 'spyxfamily'
+#          - 'isitwrongtotrytopickupgirlsinadungeon'
+#          - 'toarumajutsunoindex'
+#          - 'konosuba'
+          - 'kantaicollection'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -456,10 +459,11 @@ jobs:
 #          - 'violetevergarden'
 #          - 'vocaloid'
 #          - 'yugioh'
-          - 'spyxfamily'
-          - 'isitwrongtotrytopickupgirlsinadungeon'
-          - 'toarumajutsunoindex'
-          - 'konosuba'
+#          - 'spyxfamily'
+#          - 'isitwrongtotrytopickupgirlsinadungeon'
+#          - 'toarumajutsunoindex'
+#          - 'konosuba'
+          - 'kantaicollection'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -602,10 +606,11 @@ jobs:
 #          - 'violetevergarden'
 #          - 'vocaloid'
 #          - 'yugioh'
-          - 'spyxfamily'
-          - 'isitwrongtotrytopickupgirlsinadungeon'
-          - 'toarumajutsunoindex'
-          - 'konosuba'
+#          - 'spyxfamily'
+#          - 'isitwrongtotrytopickupgirlsinadungeon'
+#          - 'toarumajutsunoindex'
+#          - 'konosuba'
+          - 'kantaicollection'
         os:
           - 'ubuntu-latest'
         python-version:

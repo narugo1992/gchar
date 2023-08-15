@@ -59,10 +59,11 @@ jobs:
 #          - 'violetevergarden'
 #          - 'vocaloid'
 #          - 'yugioh'
-          - 'spyxfamily'
-          - 'isitwrongtotrytopickupgirlsinadungeon'
-          - 'toarumajutsunoindex'
-          - 'konosuba'
+#          - 'spyxfamily'
+#          - 'isitwrongtotrytopickupgirlsinadungeon'
+#          - 'toarumajutsunoindex'
+#          - 'konosuba'
+          - 'kantaicollection'
         os:
           - 'ubuntu-latest'
         python-version:
