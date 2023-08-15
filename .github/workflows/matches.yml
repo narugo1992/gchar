@@ -22,7 +22,7 @@ jobs:
           - 'zerochan'
           - 'danbooru'
 #          - 'safebooru'
-          - 'atfbooru'
+#          - 'atfbooru'
 #          - 'sankaku'
           - 'rule34'
 #          - 'hypnohub'
@@ -137,7 +137,7 @@ jobs:
           - 'anime_pictures'
           - 'zerochan'
           - 'danbooru'
-          - 'atfbooru'
+#          - 'atfbooru'
           - 'rule34'
           - 'yande'
         game:
@@ -215,7 +215,7 @@ jobs:
           - 'anime_pictures'
           - 'zerochan'
           - 'danbooru'
-          - 'atfbooru'
+#          - 'atfbooru'
           - 'rule34'
           - 'yande'
         game:
