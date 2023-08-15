@@ -11,6 +11,7 @@ from typing import Type, List, ContextManager, Iterator, Optional, Tuple, Union,
 import click
 import numpy as np
 from ditk import logging
+from hbutils.scale import time_to_duration, time_to_delta_str
 from hbutils.system import TemporaryDirectory
 from huggingface_hub import hf_hub_download, hf_hub_url
 from imgutils.metrics import ccip_batch_same
@@ -82,7 +83,8 @@ class TagMatcher(HuggingfaceDeployable):
     __sure_min_samples__: int = 8
     __tag_fe__: Type[TagFeatureExtract]
 
-    def __init__(self, game_name: str, game_keywords: List[str] = None, repository: Optional[str] = None):
+    def __init__(self, game_name: str, game_keywords: List[str] = None, repository: Optional[str] = None,
+                 max_time: Union[str, int, None] = None):
         db_file = hf_hub_download(
             'deepghs/site_tags',
             filename=f'{self.__site_name__}/tags.sqlite',
@@ -101,6 +103,7 @@ class TagMatcher(HuggingfaceDeployable):
         self.game_keywords = list(game_keywords or get_character_class(game_name).__game_keywords__ or [])
         self.ch_feats = {}
         self.repository = repository or self.game_cls.__repository__
+        self.max_time = time_to_duration(max_time) if max_time is not None else None
 
     def get_premarked_lists(self) -> Tuple[Mapping[Union[int, str], List[str]], Mapping[Union[int, str], List[str]]]:
         file_url = hf_hub_url(
@@ -324,6 +327,10 @@ class TagMatcher(HuggingfaceDeployable):
                 yield tag, count
 
     def try_matching(self):
+        _start_time = time.time()
+        if self.max_time is not None:
+            logging.info(f'Max time ({time_to_delta_str(self.max_time)}) is set.')
+
         ch_options = {}
         origin_chs = self.game_cls.all(contains_extra=True)
         all_chs, _exist_chids = [], set()
@@ -435,6 +442,10 @@ class TagMatcher(HuggingfaceDeployable):
             logging.info(f'Blacklisted tags of character {ch!r}: {sorted(blacklist)!r}')
             logging.info(f'Whitelisted tags of character {ch!r}: {sorted(whitelist)!r}')
 
+            if self.max_time is not None and _start_time + self.max_time < time.time():
+                logging.info(f'Max time exceeded ({time.time() - _start_time:.3f}s/{self.max_time:.3f}s), break.')
+                break
+
         return retval
 
     @contextmanager
@@ -464,6 +475,8 @@ class TagMatcher(HuggingfaceDeployable):
                       help='Revision for pushing the model.', show_default=True)
         @click.option('--game', '-g', 'game_name', type=click.Choice(list_available_game_names()), required=True,
                       help='Game to deploy.', show_default=True)
+        @click.option('--max_time', '-T', 'max_time', type=str, default=None,
+                      help='Max time to run.', show_default=True)
         def chtags(repository: Optional[str], namespace: str, revision: str, game_name: str):
             logging.try_init_root(logging.INFO)
             matcher = cls(game_name)
