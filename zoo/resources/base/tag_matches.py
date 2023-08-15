@@ -477,9 +477,10 @@ class TagMatcher(HuggingfaceDeployable):
                       help='Game to deploy.', show_default=True)
         @click.option('--max_time', '-T', 'max_time', type=str, default=None,
                       help='Max time to run.', show_default=True)
-        def chtags(repository: Optional[str], namespace: str, revision: str, game_name: str):
+        def chtags(repository: Optional[str], namespace: str, revision: str, game_name: str,
+                   max_time: Optional[str]):
             logging.try_init_root(logging.INFO)
-            matcher = cls(game_name)
+            matcher = cls(game_name, max_time=max_time)
             repository = repository or matcher.repository
             matcher.deploy_to_huggingface(repository, namespace, revision)
 
