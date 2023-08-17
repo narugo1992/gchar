@@ -10,7 +10,7 @@ on:
       generics:
         description: 'Generic to Crawl'
         required: true
-        default: 'honkai3'
+        default: 'arknightsnpc,genshinnpc'
       skip_crawl:
         description: 'Skip Crawl (Type Anything for Yes)'
         required: false
@@ -68,7 +68,9 @@ jobs:
 #          - 'toarumajutsunoindex'
 #          - 'konosuba'
 #          - 'kantaicollection'
-          - 'honkai3'
+#          - 'honkai3'
+          - 'arknightsnpc'
+          - 'genshinnpc'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -231,7 +233,9 @@ jobs:
 #          - 'toarumajutsunoindex'
 #          - 'konosuba'
 #          - 'kantaicollection'
-          - 'honkai3'
+#          - 'honkai3'
+          - 'arknightsnpc'
+          - 'genshinnpc'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -338,7 +342,9 @@ jobs:
 #          - 'toarumajutsunoindex'
 #          - 'konosuba'
 #          - 'kantaicollection'
-          - 'honkai3'
+#          - 'honkai3'
+          - 'arknightsnpc'
+          - 'genshinnpc'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -467,7 +473,9 @@ jobs:
 #          - 'toarumajutsunoindex'
 #          - 'konosuba'
 #          - 'kantaicollection'
-          - 'honkai3'
+#          - 'honkai3'
+          - 'arknightsnpc'
+          - 'genshinnpc'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -616,7 +624,9 @@ jobs:
 #          - 'toarumajutsunoindex'
 #          - 'konosuba'
 #          - 'kantaicollection'
-          - 'honkai3'
+#          - 'honkai3'
+          - 'arknightsnpc'
+          - 'genshinnpc'
         os:
           - 'ubuntu-latest'
         python-version:

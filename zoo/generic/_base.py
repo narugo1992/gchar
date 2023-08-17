@@ -10,6 +10,7 @@ from tqdm.auto import tqdm
 from waifuc.action import NoMonochromeAction, FaceCountAction, ClassFilterAction
 from waifuc.source import ZerochanSource
 
+from gchar.games.base import Character
 from ..games.base import GameIndexer
 
 
@@ -30,6 +31,7 @@ class ZerochanBasedIndexer(GameIndexer):
     __repository__ = 'deepghs/generic_characters'
     __max_skins__: int = 5
     __gender_check__: bool = True
+    __exclude_cls__: Optional[Character] = None
 
     def _get_skin(self, keyword: str) -> Iterator[dict]:
         source = ZerochanSource(keyword, strict=True, select='full')
@@ -56,25 +58,45 @@ class ZerochanBasedIndexer(GameIndexer):
             all_items = all_items[:maxcnt]
 
         for item in tqdm(all_items, desc=self.__official_name__):
+            if self.__exclude_cls__ is not None:
+                all_names = [
+                    *item['enname']['names'],
+                    *item['cnname']['names'],
+                    *item['jpname']['names'],
+                    *item['krname']['names'],
+                    *item['alias'],
+                ]
+                _exists, _exist_ch = False, None
+                for _name in all_names:
+                    ch = self.__exclude_cls__.get(_name)
+                    if ch is not None:
+                        _exists, _exist_ch = True, ch
+                        break
+
+                if _exists:
+                    logging.info(f'Character already exists as {_exist_ch!r}, skipped.')
+                    continue
+
             try:
                 skins = list(self._get_skin(item['name']))
             except JSONDecodeError as err:
                 logging.warning(repr(err))
                 continue
 
-            if skins:
-                yield {
-                    'ennames': item['enname']['names'],
-                    'cnnames': item['cnname']['names'],
-                    'jpnames': item['jpname']['names'],
-                    'krnames': item['krname']['names'],
-                    'alias': item['alias'],
-                    'gender': item['gender'],
-                    'tags': item['tags'],
-                    'desc_md': item['description'],
-                    'skins': skins,
-                    'total': item['total'],
-                    'strict': item['strict'],
-                }
-            else:
+            if not skins:
                 logging.warning(f'No skin found for {item!r}, skipped.')
+                continue
+
+            yield {
+                'ennames': item['enname']['names'],
+                'cnnames': item['cnname']['names'],
+                'jpnames': item['jpname']['names'],
+                'krnames': item['krname']['names'],
+                'alias': item['alias'],
+                'gender': item['gender'],
+                'tags': item['tags'],
+                'desc_md': item['description'],
+                'skins': skins,
+                'total': item['total'],
+                'strict': item['strict'],
+            }

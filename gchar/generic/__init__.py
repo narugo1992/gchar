@@ -1,6 +1,8 @@
+from .arknightsnpc import Character as ArknightsCharacter
 from .bangdream import Character as BangDreamCharacter
 from .demonslayer import Character as KimetsuNoYaibaCharacter
 from .eromangasensei import Character as EromangaSenseiCharacter
+from .genshinnpc import Character as GenshinImpactCharacter
 from .honkai3 import Character as Houkai3rdCharacter
 from .isitwrongtotrytopickupgirlsinadungeon import \
     Character as DungeonNiDeaiWoMotomeruNoWaMachigatteiruNoDarouKaCharacter
