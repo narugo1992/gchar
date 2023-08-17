@@ -10,7 +10,7 @@ on:
       generics:
         description: 'Generic to Crawl'
         required: true
-        default: 'kantaicollection'
+        default: 'honkai3'
       skip_crawl:
         description: 'Skip Crawl (Type Anything for Yes)'
         required: false
@@ -67,7 +67,8 @@ jobs:
 #          - 'isitwrongtotrytopickupgirlsinadungeon'
 #          - 'toarumajutsunoindex'
 #          - 'konosuba'
-          - 'kantaicollection'
+#          - 'kantaicollection'
+          - 'honkai3'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -229,7 +230,8 @@ jobs:
 #          - 'isitwrongtotrytopickupgirlsinadungeon'
 #          - 'toarumajutsunoindex'
 #          - 'konosuba'
-          - 'kantaicollection'
+#          - 'kantaicollection'
+          - 'honkai3'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -335,7 +337,8 @@ jobs:
 #          - 'isitwrongtotrytopickupgirlsinadungeon'
 #          - 'toarumajutsunoindex'
 #          - 'konosuba'
-          - 'kantaicollection'
+#          - 'kantaicollection'
+          - 'honkai3'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -463,7 +466,8 @@ jobs:
 #          - 'isitwrongtotrytopickupgirlsinadungeon'
 #          - 'toarumajutsunoindex'
 #          - 'konosuba'
-          - 'kantaicollection'
+#          - 'kantaicollection'
+          - 'honkai3'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -573,6 +577,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     needs:
       - data_crawl_upload
+      - skin_crawl
     strategy:
       fail-fast: false
       matrix:
@@ -610,7 +615,8 @@ jobs:
 #          - 'isitwrongtotrytopickupgirlsinadungeon'
 #          - 'toarumajutsunoindex'
 #          - 'konosuba'
-          - 'kantaicollection'
+#          - 'kantaicollection'
+          - 'honkai3'
         os:
           - 'ubuntu-latest'
         python-version:
