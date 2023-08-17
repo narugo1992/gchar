@@ -20,16 +20,16 @@ jobs:
         resource:
           - 'anime_pictures'
           - 'zerochan'
-          - 'danbooru'
+#          - 'danbooru'
 #          - 'safebooru'
-          - 'atfbooru'
+#          - 'atfbooru'
 #          - 'sankaku'
-          - 'rule34'
+#          - 'rule34'
 #          - 'hypnohub'
 #          - 'xbooru'
 #          - 'konachan'
 #          - 'konachan_net'
-          - 'yande'
+#          - 'yande'
 #          - 'lolibooru'
 #          - 'gelbooru'
 #          - 'pixiv'
@@ -136,10 +136,10 @@ jobs:
         resource:
           - 'anime_pictures'
           - 'zerochan'
-          - 'danbooru'
-          - 'atfbooru'
-          - 'rule34'
-          - 'yande'
+#          - 'danbooru'
+#          - 'atfbooru'
+#          - 'rule34'
+#          - 'yande'
         game:
           - 'kantaicollection'
         os:
@@ -214,10 +214,10 @@ jobs:
         resource:
           - 'anime_pictures'
           - 'zerochan'
-          - 'danbooru'
-          - 'atfbooru'
-          - 'rule34'
-          - 'yande'
+#          - 'danbooru'
+#          - 'atfbooru'
+#          - 'rule34'
+#          - 'yande'
         game:
           - 'kantaicollection'
         os:
