@@ -64,7 +64,8 @@ jobs:
 #          - 'toarumajutsunoindex'
 #          - 'konosuba'
 #          - 'kantaicollection'
-          - 'honkai3'
+#          - 'honkai3'
+          - 'touhou'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -153,7 +154,8 @@ jobs:
           - 'wallhaven'
         game:
 #          - 'kantaicollection'
-          - 'honkai3'
+#          - 'honkai3'
+          - 'touhou'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -242,7 +244,8 @@ jobs:
           - 'wallhaven'
         game:
 #          - 'kantaicollection'
-          - 'honkai3'
+#          - 'honkai3'
+          - 'touhou'
         os:
           - 'ubuntu-latest'
         python-version:

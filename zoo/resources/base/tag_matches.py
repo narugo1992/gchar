@@ -367,7 +367,7 @@ class TagMatcher(HuggingfaceDeployable):
             options = ch_options[ch.index]
             blacklist = set(ch_blacklists.get(ch.index, None) or [])
             whitelist = set(ch_whitelists.get(ch.index, None) or [])
-            options = sorted(options, key=lambda x: -x[1] * (3 if x[3] else 1) * (x[2] ** 2))
+            options = sorted(options, key=lambda x: (0 if x[2] >= 0.9 else 1, -x[1] * (3 if x[3] else 1) * (x[2] ** 2)))
             logging.info(f'Order for {ch!r}: {options!r}')
 
             # filter visual not matches
