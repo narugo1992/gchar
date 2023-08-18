@@ -1,3 +1,4 @@
+from .warshipgirls import Character as ZhanJianShaoNyuCharacter
 from .arknightsnpc import Character as ArknightsCharacter
 from .bangdream import Character as BangDreamCharacter
 from .demonslayer import Character as KimetsuNoYaibaCharacter

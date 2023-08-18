@@ -10,7 +10,7 @@ on:
       generics:
         description: 'Generic to Crawl'
         required: true
-        default: 'arknightsnpc,genshinnpc'
+        default: 'warshipgirls'
       skip_crawl:
         description: 'Skip Crawl (Type Anything for Yes)'
         required: false
@@ -69,8 +69,9 @@ jobs:
 #          - 'konosuba'
 #          - 'kantaicollection'
 #          - 'honkai3'
-          - 'arknightsnpc'
-          - 'genshinnpc'
+#          - 'arknightsnpc'
+#          - 'genshinnpc'
+          - 'warshipgirls'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -234,8 +235,9 @@ jobs:
 #          - 'konosuba'
 #          - 'kantaicollection'
 #          - 'honkai3'
-          - 'arknightsnpc'
-          - 'genshinnpc'
+#          - 'arknightsnpc'
+#          - 'genshinnpc'
+          - 'warshipgirls'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -343,8 +345,9 @@ jobs:
 #          - 'konosuba'
 #          - 'kantaicollection'
 #          - 'honkai3'
-          - 'arknightsnpc'
-          - 'genshinnpc'
+#          - 'arknightsnpc'
+#          - 'genshinnpc'
+          - 'warshipgirls'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -474,8 +477,9 @@ jobs:
 #          - 'konosuba'
 #          - 'kantaicollection'
 #          - 'honkai3'
-          - 'arknightsnpc'
-          - 'genshinnpc'
+#          - 'arknightsnpc'
+#          - 'genshinnpc'
+          - 'warshipgirls'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -625,8 +629,9 @@ jobs:
 #          - 'konosuba'
 #          - 'kantaicollection'
 #          - 'honkai3'
-          - 'arknightsnpc'
-          - 'genshinnpc'
+#          - 'arknightsnpc'
+#          - 'genshinnpc'
+          - 'warshipgirls'
         os:
           - 'ubuntu-latest'
         python-version:
