@@ -147,7 +147,10 @@ def _get_pixiv_search_count_by_name(
 
         excluded_text = ' '.join(map(lambda x: f'-{x}', sorted(excluded_words)))
         all_excluded.append(excluded_words)
-        all_keywords.append(f'{base_tag} {name} {excluded_text}')
+        if base_tag:
+            all_keywords.append(f'{base_tag} {name} {excluded_text}')
+        else:
+            all_keywords.append(f'{name} {excluded_text}')
 
     count_data = _names_search_count(all_keywords, session, _get_interval_func(interval, min_interval),
                                      sleep_every, sleep_time, ensure_times, **kwargs)

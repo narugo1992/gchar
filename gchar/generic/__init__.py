@@ -1,3 +1,11 @@
+from .theidolmstermillionlive import Character as TheIdolmSterMillionLiveCharacter
+from .bangdreamdai2ki import Character as BangDreamDai2KiCharacter
+from .idolmastercinderellagirls import Character as TheIdolmSterCinderellaGirlsCharacter
+from .theidolmstershinycolors import Character as TheIdolmSterShinyColorsCharacter
+from .lovelivesuperstar import Character as LoveLiveSuperstarCharacter
+from .theidolmster import Character as TheIdolmSterCharacter
+from .lovelivenijigasakihighschoolidolclub import Character as LoveLiveNijigasakiGakuenSchoolIdolDoukoukaiCharacter
+from .loveliveschoolidolfestivalallstars import Character as LoveLiveSchoolIdolFestivalAllStarsCharacter
 from .warshipgirls import Character as ZhanJianShaoNyuCharacter
 from .arknightsnpc import Character as ArknightsCharacter
 from .bangdream import Character as BangDreamCharacter

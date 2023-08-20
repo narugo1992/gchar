@@ -10,7 +10,7 @@ on:
       generics:
         description: 'Generic to Crawl'
         required: true
-        default: 'warshipgirls'
+        default: 'bangdreamdai2ki,idolmastercinderellagirls,lovelivenijigasakihighschoolidolclub,loveliveschoolidolfestivalallstars,lovelivesuperstar,theidolmster,theidolmstermillionlive,theidolmstershinycolors'
       skip_crawl:
         description: 'Skip Crawl (Type Anything for Yes)'
         required: false
@@ -71,7 +71,15 @@ jobs:
 #          - 'honkai3'
 #          - 'arknightsnpc'
 #          - 'genshinnpc'
-          - 'warshipgirls'
+#          - 'warshipgirls'
+          - 'bangdreamdai2ki'
+          - 'idolmastercinderellagirls'
+          - 'lovelivenijigasakihighschoolidolclub'
+          - 'loveliveschoolidolfestivalallstars'
+          - 'lovelivesuperstar'
+          - 'theidolmster'
+          - 'theidolmstermillionlive'
+          - 'theidolmstershinycolors'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -237,7 +245,15 @@ jobs:
 #          - 'honkai3'
 #          - 'arknightsnpc'
 #          - 'genshinnpc'
-          - 'warshipgirls'
+#          - 'warshipgirls'
+          - 'bangdreamdai2ki'
+          - 'idolmastercinderellagirls'
+          - 'lovelivenijigasakihighschoolidolclub'
+          - 'loveliveschoolidolfestivalallstars'
+          - 'lovelivesuperstar'
+          - 'theidolmster'
+          - 'theidolmstermillionlive'
+          - 'theidolmstershinycolors'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -347,7 +363,15 @@ jobs:
 #          - 'honkai3'
 #          - 'arknightsnpc'
 #          - 'genshinnpc'
-          - 'warshipgirls'
+#          - 'warshipgirls'
+          - 'bangdreamdai2ki'
+          - 'idolmastercinderellagirls'
+          - 'lovelivenijigasakihighschoolidolclub'
+          - 'loveliveschoolidolfestivalallstars'
+          - 'lovelivesuperstar'
+          - 'theidolmster'
+          - 'theidolmstermillionlive'
+          - 'theidolmstershinycolors'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -479,7 +503,15 @@ jobs:
 #          - 'honkai3'
 #          - 'arknightsnpc'
 #          - 'genshinnpc'
-          - 'warshipgirls'
+#          - 'warshipgirls'
+          - 'bangdreamdai2ki'
+          - 'idolmastercinderellagirls'
+          - 'lovelivenijigasakihighschoolidolclub'
+          - 'loveliveschoolidolfestivalallstars'
+          - 'lovelivesuperstar'
+          - 'theidolmster'
+          - 'theidolmstermillionlive'
+          - 'theidolmstershinycolors'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -631,7 +663,15 @@ jobs:
 #          - 'honkai3'
 #          - 'arknightsnpc'
 #          - 'genshinnpc'
-          - 'warshipgirls'
+#          - 'warshipgirls'
+          - 'bangdreamdai2ki'
+          - 'idolmastercinderellagirls'
+          - 'lovelivenijigasakihighschoolidolclub'
+          - 'loveliveschoolidolfestivalallstars'
+          - 'lovelivesuperstar'
+          - 'theidolmster'
+          - 'theidolmstermillionlive'
+          - 'theidolmstershinycolors'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -707,90 +747,90 @@ jobs:
           max_attempts: 5
           retry_on: any
           command: |
-            python -m zoo.resources.${{ matrix.resource }} chtags_export -g ${{ matrix.game }}
-      - name: Package The Data
-        env:
-          CI: 'true'
-        shell: bash
-        run: |
-          mkdir -p ${{ matrix.game }}
-          zip -r ${{ matrix.resource }}_${{ matrix.game }}.zip ${{ matrix.game }}
-      - name: Upload the character databases
-        uses: actions/upload-artifact@v3
-        with:
-          name: character-database
-          path: ${{ matrix.resource }}_${{ matrix.game }}.zip
+            python -m zoo.resources.${{ matrix.resource }} chtags -g ${{ matrix.game }}
+#      - name: Package The Data
+#        env:
+#          CI: 'true'
+#        shell: bash
+#        run: |
+#          mkdir -p ${{ matrix.game }}
+#          zip -r ${{ matrix.resource }}_${{ matrix.game }}.zip ${{ matrix.game }}
+#      - name: Upload the character databases
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: character-database
+#          path: ${{ matrix.resource }}_${{ matrix.game }}.zip
 
-  data_upload:
-    name: Generic Upload
-    runs-on: ${{ matrix.os }}
-    needs:
-      - data_crawl_upload
-      - names_crawl
-      - chars_crawl
-      - tag_match
-    strategy:
-      fail-fast: false
-      matrix:
-        os:
-          - 'ubuntu-latest'
-        python-version:
-          - '3.8'
-
-    steps:
-      - name: Prepare the repository
-        shell: bash
-        run: |
-          sudo apt-get install -y tree
-          git clone https://huggingface.co/datasets/deepghs/generic_characters
-          ls -al generic_characters
-      - name: Download from artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: character-database
-          path: generic_characters
-      - name: See what is in this path
-        shell: bash
-        run: |
-          cd generic_characters
-          for zfile in *.zip; do unzip -o $zfile; done
-          rm -rf *.zip
-          tree .
-      - name: Push models to hugging face repostory
-        env:
-          HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        run: |
-          cd generic_characters
-          git config user.name 'narugo1992'
-          git config user.email 'narugo@126.com'
-          git add -A
-          git diff-index --quiet HEAD || git commit -a -m "dev(narugo): auto sync $(date -R)"
-          git push https://narugo:$HF_TOKEN@huggingface.co/datasets/deepghs/generic_characters main
-
-  final_complete:
-    name: Final Complete
-    runs-on: ${{ matrix.os }}
-    needs:
-      - data_upload
-      - skin_crawl
-    strategy:
-      fail-fast: false
-      matrix:
-        os:
-          - 'ubuntu-latest'
-        python-version:
-          - '3.8'
-
-    steps:
-      - name: Get the Numbers
-        run: |
-          echo "UPDATE_DATE=$(date +'%Y-%m-%d %H:%M %Z')" >> $GITHUB_ENV
-      - name: Create Update Time Badge
-        uses: schneegans/dynamic-badges-action@v1.0.0
-        with:
-          auth: ${{ secrets.GIST_SECRET }}
-          gistID: ${{ secrets.BADGE_GIST_ID }}
-          filename: data_last_update.json
-          label: Generic Updated
-          message: ${{ env.UPDATE_DATE }}
-          color: yellowgreen
+#  data_upload:
+#    name: Generic Upload
+#    runs-on: ${{ matrix.os }}
+#    needs:
+#      - data_crawl_upload
+#      - names_crawl
+#      - chars_crawl
+#      - tag_match
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        os:
+#          - 'ubuntu-latest'
+#        python-version:
+#          - '3.8'
+#
+#    steps:
+#      - name: Prepare the repository
+#        shell: bash
+#        run: |
+#          sudo apt-get install -y tree
+#          git clone https://huggingface.co/datasets/deepghs/generic_characters
+#          ls -al generic_characters
+#      - name: Download from artifact
+#        uses: actions/download-artifact@v3
+#        with:
+#          name: character-database
+#          path: generic_characters
+#      - name: See what is in this path
+#        shell: bash
+#        run: |
+#          cd generic_characters
+#          for zfile in *.zip; do unzip -o $zfile; done
+#          rm -rf *.zip
+#          tree .
+#      - name: Push models to hugging face repostory
+#        env:
+#          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+#        run: |
+#          cd generic_characters
+#          git config user.name 'narugo1992'
+#          git config user.email 'narugo@126.com'
+#          git add -A
+#          git diff-index --quiet HEAD || git commit -a -m "dev(narugo): auto sync $(date -R)"
+#          git push https://narugo:$HF_TOKEN@huggingface.co/datasets/deepghs/generic_characters main
+#
+#  final_complete:
+#    name: Final Complete
+#    runs-on: ${{ matrix.os }}
+#    needs:
+#      - data_upload
+#      - skin_crawl
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        os:
+#          - 'ubuntu-latest'
+#        python-version:
+#          - '3.8'
+#
+#    steps:
+#      - name: Get the Numbers
+#        run: |
+#          echo "UPDATE_DATE=$(date +'%Y-%m-%d %H:%M %Z')" >> $GITHUB_ENV
+#      - name: Create Update Time Badge
+#        uses: schneegans/dynamic-badges-action@v1.0.0
+#        with:
+#          auth: ${{ secrets.GIST_SECRET }}
+#          gistID: ${{ secrets.BADGE_GIST_ID }}
+#          filename: data_last_update.json
+#          label: Generic Updated
+#          message: ${{ env.UPDATE_DATE }}
+#          color: yellowgreen
