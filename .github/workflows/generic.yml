@@ -747,7 +747,7 @@ jobs:
           max_attempts: 5
           retry_on: any
           command: |
-            python -m zoo.resources.${{ matrix.resource }} chtags -g ${{ matrix.game }}
+            python -m zoo.resources.${{ matrix.resource }} chtags -g ${{ matrix.game }} --max_time '5.5 hours'
 #      - name: Package The Data
 #        env:
 #          CI: 'true'
@@ -761,52 +761,52 @@ jobs:
 #          name: character-database
 #          path: ${{ matrix.resource }}_${{ matrix.game }}.zip
 
-#  data_upload:
-#    name: Generic Upload
-#    runs-on: ${{ matrix.os }}
-#    needs:
-#      - data_crawl_upload
-#      - names_crawl
-#      - chars_crawl
+  data_upload:
+    name: Generic Upload
+    runs-on: ${{ matrix.os }}
+    needs:
+      - data_crawl_upload
+      - names_crawl
+      - chars_crawl
 #      - tag_match
-#    strategy:
-#      fail-fast: false
-#      matrix:
-#        os:
-#          - 'ubuntu-latest'
-#        python-version:
-#          - '3.8'
-#
-#    steps:
-#      - name: Prepare the repository
-#        shell: bash
-#        run: |
-#          sudo apt-get install -y tree
-#          git clone https://huggingface.co/datasets/deepghs/generic_characters
-#          ls -al generic_characters
-#      - name: Download from artifact
-#        uses: actions/download-artifact@v3
-#        with:
-#          name: character-database
-#          path: generic_characters
-#      - name: See what is in this path
-#        shell: bash
-#        run: |
-#          cd generic_characters
-#          for zfile in *.zip; do unzip -o $zfile; done
-#          rm -rf *.zip
-#          tree .
-#      - name: Push models to hugging face repostory
-#        env:
-#          HF_TOKEN: ${{ secrets.HF_TOKEN }}
-#        run: |
-#          cd generic_characters
-#          git config user.name 'narugo1992'
-#          git config user.email 'narugo@126.com'
-#          git add -A
-#          git diff-index --quiet HEAD || git commit -a -m "dev(narugo): auto sync $(date -R)"
-#          git push https://narugo:$HF_TOKEN@huggingface.co/datasets/deepghs/generic_characters main
-#
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - 'ubuntu-latest'
+        python-version:
+          - '3.8'
+
+    steps:
+      - name: Prepare the repository
+        shell: bash
+        run: |
+          sudo apt-get install -y tree
+          git clone https://huggingface.co/datasets/deepghs/generic_characters
+          ls -al generic_characters
+      - name: Download from artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: character-database
+          path: generic_characters
+      - name: See what is in this path
+        shell: bash
+        run: |
+          cd generic_characters
+          for zfile in *.zip; do unzip -o $zfile; done
+          rm -rf *.zip
+          tree .
+      - name: Push models to hugging face repostory
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          cd generic_characters
+          git config user.name 'narugo1992'
+          git config user.email 'narugo@126.com'
+          git add -A
+          git diff-index --quiet HEAD || git commit -a -m "dev(narugo): auto sync $(date -R)"
+          git push https://narugo:$HF_TOKEN@huggingface.co/datasets/deepghs/generic_characters main
+
 #  final_complete:
 #    name: Final Complete
 #    runs-on: ${{ matrix.os }}
