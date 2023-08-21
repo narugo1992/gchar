@@ -234,7 +234,7 @@ class TagMatcher(HuggingfaceDeployable):
         # name without keyword
         for name_words in name_words_sets:
             word_count = len(name_words)
-            f_word_count = min(max(word_count // 2, 2), word_count)
+            f_word_count = min(max(word_count // 2, 2), word_count, 3)
             for word_cmbs in itertools.combinations(name_words, f_word_count):
                 if sum(map(len, word_cmbs)) >= 7:
                     for words in itertools.permutations(word_cmbs):
@@ -333,7 +333,6 @@ class TagMatcher(HuggingfaceDeployable):
 
         ch_options = {}
         origin_chs = self.game_cls.all(contains_extra=True)
-        # origin_chs = origin_chs[184:]
         all_chs, _exist_chids = [], set()
         for ch in origin_chs:
             if ch.index not in _exist_chids:
@@ -480,7 +479,7 @@ class TagMatcher(HuggingfaceDeployable):
                       help='Max time to run.', show_default=True)
         def chtags(repository: Optional[str], namespace: str, revision: str, game_name: str,
                    max_time: Optional[str]):
-            # logging.try_init_root(logging.DEBUG)
+            logging.try_init_root(logging.INFO)
             matcher = cls(game_name, max_time=max_time)
             repository = repository or matcher.repository
             matcher.deploy_to_huggingface(repository, namespace, revision)
