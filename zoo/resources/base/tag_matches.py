@@ -333,6 +333,7 @@ class TagMatcher(HuggingfaceDeployable):
 
         ch_options = {}
         origin_chs = self.game_cls.all(contains_extra=True)
+        # origin_chs = origin_chs[184:]
         all_chs, _exist_chids = [], set()
         for ch in origin_chs:
             if ch.index not in _exist_chids:
@@ -479,7 +480,7 @@ class TagMatcher(HuggingfaceDeployable):
                       help='Max time to run.', show_default=True)
         def chtags(repository: Optional[str], namespace: str, revision: str, game_name: str,
                    max_time: Optional[str]):
-            logging.try_init_root(logging.INFO)
+            # logging.try_init_root(logging.DEBUG)
             matcher = cls(game_name, max_time=max_time)
             repository = repository or matcher.repository
             matcher.deploy_to_huggingface(repository, namespace, revision)

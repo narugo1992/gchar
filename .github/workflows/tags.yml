@@ -18,7 +18,7 @@ jobs:
       matrix:
         resource:
           - 'anime_pictures'
-          - 'zerochan'
+#          - 'zerochan'  # do not refresh zerochan, it limited the page to 1000
           - 'danbooru'
           - 'safebooru'
           - 'atfbooru'
