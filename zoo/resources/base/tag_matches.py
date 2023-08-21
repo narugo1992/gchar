@@ -234,7 +234,7 @@ class TagMatcher(HuggingfaceDeployable):
         # name without keyword
         for name_words in name_words_sets:
             word_count = len(name_words)
-            f_word_count = min(max(word_count // 2, 2), word_count, 3)
+            f_word_count = min(max(word_count // 2, 2), word_count, 2)
             for word_cmbs in itertools.combinations(name_words, f_word_count):
                 if sum(map(len, word_cmbs)) >= 7:
                     for words in itertools.permutations(word_cmbs):
@@ -359,6 +359,7 @@ class TagMatcher(HuggingfaceDeployable):
                     options.append((mapped_tag, count, sim, kw, meta))
 
             options = sorted(options, key=lambda x: (0 if x[3] else 1, -x[2], -x[1], len(x[0]), x[0]))
+            options = sorted(options, key=lambda x: (0 if x[2] >= 0.9 else 1, -x[1] * (3 if x[3] else 1) * (x[2] ** 2)))
             ch_options[ch.index] = options
             logging.info(f'Selected tags for {ch!r}: {options!r}')
 
