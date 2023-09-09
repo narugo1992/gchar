@@ -49,7 +49,7 @@ def list_parent_tags(min_strict: int = 3, min_character_count: int = 5, max_work
         .order_by('character_count', 'desc').get()
     all_items = list(all_items)
     retval = []
-    pg = tqdm(total=len(all_items))
+    pg = tqdm(total=len(all_items), desc='Getting Parents')
 
     def _get_info(item_):
         alias_items, tags_items, desc_md = get_info_of_keyword(item_['tag'], session)
@@ -71,7 +71,17 @@ def list_parent_tags(min_strict: int = 3, min_character_count: int = 5, max_work
         tp.submit(_get_info, item)
 
     tp.shutdown()
-    retval = sorted(retval, key=lambda x: (-x['character_count'], x['tag']))
+
+    new_retval = []
+    for item in retval:
+        lst = list(db.table('tags').where('tag', item['tag']).get())
+        if lst:
+            item['parent'] = lst[0]['parent']
+        else:
+            item['parent'] = None
+        new_retval.append(item)
+
+    retval = sorted(new_retval, key=lambda x: (-x['character_count'], x['tag']))
     return retval
 
 
