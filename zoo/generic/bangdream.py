@@ -17,7 +17,7 @@ class Indexer(ZerochanBasedIndexer):
         "BanG Dream! Episode of Roselia II: Song I am",
         "BanG Dream! FILM LIVE 2nd Stage",
         "Bang Dream! FILM LIVE",
-        "BanG Dream! Poppin Dream!", 
+        "BanG Dream! Poppin Dream!",
         "BanG Dream! 11th☆LIVE",
         "BanG Dream! Special☆LIVE Girls Band Party! 2020",
         "BanG Dream! Special☆LIVE Girls Band Party! 2020→2022",
