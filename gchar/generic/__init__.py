@@ -1,3 +1,4 @@
+from .shoujokagekirevuestarlight import Character as ShoujoKagekiRevueStarlightCharacter
 from .theidolmstermillionlive import Character as TheIdolmSterMillionLiveCharacter
 from .bangdreamdai2ki import Character as BangDreamDai2KiCharacter
 from .idolmastercinderellagirls import Character as TheIdolmSterCinderellaGirlsCharacter

@@ -10,7 +10,7 @@ on:
       generics:
         description: 'Generic to Crawl'
         required: true
-        default: 'pokemon'
+        default: 'bangdream,shoujokagekirevuestarlight'
       skip_crawl:
         description: 'Skip Crawl (Type Anything for Yes)'
         required: false
@@ -49,14 +49,15 @@ jobs:
       fail-fast: false
       matrix:
         game:
-#          - 'bangdream'
+          - 'bangdream'
+          - 'shoujokagekirevuestarlight'
 #          - 'demonslayer'
 #          - 'eromangasensei'
 #          - 'lovelive'
 #          - 'lovelivesunshine'
 #          - 'mahoushoujomadokamagica'
-##          - 'naruto'
-          - 'pokemon'
+#          - 'naruto'
+#          - 'pokemon'
 #          - 'rezero'
 #          - 'swordartonline'
 #          - 'touhou'
@@ -223,14 +224,15 @@ jobs:
       max-parallel: 1
       matrix:
         game:
-#          - 'bangdream'
+          - 'bangdream'
+          - 'shoujokagekirevuestarlight'
 #          - 'demonslayer'
 #          - 'eromangasensei'
 #          - 'lovelive'
 #          - 'lovelivesunshine'
 #          - 'mahoushoujomadokamagica'
 #          - 'naruto'
-          - 'pokemon'
+#          - 'pokemon'
 #          - 'rezero'
 #          - 'swordartonline'
 #          - 'touhou'
@@ -341,14 +343,15 @@ jobs:
       max-parallel: 1
       matrix:
         game:
-#          - 'bangdream'
+          - 'bangdream'
+          - 'shoujokagekirevuestarlight'
 #          - 'demonslayer'
 #          - 'eromangasensei'
 #          - 'lovelive'
 #          - 'lovelivesunshine'
 #          - 'mahoushoujomadokamagica'
 #          - 'naruto'
-          - 'pokemon'
+#          - 'pokemon'
 #          - 'rezero'
 #          - 'swordartonline'
 #          - 'touhou'
@@ -481,14 +484,15 @@ jobs:
       max-parallel: 1
       matrix:
         game:
-#          - 'bangdream'
+          - 'bangdream'
+          - 'shoujokagekirevuestarlight'
 #          - 'demonslayer'
 #          - 'eromangasensei'
 #          - 'lovelive'
 #          - 'lovelivesunshine'
 #          - 'mahoushoujomadokamagica'
 #          - 'naruto'
-          - 'pokemon'
+#          - 'pokemon'
 #          - 'rezero'
 #          - 'swordartonline'
 #          - 'touhou'
@@ -641,14 +645,15 @@ jobs:
           - 'gelbooru'
           - 'wallhaven'
         game:
-#          - 'bangdream'
+          - 'bangdream'
+          - 'shoujokagekirevuestarlight'
 #          - 'demonslayer'
 #          - 'eromangasensei'
 #          - 'lovelive'
 #          - 'lovelivesunshine'
 #          - 'mahoushoujomadokamagica'
 #          - 'naruto'
-          - 'pokemon'
+#          - 'pokemon'
 #          - 'rezero'
 #          - 'swordartonline'
 #          - 'touhou'
