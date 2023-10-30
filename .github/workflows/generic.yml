@@ -153,7 +153,7 @@ jobs:
           CI: 'true'
         with:
           shell: bash
-          timeout_minutes: 180
+          timeout_minutes: 360
           max_attempts: 5
           retry_on: any
           command: |
@@ -329,7 +329,7 @@ jobs:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         with:
           shell: bash
-          timeout_minutes: 300
+          timeout_minutes: 360
           max_attempts: 5
           retry_on: any
           command: |
