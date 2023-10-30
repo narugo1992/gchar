@@ -10,7 +10,7 @@ on:
       generics:
         description: 'Generic to Crawl'
         required: true
-        default: 'bangdream,shoujokagekirevuestarlight'
+        default: 'fireemblem'
       skip_crawl:
         description: 'Skip Crawl (Type Anything for Yes)'
         required: false
@@ -49,8 +49,9 @@ jobs:
       fail-fast: false
       matrix:
         game:
-          - 'bangdream'
-          - 'shoujokagekirevuestarlight'
+          - 'fireemblem'
+#          - 'bangdream'
+#          - 'shoujokagekirevuestarlight'
 #          - 'demonslayer'
 #          - 'eromangasensei'
 #          - 'lovelive'
@@ -224,8 +225,9 @@ jobs:
       max-parallel: 1
       matrix:
         game:
-          - 'bangdream'
-          - 'shoujokagekirevuestarlight'
+          - 'fireemblem'
+#          - 'bangdream'
+#          - 'shoujokagekirevuestarlight'
 #          - 'demonslayer'
 #          - 'eromangasensei'
 #          - 'lovelive'
@@ -343,8 +345,9 @@ jobs:
       max-parallel: 1
       matrix:
         game:
-          - 'bangdream'
-          - 'shoujokagekirevuestarlight'
+          - 'fireemblem'
+#          - 'bangdream'
+#          - 'shoujokagekirevuestarlight'
 #          - 'demonslayer'
 #          - 'eromangasensei'
 #          - 'lovelive'
@@ -484,8 +487,9 @@ jobs:
       max-parallel: 1
       matrix:
         game:
-          - 'bangdream'
-          - 'shoujokagekirevuestarlight'
+          - 'fireemblem'
+#          - 'bangdream'
+#          - 'shoujokagekirevuestarlight'
 #          - 'demonslayer'
 #          - 'eromangasensei'
 #          - 'lovelive'
@@ -645,8 +649,9 @@ jobs:
           - 'gelbooru'
           - 'wallhaven'
         game:
-          - 'bangdream'
-          - 'shoujokagekirevuestarlight'
+          - 'fireemblem'
+#          - 'bangdream'
+#          - 'shoujokagekirevuestarlight'
 #          - 'demonslayer'
 #          - 'eromangasensei'
 #          - 'lovelive'
