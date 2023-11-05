@@ -547,7 +547,7 @@ jobs:
           - 'safebooru'
           - 'atfbooru'
           - 'sankaku'
-          - 'rule34'
+#          - 'rule34'
           - 'hypnohub'
           - 'xbooru'
           - 'konachan'
@@ -639,7 +639,7 @@ jobs:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         with:
           shell: bash
-          timeout_minutes: 360
+          timeout_minutes: 340
           max_attempts: 5
           retry_on: any
           command: |
