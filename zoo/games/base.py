@@ -30,7 +30,7 @@ class GameIndexer:
         raise NotImplementedError
 
     @contextmanager
-    def crawl_index_to_local(self, maxcnt: Optional[int] = None, timeout: int = 10, retries: int = 5, **kwargs) \
+    def crawl_index_to_local(self, maxcnt: Optional[int] = None, timeout: int = 30, retries: int = 5, **kwargs) \
             -> ContextManager[List[str]]:
         session = self._create_session(timeout, retries, **kwargs)
         data = list(self._crawl_index_from_online(session, maxcnt, **kwargs))
@@ -80,7 +80,7 @@ class GameIndexer:
 
         @cli.command('index', help='Index the game characters onto huggingface.',
                      context_settings={**GLOBAL_CONTEXT_SETTINGS})
-        @click.option('--timeout', '-t', 'timeout', type=int, default=5,
+        @click.option('--timeout', '-t', 'timeout', type=int, default=30,
                       help='Timeout of this update.', show_default=True)
         @click.option('--maxcnt', '-n', 'maxcnt', type=int, default=None,
                       help='Max count to crawler (only used for debugging and testing).', show_default=True)
@@ -94,7 +94,7 @@ class GameIndexer:
 
         @cli.command('index_export', help='Index the game characters to local.',
                      context_settings={**GLOBAL_CONTEXT_SETTINGS})
-        @click.option('--timeout', '-t', 'timeout', type=int, default=5,
+        @click.option('--timeout', '-t', 'timeout', type=int, default=30,
                       help='Timeout of this update.', show_default=True)
         @click.option('--maxcnt', '-n', 'maxcnt', type=int, default=None,
                       help='Max count to crawler (only used for debugging and testing).', show_default=True)

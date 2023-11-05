@@ -633,6 +633,7 @@ jobs:
       - name: Run Game Crawler
         uses: nick-fields/retry@v2
         if: ${{ env.SCHEDULED == 'yes' }}
+        continue-on-error: true
         env:
           CI: 'true'
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
