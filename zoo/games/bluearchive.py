@@ -1,12 +1,12 @@
 import os.path
 import re
+import unicodedata
 import warnings
 from datetime import datetime
 from typing import Optional, Iterator, Any
 from urllib.parse import urljoin
 
 import requests
-import unicodedata
 from hbutils.system import TemporaryDirectory
 from pyquery import PyQuery as pq
 from tqdm.auto import tqdm
@@ -93,7 +93,8 @@ class BlueArchiveIndexer(GameIndexer):
         if row3('td:nth-child(1)').text().strip() == '繁中译名':
             tw_name_raw = unicodedata.normalize('NFKC', row3('td:nth-child(2)').text())
             tw_matching = self._CN_TITLE_PATTERN.fullmatch(tw_name_raw)
-            cnnames.append(unicodedata.normalize('NFKC', tw_matching.group('title')))
+            if tw_matching:
+                cnnames.append(unicodedata.normalize('NFKC', tw_matching.group('title')))
 
         image_url = urljoin(resp.url, page_full('table tr:nth-child(2) img').attr('src'))
         return (cn_title, comment), (cnnames, jpnames, image_url)
@@ -153,7 +154,7 @@ class BlueArchiveIndexer(GameIndexer):
 
         image_file_page_url = urljoin(
             resp.url,
-            full_page("article.tabber__panel[data-title=Artwork] a.image").attr("href")
+            full_page("article.tabber__panel[data-title=Artwork] a.mw-file-description").attr("href")
         )
         src_resp = sget(session, image_file_page_url)
         full_image_url = urljoin(src_resp.url, pq(src_resp.text)(".fullMedia a").attr('href'))
