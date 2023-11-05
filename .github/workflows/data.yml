@@ -647,7 +647,7 @@ jobs:
       - name: Package The Data
         env:
           CI: 'true'
-         shell: bash
+        shell: bash
         run: |
           mkdir -p ${{ matrix.game }}
           zip -r ${{ matrix.resource }}_${{ matrix.game }}.zip ${{ matrix.game }}
