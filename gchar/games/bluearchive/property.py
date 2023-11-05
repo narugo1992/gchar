@@ -141,6 +141,7 @@ class AttackType(Enum):
     PENETRATION = 'PENETRATION'
     EXPLOSIVE = 'EXPLOSIVE'
     MYSTIC = 'MYSTIC'
+    SONIC = 'SONIC'
 
     @classmethod
     def loads(cls, val) -> 'AttackType':
