@@ -53,6 +53,7 @@ _DATA_ITEMS = [
 ]
 
 _PRE_GENDERS = {
+    1074: '女性',
     1032: '男性',
     1056: '男性',
 }
@@ -117,7 +118,7 @@ class NeuralCloudIndexer(GameIndexer):
 
             if one_page('#后续经历'):
                 gf_char_block = one_page('#后续经历').parent('h2').next('table.dollPageCloud')
-                *_, gf_char_element = gf_char_block('td > a.externalCloud').items()
+                *_, gf_char_element = gf_char_block('td > span.externalCloud a').items()
                 gf_char_name, gf_char_page_url = gf_char_element.text().strip(), gf_char_element.attr('href')
                 gf_char_page_url = gf_char_page_url.replace('https://', 'http://')
 
@@ -146,19 +147,26 @@ class NeuralCloudIndexer(GameIndexer):
 
                 assert gender, f'Invalid gender - {id_} {cnname}, this should be processed in _PRE_GENDERS.'
 
-            enname, = re.findall(r'<div\s+id="nameEN"[^>]*>(?P<name>[^<]+)</div>', page_resp.text)
-            skins = []
-            for skin_text in re.findall(r'pic_data\.push\((?P<content>\{[\s\S]+?})\)\s*;', page_resp.text):
+            if list(one_page('.fixed-info .ssr').items()):
+                enname_item, *_ = one_page('.fixed-info .ssr').items()
+            elif list(one_page('.fixed-info .sr').items()):
+                enname_item, *_ = one_page('.fixed-info .sr').items()
+            elif list(one_page('.fixed-info .r').items()):
+                enname_item, *_ = one_page('.fixed-info .r').items()
+            else:
+                assert False, f'No english name element found for character {cnname!r} ({id_!r})'
 
-                (skin_name_s1, _), = re.findall(r'name\s*:\s*"(?P<name>[\s\S]*?)"\s*(,|$)', skin_text)
-                (skin_name_s2_1, _), = re.findall(r'class\s*:\s*"(?P<name>[\s\S]*?)"\s*(,|$)', skin_text)
-                (skin_name_s2_2, _), = re.findall(r'line\s*:\s*"(?P<name>[\s\S]*?)"\s*(,|$)', skin_text)
-                (skin_url, _), = re.findall(r'pic\s*:\s*"(?P<name>[\s\S]*?)"\s*(,|$)', skin_text)
-                skin_name_s2 = skin_name_s2_1 if len(skin_name_s2_1) <= len(skin_name_s2_2) else skin_name_s2_2
-                if skin_name_s2:
-                    skin_name = f"{skin_name_s1} - {skin_name_s2}"
-                else:
-                    skin_name = skin_name_s1
+            enname = enname_item.text().lower()
+            # enname, = re.findall(r'<div\s+id="nameEN"[^>]*>(?P<name>[^<]+)</div>', page_resp.text)
+            hero_state = one_page('.hero-state')
+
+            skins = []
+            for skin_text, skin_img in zip(
+                    hero_state('.skin-list [data-npic]').items(),
+                    hero_state('.skin img').items(),
+            ):
+                skin_url = urljoin(page_resp.url, skin_img.attr('src'))
+                skin_name = skin_text('b').text().strip() + ' - ' + skin_text('span').text().strip()
                 skins.append({
                     'name': skin_name,
                     'url': skin_url,
@@ -198,10 +206,13 @@ class NeuralCloudIndexer(GameIndexer):
 
         tables = list(page('.style_table').items())
         table_1 = tables[0]
-        url = urljoin(resp.request.url, table_1('tr:nth-child(2) td:nth-child(1) img').attr('data-src'))
-        return {
-            'skin_url': url,
-        }
+        rel_url = table_1('tr:nth-child(2) td:nth-child(1) img').attr('data-src')
+        if rel_url:
+            return {
+                'skin_url': urljoin(resp.request.url, rel_url),
+            }
+        else:
+            return None
 
     def _crawl_index_from_online(self, session: requests.Session, maxcnt: Optional[int] = None, **kwargs) \
             -> Iterator[Any]:
@@ -224,12 +235,17 @@ class NeuralCloudIndexer(GameIndexer):
 
         jp_items = []
         jp_skins = []
-        for i, (jpname, jp_page_url) in enumerate(tqdm(list(self._get_index_from_jpsite(session)))):
+        i = 0
+        for _, (jpname, jp_page_url) in enumerate(tqdm(list(self._get_index_from_jpsite(session)))):
             info = self._get_info_from_jpsite(session, jp_page_url)
+            if not info:
+                logging.warning(f'No skin information for {jpname!r}, skipped.')
+                continue
             info['jpname'] = jpname
             jp_items.append(info)
             img = _url_to_pil(info['skin_url'])
             jp_skins.append((i, lpips_extract_feature(img), ccip_extract_feature(img)))
+            i += 1
 
         lpips_pairs = []
         for i, cn_lpips_feat, _ in cn_skins:
