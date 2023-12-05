@@ -235,7 +235,7 @@ class NeuralCloudIndexer(GameIndexer):
 
         jp_items = []
         jp_skins = []
-        i = 0
+        i = 0 
         for _, (jpname, jp_page_url) in enumerate(tqdm(list(self._get_index_from_jpsite(session)))):
             info = self._get_info_from_jpsite(session, jp_page_url)
             if not info:
