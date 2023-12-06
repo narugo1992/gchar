@@ -62,10 +62,17 @@ class NikkeIndexer(GameIndexer):
     def _get_index_from_ensite(self, session: requests.Session) -> Iterator[Tuple[str, str]]:
         resp = srequest(session, 'GET', f'{self.__root_website__}/wiki/Home')
         page = pq(resp.text)
-        for item in page('#content .main > div:nth-child(1) > div:nth-child(3) > div:nth-child(2) > div').items():
-            url = urljoin(resp.request.url, item('div:nth-child(1) a').attr('href'))
-            name = item('div:nth-child(2)').text().strip()
-            yield name, url
+
+        for ix in page('#content div').items():
+            divs = list(ix.children())
+            if len(divs) == 2 and pq(divs[0]).text().strip() == 'Nikkes':
+                for item in pq(divs[1]).children():
+                    item = pq(item)
+                    url = urljoin(resp.request.url, item('div:nth-child(1) a').attr('href'))
+                    name = item('div:nth-child(2)').text().strip()
+                    yield name, url
+
+                break
 
     def _get_info_from_ensite(self, session: requests.Session, url: str):
         resp = srequest(session, 'GET', url)
@@ -84,24 +91,6 @@ class NikkeIndexer(GameIndexer):
                     current_names.append(name)
             names[item.attr('data-source')] = current_names
 
-        skins = []
-        imgbox = page('aside.pi-theme-wikia > div:nth-child(2)')
-        if list(imgbox.items()):
-            skin_titles = [item.text().strip() for item in imgbox('.wds-tabs__wrapper li').items()]
-            skin_urls = [item.attr('href') for item in imgbox('.wds-tab__content a').items()]
-            assert len(skin_titles) == len(skin_urls), \
-                f'Skin titles ({skin_titles!r}) not match with skin urls ({skin_urls!r})'
-            for name, url in zip(skin_titles, skin_urls):
-                skins.append({'name': name, 'url': urljoin(resp.request.url, url)})
-
-        else:
-            imgbox = page('aside.pi-theme-wikia > figure:nth-child(2)')
-            if list(imgbox.items()):
-                url = urljoin(resp.request.url, imgbox('a').attr('href'))
-                skins.append({'name': 'Default', 'url': url})
-            else:
-                raise ValueError(f'SKin not found - {url!r}')
-
         info = {}
         for item in page('aside.pi-theme-wikia > section:nth-child(5) td[data-source]').items():
             info[item.attr('data-source')] = item('a').attr('title').lower().replace('category:', '').strip()
@@ -115,6 +104,19 @@ class NikkeIndexer(GameIndexer):
             release_time = dateparser.parse(extra['releaseDate']).timestamp()
         else:
             release_time = None
+
+        skins = []
+        skin_resp = srequest(session, 'GET', f'{url}/Gallery')
+        skin_page = pq(skin_resp.text)
+        images_box = skin_page('#gallery-0')
+        for item in images_box('.wikia-gallery-item').items():
+            name_box = item('.lightbox-caption')
+            name_box.remove('span')
+            name = name_box.text().strip() or 'Default'
+            thumb_page_url = urljoin(skin_resp.url, item('.thumb a img').attr('src'))
+            skin_url = re.sub(r'/revision[\s\S]+?$', '', thumb_page_url)
+            if skin_url and srequest(session, 'HEAD', skin_url).ok:
+                skins.append({'name': name, 'url': skin_url})
 
         return {
             'info': info,

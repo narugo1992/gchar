@@ -76,6 +76,7 @@ class Burst(Enum):
     I = (('burst skill i', 'i'), 1)
     II = (('burst skill ii', 'ii'), 2)
     III = (('burst skill iii', 'iii'), 3)
+    ALL = (('burst skill all', 'all'), 0xf)
 
     def __init__(self, aliases, number):
         self.aliases = aliases

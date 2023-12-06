@@ -63,7 +63,8 @@ class GenshinImpactIndexer(GameIndexer):
                 })
 
             info_tab = page('section.wds-tabber .wds-tab__content [data-source=releaseDate]')
-            assert info_tab('h3').text().strip() == 'Release Date'
+            assert info_tab('h3').text().strip() == 'Release Date', \
+                f'"Release Date" expected, but {info_tab("h3").text().strip()!r} found.'
             month_pattern = '|'.join(MONTH_NAMES)
             date_match = re.fullmatch(
                 rf'^\s*(?P<month>{month_pattern})\s+(?P<day>\d+),\s*(?P<year>\d+)\s*$',
