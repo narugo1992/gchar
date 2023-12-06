@@ -9,13 +9,15 @@ from hbutils.system import urlsplit
 from hfmirror.resource import SyncResource
 from hfmirror.storage import HuggingfaceStorage
 from hfmirror.sync import SyncTask
-from huggingface_hub import HfApi
+from huggingface_hub import HfApi, configure_http_backend
 from tqdm.auto import tqdm
 
 from gchar.games.dispatch.access import GAME_CHARS
 from gchar.generic import import_generic
 from gchar.utils import GLOBAL_CONTEXT_SETTINGS, srequest, get_requests_session
 from gchar.utils import print_version as _origin_print_version
+
+configure_http_backend(partial(get_requests_session, timeout=60))
 
 import_generic()
 
@@ -25,7 +27,7 @@ class SkinResource(SyncResource):
         SyncResource.__init__(self)
         self.characters = chs
         self.ch_type = ch_type
-        self.session = get_requests_session()
+        self.session = get_requests_session(timeout=60)
 
     def grab(self):
         yield 'metadata', {'game': self.ch_type.__game_name__}, ''
