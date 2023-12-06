@@ -80,6 +80,7 @@ class NikkeIndexer(GameIndexer):
 
         names = {}
         for item in page('aside.pi-theme-wikia > section:nth-child(3) > .pi-item[data-source]').items():
+            item = item.remove('sup')
             text = item.text().strip().replace('(', '(').replace(')', ')')
             native = re.sub(r'\([^)]+\)', '', text).strip()
             inners = re.findall(r'\(([^)]+)\)', text)
