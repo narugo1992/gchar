@@ -6,7 +6,7 @@ import requests
 from requests.adapters import HTTPAdapter, Retry
 from requests.exceptions import RequestException
 
-DEFAULT_TIMEOUT = 10  # seconds
+DEFAULT_TIMEOUT = 60  # seconds
 
 
 class TimeoutHTTPAdapter(HTTPAdapter):

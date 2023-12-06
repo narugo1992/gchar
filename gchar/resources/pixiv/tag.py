@@ -213,7 +213,8 @@ class PixivCharPool:
             name_pollution_ratio = self.__get_name_pollution_ratio(s_chname)
             min_pollution = min(name_pollution_ratio, min_pollution)
             all_exnames = list(self._iter_dup_names(s_chname))
-            if name_pollution_ratio <= max_pollution_ratio and len(all_exnames) <= max_exclude_per_word:
+            if len(char_names) == 1 or \
+                    (name_pollution_ratio <= max_pollution_ratio and len(all_exnames) <= max_exclude_per_word):
                 or_clause.add(s_chname)
 
                 for pword, pcnt in self.__get_name_pollution_words(s_chname):
@@ -242,8 +243,11 @@ class PixivCharPool:
                 else:
                     return ret_keyword
         else:
-            return self.get_tag(char, use_english, origin_positive, origin_negative,
-                                max_exclude_per_word, max_exclude, max_pollution_ratio=min_pollution + 0.015)
+            return self.get_tag(
+                char, use_english, origin_positive, origin_negative,
+                max_exclude_per_word, max_exclude,
+                max_pollution_ratio=min_pollution + 0.015,
+            )
 
     def _iter_end_dup_names(self, name: str) -> Iterator[str]:
         """
