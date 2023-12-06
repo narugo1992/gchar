@@ -78,7 +78,7 @@ class StarRailIndexer(GameIndexer):
 
     def _get_en_index(self, session: requests.Session):
         resp = srequest(session, 'GET', f'{self.__root_website__}/cn/characters')
-        page = pq(resp.text.replace('\x00', ''))
+        page = pq(resp.text.replace('\x00', '')) 
         for item in page(".page-margins.page-margins-top > div:nth-child(2) > div:nth-child(3) > a").items():
             name = item.text().strip()
             url = urljoin(resp.request.url, item.attr('href'))
