@@ -54,14 +54,14 @@ class TestGamesAzurlaneCharacter:
         assert azl_fuso_meta == '扶桑(meta)'
         assert azl_fuso_meta.jpname == '扶桑(meta)'
         assert azl_fuso_meta.rarity == 3
-        assert azl_fuso_meta.group == '其他'
+        assert azl_fuso_meta.group == 'META-???'
         assert azl_fuso_meta.is_meta
         assert azl_fuso_meta.gender == 'female'
         assert not azl_fuso_meta.is_refit
         assert not azl_fuso_meta.is_mu
         assert not azl_fuso_meta.is_chibi
         assert azl_fuso_meta.is_extra
-        assert repr(azl_fuso_meta) == '<Character META005 - 扶桑·META/fuso_meta/扶桑(META), 精锐(3***), group: 其他>'
+        assert repr(azl_fuso_meta) == '<Character META005 - 扶桑·META/fuso_meta/扶桑(META), 精锐(3***), group: META-???>'
 
         assert azl_san_diego_refit == '036'
         assert azl_san_diego_refit == '圣地亚哥.改'

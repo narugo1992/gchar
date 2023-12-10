@@ -17,7 +17,7 @@ class TestGamesBluearchive:
         assert ba_toki.attack_type == 'EXPLOSIVE'
         assert len(ba_toki.skins) >= 2
         assert ba_toki.release_time == pytest.approx(1677056400.0)
-        assert repr(ba_toki) == '<Character 时/季/toki/asuma_toki/飛鳥馬トキ, SSR(3***), role: Role.ATTACKER, ' \
+        assert repr(ba_toki) == '<Character 时/季/toki/asuma_toki/飛鳥馬トキ/あすまトキ, SSR(3***), role: Role.ATTACKER, ' \
                                 'attack: AttackType.EXPLOSIVE, weapon: WeaponType.AR>'
 
         assert ba_yuuka.index == 'yuuka'

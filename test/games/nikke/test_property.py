@@ -90,8 +90,8 @@ class TestGamesNikkeProperty:
         with pytest.raises(TypeError):
             _ = Burst.loads([1, 2])
 
-        assert sorted(Burst.__members__.values()) == [Burst.I, Burst.II, Burst.III]
-        assert set(Burst.__members__.values()) == {Burst.I, Burst.II, Burst.III}
+        assert sorted(Burst.__members__.values()) == [Burst.I, Burst.II, Burst.III, Burst.ALL]
+        assert set(Burst.__members__.values()) == {Burst.I, Burst.II, Burst.III, Burst.ALL}
 
         assert repr(Burst.I) == '<Burst.I: 1>'
         assert repr(Burst.II) == '<Burst.II: 2>'
