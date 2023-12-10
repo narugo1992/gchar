@@ -377,7 +377,8 @@
             <span class="n">name_pollution_ratio</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_name_pollution_ratio</span><span class="p">(</span><span class="n">s_chname</span><span class="p">)</span>
             <span class="n">min_pollution</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">name_pollution_ratio</span><span class="p">,</span> <span class="n">min_pollution</span><span class="p">)</span>
             <span class="n">all_exnames</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_iter_dup_names</span><span class="p">(</span><span class="n">s_chname</span><span class="p">))</span>
-            <span class="k">if</span> <span class="n">name_pollution_ratio</span> <span class="o">&lt;=</span> <span class="n">max_pollution_ratio</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_exnames</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">max_exclude_per_word</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">char_names</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> \
+                    <span class="p">(</span><span class="n">name_pollution_ratio</span> <span class="o">&lt;=</span> <span class="n">max_pollution_ratio</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_exnames</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">max_exclude_per_word</span><span class="p">):</span>
                 <span class="n">or_clause</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">s_chname</span><span class="p">)</span>
 
                 <span class="k">for</span> <span class="n">pword</span><span class="p">,</span> <span class="n">pcnt</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_name_pollution_words</span><span class="p">(</span><span class="n">s_chname</span><span class="p">):</span>
@@ -406,8 +407,11 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">return</span> <span class="n">ret_keyword</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">char</span><span class="p">,</span> <span class="n">use_english</span><span class="p">,</span> <span class="n">origin_positive</span><span class="p">,</span> <span class="n">origin_negative</span><span class="p">,</span>
-                                <span class="n">max_exclude_per_word</span><span class="p">,</span> <span class="n">max_exclude</span><span class="p">,</span> <span class="n">max_pollution_ratio</span><span class="o">=</span><span class="n">min_pollution</span> <span class="o">+</span> <span class="mf">0.015</span><span class="p">)</span></div>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span>
+                <span class="n">char</span><span class="p">,</span> <span class="n">use_english</span><span class="p">,</span> <span class="n">origin_positive</span><span class="p">,</span> <span class="n">origin_negative</span><span class="p">,</span>
+                <span class="n">max_exclude_per_word</span><span class="p">,</span> <span class="n">max_exclude</span><span class="p">,</span>
+                <span class="n">max_pollution_ratio</span><span class="o">=</span><span class="n">min_pollution</span> <span class="o">+</span> <span class="mf">0.015</span><span class="p">,</span>
+            <span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_iter_end_dup_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
