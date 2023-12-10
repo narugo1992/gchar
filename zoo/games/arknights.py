@@ -1,4 +1,5 @@
 import json
+import logging
 import re
 from datetime import datetime
 from typing import Iterator, Optional, List, Any, Mapping, Tuple
@@ -90,6 +91,19 @@ class ArknightsIndexer(GameIndexer):
 
         return skins
 
+    def _time_extract(self, time_str: str, attached=None):
+        date_match = re.fullmatch(
+            r'^\s*(?P<year>\d+)年(?P<month>\d+)月(?P<day>\d+)日\s+(?P<hour>\d+):(?P<minute>\d+)\s*$',
+            time_str
+        )
+        assert date_match, f'Release date invalid - {(attached, time_str)}.'
+
+        return datetime.strptime(
+            f'{date_match.group("year")}/{date_match.group("month")}/{date_match.group("day")} '
+            f'{date_match.group("hour")}:{date_match.group("minute")}:00 +0800',
+            '%Y/%m/%d %H:%M:%S %z'
+        )
+
     def _crawl_release_index(self, session: requests.Session) -> Mapping[str, Tuple[int, float]]:
         response = srequest(
             session, 'GET',
@@ -105,20 +119,23 @@ class ArknightsIndexer(GameIndexer):
             if not cnname:
                 continue
 
-            date_match = re.fullmatch(
-                r'^\s*(?P<year>\d+)年(?P<month>\d+)月(?P<day>\d+)日\s+(?P<hour>\d+):(?P<minute>\d+)\s*$',
-                row('td:nth-child(3)').text()
-            )
-            assert date_match, f'Release date invalid - {(cnname, row("td:nth-child(3)").text())}.'
-
-            release_time = datetime.strptime(
-                f'{date_match.group("year")}/{date_match.group("month")}/{date_match.group("day")} '
-                f'{date_match.group("hour")}:{date_match.group("minute")}:00 +0800',
-                '%Y/%m/%d %H:%M:%S %z'
-            )
+            release_time = self._time_extract(row('td:nth-child(3)').text(), cnname)
             retval[cnname] = (i, release_time.timestamp())
 
         return retval
+
+    def _get_release_time_from_page(self, session: requests.Session, cnname: str) -> Optional[str]:
+        response = sget(
+            session,
+            f'{self.__root_website__}/w/{quote(cnname)}',
+        )
+        page = pq(response.text)
+        for table in page('table.wikitable').items():
+            for header in table('th').items():
+                if header.text().strip() == '上线时间':
+                    return header.next('td').text().strip()
+
+        return None
 
     def _crawl_index_from_online(self, session: requests.Session, maxcnt: Optional[int] = None, **kwargs) \
             -> Iterator[Any]:
@@ -143,7 +160,14 @@ class ArknightsIndexer(GameIndexer):
             if _release_info:
                 release_index, release_time = _release_info
             else:
-                release_index, release_time = None, None
+                logging.info(f'Trying to get release time for {cnname!r} from wiki page ...')
+                rtime = self._get_release_time_from_page(session, cnname)
+                if rtime is not None:
+                    logging.info(f'Release time found for {cnname!r}: {rtime!r}')
+                    release_index, release_time = 0, self._time_extract(rtime).timestamp()
+                else:
+                    logging.warn(f'No release time found for {cnname!r}.')
+                    release_index, release_time = None, None
             retval.append({
                 'data': data,
                 'alias': self._get_alias_of_op(
