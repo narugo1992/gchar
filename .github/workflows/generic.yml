@@ -49,6 +49,8 @@ jobs:
       fail-fast: false
       matrix:
         game:
+          - 'princessconnect'
+          - 'eiyuudensetsusennokiseki'
 #          - 'leagueoflegends'
 #          - 'bangdream'
 #          - 'shoujokagekirevuestarlight'
@@ -225,6 +227,8 @@ jobs:
       max-parallel: 1
       matrix:
         game:
+          - 'princessconnect'
+          - 'eiyuudensetsusennokiseki'
 #          - 'leagueoflegends'
 #          - 'bangdream'
 #          - 'shoujokagekirevuestarlight'
@@ -345,6 +349,8 @@ jobs:
       max-parallel: 1
       matrix:
         game:
+          - 'princessconnect'
+          - 'eiyuudensetsusennokiseki'
 #          - 'leagueoflegends'
 #          - 'bangdream'
 #          - 'shoujokagekirevuestarlight'
@@ -487,6 +493,8 @@ jobs:
       max-parallel: 1
       matrix:
         game:
+          - 'princessconnect'
+          - 'eiyuudensetsusennokiseki'
 #          - 'leagueoflegends'
 #          - 'bangdream'
 #          - 'shoujokagekirevuestarlight'
@@ -649,6 +657,8 @@ jobs:
           - 'gelbooru'
           - 'wallhaven'
         game:
+          - 'princessconnect'
+          - 'eiyuudensetsusennokiseki'
 #          - 'leagueoflegends'
 #          - 'bangdream'
 #          - 'shoujokagekirevuestarlight'
