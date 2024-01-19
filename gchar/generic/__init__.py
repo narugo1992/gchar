@@ -1,3 +1,4 @@
+from .granbluefantasy import Character as GranblueFantasyCharacter
 from .arknightsnpc import Character as ArknightsCharacter
 from .bangdream import Character as BangDreamCharacter
 from .bangdreamdai2ki import Character as BangDreamDai2KiCharacter

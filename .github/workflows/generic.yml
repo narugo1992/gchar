@@ -10,7 +10,7 @@ on:
       generics:
         description: 'Generic to Crawl'
         required: true
-        default: 'princessconnect,eiyuudensetsusennokiseki'
+        default: 'granbluefantasy'
       skip_crawl:
         description: 'Skip Crawl (Type Anything for Yes)'
         required: false
@@ -49,8 +49,8 @@ jobs:
       fail-fast: false
       matrix:
         game:
-          - 'princessconnect'
-          - 'eiyuudensetsusennokiseki'
+          - 'granbluefantasy'
+#          - 'eiyuudensetsusennokiseki'
 #          - 'leagueoflegends'
 #          - 'bangdream'
 #          - 'shoujokagekirevuestarlight'
@@ -227,8 +227,8 @@ jobs:
       max-parallel: 1
       matrix:
         game:
-          - 'princessconnect'
-          - 'eiyuudensetsusennokiseki'
+          - 'granbluefantasy'
+#          - 'eiyuudensetsusennokiseki'
 #          - 'leagueoflegends'
 #          - 'bangdream'
 #          - 'shoujokagekirevuestarlight'
@@ -349,8 +349,8 @@ jobs:
       max-parallel: 1
       matrix:
         game:
-          - 'princessconnect'
-          - 'eiyuudensetsusennokiseki'
+          - 'granbluefantasy'
+#          - 'eiyuudensetsusennokiseki'
 #          - 'leagueoflegends'
 #          - 'bangdream'
 #          - 'shoujokagekirevuestarlight'
@@ -493,8 +493,8 @@ jobs:
       max-parallel: 1
       matrix:
         game:
-          - 'princessconnect'
-          - 'eiyuudensetsusennokiseki'
+          - 'granbluefantasy'
+#          - 'eiyuudensetsusennokiseki'
 #          - 'leagueoflegends'
 #          - 'bangdream'
 #          - 'shoujokagekirevuestarlight'
@@ -657,8 +657,8 @@ jobs:
           - 'gelbooru'
           - 'wallhaven'
         game:
-          - 'princessconnect'
-          - 'eiyuudensetsusennokiseki'
+          - 'granbluefantasy'
+#          - 'eiyuudensetsusennokiseki'
 #          - 'leagueoflegends'
 #          - 'bangdream'
 #          - 'shoujokagekirevuestarlight'
