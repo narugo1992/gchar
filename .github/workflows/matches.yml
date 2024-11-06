@@ -356,7 +356,7 @@ jobs:
 #        run: |
 #          cd game_characters
 #          git config user.name 'narugo1992'
-#          git config user.email 'narugo@126.com'
+#          git config user.email 'narugo992@gmail.com'
 #          git add -A
 #          git diff-index --quiet HEAD || git commit -a -m "dev(narugo): auto sync $(date -R)"
 #          git push https://narugo:$HF_TOKEN@huggingface.co/datasets/deepghs/game_characters main

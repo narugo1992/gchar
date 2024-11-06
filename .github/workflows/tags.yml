@@ -17,23 +17,23 @@ jobs:
       fail-fast: false
       matrix:
         resource:
-          - 'anime_pictures'
+#          - 'anime_pictures'
 #          - 'zerochan'  # do not refresh zerochan, it limited the page to 1000
-          - 'danbooru'
-          - 'safebooru'
-          - 'atfbooru'
-          - 'sankaku'
-          - 'rule34'
-          - 'hypnohub'
-          - 'xbooru'
-          - 'konachan'
-          - 'konachan_net'
-          - 'yande'
-          - 'lolibooru'
+#          - 'danbooru'
+#          - 'safebooru'
+#          - 'atfbooru'
+#          - 'sankaku'
+#          - 'rule34'
+#          - 'hypnohub'
+#          - 'xbooru'
+#          - 'konachan'
+#          - 'konachan_net'
+#          - 'yande'
+#          - 'lolibooru' # do not refresh lolibooru, it has been closed
           - 'gelbooru'
-          - 'pixiv'
-          - 'pixiv_en'
-          - 'wallhaven'
+#          - 'pixiv'
+#          - 'pixiv_en'
+#          - 'wallhaven'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -136,8 +136,7 @@ jobs:
         shell: bash
         run: |
           sudo apt-get install -y tree
-          git clone https://huggingface.co/datasets/deepghs/site_tags
-          ls -al site_tags
+          pip install -U hfutils
       - name: Download from artifact
         uses: actions/download-artifact@v3
         with:
@@ -146,6 +145,7 @@ jobs:
       - name: See what is in this path
         shell: bash
         run: |
+          mkdir -p site_tags
           cd site_tags
           for zfile in *.zip; do unzip -o $zfile; done
           rm -rf *.zip
@@ -154,9 +154,5 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          cd site_tags
-          git config user.name 'narugo1992'
-          git config user.email 'narugo@126.com'
-          git add -A
-          git diff-index --quiet HEAD || git commit -a -m "dev(narugo): auto sync $(date -R)"
-          git push https://narugo:$HF_TOKEN@huggingface.co/datasets/deepghs/site_tags main
+          hfutils whoami
+          hfutils upload -r deepghs/site_tags -i site_tags -d . -m "dev(narugo): auto sync $(date -R)"
