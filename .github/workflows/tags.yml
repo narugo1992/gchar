@@ -17,23 +17,23 @@ jobs:
       fail-fast: false
       matrix:
         resource:
-#          - 'anime_pictures'
+          - 'anime_pictures'
 #          - 'zerochan'  # do not refresh zerochan, it limited the page to 1000
-#          - 'danbooru'
-#          - 'safebooru'
-#          - 'atfbooru'
-#          - 'sankaku'
-#          - 'rule34'
-#          - 'hypnohub'
-#          - 'xbooru'
-#          - 'konachan'
-#          - 'konachan_net'
-#          - 'yande'
+          - 'danbooru'
+          - 'safebooru'
+          - 'atfbooru'
+          - 'sankaku'
+          - 'rule34'
+          - 'hypnohub'
+          - 'xbooru'
+          - 'konachan'
+          - 'konachan_net'
+          - 'yande'
 #          - 'lolibooru' # do not refresh lolibooru, it has been closed
           - 'gelbooru'
-#          - 'pixiv'
-#          - 'pixiv_en'
-#          - 'wallhaven'
+          - 'pixiv'
+          - 'pixiv_en'
+          - 'wallhaven'
         os:
           - 'ubuntu-latest'
         python-version:
@@ -155,4 +155,4 @@ jobs:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
           hfutils whoami
-          hfutils upload -r deepghs/site_tags -i site_tags -d . -m "dev(narugo): auto sync $(date -R)"
+          hfutils upload -r deepghs/site_tags -i site_tags -d . -m "dev(narugo): auto sync"
