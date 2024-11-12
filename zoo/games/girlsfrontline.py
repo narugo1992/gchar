@@ -2,6 +2,7 @@ import re
 import warnings
 from datetime import datetime
 from functools import wraps
+from pprint import pprint
 from typing import Optional, List, Dict, Iterator, Any
 from urllib.parse import quote, urljoin
 
@@ -154,7 +155,7 @@ class GirlsFrontLineIndexer(GameIndexer):
                         'url': urljoin(self.__root_website__, f"/{img_url}"),
                     })
 
-            retval.append({
+            item = {
                 'id': id_,
                 'rarity': rarity,
                 'class': clazz,
@@ -169,7 +170,9 @@ class GirlsFrontLineIndexer(GameIndexer):
                     'time': release_timestamp,
                 },
                 'skins': skins
-            })
+            }
+            pprint(item)
+            retval.append(item)
             if maxcnt is not None and len(retval) >= maxcnt:
                 break
 
