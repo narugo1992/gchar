@@ -3,7 +3,7 @@ import warnings
 from datetime import datetime
 from functools import wraps
 from typing import Optional, List, Dict, Iterator, Any
-from urllib.parse import quote
+from urllib.parse import quote, urljoin
 
 import requests
 from pyquery import PyQuery as pq
@@ -138,7 +138,7 @@ class GirlsFrontLineIndexer(GameIndexer):
             else:
                 release_timestamp = None
 
-            resp = sget(session, f"{self.__root_website__}/{item('.pad a').attr('href')}")
+            resp = sget(session, urljoin(self.__root_website__, f"/{item('.pad a').attr('href')}"))
             ch_page = pq(resp.text)
             _first, *_ = ch_page('a.image').parents('ul').items()
             img_items = list(_first('li').items())
@@ -147,11 +147,11 @@ class GirlsFrontLineIndexer(GameIndexer):
             for fn in img_items_tqdm:
                 img_name = fn('.gallerytext').text()
                 img_items_tqdm.set_description(img_name)
-                img_url = self._get_media_url(session, f"{self.__root_website__}/{fn('a.image').attr('href')}")
+                img_url = self._get_media_url(session, urljoin(self.__root_website__, f"/{fn('a.image').attr('href')}"))
                 if not re.findall(r'\bprofile\b', img_name, re.IGNORECASE):
                     skins.append({
                         'desc': img_name,
-                        'url': f"{self.__root_website__}/{img_url}",
+                        'url': urljoin(self.__root_website__, f"/{img_url}"),
                     })
 
             retval.append({
