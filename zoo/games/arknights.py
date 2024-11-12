@@ -3,7 +3,7 @@ import logging
 import re
 from datetime import datetime
 from typing import Iterator, Optional, List, Any, Mapping, Tuple
-from urllib.parse import quote
+from urllib.parse import quote, urljoin
 
 import requests
 from pyquery import PyQuery as pq
@@ -82,7 +82,7 @@ class ArknightsIndexer(GameIndexer):
             skins_data_tqdm.set_description(name)
             resp = srequest(session, 'GET', f'{self.__root_website__}/w/文件:{filename}')
             page = pq(resp.text)
-            media_url = f"{self.__root_website__}/{page('.fullMedia a').attr('href')}"
+            media_url = urljoin(self.__root_website__, f"/{page('.fullMedia a').attr('href')}")
 
             skins.append({
                 'name': name,
