@@ -155,7 +155,7 @@ class GirlsFrontLineIndexer(GameIndexer):
                 img_name = fn('.gallerytext').text()
                 img_items_tqdm.set_description(img_name)
                 if not re.findall(r'\bprofile\b', img_name, re.IGNORECASE):
-                    wiki_url = urljoin(resp.url, fn('a.mw-file-description').attr('href')) 
+                    wiki_url = urljoin(resp.url, fn('a.mw-file-description').attr('href'))
                     logging.info(f'Accessing skin {img_name!r} for {title!r} ...')
                     img_url = self._get_media_url(session, wiki_url)
                     img_name = img_name or os.path.splitext(urlsplit(img_url).filename)[0]
