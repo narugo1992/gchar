@@ -1,12 +1,14 @@
+import logging
+import os.path
 import re
 import warnings
 from datetime import datetime
 from functools import wraps
-from pprint import pprint
 from typing import Optional, List, Dict, Iterator, Any
 from urllib.parse import quote, urljoin
 
 import requests
+from hbutils.system import urlsplit
 from pyquery import PyQuery as pq
 from tqdm import tqdm
 
@@ -47,6 +49,7 @@ class GirlsFrontLineIndexer(GameIndexer):
         response = sget(
             session,
             f'{website_root}/api.php?action=query&prop=redirects&titles={quote(op)}&format=json',
+            headers={'Referer': website_root},
         )
         response.raise_for_status()
 
@@ -71,7 +74,7 @@ class GirlsFrontLineIndexer(GameIndexer):
 
     def _get_media_url(self, session, purl: str) -> str:
         resp_ = sget(session, purl)
-        return pq(resp_.text)(".fullMedia a").attr("href")
+        return urljoin(resp_.url, pq(resp_.text)(".fullMedia a").attr("href"))
 
     def _crawl_index_from_online(self, session: requests.Session, maxcnt: Optional[int] = None, **kwargs) \
             -> Iterator[Any]:
@@ -81,16 +84,16 @@ class GirlsFrontLineIndexer(GameIndexer):
         _cn_index = self._get_only_index_from_cnsite(session)
 
         retval = []
-        all_items = list(full('span.card-bg-small').items())
+        all_items = list(full('span.gfl-doll-card').items())
         all_items_tqdm = tqdm(all_items)
         for item in all_items_tqdm:
             id_text = item('span.index').text().strip()
             if not id_text:
                 continue
 
-            title = item('a').attr('title')
-            rele, *_ = _STAR_PATTERN.findall(item('img.rarity-stars').attr('src'))
-            clazz, *_ = _CLASS_PATTERN.findall(item('img.rarity-class').attr('src'))
+            title = item('span[title]').attr('title')
+            rele, *_ = _STAR_PATTERN.findall(item('span.rarity-class').attr('data-bg-lazy'))
+            clazz, *_ = _CLASS_PATTERN.findall(item('span.rarity-class').attr('data-bg-lazy'))
             rarity = int(rele) if len(rele) == 1 else rele
             id_ = int(id_text)
 
@@ -119,7 +122,10 @@ class GirlsFrontLineIndexer(GameIndexer):
                                                          [*alias_names, *cnnames, enname, jpname]))
 
             if id_ in _cn_index:
-                cn_page_resp = sget(session, f'{self.__root_website_cn__}/w/{quote(_cn_index[id_])}')
+                logging.info(f'Accessing info of {title!r} from CN wiki ...')
+                cn_page_resp = sget(session, f'{self.__root_website_cn__}/w/{quote(_cn_index[id_])}',
+                                    headers={
+                                        'Referer': f'{self.__root_website_cn__}/w/%E6%88%98%E6%9C%AF%E4%BA%BA%E5%BD%A2%E5%9B%BE%E9%89%B4'})
                 cn_page = pq(cn_page_resp.text)
                 all_doll_items = list(cn_page('.dollDivSplit4R table.dollTable').items())
                 if all_doll_items:
@@ -139,20 +145,23 @@ class GirlsFrontLineIndexer(GameIndexer):
             else:
                 release_timestamp = None
 
-            resp = sget(session, urljoin(self.__root_website__, f"/{item('.pad a').attr('href')}"))
+            resp = sget(session, urljoin(response.url, item('span[title] a').attr('href')))
             ch_page = pq(resp.text)
-            _first, *_ = ch_page('a.image').parents('ul').items()
+            _first, *_ = ch_page('li.gallerybox a').parents('ul').items()
             img_items = list(_first('li').items())
             skins = []
             img_items_tqdm = tqdm(img_items)
             for fn in img_items_tqdm:
                 img_name = fn('.gallerytext').text()
                 img_items_tqdm.set_description(img_name)
-                img_url = self._get_media_url(session, urljoin(self.__root_website__, f"/{fn('a.image').attr('href')}"))
                 if not re.findall(r'\bprofile\b', img_name, re.IGNORECASE):
+                    wiki_url = urljoin(resp.url, fn('a.mw-file-description').attr('href'))
+                    logging.info(f'Accessing skin {img_name!r} for {title!r} ...')
+                    img_url = self._get_media_url(session, wiki_url)
+                    img_name = img_name or os.path.splitext(urlsplit(img_url).filename)[0]
                     skins.append({
                         'desc': img_name,
-                        'url': urljoin(self.__root_website__, f"/{img_url}"),
+                        'url': img_url,
                     })
 
             item = {
@@ -171,7 +180,6 @@ class GirlsFrontLineIndexer(GameIndexer):
                 },
                 'skins': skins
             }
-            pprint(item)
             retval.append(item)
             if maxcnt is not None and len(retval) >= maxcnt:
                 break
