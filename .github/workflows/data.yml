@@ -144,7 +144,7 @@ jobs:
           mkdir -p ${{ matrix.game }}
           zip -r ${{ matrix.game }}.zip ${{ matrix.game }}
       - name: Upload the character databases
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: character-database
           path: ${{ matrix.game }}.zip
@@ -170,7 +170,7 @@ jobs:
           git clone https://huggingface.co/datasets/deepghs/game_characters
           ls -al game_characters
       - name: Download from artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: character-database
           path: game_characters
@@ -397,12 +397,12 @@ jobs:
           mkdir -p ${{ matrix.game }}
           zip -r ${{ matrix.game }}.zip ${{ matrix.game }}
       - name: Upload the character databases
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: character-database
           path: ${{ matrix.game }}.zip
       - name: Upload the specific database
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: character-names-db-${{ matrix.game }}
           path: ${{ matrix.game }}.zip
@@ -485,7 +485,7 @@ jobs:
         run: |
           echo "SCHEDULED=no" >> $GITHUB_ENV
       - name: Download from artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: character-names-db-${{ matrix.game }}
       - name: Load Index file from upstream
@@ -527,7 +527,7 @@ jobs:
           mkdir -p ${{ matrix.game }}
           zip -r ${{ matrix.game }}.zip ${{ matrix.game }}
       - name: Upload the character databases
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: character-database
           path: ${{ matrix.game }}.zip
@@ -652,7 +652,7 @@ jobs:
           mkdir -p ${{ matrix.game }}
           zip -r ${{ matrix.resource }}_${{ matrix.game }}.zip ${{ matrix.game }}
       - name: Upload the character databases
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: character-database
           path: ${{ matrix.resource }}_${{ matrix.game }}.zip
@@ -681,7 +681,7 @@ jobs:
           git clone https://huggingface.co/datasets/deepghs/game_characters
           ls -al game_characters
       - name: Download from artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: character-database
           path: game_characters

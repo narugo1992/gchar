@@ -313,7 +313,7 @@ jobs:
 #            python -m zoo.resources.${{ matrix.resource }} chtags_export -g ${{ matrix.game }}
 #            zip -r ${{ matrix.resource }}_${{ matrix.game }}.zip ${{ matrix.game }}
 #      - name: Upload the character databases
-#        uses: actions/upload-artifact@v3
+#        uses: actions/upload-artifact@v4
 #        with:
 #          name: character-database
 #          path: ${{ matrix.resource }}_${{ matrix.game }}.zip
@@ -339,7 +339,7 @@ jobs:
 #          git clone https://huggingface.co/datasets/deepghs/game_characters
 #          ls -al game_characters
 #      - name: Download from artifact
-#        uses: actions/download-artifact@v3
+#        uses: actions/download-artifact@v4
 #        with:
 #          name: character-database
 #          path: game_characters

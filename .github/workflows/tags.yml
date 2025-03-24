@@ -112,10 +112,10 @@ jobs:
           cd ..
           tree tags_db
       - name: Upload the character databases
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: ${{ env.CRAWL_SUCCESS == 'yes' }}
         with:
-          name: character-database
+          name: character-database-${{ matrix.resource }}
           path: tags_db/${{ matrix.resource }}.zip
 
   data_upload:
@@ -138,10 +138,11 @@ jobs:
           sudo apt-get install -y tree
           pip install -U hfutils
       - name: Download from artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
-          name: character-database
+          pattern: character-database-*
           path: site_tags
+          merge-multiple: true
       - name: See what is in this path
         shell: bash
         run: |
