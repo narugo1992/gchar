@@ -1,3 +1,4 @@
+import logging
 import random
 import time
 from functools import lru_cache
@@ -120,7 +121,10 @@ def srequest(session: requests.Session, method, url, *, max_retries: int = 5,
     for _ in range(max_retries):
         try:
             resp = session.request(method, url, **kwargs)
-        except RequestException:
+            if resp.status_code in {429}:
+                resp.raise_for_status()
+        except RequestException as err:
+            logging.error(f'Request error - {err!r}')
             time.sleep(sleep_time)
         else:
             break
