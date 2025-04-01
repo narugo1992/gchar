@@ -1,8 +1,11 @@
 import random
 import time
+from functools import lru_cache
 from typing import Optional, Dict
 
 import requests
+from random_user_agent.params import SoftwareName, OperatingSystem
+from random_user_agent.user_agent import UserAgent
 from requests.adapters import HTTPAdapter, Retry
 from requests.exceptions import RequestException
 
@@ -81,8 +84,7 @@ def get_requests_session(max_retries: int = 5, timeout: int = DEFAULT_TIMEOUT,
     session.mount('http://', adapter)
     session.mount('https://', adapter)
     session.headers.update({
-        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
-                      "(KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36",
+        "User-Agent": get_random_ua(),
         **dict(headers or {}),
     })
 
@@ -156,3 +158,29 @@ def sget(session: requests.Session, url, *, max_retries: int = 5,
         raise_for_status=raise_for_status,
         **kwargs,
     )
+
+
+@lru_cache()
+def _ua_pool():
+    software_names = [SoftwareName.CHROME.value, SoftwareName.FIREFOX.value, SoftwareName.EDGE.value]
+    operating_systems = [OperatingSystem.WINDOWS.value, OperatingSystem.MACOS.value]
+
+    user_agent_rotator = UserAgent(software_names=software_names, operating_systems=operating_systems, limit=1000)
+    return user_agent_rotator
+
+
+def get_random_ua():
+    return _ua_pool().get_random_user_agent()
+
+
+@lru_cache()
+def _ua_mobile_pool():
+    software_names = [SoftwareName.CHROME.value, SoftwareName.FIREFOX.value, SoftwareName.SAFARI.value]
+    operating_systems = [OperatingSystem.ANDROID.value, OperatingSystem.IOS.value]
+
+    user_agent_rotator = UserAgent(software_names=software_names, operating_systems=operating_systems, limit=1000)
+    return user_agent_rotator
+
+
+def get_random_mobile_ua():
+    return _ua_mobile_pool().get_random_user_agent()

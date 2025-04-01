@@ -9,3 +9,4 @@ editdistance
 requests
 pyyaml~=5.3.1
 hfutils>=0.5.0
+random_user_agent

@@ -1,5 +1,6 @@
 from typing import List, Mapping, Any
 
+import cloudscraper
 import pandas as pd
 from tqdm.auto import tqdm
 
@@ -8,10 +9,10 @@ from ..base import TagCrawler
 
 
 class AnimePicturesTagCrawler(TagCrawler):
-    __site_url__ = 'https://anime-pictures.net'
+    __site_url__ = 'https://api.anime-pictures.net'
 
     def get_tags_json(self) -> List[Mapping[str, Any]]:
-        session = get_requests_session()
+        session = cloudscraper.create_scraper(get_requests_session())
         offset = 0
         retval = []
         pg = tqdm(desc='Tag Crawl')
