@@ -1,7 +1,9 @@
 from typing import List, Mapping, Any
 
 import cloudscraper
+import math
 import pandas as pd
+from pyrate_limiter import Duration, Rate, Limiter
 from tqdm.auto import tqdm
 
 from gchar.utils import get_requests_session, srequest
@@ -12,12 +14,15 @@ class AnimePicturesTagCrawler(TagCrawler):
     __site_url__ = 'https://api.anime-pictures.net'
 
     def get_tags_json(self) -> List[Mapping[str, Any]]:
+        rate = Rate(1, int(math.ceil(Duration.SECOND * 1)))
+        limiter = Limiter(rate, max_delay=1 << 32)
         session = cloudscraper.create_scraper(get_requests_session())
         offset = 0
         retval = []
         pg = tqdm(desc='Tag Crawl')
         exist_ids = set()
         while True:
+            limiter.try_acquire('api rate limit')
             resp = srequest(
                 session, 'GET', f'{self.__site_url__}/api/v3/tags',
                 params={
