@@ -146,7 +146,7 @@ jobs:
       - name: Upload the character databases
         uses: actions/upload-artifact@v4
         with:
-          name: character-database
+          name: character-database-${{ matrix.game }}
           path: ${{ matrix.game }}.zip
 
   data_crawl_upload:
@@ -172,8 +172,9 @@ jobs:
       - name: Download from artifact
         uses: actions/download-artifact@v4
         with:
-          name: character-database
+          pattern: character-database-*
           path: game_characters
+          merge-multiple: true
       - name: See what is in this path
         shell: bash
         run: |
@@ -399,12 +400,12 @@ jobs:
       - name: Upload the character databases
         uses: actions/upload-artifact@v4
         with:
-          name: character-database
+          name: character-database-s2-${{ matrix.game }}
           path: ${{ matrix.game }}.zip
       - name: Upload the specific database
         uses: actions/upload-artifact@v4
         with:
-          name: character-names-db-${{ matrix.game }}
+          name: character-names-s2-db-${{ matrix.game }}
           path: ${{ matrix.game }}.zip
 
   chars_crawl:
@@ -487,7 +488,7 @@ jobs:
       - name: Download from artifact
         uses: actions/download-artifact@v4
         with:
-          name: character-names-db-${{ matrix.game }}
+          name: character-names-s2-db-${{ matrix.game }}
       - name: Load Index file from upstream
         shell: bash
         run: |
@@ -529,7 +530,7 @@ jobs:
       - name: Upload the character databases
         uses: actions/upload-artifact@v4
         with:
-          name: character-database
+          name: character-database-s3-${{ matrix.game }}
           path: ${{ matrix.game }}.zip
 
   tag_match:
@@ -547,7 +548,7 @@ jobs:
           - 'safebooru'
           - 'atfbooru'
           - 'sankaku'
-#          - 'rule34'
+          #          - 'rule34'
           - 'hypnohub'
           - 'xbooru'
           - 'konachan'
@@ -654,7 +655,7 @@ jobs:
       - name: Upload the character databases
         uses: actions/upload-artifact@v4
         with:
-          name: character-database
+          name: character-database-match-${{ matrix.resource }}-${{ matrix.game }}
           path: ${{ matrix.resource }}_${{ matrix.game }}.zip
 
   data_upload:
@@ -683,8 +684,9 @@ jobs:
       - name: Download from artifact
         uses: actions/download-artifact@v4
         with:
-          name: character-database
+          pattern: character-database-*
           path: game_characters
+          merge-multiple: true
       - name: See what is in this path
         shell: bash
         run: |
