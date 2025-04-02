@@ -19,6 +19,7 @@ from .base import HuggingfaceDeployable
 
 import_generic()
 
+
 class NoTagAlias(Exception):
     pass
 
@@ -44,6 +45,11 @@ class TagCrawler(HuggingfaceDeployable):
         df.to_csv(csv_file, index=False)
         return csv_file
 
+    def tags_json_save_to_parquet(self, json_, parquet_file) -> str:
+        df = self.tags_json_to_df(json_)
+        df.to_parquet(parquet_file, index=False)
+        return parquet_file
+
     def tag_aliases_json_to_df(self, list_):
         return pd.DataFrame([{'alias': alias, 'tag': to_} for alias, to_ in list_])
 
@@ -51,6 +57,11 @@ class TagCrawler(HuggingfaceDeployable):
         df = self.tag_aliases_json_to_df(list_)
         df.to_csv(csv_file, index=False)
         return csv_file
+
+    def tag_aliases_json_save_to_parquet(self, list_, parquet_file):
+        df = self.tag_aliases_json_to_df(list_)
+        df.to_parquet(parquet_file, index=False)
+        return parquet_file
 
     __sqlite_indices__ = []
 
@@ -92,6 +103,11 @@ class TagCrawler(HuggingfaceDeployable):
             self.tags_json_save_to_csv(tags, csv_tags_file)
             files.append(csv_tags_file)
 
+            parquet_tags_file = os.path.join(td, 'tags.parquet')
+            logging.info(f'Exporting tags to parquet file {parquet_tags_file!r} ...')
+            self.tags_json_save_to_parquet(tags, parquet_tags_file)
+            files.append(parquet_tags_file)
+
             if tag_aliases is not None:
                 json_tag_aliases_file = os.path.join(td, 'tag_aliases.json')
                 logging.info(f'Saving tags alias to json file {json_tag_aliases_file!r} ...')
@@ -103,6 +119,11 @@ class TagCrawler(HuggingfaceDeployable):
                 logging.info(f'Exporting tag aliases to csv file {csv_tag_aliases_file!r} ...')
                 self.tag_aliases_json_save_to_csv(tag_aliases, csv_tag_aliases_file)
                 files.append(csv_tag_aliases_file)
+
+                parquet_tag_aliases_file = os.path.join(td, 'tag_aliases.parquet')
+                logging.info(f'Exporting tag aliases to parquet file {parquet_tag_aliases_file!r} ...')
+                self.tag_aliases_json_save_to_parquet(tag_aliases, parquet_tag_aliases_file)
+                files.append(parquet_tag_aliases_file)
 
             sqlite_file = os.path.join(td, 'tags.sqlite')
             logging.info(f'Exporting data to sqlite database file {sqlite_file!r} ...')

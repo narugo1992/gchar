@@ -11,7 +11,7 @@ from ..base import TagCrawler
 
 
 class AnimePicturesTagCrawler(TagCrawler):
-    __site_url__ = 'https://api.anime-pictures.net'
+    __site_url__ = 'https://anime-pictures.net'
 
     def get_tags_json(self) -> List[Mapping[str, Any]]:
         rate = Rate(1, int(math.ceil(Duration.SECOND * 1)))
@@ -24,7 +24,7 @@ class AnimePicturesTagCrawler(TagCrawler):
         while True:
             limiter.try_acquire('api rate limit')
             resp = srequest(
-                session, 'GET', f'{self.__site_url__}/api/v3/tags',
+                session, 'GET', f'https://api.anime-pictures.net/api/v3/tags',
                 params={
                     'lang': 'en',
                     'offset': str(offset),

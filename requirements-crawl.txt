@@ -16,3 +16,4 @@ zhon
 markdownify
 cloudscraper
 pyrate-limiter
+pyarrow
