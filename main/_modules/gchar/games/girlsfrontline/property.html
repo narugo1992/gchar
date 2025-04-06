@@ -162,11 +162,11 @@
     
     
   <h1>Source code for gchar.games.girlsfrontline.property</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">unique</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">unique</span>
 
 
 <div class="viewcode-block" id="Rarity"><a class="viewcode-back" href="../../../../api_doc/games/girlsfrontline.html#gchar.games.girlsfrontline.Rarity">[docs]</a><span class="nd">@unique</span>
-<span class="k">class</span> <span class="nc">Rarity</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Rarity</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
     <span class="n">ONE</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">TWO</span> <span class="o">=</span> <span class="mi">2</span>
     <span class="n">THREE</span> <span class="o">=</span> <span class="mi">3</span>
@@ -175,7 +175,7 @@
     <span class="n">EXTRA</span> <span class="o">=</span> <span class="s1">&#39;EXTRA&#39;</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">loads</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Rarity&#39;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">loads</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Rarity&#39;</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">Rarity</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">val</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">)):</span>
@@ -192,7 +192,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Invalid level type - </span><span class="si">{</span><span class="n">val</span><span class="si">!r}</span><span class="s1">.&#39;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Rarity</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span>
         <span class="k">else</span><span class="p">:</span>
@@ -203,7 +203,7 @@
 
 
 <div class="viewcode-block" id="Clazz"><a class="viewcode-back" href="../../../../api_doc/games/girlsfrontline.html#gchar.games.girlsfrontline.Clazz">[docs]</a><span class="nd">@unique</span>
-<span class="k">class</span> <span class="nc">Clazz</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Clazz</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
     <span class="n">MG</span> <span class="o">=</span> <span class="s1">&#39;MG&#39;</span>
     <span class="n">SMG</span> <span class="o">=</span> <span class="s1">&#39;SMG&#39;</span>
     <span class="n">RF</span> <span class="o">=</span> <span class="s1">&#39;RF&#39;</span>
@@ -212,7 +212,7 @@
     <span class="n">HG</span> <span class="o">=</span> <span class="s1">&#39;HG&#39;</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">loads</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Clazz&#39;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">loads</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Clazz&#39;</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">val</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
@@ -237,7 +237,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Invalid class type - </span><span class="si">{</span><span class="n">val</span><span class="si">!r}</span><span class="s1">.&#39;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Clazz</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span>
         <span class="k">else</span><span class="p">:</span>
@@ -258,7 +258,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2023, narugo1992
+        &copy; Copyright 2025, narugo1992
 
     </p>
   </div>
@@ -288,6 +288,7 @@
                 <dl>
                     <dt>Branches</dt>
                         <dd><a href="property.html">main</a></dd>
+                        <dd><a href="../../../../../HEAD/index.html">HEAD</a></dd>
                 </dl>
         </div>
     </div>

@@ -162,22 +162,22 @@
     
     
   <h1>Source code for gchar.resources.sites.tags</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">lru_cache</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">lru_cache</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
 
-<span class="kn">from</span> <span class="nn">huggingface_hub</span> <span class="kn">import</span> <span class="n">hf_hub_download</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">huggingface_hub</span><span class="w"> </span><span class="kn">import</span> <span class="n">hf_hub_download</span>
 
-<span class="kn">from</span> <span class="nn">gchar.games</span> <span class="kn">import</span> <span class="n">get_character</span>
-<span class="kn">from</span> <span class="nn">gchar.games.base</span> <span class="kn">import</span> <span class="n">Character</span>
-<span class="kn">from</span> <span class="nn">gchar.games.dispatch.access</span> <span class="kn">import</span> <span class="n">GAME_CHARS</span>
-<span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">SITES</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gchar.games</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_character</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gchar.games.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Character</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gchar.games.dispatch.access</span><span class="w"> </span><span class="kn">import</span> <span class="n">GAME_CHARS</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">SITES</span>
 
 <span class="n">_AVAIL_SITE_NAMES</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">SITES</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 
 
 <span class="nd">@lru_cache</span><span class="p">()</span>
-<span class="k">def</span> <span class="nf">_get_tags_for_game_site</span><span class="p">(</span><span class="n">game</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">site</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_tags_for_game_site</span><span class="p">(</span><span class="n">game</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">site</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get the tags for a specific game and site.</span>
 
@@ -197,7 +197,7 @@
 
 
 <span class="nd">@lru_cache</span><span class="p">()</span>
-<span class="k">def</span> <span class="nf">_get_tag_mapping</span><span class="p">(</span><span class="n">game</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">site</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">]]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_tag_mapping</span><span class="p">(</span><span class="n">game</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">site</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get the mapping of tags for a specific game and site.</span>
 
@@ -212,7 +212,7 @@
     <span class="k">return</span> <span class="p">{</span><span class="n">tag</span><span class="p">[</span><span class="s1">&#39;index&#39;</span><span class="p">]:</span> <span class="n">tag</span><span class="p">[</span><span class="s1">&#39;tags&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">}</span>
 
 
-<span class="k">def</span> <span class="nf">_get_raw_site_tags</span><span class="p">(</span><span class="n">ch</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Character</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">site</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sure_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_raw_site_tags</span><span class="p">(</span><span class="n">ch</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Character</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">site</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sure_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
                        <span class="n">allow_fuzzy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get the raw tags for a character and site.</span>
@@ -245,7 +245,7 @@
         <span class="k">return</span> <span class="p">[]</span>
 
 
-<div class="viewcode-block" id="list_site_tags"><a class="viewcode-back" href="../../../../api_doc/resources/sites.html#gchar.resources.sites.list_site_tags">[docs]</a><span class="k">def</span> <span class="nf">list_site_tags</span><span class="p">(</span><span class="n">ch</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Character</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">site</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sure_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<div class="viewcode-block" id="list_site_tags"><a class="viewcode-back" href="../../../../api_doc/resources/sites.html#gchar.resources.sites.list_site_tags">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">list_site_tags</span><span class="p">(</span><span class="n">ch</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Character</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">site</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sure_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
                    <span class="n">with_posts</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">allow_fuzzy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> \
         <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -288,7 +288,7 @@
         <span class="k">return</span> <span class="p">[</span><span class="n">tag</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="get_site_tag"><a class="viewcode-back" href="../../../../api_doc/resources/sites.html#gchar.resources.sites.get_site_tag">[docs]</a><span class="k">def</span> <span class="nf">get_site_tag</span><span class="p">(</span><span class="n">ch</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Character</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">site</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sure_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<div class="viewcode-block" id="get_site_tag"><a class="viewcode-back" href="../../../../api_doc/resources/sites.html#gchar.resources.sites.get_site_tag">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_site_tag</span><span class="p">(</span><span class="n">ch</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Character</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">site</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sure_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
                  <span class="n">with_posts</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">allow_fuzzy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> \
         <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="kc">None</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -342,7 +342,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2023, narugo1992
+        &copy; Copyright 2025, narugo1992
 
     </p>
   </div>
@@ -372,6 +372,7 @@
                 <dl>
                     <dt>Branches</dt>
                         <dd><a href="../../../../../main/index.html">main</a></dd>
+                        <dd><a href="../../../../../HEAD/index.html">HEAD</a></dd>
                 </dl>
         </div>
     </div>

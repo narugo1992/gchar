@@ -158,15 +158,15 @@
     
     
   <h1>Source code for gchar.games.bluearchive.character</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
 
-<span class="kn">from</span> <span class="nn">.name</span> <span class="kn">import</span> <span class="n">EnglishName</span><span class="p">,</span> <span class="n">JapaneseName</span><span class="p">,</span> <span class="n">ChineseName</span><span class="p">,</span> <span class="n">ChineseAliasName</span>
-<span class="kn">from</span> <span class="nn">.property</span> <span class="kn">import</span> <span class="n">Rarity</span><span class="p">,</span> <span class="n">WeaponType</span><span class="p">,</span> <span class="n">Role</span><span class="p">,</span> <span class="n">AttackType</span>
-<span class="kn">from</span> <span class="nn">..base</span> <span class="kn">import</span> <span class="n">Character</span> <span class="k">as</span> <span class="n">_BaseCharacter</span><span class="p">,</span> <span class="n">Gender</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.name</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnglishName</span><span class="p">,</span> <span class="n">JapaneseName</span><span class="p">,</span> <span class="n">ChineseName</span><span class="p">,</span> <span class="n">ChineseAliasName</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.property</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rarity</span><span class="p">,</span> <span class="n">WeaponType</span><span class="p">,</span> <span class="n">Role</span><span class="p">,</span> <span class="n">AttackType</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Character</span> <span class="k">as</span> <span class="n">_BaseCharacter</span><span class="p">,</span> <span class="n">Gender</span>
 
 
-<div class="viewcode-block" id="Character"><a class="viewcode-back" href="../../../../api_doc/games/bluearchive.html#gchar.games.bluearchive.Character">[docs]</a><span class="k">class</span> <span class="nc">Character</span><span class="p">(</span><span class="n">_BaseCharacter</span><span class="p">):</span>
+<div class="viewcode-block" id="Character"><a class="viewcode-back" href="../../../../api_doc/games/bluearchive.html#gchar.games.bluearchive.Character">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Character</span><span class="p">(</span><span class="n">_BaseCharacter</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Represents a character in Blue Archive.</span>
 <span class="sd">    Inherits from the base class _BaseCharacter.</span>
@@ -178,7 +178,7 @@
     <span class="n">__jpname_class__</span> <span class="o">=</span> <span class="n">JapaneseName</span>
     <span class="n">__alias_name_class__</span> <span class="o">=</span> <span class="n">ChineseAliasName</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes a Character object with raw data.</span>
 
@@ -187,7 +187,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span> <span class="o">=</span> <span class="n">raw_data</span>
 
-    <span class="k">def</span> <span class="nf">_index</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_index</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generates the index of the character.</span>
 
@@ -196,7 +196,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\W+&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_enname</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
 
-    <span class="k">def</span> <span class="nf">_cnname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_cnname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the Chinese name of the character.</span>
 
@@ -205,7 +205,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="p">[</span><span class="s1">&#39;cnnames&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">_jpname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_jpname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the Japanese name of the character.</span>
 
@@ -214,7 +214,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="p">[</span><span class="s1">&#39;jpnames&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">_enname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_enname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the English name of the character.</span>
 
@@ -223,7 +223,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="p">[</span><span class="s1">&#39;ennames&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">_cnnames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_cnnames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a list of Chinese names of the character.</span>
 
@@ -232,7 +232,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="p">[</span><span class="s1">&#39;cnnames&#39;</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">_jpnames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_jpnames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a list of Japanese names of the character.</span>
 
@@ -241,7 +241,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="p">[</span><span class="s1">&#39;jpnames&#39;</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">_ennames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_ennames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a list of English names of the character.</span>
 
@@ -250,7 +250,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="p">[</span><span class="s1">&#39;ennames&#39;</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">_gender</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_gender</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the gender of the character.</span>
 
@@ -260,7 +260,7 @@
         <span class="k">return</span> <span class="n">Gender</span><span class="o">.</span><span class="n">FEMALE</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">rarity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Rarity</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rarity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Rarity</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the rarity of the character.</span>
 
@@ -270,7 +270,7 @@
         <span class="k">return</span> <span class="n">Rarity</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;rarity&#39;</span><span class="p">])</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">role</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Role</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">role</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Role</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the role of the character.</span>
 
@@ -280,7 +280,7 @@
         <span class="k">return</span> <span class="n">Role</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;role&#39;</span><span class="p">])</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">weapon_type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WeaponType</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">weapon_type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WeaponType</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the weapon type of the character.</span>
 
@@ -290,7 +290,7 @@
         <span class="k">return</span> <span class="n">WeaponType</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;weapon_type&#39;</span><span class="p">])</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">attack_type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AttackType</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">attack_type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AttackType</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the attack type of the character.</span>
 
@@ -299,7 +299,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">AttackType</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;attack_type&#39;</span><span class="p">])</span>
 
-    <span class="k">def</span> <span class="nf">_skins</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_skins</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the list of skins for the character.</span>
 
@@ -308,7 +308,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[(</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">])</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="p">[</span><span class="s1">&#39;skins&#39;</span><span class="p">]]</span>
 
-    <span class="k">def</span> <span class="nf">_release_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_release_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the release time of the character.</span>
 
@@ -318,7 +318,7 @@
         <span class="n">release_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="p">[</span><span class="s1">&#39;release&#39;</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">release_info</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">_order</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_order</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the order of the character for sorting.</span>
 
@@ -327,7 +327,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_release_time</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a string representation of the character.</span>
 
@@ -350,7 +350,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2023, narugo1992
+        &copy; Copyright 2025, narugo1992
 
     </p>
   </div>
@@ -380,6 +380,7 @@
                 <dl>
                     <dt>Branches</dt>
                         <dd><a href="../../../../../main/index.html">main</a></dd>
+                        <dd><a href="../../../../../HEAD/index.html">HEAD</a></dd>
                 </dl>
         </div>
     </div>

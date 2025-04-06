@@ -162,18 +162,22 @@
     
     
   <h1>Source code for gchar.utils.session</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">random</span>
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">lru_cache</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span>
 
-<span class="kn">import</span> <span class="nn">requests</span>
-<span class="kn">from</span> <span class="nn">requests.adapters</span> <span class="kn">import</span> <span class="n">HTTPAdapter</span><span class="p">,</span> <span class="n">Retry</span>
-<span class="kn">from</span> <span class="nn">requests.exceptions</span> <span class="kn">import</span> <span class="n">RequestException</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">random_user_agent.params</span><span class="w"> </span><span class="kn">import</span> <span class="n">SoftwareName</span><span class="p">,</span> <span class="n">OperatingSystem</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">random_user_agent.user_agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">UserAgent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">requests.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">HTTPAdapter</span><span class="p">,</span> <span class="n">Retry</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">requests.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">RequestException</span>
 
 <span class="n">DEFAULT_TIMEOUT</span> <span class="o">=</span> <span class="mi">60</span>  <span class="c1"># seconds</span>
 
 
-<span class="k">class</span> <span class="nc">TimeoutHTTPAdapter</span><span class="p">(</span><span class="n">HTTPAdapter</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TimeoutHTTPAdapter</span><span class="p">(</span><span class="n">HTTPAdapter</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Custom HTTP adapter that sets a default timeout for requests.</span>
 
@@ -194,14 +198,14 @@
 <span class="sd">    :type timeout: int</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="n">DEFAULT_TIMEOUT</span>
         <span class="k">if</span> <span class="s2">&quot;timeout&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;timeout&quot;</span><span class="p">]</span>
             <span class="k">del</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;timeout&quot;</span><span class="p">]</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sends a request with the provided timeout value.</span>
 
@@ -218,7 +222,7 @@
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="get_requests_session"><a class="viewcode-back" href="../../../api_doc/utils/session.html#gchar.utils.session.get_requests_session">[docs]</a><span class="k">def</span> <span class="nf">get_requests_session</span><span class="p">(</span><span class="n">max_retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_TIMEOUT</span><span class="p">,</span>
+<div class="viewcode-block" id="get_requests_session"><a class="viewcode-back" href="../../../api_doc/utils/session.html#gchar.utils.session.get_requests_session">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_requests_session</span><span class="p">(</span><span class="n">max_retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_TIMEOUT</span><span class="p">,</span>
                          <span class="n">headers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> \
         <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -245,15 +249,14 @@
     <span class="n">session</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="s1">&#39;http://&#39;</span><span class="p">,</span> <span class="n">adapter</span><span class="p">)</span>
     <span class="n">session</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="s1">&#39;https://&#39;</span><span class="p">,</span> <span class="n">adapter</span><span class="p">)</span>
     <span class="n">session</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
-        <span class="s2">&quot;User-Agent&quot;</span><span class="p">:</span> <span class="s2">&quot;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 &quot;</span>
-                      <span class="s2">&quot;(KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;User-Agent&quot;</span><span class="p">:</span> <span class="n">get_random_ua</span><span class="p">(),</span>
         <span class="o">**</span><span class="nb">dict</span><span class="p">(</span><span class="n">headers</span> <span class="ow">or</span> <span class="p">{}),</span>
     <span class="p">})</span>
 
     <span class="k">return</span> <span class="n">session</span></div>
 
 
-<div class="viewcode-block" id="srequest"><a class="viewcode-back" href="../../../api_doc/utils/session.html#gchar.utils.session.srequest">[docs]</a><span class="k">def</span> <span class="nf">srequest</span><span class="p">(</span><span class="n">session</span><span class="p">:</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">max_retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+<div class="viewcode-block" id="srequest"><a class="viewcode-back" href="../../../api_doc/utils/session.html#gchar.utils.session.srequest">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">srequest</span><span class="p">(</span><span class="n">session</span><span class="p">:</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">max_retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
              <span class="n">sleep_time</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">5.0</span><span class="p">,</span> <span class="n">raise_for_status</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Send a request using the provided session object with retry and timeout settings.</span>
@@ -282,7 +285,10 @@
     <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_retries</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">resp</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">RequestException</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">resp</span><span class="o">.</span><span class="n">status_code</span> <span class="ow">in</span> <span class="p">{</span><span class="mi">429</span><span class="p">}:</span>
+                <span class="n">resp</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">RequestException</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Request error - </span><span class="si">{</span><span class="n">err</span><span class="si">!r}</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">sleep_time</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">break</span>
@@ -293,7 +299,7 @@
     <span class="k">return</span> <span class="n">resp</span></div>
 
 
-<div class="viewcode-block" id="sget"><a class="viewcode-back" href="../../../api_doc/utils/session.html#gchar.utils.session.sget">[docs]</a><span class="k">def</span> <span class="nf">sget</span><span class="p">(</span><span class="n">session</span><span class="p">:</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">max_retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+<div class="viewcode-block" id="sget"><a class="viewcode-back" href="../../../api_doc/utils/session.html#gchar.utils.session.sget">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">sget</span><span class="p">(</span><span class="n">session</span><span class="p">:</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">max_retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
          <span class="n">sleep_time</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">5.0</span><span class="p">,</span> <span class="n">raise_for_status</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Send a GET request using the provided session object with retry and timeout settings.</span>
@@ -320,6 +326,32 @@
         <span class="n">raise_for_status</span><span class="o">=</span><span class="n">raise_for_status</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">)</span></div>
+
+
+<span class="nd">@lru_cache</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_ua_pool</span><span class="p">():</span>
+    <span class="n">software_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">SoftwareName</span><span class="o">.</span><span class="n">CHROME</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">SoftwareName</span><span class="o">.</span><span class="n">FIREFOX</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">SoftwareName</span><span class="o">.</span><span class="n">EDGE</span><span class="o">.</span><span class="n">value</span><span class="p">]</span>
+    <span class="n">operating_systems</span> <span class="o">=</span> <span class="p">[</span><span class="n">OperatingSystem</span><span class="o">.</span><span class="n">WINDOWS</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">OperatingSystem</span><span class="o">.</span><span class="n">MACOS</span><span class="o">.</span><span class="n">value</span><span class="p">]</span>
+
+    <span class="n">user_agent_rotator</span> <span class="o">=</span> <span class="n">UserAgent</span><span class="p">(</span><span class="n">software_names</span><span class="o">=</span><span class="n">software_names</span><span class="p">,</span> <span class="n">operating_systems</span><span class="o">=</span><span class="n">operating_systems</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">user_agent_rotator</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_random_ua</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">_ua_pool</span><span class="p">()</span><span class="o">.</span><span class="n">get_random_user_agent</span><span class="p">()</span>
+
+
+<span class="nd">@lru_cache</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_ua_mobile_pool</span><span class="p">():</span>
+    <span class="n">software_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">SoftwareName</span><span class="o">.</span><span class="n">CHROME</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">SoftwareName</span><span class="o">.</span><span class="n">FIREFOX</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">SoftwareName</span><span class="o">.</span><span class="n">SAFARI</span><span class="o">.</span><span class="n">value</span><span class="p">]</span>
+    <span class="n">operating_systems</span> <span class="o">=</span> <span class="p">[</span><span class="n">OperatingSystem</span><span class="o">.</span><span class="n">ANDROID</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">OperatingSystem</span><span class="o">.</span><span class="n">IOS</span><span class="o">.</span><span class="n">value</span><span class="p">]</span>
+
+    <span class="n">user_agent_rotator</span> <span class="o">=</span> <span class="n">UserAgent</span><span class="p">(</span><span class="n">software_names</span><span class="o">=</span><span class="n">software_names</span><span class="p">,</span> <span class="n">operating_systems</span><span class="o">=</span><span class="n">operating_systems</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">user_agent_rotator</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_random_mobile_ua</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">_ua_mobile_pool</span><span class="p">()</span><span class="o">.</span><span class="n">get_random_user_agent</span><span class="p">()</span>
 </pre></div>
 
 
@@ -333,7 +365,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2023, narugo1992
+        &copy; Copyright 2025, narugo1992
 
     </p>
   </div>
@@ -363,6 +395,7 @@
                 <dl>
                     <dt>Branches</dt>
                         <dd><a href="session.html">main</a></dd>
+                        <dd><a href="../../../../HEAD/index.html">HEAD</a></dd>
                 </dl>
         </div>
     </div>

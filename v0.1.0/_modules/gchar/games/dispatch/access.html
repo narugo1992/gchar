@@ -158,29 +158,29 @@
     
     
   <h1>Source code for gchar.games.dispatch.access</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">lru_cache</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">islice</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Dict</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">lru_cache</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">islice</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Dict</span>
 
-<span class="kn">from</span> <span class="nn">thefuzz</span> <span class="kn">import</span> <span class="n">fuzz</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">thefuzz</span><span class="w"> </span><span class="kn">import</span> <span class="n">fuzz</span>
 
-<span class="kn">from</span> <span class="nn">..arknights</span> <span class="kn">import</span> <span class="n">Character</span> <span class="k">as</span> <span class="n">ArknightsCharacter</span>
-<span class="kn">from</span> <span class="nn">..azurlane</span> <span class="kn">import</span> <span class="n">Character</span> <span class="k">as</span> <span class="n">AzurLaneCharacter</span>
-<span class="kn">from</span> <span class="nn">..base</span> <span class="kn">import</span> <span class="n">Character</span>
-<span class="kn">from</span> <span class="nn">..bluearchive</span> <span class="kn">import</span> <span class="n">Character</span> <span class="k">as</span> <span class="n">BlueArchiveCharacter</span>
-<span class="kn">from</span> <span class="nn">..fgo</span> <span class="kn">import</span> <span class="n">Character</span> <span class="k">as</span> <span class="n">FateGrandOrderCharacter</span>
-<span class="kn">from</span> <span class="nn">..genshin</span> <span class="kn">import</span> <span class="n">Character</span> <span class="k">as</span> <span class="n">GenshinImpactCharacter</span>
-<span class="kn">from</span> <span class="nn">..girlsfrontline</span> <span class="kn">import</span> <span class="n">Character</span> <span class="k">as</span> <span class="n">GirlsFrontLineCharacter</span>
-<span class="kn">from</span> <span class="nn">..neuralcloud</span> <span class="kn">import</span> <span class="n">Character</span> <span class="k">as</span> <span class="n">NeuralCloudCharacter</span>
-<span class="kn">from</span> <span class="nn">..nikke</span> <span class="kn">import</span> <span class="n">Character</span> <span class="k">as</span> <span class="n">NikkeCharacter</span>
-<span class="kn">from</span> <span class="nn">..pathtonowhere</span> <span class="kn">import</span> <span class="n">Character</span> <span class="k">as</span> <span class="n">PathToNowhereCharacter</span>
-<span class="kn">from</span> <span class="nn">..starrail</span> <span class="kn">import</span> <span class="n">Character</span> <span class="k">as</span> <span class="n">StarRailCharacter</span>
-<span class="kn">from</span> <span class="nn">...utils</span> <span class="kn">import</span> <span class="n">optional_lru_cache</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..arknights</span><span class="w"> </span><span class="kn">import</span> <span class="n">Character</span> <span class="k">as</span> <span class="n">ArknightsCharacter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..azurlane</span><span class="w"> </span><span class="kn">import</span> <span class="n">Character</span> <span class="k">as</span> <span class="n">AzurLaneCharacter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Character</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..bluearchive</span><span class="w"> </span><span class="kn">import</span> <span class="n">Character</span> <span class="k">as</span> <span class="n">BlueArchiveCharacter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..fgo</span><span class="w"> </span><span class="kn">import</span> <span class="n">Character</span> <span class="k">as</span> <span class="n">FateGrandOrderCharacter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..genshin</span><span class="w"> </span><span class="kn">import</span> <span class="n">Character</span> <span class="k">as</span> <span class="n">GenshinImpactCharacter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..girlsfrontline</span><span class="w"> </span><span class="kn">import</span> <span class="n">Character</span> <span class="k">as</span> <span class="n">GirlsFrontLineCharacter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..neuralcloud</span><span class="w"> </span><span class="kn">import</span> <span class="n">Character</span> <span class="k">as</span> <span class="n">NeuralCloudCharacter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..nikke</span><span class="w"> </span><span class="kn">import</span> <span class="n">Character</span> <span class="k">as</span> <span class="n">NikkeCharacter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..pathtonowhere</span><span class="w"> </span><span class="kn">import</span> <span class="n">Character</span> <span class="k">as</span> <span class="n">PathToNowhereCharacter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..starrail</span><span class="w"> </span><span class="kn">import</span> <span class="n">Character</span> <span class="k">as</span> <span class="n">StarRailCharacter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">optional_lru_cache</span>
 
 <span class="n">GAME_CHARS</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Type</span><span class="p">[</span><span class="n">Character</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
 
 
-<div class="viewcode-block" id="register_game"><a class="viewcode-back" href="../../../../api_doc/games/dispatch.html#gchar.games.dispatch.register_game">[docs]</a><span class="k">def</span> <span class="nf">register_game</span><span class="p">(</span><span class="bp">cls</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">Character</span><span class="p">]):</span>
+<div class="viewcode-block" id="register_game"><a class="viewcode-back" href="../../../../api_doc/games/dispatch.html#gchar.games.dispatch.register_game">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">register_game</span><span class="p">(</span><span class="bp">cls</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">Character</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Register a game and its corresponding character class.</span>
 
@@ -194,7 +194,7 @@
         <span class="n">GAME_CHARS</span><span class="p">[</span><span class="bp">cls</span><span class="o">.</span><span class="n">__game_name__</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span></div>
 
 
-<div class="viewcode-block" id="list_available_game_names"><a class="viewcode-back" href="../../../../api_doc/games/dispatch.html#gchar.games.dispatch.list_available_game_names">[docs]</a><span class="k">def</span> <span class="nf">list_available_game_names</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<div class="viewcode-block" id="list_available_game_names"><a class="viewcode-back" href="../../../../api_doc/games/dispatch.html#gchar.games.dispatch.list_available_game_names">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">list_available_game_names</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get a list of available game names.</span>
 
@@ -210,7 +210,7 @@
     <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">GAME_CHARS</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div>
 
 
-<div class="viewcode-block" id="get_character_class"><a class="viewcode-back" href="../../../../api_doc/games/dispatch.html#gchar.games.dispatch.get_character_class">[docs]</a><span class="k">def</span> <span class="nf">get_character_class</span><span class="p">(</span><span class="n">game_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Type</span><span class="p">[</span><span class="n">Character</span><span class="p">]:</span>
+<div class="viewcode-block" id="get_character_class"><a class="viewcode-back" href="../../../../api_doc/games/dispatch.html#gchar.games.dispatch.get_character_class">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_character_class</span><span class="p">(</span><span class="n">game_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Type</span><span class="p">[</span><span class="n">Character</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get the character class for a given game name.</span>
 
@@ -239,7 +239,7 @@
 
 
 <span class="nd">@optional_lru_cache</span><span class="p">()</span>
-<span class="k">def</span> <span class="nf">_all_characters</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Character</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_all_characters</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Character</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get a list of all characters from all registered games.</span>
 
@@ -247,7 +247,7 @@
 <span class="sd">    :return: The list of characters.</span>
 <span class="sd">    :rtype: List[Character]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">...resources.pixiv</span> <span class="kn">import</span> <span class="n">get_pixiv_posts</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">...resources.pixiv</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_pixiv_posts</span>
 
     <span class="n">chs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Character</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
@@ -271,7 +271,7 @@
 <span class="n">_NAME_MATCH</span> <span class="o">=</span> <span class="mi">400</span>
 
 
-<span class="k">def</span> <span class="nf">_name_trim</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_name_trim</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Trim a character name by removing spaces, dashes, underscores, and special characters.</span>
 
@@ -283,7 +283,7 @@
     <span class="k">return</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="nb">chr</span><span class="p">(</span><span class="mi">160</span><span class="p">),</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_yield_characters</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">allow_fuzzy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">fuzzy_threshold</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">80</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> \
+<span class="k">def</span><span class="w"> </span><span class="nf">_yield_characters</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">allow_fuzzy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">fuzzy_threshold</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">80</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> \
         <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Character</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Yield characters that match the given name.</span>
@@ -308,7 +308,7 @@
 
     <span class="k">if</span> <span class="n">allow_fuzzy</span><span class="p">:</span>
         <span class="nd">@lru_cache</span><span class="p">()</span>
-        <span class="k">def</span> <span class="nf">_get_formatted_name</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_get_formatted_name</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">cls</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
 
         <span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Character</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
@@ -344,7 +344,7 @@
             <span class="k">yield</span> <span class="n">ch</span><span class="p">,</span> <span class="n">fuzzy</span>
 
 
-<div class="viewcode-block" id="list_character"><a class="viewcode-back" href="../../../../api_doc/games/dispatch.html#gchar.games.dispatch.list_character">[docs]</a><span class="k">def</span> <span class="nf">list_character</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">allow_fuzzy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<div class="viewcode-block" id="list_character"><a class="viewcode-back" href="../../../../api_doc/games/dispatch.html#gchar.games.dispatch.list_character">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">list_character</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">allow_fuzzy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
                    <span class="n">fuzzy_threshold</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">80</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Character</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    List characters that match the given name.</span>
@@ -370,7 +370,7 @@
     <span class="k">return</span> <span class="n">ordered</span></div>
 
 
-<div class="viewcode-block" id="get_character"><a class="viewcode-back" href="../../../../api_doc/games/dispatch.html#gchar.games.dispatch.get_character">[docs]</a><span class="k">def</span> <span class="nf">get_character</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">allow_fuzzy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">fuzzy_threshold</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">80</span><span class="p">,</span>
+<div class="viewcode-block" id="get_character"><a class="viewcode-back" href="../../../../api_doc/games/dispatch.html#gchar.games.dispatch.get_character">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_character</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">allow_fuzzy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">fuzzy_threshold</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">80</span><span class="p">,</span>
                   <span class="n">contains_extra</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Character</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get a character that matches the given name.</span>
@@ -418,7 +418,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2023, narugo1992
+        &copy; Copyright 2025, narugo1992
 
     </p>
   </div>
@@ -448,6 +448,7 @@
                 <dl>
                     <dt>Branches</dt>
                         <dd><a href="../../../../../main/index.html">main</a></dd>
+                        <dd><a href="../../../../../HEAD/index.html">HEAD</a></dd>
                 </dl>
         </div>
     </div>

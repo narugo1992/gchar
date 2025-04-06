@@ -1,0 +1,445 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gchar.utils.compare &mdash; gchar 0.1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="gchar.utils.download" href="download.html" />
+    <link rel="prev" title="gchar.utils.cli" href="cli.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> gchar
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/installation/index.html">Installation</a></li>
+</ul>
+<p><span class="caption-text">Best Practice</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../best_practice/supported/index.html">Supported Games And Sites</a></li>
+</ul>
+<p><span class="caption-text">API Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html">gchar.config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../games/index.html">gchar.games</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/index.html">gchar.resources</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">gchar.utils</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cache.html">gchar.utils.cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html">gchar.utils.cli</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">gchar.utils.compare</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#comparable">Comparable</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="download.html">gchar.utils.download</a></li>
+<li class="toctree-l2"><a class="reference internal" href="session.html">gchar.utils.session</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">gchar</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">gchar.utils</a> &raquo;</li>
+        
+      <li>gchar.utils.compare</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/api_doc/utils/compare.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+    
+    
+  <section id="module-gchar.utils.compare">
+<span id="gchar-utils-compare"></span><h1>gchar.utils.compare<a class="headerlink" href="#module-gchar.utils.compare" title="Permalink to this headline">¶</a></h1>
+<section id="comparable">
+<h2>Comparable<a class="headerlink" href="#comparable" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gchar.utils.compare.Comparable">
+<em class="property">class </em><code class="sig-prename descclassname">gchar.utils.compare.</code><code class="sig-name descname">Comparable</code><a class="reference internal" href="../../_modules/gchar/utils/compare.html#Comparable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.utils.compare.Comparable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class that allows subclasses to perform arbitrary comparison operations by implementing the necessary interfaces.</p>
+<p>Subclasses need to implement the <cite>_key</cite> method, which returns the key used for comparison.</p>
+<p>Supported comparison operators: ==, !=, &gt;=, &gt;, &lt;=, &lt;</p>
+<dl>
+<dt>Usage:</dt><dd><ul class="simple">
+<li><p>Subclass <cite>Comparable</cite> and implement the <cite>_key</cite> method.</p></li>
+<li><p>Objects of the subclass can then be compared using the defined comparison operators.</p></li>
+</ul>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyComparable</span><span class="p">(</span><span class="n">Comparable</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">def</span><span class="w"> </span><span class="nf">_key</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obj1</span> <span class="o">=</span> <span class="n">MyComparable</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obj2</span> <span class="o">=</span> <span class="n">MyComparable</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">obj1</span> <span class="o">==</span> <span class="n">obj2</span><span class="p">)</span>  <span class="c1"># False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">obj1</span> <span class="o">&lt;</span> <span class="n">obj2</span><span class="p">)</span>   <span class="c1"># True</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="gchar.utils.compare.Comparable.__eq__">
+<code class="sig-name descname">__eq__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">other</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/utils/compare.html#Comparable.__eq__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.utils.compare.Comparable.__eq__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implementation of the equality operator (==).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<em>object</em>) – The other object to compare.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the objects are equal, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gchar.utils.compare.Comparable.__ge__">
+<code class="sig-name descname">__ge__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">other</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/utils/compare.html#Comparable.__ge__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.utils.compare.Comparable.__ge__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implementation of the greater than or equal to operator (&gt;=).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<em>object</em>) – The other object to compare.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the current object is greater than or equal to the other object, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gchar.utils.compare.Comparable.__gt__">
+<code class="sig-name descname">__gt__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">other</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/utils/compare.html#Comparable.__gt__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.utils.compare.Comparable.__gt__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implementation of the greater than operator (&gt;).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<em>object</em>) – The other object to compare.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the current object is greater than the other object, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gchar.utils.compare.Comparable.__le__">
+<code class="sig-name descname">__le__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">other</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/utils/compare.html#Comparable.__le__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.utils.compare.Comparable.__le__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implementation of the less than or equal to operator (&lt;=).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<em>object</em>) – The other object to compare.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the current object is less than or equal to the other object, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gchar.utils.compare.Comparable.__lt__">
+<code class="sig-name descname">__lt__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">other</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/utils/compare.html#Comparable.__lt__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.utils.compare.Comparable.__lt__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implementation of the less than operator (&lt;).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<em>object</em>) – The other object to compare.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the current object is less than the other object, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gchar.utils.compare.Comparable.__ne__">
+<code class="sig-name descname">__ne__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">other</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/utils/compare.html#Comparable.__ne__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.utils.compare.Comparable.__ne__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implementation of the inequality operator (!=).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<em>object</em>) – The other object to compare.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the objects are not equal, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gchar.utils.compare.Comparable._check_same_type">
+<code class="sig-name descname">_check_same_type</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">other</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/utils/compare.html#Comparable._check_same_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.utils.compare.Comparable._check_same_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper method to check if the type of the other object is the same as the current object’s type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<em>object</em>) – The other object to compare.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The other object if the types are the same.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>TypeError</strong> – If the types are different.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gchar.utils.compare.Comparable._cmp">
+<code class="sig-name descname">_cmp</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cmp</span></em>, <em class="sig-param"><span class="n">other</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/utils/compare.html#Comparable._cmp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.utils.compare.Comparable._cmp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper method to perform comparison operations using the provided comparison function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cmp</strong> (<em>callable</em>) – The comparison function to use.</p></li>
+<li><p><strong>other</strong> (<em>object</em>) – The other object to compare.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The result of the comparison operation.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gchar.utils.compare.Comparable._key">
+<code class="sig-name descname">_key</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/utils/compare.html#Comparable._key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.utils.compare.Comparable._key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract method that needs to be implemented by subclasses.
+Returns the key used for comparison.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The key used for comparison.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>object</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>NotImplementedError</strong> – If the method is not implemented.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="download.html" class="btn btn-neutral float-right" title="gchar.utils.download" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="cli.html" class="btn btn-neutral float-left" title="gchar.utils.cli" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2025, narugo1992
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+    <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: HEAD
+    <span class="fa fa-caret-down"></span>
+  </span>
+        <div class="rst-other-versions">
+                <dl>
+                    <dt>Tags</dt>
+                        <dd><a href="../../../v0.1.0/api_doc/utils/compare.html">v0.1.0</a></dd>
+                        <dd><a href="../../../v0.1.1/api_doc/utils/compare.html">v0.1.1</a></dd>
+                </dl>
+                <dl>
+                    <dt>Branches</dt>
+                        <dd><a href="../../../main/api_doc/utils/compare.html">main</a></dd>
+                        <dd><a href="compare.html">HEAD</a></dd>
+                </dl>
+        </div>
+    </div>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

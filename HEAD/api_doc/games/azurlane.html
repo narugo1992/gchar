@@ -1,0 +1,592 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gchar.games.azurlane &mdash; gchar 0.1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="gchar.games.bluearchive" href="bluearchive.html" />
+    <link rel="prev" title="gchar.games.arknights" href="arknights.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> gchar
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/installation/index.html">Installation</a></li>
+</ul>
+<p><span class="caption-text">Best Practice</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../best_practice/supported/index.html">Supported Games And Sites</a></li>
+</ul>
+<p><span class="caption-text">API Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html">gchar.config</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">gchar.games</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="base.html">gchar.games.base</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arknights.html">gchar.games.arknights</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">gchar.games.azurlane</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#character">Character</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#englishname">EnglishName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#japanesename">JapaneseName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#chinesename">ChineseName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#basicrarity">BasicRarity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#researchrarity">ResearchRarity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#group">Group</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="bluearchive.html">gchar.games.bluearchive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fgo.html">gchar.games.fgo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="genshin.html">gchar.games.genshin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="girlsfrontline.html">gchar.games.girlsfrontline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neuralcloud.html">gchar.games.neuralcloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nikke.html">gchar.games.nikke</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pathtonowhere.html">gchar.games.pathtonowhere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="starrail.html">gchar.games.starrail</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dispatch.html">gchar.games.dispatch</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/index.html">gchar.resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils/index.html">gchar.utils</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">gchar</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">gchar.games</a> &raquo;</li>
+        
+      <li>gchar.games.azurlane</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/api_doc/games/azurlane.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+    
+    
+  <section id="module-gchar.games.azurlane">
+<span id="gchar-games-azurlane"></span><h1>gchar.games.azurlane<a class="headerlink" href="#module-gchar.games.azurlane" title="Permalink to this headline">¶</a></h1>
+<section id="character">
+<h2>Character<a class="headerlink" href="#character" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gchar.games.azurlane.Character">
+<em class="property">class </em><code class="sig-prename descclassname">gchar.games.azurlane.</code><code class="sig-name descname">Character</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">raw_data</span><span class="p">:</span> <span class="n">dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/azurlane/character.html#Character"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.azurlane.Character" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class representing characters in the Azur Lane game.
+Inherits from _BaseCharacter.</p>
+<dl class="py method">
+<dt id="gchar.games.azurlane.Character.group">
+<em class="property">property </em><code class="sig-name descname">group</code><a class="headerlink" href="#gchar.games.azurlane.Character.group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the group of the character.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The group of the character.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Union[<a class="reference internal" href="#gchar.games.azurlane.Group" title="gchar.games.azurlane.Group">Group</a>, str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gchar.games.azurlane.Character.is_chibi">
+<em class="property">property </em><code class="sig-name descname">is_chibi</code><a class="headerlink" href="#gchar.games.azurlane.Character.is_chibi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the character has a chibi form.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the character has a chibi form, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gchar.games.azurlane.Character.is_meta">
+<em class="property">property </em><code class="sig-name descname">is_meta</code><a class="headerlink" href="#gchar.games.azurlane.Character.is_meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the character is a meta character.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the character is a meta character, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gchar.games.azurlane.Character.is_mu">
+<em class="property">property </em><code class="sig-name descname">is_mu</code><a class="headerlink" href="#gchar.games.azurlane.Character.is_mu" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the character is a Mu character.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the character is a Mu character, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gchar.games.azurlane.Character.is_refit">
+<em class="property">property </em><code class="sig-name descname">is_refit</code><a class="headerlink" href="#gchar.games.azurlane.Character.is_refit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the character is a refit character.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the character is a refit character, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gchar.games.azurlane.Character.rarity">
+<em class="property">property </em><code class="sig-name descname">rarity</code><a class="headerlink" href="#gchar.games.azurlane.Character.rarity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the rarity of the character.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The rarity of the character.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Optional[Union[<a class="reference internal" href="#gchar.games.azurlane.BasicRarity" title="gchar.games.azurlane.BasicRarity">BasicRarity</a>, <a class="reference internal" href="#gchar.games.azurlane.ResearchRarity" title="gchar.games.azurlane.ResearchRarity">ResearchRarity</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="englishname">
+<h2>EnglishName<a class="headerlink" href="#englishname" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gchar.games.azurlane.EnglishName">
+<em class="property">class </em><code class="sig-prename descclassname">gchar.games.azurlane.</code><code class="sig-name descname">EnglishName</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>List<span class="p">[</span>str<span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/azurlane/name.html#EnglishName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.azurlane.EnglishName" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class representing English names of characters in the Azur Lane game.
+Inherits from _GenericEnglishName.</p>
+</dd></dl>
+
+</section>
+<section id="japanesename">
+<h2>JapaneseName<a class="headerlink" href="#japanesename" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gchar.games.azurlane.JapaneseName">
+<em class="property">class </em><code class="sig-prename descclassname">gchar.games.azurlane.</code><code class="sig-name descname">JapaneseName</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/azurlane/name.html#JapaneseName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.azurlane.JapaneseName" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class representing Japanese names of characters in the Azur Lane game.
+Inherits from _GenericJapaneseName.</p>
+</dd></dl>
+
+</section>
+<section id="chinesename">
+<h2>ChineseName<a class="headerlink" href="#chinesename" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gchar.games.azurlane.ChineseName">
+<em class="property">class </em><code class="sig-prename descclassname">gchar.games.azurlane.</code><code class="sig-name descname">ChineseName</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/azurlane/name.html#ChineseName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.azurlane.ChineseName" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class representing Chinese names of characters in the Azur Lane game.
+Inherits from _GenericChineseName.</p>
+</dd></dl>
+
+</section>
+<section id="basicrarity">
+<h2>BasicRarity<a class="headerlink" href="#basicrarity" title="Permalink to this headline">¶</a></h2>
+<dl class="py class enum">
+<dt id="gchar.games.azurlane.BasicRarity">
+<em class="property">enum </em><code class="sig-prename descclassname">gchar.games.azurlane.</code><code class="sig-name descname">BasicRarity</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/azurlane/property.html#BasicRarity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.azurlane.BasicRarity" title="Permalink to this definition">¶</a></dt>
+<dd><p>An enumeration representing the basic rarity levels in the Azur Lane game.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Member Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
+</dd>
+</dl>
+<p>Valid values are as follows:</p>
+<dl class="py attribute">
+<dt id="gchar.games.azurlane.BasicRarity.COMMON">
+<code class="sig-name descname">COMMON</code><em class="property"> = &lt;BasicRarity.COMMON: 1&gt;</em><a class="headerlink" href="#gchar.games.azurlane.BasicRarity.COMMON" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.azurlane.BasicRarity.RARE">
+<code class="sig-name descname">RARE</code><em class="property"> = &lt;BasicRarity.RARE: 2&gt;</em><a class="headerlink" href="#gchar.games.azurlane.BasicRarity.RARE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.azurlane.BasicRarity.ELITE">
+<code class="sig-name descname">ELITE</code><em class="property"> = &lt;BasicRarity.ELITE: 3&gt;</em><a class="headerlink" href="#gchar.games.azurlane.BasicRarity.ELITE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.azurlane.BasicRarity.ULTRA">
+<code class="sig-name descname">ULTRA</code><em class="property"> = &lt;BasicRarity.ULTRA: 4&gt;</em><a class="headerlink" href="#gchar.games.azurlane.BasicRarity.ULTRA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.azurlane.BasicRarity.EPIC">
+<code class="sig-name descname">EPIC</code><em class="property"> = &lt;BasicRarity.EPIC: 5&gt;</em><a class="headerlink" href="#gchar.games.azurlane.BasicRarity.EPIC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code> and its members also have the following methods:</p>
+<dl class="py method">
+<dt id="gchar.games.azurlane.BasicRarity.label">
+<em class="property">property </em><code class="sig-name descname">label</code><a class="headerlink" href="#gchar.games.azurlane.BasicRarity.label" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the label corresponding to the rarity level.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The label of the rarity level.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gchar.games.azurlane.BasicRarity.loads">
+<em class="property">classmethod </em><code class="sig-name descname">loads</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val</span></em><span class="sig-paren">)</span> &#x2192; gchar.games.azurlane.property.BasicRarity<a class="reference internal" href="../../_modules/gchar/games/azurlane/property.html#BasicRarity.loads"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.azurlane.BasicRarity.loads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a BasicRarity value from a string or an int.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>val</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>int</em><em>]</em>) – The value to load.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The loaded BasicRarity value.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#gchar.games.azurlane.BasicRarity" title="gchar.games.azurlane.BasicRarity">BasicRarity</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="researchrarity">
+<h2>ResearchRarity<a class="headerlink" href="#researchrarity" title="Permalink to this headline">¶</a></h2>
+<dl class="py class enum">
+<dt id="gchar.games.azurlane.ResearchRarity">
+<em class="property">enum </em><code class="sig-prename descclassname">gchar.games.azurlane.</code><code class="sig-name descname">ResearchRarity</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/azurlane/property.html#ResearchRarity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.azurlane.ResearchRarity" title="Permalink to this definition">¶</a></dt>
+<dd><p>An enumeration representing the research rarity levels in the Azur Lane game.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Member Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
+</dd>
+</dl>
+<p>Valid values are as follows:</p>
+<dl class="py attribute">
+<dt id="gchar.games.azurlane.ResearchRarity.TOP">
+<code class="sig-name descname">TOP</code><em class="property"> = &lt;ResearchRarity.TOP: 4&gt;</em><a class="headerlink" href="#gchar.games.azurlane.ResearchRarity.TOP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.azurlane.ResearchRarity.DECISIVE">
+<code class="sig-name descname">DECISIVE</code><em class="property"> = &lt;ResearchRarity.DECISIVE: 5&gt;</em><a class="headerlink" href="#gchar.games.azurlane.ResearchRarity.DECISIVE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code> and its members also have the following methods:</p>
+<dl class="py method">
+<dt id="gchar.games.azurlane.ResearchRarity.label">
+<em class="property">property </em><code class="sig-name descname">label</code><a class="headerlink" href="#gchar.games.azurlane.ResearchRarity.label" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the label corresponding to the research rarity level.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The label of the research rarity level.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gchar.games.azurlane.ResearchRarity.loads">
+<em class="property">classmethod </em><code class="sig-name descname">loads</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val</span></em><span class="sig-paren">)</span> &#x2192; gchar.games.azurlane.property.ResearchRarity<a class="reference internal" href="../../_modules/gchar/games/azurlane/property.html#ResearchRarity.loads"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.azurlane.ResearchRarity.loads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a ResearchRarity value from a string or an int.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>val</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>int</em><em>]</em>) – The value to load.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The loaded ResearchRarity value.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#gchar.games.azurlane.ResearchRarity" title="gchar.games.azurlane.ResearchRarity">ResearchRarity</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="group">
+<h2>Group<a class="headerlink" href="#group" title="Permalink to this headline">¶</a></h2>
+<dl class="py class enum">
+<dt id="gchar.games.azurlane.Group">
+<em class="property">enum </em><code class="sig-prename descclassname">gchar.games.azurlane.</code><code class="sig-name descname">Group</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/azurlane/property.html#Group"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.azurlane.Group" title="Permalink to this definition">¶</a></dt>
+<dd><p>An enumeration representing the groups in the Azur Lane game.</p>
+<p>Valid values are as follows:</p>
+<dl class="py attribute">
+<dt id="gchar.games.azurlane.Group.USS">
+<code class="sig-name descname">USS</code><em class="property"> = &lt;Group.USS: 1&gt;</em><a class="headerlink" href="#gchar.games.azurlane.Group.USS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.azurlane.Group.HMS">
+<code class="sig-name descname">HMS</code><em class="property"> = &lt;Group.HMS: 2&gt;</em><a class="headerlink" href="#gchar.games.azurlane.Group.HMS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.azurlane.Group.IJN">
+<code class="sig-name descname">IJN</code><em class="property"> = &lt;Group.IJN: 3&gt;</em><a class="headerlink" href="#gchar.games.azurlane.Group.IJN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.azurlane.Group.KMS">
+<code class="sig-name descname">KMS</code><em class="property"> = &lt;Group.KMS: 4&gt;</em><a class="headerlink" href="#gchar.games.azurlane.Group.KMS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.azurlane.Group.DE">
+<code class="sig-name descname">DE</code><em class="property"> = &lt;Group.DE: 5&gt;</em><a class="headerlink" href="#gchar.games.azurlane.Group.DE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.azurlane.Group.RN">
+<code class="sig-name descname">RN</code><em class="property"> = &lt;Group.RN: 6&gt;</em><a class="headerlink" href="#gchar.games.azurlane.Group.RN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.azurlane.Group.SN">
+<code class="sig-name descname">SN</code><em class="property"> = &lt;Group.SN: 7&gt;</em><a class="headerlink" href="#gchar.games.azurlane.Group.SN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.azurlane.Group.FFNF">
+<code class="sig-name descname">FFNF</code><em class="property"> = &lt;Group.FFNF: 8&gt;</em><a class="headerlink" href="#gchar.games.azurlane.Group.FFNF" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.azurlane.Group.MNF">
+<code class="sig-name descname">MNF</code><em class="property"> = &lt;Group.MNF: 9&gt;</em><a class="headerlink" href="#gchar.games.azurlane.Group.MNF" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code> and its members also have the following methods:</p>
+<dl class="py method">
+<dt id="gchar.games.azurlane.Group.loads">
+<em class="property">classmethod </em><code class="sig-name descname">loads</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val</span></em><span class="sig-paren">)</span> &#x2192; gchar.games.azurlane.property.Group<a class="reference internal" href="../../_modules/gchar/games/azurlane/property.html#Group.loads"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.azurlane.Group.loads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a Group value from a string or an int.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>val</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>int</em><em>]</em>) – The value to load.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The loaded Group value.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#gchar.games.azurlane.Group" title="gchar.games.azurlane.Group">Group</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="bluearchive.html" class="btn btn-neutral float-right" title="gchar.games.bluearchive" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="arknights.html" class="btn btn-neutral float-left" title="gchar.games.arknights" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2025, narugo1992
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+    <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: HEAD
+    <span class="fa fa-caret-down"></span>
+  </span>
+        <div class="rst-other-versions">
+                <dl>
+                    <dt>Tags</dt>
+                        <dd><a href="../../../v0.1.0/api_doc/games/azurlane.html">v0.1.0</a></dd>
+                        <dd><a href="../../../v0.1.1/api_doc/games/azurlane.html">v0.1.1</a></dd>
+                </dl>
+                <dl>
+                    <dt>Branches</dt>
+                        <dd><a href="../../../main/api_doc/games/azurlane.html">main</a></dd>
+                        <dd><a href="azurlane.html">HEAD</a></dd>
+                </dl>
+        </div>
+    </div>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

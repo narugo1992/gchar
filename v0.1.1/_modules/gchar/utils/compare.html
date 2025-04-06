@@ -162,10 +162,10 @@
     
     
   <h1>Source code for gchar.utils.compare</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">ge</span><span class="p">,</span> <span class="n">gt</span><span class="p">,</span> <span class="n">le</span><span class="p">,</span> <span class="n">lt</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">operator</span><span class="w"> </span><span class="kn">import</span> <span class="n">ge</span><span class="p">,</span> <span class="n">gt</span><span class="p">,</span> <span class="n">le</span><span class="p">,</span> <span class="n">lt</span>
 
 
-<div class="viewcode-block" id="Comparable"><a class="viewcode-back" href="../../../api_doc/utils/compare.html#gchar.utils.compare.Comparable">[docs]</a><span class="k">class</span> <span class="nc">Comparable</span><span class="p">:</span>
+<div class="viewcode-block" id="Comparable"><a class="viewcode-back" href="../../../api_doc/utils/compare.html#gchar.utils.compare.Comparable">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Comparable</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base class that allows subclasses to perform arbitrary comparison operations by implementing the necessary interfaces.</span>
 
@@ -192,7 +192,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Comparable._check_same_type"><a class="viewcode-back" href="../../../api_doc/utils/compare.html#gchar.utils.compare.Comparable._check_same_type">[docs]</a>    <span class="k">def</span> <span class="nf">_check_same_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<div class="viewcode-block" id="Comparable._check_same_type"><a class="viewcode-back" href="../../../api_doc/utils/compare.html#gchar.utils.compare.Comparable._check_same_type">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">_check_same_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Helper method to check if the type of the other object is the same as the current object&#39;s type.</span>
 
@@ -207,7 +207,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Invalid type for compare - </span><span class="si">{</span><span class="n">other</span><span class="si">!r}</span><span class="s1">.&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Comparable._key"><a class="viewcode-back" href="../../../api_doc/utils/compare.html#gchar.utils.compare.Comparable._key">[docs]</a>    <span class="k">def</span> <span class="nf">_key</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Comparable._key"><a class="viewcode-back" href="../../../api_doc/utils/compare.html#gchar.utils.compare.Comparable._key">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">_key</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Abstract method that needs to be implemented by subclasses.</span>
 <span class="sd">        Returns the key used for comparison.</span>
@@ -218,7 +218,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>  <span class="c1"># pragma: no cover</span></div>
 
-<div class="viewcode-block" id="Comparable.__eq__"><a class="viewcode-back" href="../../../api_doc/utils/compare.html#gchar.utils.compare.Comparable.__eq__">[docs]</a>    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<div class="viewcode-block" id="Comparable.__eq__"><a class="viewcode-back" href="../../../api_doc/utils/compare.html#gchar.utils.compare.Comparable.__eq__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Implementation of the equality operator (==).</span>
 
@@ -234,7 +234,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_key</span><span class="p">()</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_key</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Comparable.__ne__"><a class="viewcode-back" href="../../../api_doc/utils/compare.html#gchar.utils.compare.Comparable.__ne__">[docs]</a>    <span class="k">def</span> <span class="fm">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<div class="viewcode-block" id="Comparable.__ne__"><a class="viewcode-back" href="../../../api_doc/utils/compare.html#gchar.utils.compare.Comparable.__ne__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Implementation of the inequality operator (!=).</span>
 
@@ -250,7 +250,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_key</span><span class="p">()</span> <span class="o">!=</span> <span class="n">other</span><span class="o">.</span><span class="n">_key</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Comparable._cmp"><a class="viewcode-back" href="../../../api_doc/utils/compare.html#gchar.utils.compare.Comparable._cmp">[docs]</a>    <span class="k">def</span> <span class="nf">_cmp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmp</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<div class="viewcode-block" id="Comparable._cmp"><a class="viewcode-back" href="../../../api_doc/utils/compare.html#gchar.utils.compare.Comparable._cmp">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">_cmp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmp</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Helper method to perform comparison operations using the provided comparison function.</span>
 
@@ -268,7 +268,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">cmp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_key</span><span class="p">(),</span> <span class="n">other</span><span class="o">.</span><span class="n">_key</span><span class="p">())</span></div>
 
-<div class="viewcode-block" id="Comparable.__ge__"><a class="viewcode-back" href="../../../api_doc/utils/compare.html#gchar.utils.compare.Comparable.__ge__">[docs]</a>    <span class="k">def</span> <span class="fm">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<div class="viewcode-block" id="Comparable.__ge__"><a class="viewcode-back" href="../../../api_doc/utils/compare.html#gchar.utils.compare.Comparable.__ge__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Implementation of the greater than or equal to operator (&gt;=).</span>
 
@@ -279,7 +279,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cmp</span><span class="p">(</span><span class="n">ge</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Comparable.__gt__"><a class="viewcode-back" href="../../../api_doc/utils/compare.html#gchar.utils.compare.Comparable.__gt__">[docs]</a>    <span class="k">def</span> <span class="fm">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<div class="viewcode-block" id="Comparable.__gt__"><a class="viewcode-back" href="../../../api_doc/utils/compare.html#gchar.utils.compare.Comparable.__gt__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Implementation of the greater than operator (&gt;).</span>
 
@@ -290,7 +290,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cmp</span><span class="p">(</span><span class="n">gt</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Comparable.__le__"><a class="viewcode-back" href="../../../api_doc/utils/compare.html#gchar.utils.compare.Comparable.__le__">[docs]</a>    <span class="k">def</span> <span class="fm">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<div class="viewcode-block" id="Comparable.__le__"><a class="viewcode-back" href="../../../api_doc/utils/compare.html#gchar.utils.compare.Comparable.__le__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Implementation of the less than or equal to operator (&lt;=).</span>
 
@@ -301,7 +301,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cmp</span><span class="p">(</span><span class="n">le</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Comparable.__lt__"><a class="viewcode-back" href="../../../api_doc/utils/compare.html#gchar.utils.compare.Comparable.__lt__">[docs]</a>    <span class="k">def</span> <span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<div class="viewcode-block" id="Comparable.__lt__"><a class="viewcode-back" href="../../../api_doc/utils/compare.html#gchar.utils.compare.Comparable.__lt__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Implementation of the less than operator (&lt;).</span>
 
@@ -324,7 +324,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2023, narugo1992
+        &copy; Copyright 2025, narugo1992
 
     </p>
   </div>
@@ -354,6 +354,7 @@
                 <dl>
                     <dt>Branches</dt>
                         <dd><a href="../../../../main/index.html">main</a></dd>
+                        <dd><a href="../../../../HEAD/index.html">HEAD</a></dd>
                 </dl>
         </div>
     </div>

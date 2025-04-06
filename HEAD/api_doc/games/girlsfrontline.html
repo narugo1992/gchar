@@ -1,0 +1,386 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gchar.games.girlsfrontline &mdash; gchar 0.1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="gchar.games.neuralcloud" href="neuralcloud.html" />
+    <link rel="prev" title="gchar.games.genshin" href="genshin.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> gchar
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/installation/index.html">Installation</a></li>
+</ul>
+<p><span class="caption-text">Best Practice</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../best_practice/supported/index.html">Supported Games And Sites</a></li>
+</ul>
+<p><span class="caption-text">API Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html">gchar.config</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">gchar.games</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="base.html">gchar.games.base</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arknights.html">gchar.games.arknights</a></li>
+<li class="toctree-l2"><a class="reference internal" href="azurlane.html">gchar.games.azurlane</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bluearchive.html">gchar.games.bluearchive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fgo.html">gchar.games.fgo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="genshin.html">gchar.games.genshin</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">gchar.games.girlsfrontline</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#character">Character</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#englishname">EnglishName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#japanesename">JapaneseName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#chinesename">ChineseName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#chinesealiasname">ChineseAliasName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rarity">Rarity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#clazz">Clazz</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="neuralcloud.html">gchar.games.neuralcloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nikke.html">gchar.games.nikke</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pathtonowhere.html">gchar.games.pathtonowhere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="starrail.html">gchar.games.starrail</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dispatch.html">gchar.games.dispatch</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/index.html">gchar.resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils/index.html">gchar.utils</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">gchar</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">gchar.games</a> &raquo;</li>
+        
+      <li>gchar.games.girlsfrontline</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/api_doc/games/girlsfrontline.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+    
+    
+  <section id="module-gchar.games.girlsfrontline">
+<span id="gchar-games-girlsfrontline"></span><h1>gchar.games.girlsfrontline<a class="headerlink" href="#module-gchar.games.girlsfrontline" title="Permalink to this headline">¶</a></h1>
+<section id="character">
+<h2>Character<a class="headerlink" href="#character" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gchar.games.girlsfrontline.Character">
+<em class="property">class </em><code class="sig-prename descclassname">gchar.games.girlsfrontline.</code><code class="sig-name descname">Character</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">raw_data</span><span class="p">:</span> <span class="n">dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/girlsfrontline/character.html#Character"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.girlsfrontline.Character" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="englishname">
+<h2>EnglishName<a class="headerlink" href="#englishname" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gchar.games.girlsfrontline.EnglishName">
+<em class="property">class </em><code class="sig-prename descclassname">gchar.games.girlsfrontline.</code><code class="sig-name descname">EnglishName</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>List<span class="p">[</span>str<span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/girlsfrontline/name.html#EnglishName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.girlsfrontline.EnglishName" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="japanesename">
+<h2>JapaneseName<a class="headerlink" href="#japanesename" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gchar.games.girlsfrontline.JapaneseName">
+<em class="property">class </em><code class="sig-prename descclassname">gchar.games.girlsfrontline.</code><code class="sig-name descname">JapaneseName</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/girlsfrontline/name.html#JapaneseName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.girlsfrontline.JapaneseName" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="chinesename">
+<h2>ChineseName<a class="headerlink" href="#chinesename" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gchar.games.girlsfrontline.ChineseName">
+<em class="property">class </em><code class="sig-prename descclassname">gchar.games.girlsfrontline.</code><code class="sig-name descname">ChineseName</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/girlsfrontline/name.html#ChineseName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.girlsfrontline.ChineseName" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="chinesealiasname">
+<h2>ChineseAliasName<a class="headerlink" href="#chinesealiasname" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gchar.games.girlsfrontline.ChineseAliasName">
+<em class="property">class </em><code class="sig-prename descclassname">gchar.games.girlsfrontline.</code><code class="sig-name descname">ChineseAliasName</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/girlsfrontline/name.html#ChineseAliasName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.girlsfrontline.ChineseAliasName" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="rarity">
+<h2>Rarity<a class="headerlink" href="#rarity" title="Permalink to this headline">¶</a></h2>
+<dl class="py class enum">
+<dt id="gchar.games.girlsfrontline.Rarity">
+<em class="property">enum </em><code class="sig-prename descclassname">gchar.games.girlsfrontline.</code><code class="sig-name descname">Rarity</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/girlsfrontline/property.html#Rarity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.girlsfrontline.Rarity" title="Permalink to this definition">¶</a></dt>
+<dd><p>An enumeration.</p>
+<p>Valid values are as follows:</p>
+<dl class="py attribute">
+<dt id="gchar.games.girlsfrontline.Rarity.ONE">
+<code class="sig-name descname">ONE</code><em class="property"> = &lt;Rarity.ONE: 1&gt;</em><a class="headerlink" href="#gchar.games.girlsfrontline.Rarity.ONE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.girlsfrontline.Rarity.TWO">
+<code class="sig-name descname">TWO</code><em class="property"> = &lt;Rarity.TWO: 2&gt;</em><a class="headerlink" href="#gchar.games.girlsfrontline.Rarity.TWO" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.girlsfrontline.Rarity.THREE">
+<code class="sig-name descname">THREE</code><em class="property"> = &lt;Rarity.THREE: 3&gt;</em><a class="headerlink" href="#gchar.games.girlsfrontline.Rarity.THREE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.girlsfrontline.Rarity.FOUR">
+<code class="sig-name descname">FOUR</code><em class="property"> = &lt;Rarity.FOUR: 4&gt;</em><a class="headerlink" href="#gchar.games.girlsfrontline.Rarity.FOUR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.girlsfrontline.Rarity.FIVE">
+<code class="sig-name descname">FIVE</code><em class="property"> = &lt;Rarity.FIVE: 5&gt;</em><a class="headerlink" href="#gchar.games.girlsfrontline.Rarity.FIVE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.girlsfrontline.Rarity.EXTRA">
+<code class="sig-name descname">EXTRA</code><em class="property"> = &lt;Rarity.EXTRA: 'EXTRA'&gt;</em><a class="headerlink" href="#gchar.games.girlsfrontline.Rarity.EXTRA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="clazz">
+<h2>Clazz<a class="headerlink" href="#clazz" title="Permalink to this headline">¶</a></h2>
+<dl class="py class enum">
+<dt id="gchar.games.girlsfrontline.Clazz">
+<em class="property">enum </em><code class="sig-prename descclassname">gchar.games.girlsfrontline.</code><code class="sig-name descname">Clazz</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gchar/games/girlsfrontline/property.html#Clazz"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gchar.games.girlsfrontline.Clazz" title="Permalink to this definition">¶</a></dt>
+<dd><p>An enumeration.</p>
+<p>Valid values are as follows:</p>
+<dl class="py attribute">
+<dt id="gchar.games.girlsfrontline.Clazz.MG">
+<code class="sig-name descname">MG</code><em class="property"> = &lt;Clazz.MG: 'MG'&gt;</em><a class="headerlink" href="#gchar.games.girlsfrontline.Clazz.MG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.girlsfrontline.Clazz.SMG">
+<code class="sig-name descname">SMG</code><em class="property"> = &lt;Clazz.SMG: 'SMG'&gt;</em><a class="headerlink" href="#gchar.games.girlsfrontline.Clazz.SMG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.girlsfrontline.Clazz.RF">
+<code class="sig-name descname">RF</code><em class="property"> = &lt;Clazz.RF: 'RF'&gt;</em><a class="headerlink" href="#gchar.games.girlsfrontline.Clazz.RF" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.girlsfrontline.Clazz.AR">
+<code class="sig-name descname">AR</code><em class="property"> = &lt;Clazz.AR: 'AR'&gt;</em><a class="headerlink" href="#gchar.games.girlsfrontline.Clazz.AR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.girlsfrontline.Clazz.SG">
+<code class="sig-name descname">SG</code><em class="property"> = &lt;Clazz.SG: 'SG'&gt;</em><a class="headerlink" href="#gchar.games.girlsfrontline.Clazz.SG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gchar.games.girlsfrontline.Clazz.HG">
+<code class="sig-name descname">HG</code><em class="property"> = &lt;Clazz.HG: 'HG'&gt;</em><a class="headerlink" href="#gchar.games.girlsfrontline.Clazz.HG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="neuralcloud.html" class="btn btn-neutral float-right" title="gchar.games.neuralcloud" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="genshin.html" class="btn btn-neutral float-left" title="gchar.games.genshin" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2025, narugo1992
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+    <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: HEAD
+    <span class="fa fa-caret-down"></span>
+  </span>
+        <div class="rst-other-versions">
+                <dl>
+                    <dt>Tags</dt>
+                        <dd><a href="../../../v0.1.0/api_doc/games/girlsfrontline.html">v0.1.0</a></dd>
+                        <dd><a href="../../../v0.1.1/api_doc/games/girlsfrontline.html">v0.1.1</a></dd>
+                </dl>
+                <dl>
+                    <dt>Branches</dt>
+                        <dd><a href="../../../main/api_doc/games/girlsfrontline.html">main</a></dd>
+                        <dd><a href="girlsfrontline.html">HEAD</a></dd>
+                </dl>
+        </div>
+    </div>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

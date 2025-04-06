@@ -158,12 +158,12 @@
     
     
   <h1>Source code for gchar.utils.cli</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">types</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">types</span>
 
-<span class="kn">import</span> <span class="nn">click</span>
-<span class="kn">from</span> <span class="nn">click.core</span> <span class="kn">import</span> <span class="n">Context</span><span class="p">,</span> <span class="n">Option</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">click</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">click.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Context</span><span class="p">,</span> <span class="n">Option</span>
 
-<span class="kn">from</span> <span class="nn">..config.meta</span> <span class="kn">import</span> <span class="n">__TITLE__</span><span class="p">,</span> <span class="n">__VERSION__</span><span class="p">,</span> <span class="n">__AUTHOR__</span><span class="p">,</span> <span class="n">__AUTHOR_EMAIL__</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..config.meta</span><span class="w"> </span><span class="kn">import</span> <span class="n">__TITLE__</span><span class="p">,</span> <span class="n">__VERSION__</span><span class="p">,</span> <span class="n">__AUTHOR__</span><span class="p">,</span> <span class="n">__AUTHOR_EMAIL__</span>
 
 <span class="n">_raw_authors</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">__AUTHOR__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
 <span class="n">_raw_emails</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">__AUTHOR_EMAIL__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)]</span>
@@ -187,7 +187,7 @@
 <span class="p">)</span>
 
 
-<div class="viewcode-block" id="print_version"><a class="viewcode-back" href="../../../api_doc/utils/cli.html#gchar.utils.cli.print_version">[docs]</a><span class="k">def</span> <span class="nf">print_version</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">Context</span><span class="p">,</span> <span class="n">param</span><span class="p">:</span> <span class="n">Option</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="print_version"><a class="viewcode-back" href="../../../api_doc/utils/cli.html#gchar.utils.cli.print_version">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">print_version</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">Context</span><span class="p">,</span> <span class="n">param</span><span class="p">:</span> <span class="n">Option</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Print version information of cli</span>
 <span class="sd">    :param module: current module using this cli.</span>
@@ -222,7 +222,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2023, narugo1992
+        &copy; Copyright 2025, narugo1992
 
     </p>
   </div>
@@ -252,6 +252,7 @@
                 <dl>
                     <dt>Branches</dt>
                         <dd><a href="../../../../main/index.html">main</a></dd>
+                        <dd><a href="../../../../HEAD/index.html">HEAD</a></dd>
                 </dl>
         </div>
     </div>

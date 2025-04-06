@@ -158,16 +158,16 @@
     
     
   <h1>Source code for gchar.games.genshin.property</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">unique</span><span class="p">,</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">IntEnum</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">unique</span><span class="p">,</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">IntEnum</span>
 
 
 <div class="viewcode-block" id="Rarity"><a class="viewcode-back" href="../../../../api_doc/games/genshin.html#gchar.games.genshin.Rarity">[docs]</a><span class="nd">@unique</span>
-<span class="k">class</span> <span class="nc">Rarity</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Rarity</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
     <span class="n">FOUR</span> <span class="o">=</span> <span class="mh">0x4</span>
     <span class="n">FIVE</span> <span class="o">=</span> <span class="mh">0x5</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">loads</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Rarity&#39;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">loads</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Rarity&#39;</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">val</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
@@ -181,14 +181,14 @@
 
 
 <div class="viewcode-block" id="Weapon"><a class="viewcode-back" href="../../../../api_doc/games/genshin.html#gchar.games.genshin.Weapon">[docs]</a><span class="nd">@unique</span>
-<span class="k">class</span> <span class="nc">Weapon</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Weapon</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
     <span class="n">CATALYST</span> <span class="o">=</span> <span class="mh">0x1</span>
     <span class="n">CLAYMORE</span> <span class="o">=</span> <span class="mh">0x2</span>
     <span class="n">SWORD</span> <span class="o">=</span> <span class="mh">0x3</span>
     <span class="n">BOW</span> <span class="o">=</span> <span class="mh">0x4</span>
     <span class="n">POLEARM</span> <span class="o">=</span> <span class="mh">0x5</span>
 
-    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Weapon</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
         <span class="k">else</span><span class="p">:</span>
@@ -200,7 +200,7 @@
                 <span class="k">return</span> <span class="n">other</span> <span class="o">==</span> <span class="bp">self</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">loads</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Weapon&#39;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">loads</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Weapon&#39;</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">val</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
@@ -225,7 +225,7 @@
 
 
 <div class="viewcode-block" id="Element"><a class="viewcode-back" href="../../../../api_doc/games/genshin.html#gchar.games.genshin.Element">[docs]</a><span class="nd">@unique</span>
-<span class="k">class</span> <span class="nc">Element</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Element</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
     <span class="n">PYRO</span> <span class="o">=</span> <span class="mh">0x1</span>
     <span class="n">ANEMO</span> <span class="o">=</span> <span class="mh">0x2</span>
     <span class="n">CRYO</span> <span class="o">=</span> <span class="mh">0x3</span>
@@ -234,7 +234,7 @@
     <span class="n">GEO</span> <span class="o">=</span> <span class="mh">0x6</span>
     <span class="n">HYDRO</span> <span class="o">=</span> <span class="mh">0x7</span>
 
-    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Element</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
         <span class="k">else</span><span class="p">:</span>
@@ -246,7 +246,7 @@
                 <span class="k">return</span> <span class="n">other</span> <span class="o">==</span> <span class="bp">self</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">loads</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Element&#39;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">loads</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Element&#39;</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">val</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
@@ -285,7 +285,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2023, narugo1992
+        &copy; Copyright 2025, narugo1992
 
     </p>
   </div>
@@ -315,6 +315,7 @@
                 <dl>
                     <dt>Branches</dt>
                         <dd><a href="../../../../../main/index.html">main</a></dd>
+                        <dd><a href="../../../../../HEAD/index.html">HEAD</a></dd>
                 </dl>
         </div>
     </div>

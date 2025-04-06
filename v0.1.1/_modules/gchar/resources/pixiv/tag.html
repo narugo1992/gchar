@@ -162,19 +162,19 @@
     
     
   <h1>Source code for gchar.resources.pixiv.tag</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Optional</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">chain</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">_GAMES</span>
-<span class="kn">from</span> <span class="nn">.keyword</span> <span class="kn">import</span> <span class="n">_load_pixiv_names_for_game</span><span class="p">,</span> <span class="n">_load_pixiv_alias_for_game</span>
-<span class="kn">from</span> <span class="nn">...games</span> <span class="kn">import</span> <span class="n">get_character</span>
-<span class="kn">from</span> <span class="nn">...games.base</span> <span class="kn">import</span> <span class="n">Character</span>
-<span class="kn">from</span> <span class="nn">...utils</span> <span class="kn">import</span> <span class="n">optional_lru_cache</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">_GAMES</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.keyword</span><span class="w"> </span><span class="kn">import</span> <span class="n">_load_pixiv_names_for_game</span><span class="p">,</span> <span class="n">_load_pixiv_alias_for_game</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...games</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_character</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...games.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Character</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">optional_lru_cache</span>
 
 
-<span class="k">def</span> <span class="nf">_yield_tags</span><span class="p">(</span><span class="n">tags</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_yield_tags</span><span class="p">(</span><span class="n">tags</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Yield individual tags from a string or a list of tags.</span>
 
@@ -192,7 +192,7 @@
             <span class="k">yield from</span> <span class="n">_yield_tags</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_format_tags</span><span class="p">(</span><span class="n">positive</span><span class="p">,</span> <span class="n">negative</span><span class="p">,</span> <span class="n">or_clause</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_format_tags</span><span class="p">(</span><span class="n">positive</span><span class="p">,</span> <span class="n">negative</span><span class="p">,</span> <span class="n">or_clause</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Format the positive and negative tags into a valid Pixiv search tag string.</span>
 
@@ -233,8 +233,8 @@
 <span class="n">PIXIV_TAG_MAX_LENGTH</span> <span class="o">=</span> <span class="mi">256</span>
 
 
-<div class="viewcode-block" id="PixivCharPool"><a class="viewcode-back" href="../../../../api_doc/resources/pixiv.html#gchar.resources.pixiv.PixivCharPool">[docs]</a><span class="k">class</span> <span class="nc">PixivCharPool</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chars</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Character</span><span class="p">],</span>
+<div class="viewcode-block" id="PixivCharPool"><a class="viewcode-back" href="../../../../api_doc/resources/pixiv.html#gchar.resources.pixiv.PixivCharPool">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">PixivCharPool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chars</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Character</span><span class="p">],</span>
                  <span class="n">names_dict</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]],</span>
                  <span class="n">names_alias</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -255,7 +255,7 @@
             <span class="nb">set</span><span class="p">(</span><span class="n">chain</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">__names_alias</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__get_name_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__get_name_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the Pixiv data for a specific character name.</span>
 
@@ -266,7 +266,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__names_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__get_name_count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__get_name_count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the count of illustrations for a specific character name.</span>
 
@@ -282,7 +282,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="mi">0</span>
 
-    <span class="k">def</span> <span class="nf">__get_name_pollution_ratio</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__get_name_pollution_ratio</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the pollution ratio for a specific character name.</span>
 
@@ -298,7 +298,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="mf">0.0</span>
 
-    <span class="k">def</span> <span class="nf">__get_name_pollution_words</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__get_name_pollution_words</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the pollution words and their counts for a specific character name.</span>
 
@@ -314,7 +314,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[]</span>
 
-    <span class="k">def</span> <span class="nf">_iter_dup_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_iter_dup_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Iterate over duplicate names that contain the given name.</span>
 
@@ -327,7 +327,7 @@
             <span class="k">if</span> <span class="n">name</span> <span class="o">!=</span> <span class="n">sname</span> <span class="ow">and</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">sname</span><span class="p">:</span>
                 <span class="k">yield</span> <span class="n">sname</span>
 
-<div class="viewcode-block" id="PixivCharPool.get_tag"><a class="viewcode-back" href="../../../../api_doc/resources/pixiv.html#gchar.resources.pixiv.PixivCharPool.get_tag">[docs]</a>    <span class="k">def</span> <span class="nf">get_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">char</span><span class="p">:</span> <span class="n">Character</span><span class="p">,</span> <span class="n">use_english</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">positive</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">negative</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="PixivCharPool.get_tag"><a class="viewcode-back" href="../../../../api_doc/resources/pixiv.html#gchar.resources.pixiv.PixivCharPool.get_tag">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">char</span><span class="p">:</span> <span class="n">Character</span><span class="p">,</span> <span class="n">use_english</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">positive</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">negative</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                 <span class="n">max_exclude_per_word</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span> <span class="n">max_exclude</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span> <span class="n">max_pollution_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.8</span><span class="p">,</span>
                 <span class="n">max_length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">PIXIV_TAG_MAX_LENGTH</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -409,7 +409,7 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">char</span><span class="p">,</span> <span class="n">use_english</span><span class="p">,</span> <span class="n">origin_positive</span><span class="p">,</span> <span class="n">origin_negative</span><span class="p">,</span>
                                 <span class="n">max_exclude_per_word</span><span class="p">,</span> <span class="n">max_exclude</span><span class="p">,</span> <span class="n">max_pollution_ratio</span><span class="o">=</span><span class="n">min_pollution</span> <span class="o">+</span> <span class="mf">0.015</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_iter_end_dup_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_iter_end_dup_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Iterate over names that end with the given name.</span>
 
@@ -422,7 +422,7 @@
             <span class="k">if</span> <span class="n">name</span> <span class="o">!=</span> <span class="n">sname</span> <span class="ow">and</span> <span class="n">sname</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
                 <span class="k">yield</span> <span class="n">sname</span>
 
-<div class="viewcode-block" id="PixivCharPool.get_simple_tag"><a class="viewcode-back" href="../../../../api_doc/resources/pixiv.html#gchar.resources.pixiv.PixivCharPool.get_simple_tag">[docs]</a>    <span class="k">def</span> <span class="nf">get_simple_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">char</span><span class="p">:</span> <span class="n">Character</span><span class="p">,</span> <span class="n">base_tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">max_exclude</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">):</span>
+<div class="viewcode-block" id="PixivCharPool.get_simple_tag"><a class="viewcode-back" href="../../../../api_doc/resources/pixiv.html#gchar.resources.pixiv.PixivCharPool.get_simple_tag">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_simple_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">char</span><span class="p">:</span> <span class="n">Character</span><span class="p">,</span> <span class="n">base_tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">max_exclude</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate a simplified Pixiv search tag for a specific character.</span>
 
@@ -458,7 +458,7 @@
 
 
 <span class="nd">@optional_lru_cache</span><span class="p">()</span>
-<span class="k">def</span> <span class="nf">_get_char_pool</span><span class="p">(</span><span class="bp">cls</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">Character</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_char_pool</span><span class="p">(</span><span class="bp">cls</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">Character</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get the Pixiv character pool for a specific character class.</span>
 
@@ -472,7 +472,7 @@
     <span class="k">return</span> <span class="n">PixivCharPool</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="n">names_dict</span><span class="p">,</span> <span class="n">names_alias</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="get_pixiv_keywords"><a class="viewcode-back" href="../../../../api_doc/resources/pixiv.html#gchar.resources.pixiv.get_pixiv_keywords">[docs]</a><span class="k">def</span> <span class="nf">get_pixiv_keywords</span><span class="p">(</span><span class="n">char</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Character</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">simple</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">use_english</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<div class="viewcode-block" id="get_pixiv_keywords"><a class="viewcode-back" href="../../../../api_doc/resources/pixiv.html#gchar.resources.pixiv.get_pixiv_keywords">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_pixiv_keywords</span><span class="p">(</span><span class="n">char</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Character</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">simple</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">use_english</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
                        <span class="n">includes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                        <span class="n">allow_fuzzy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">fuzzy_threshold</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">70</span><span class="p">,</span> <span class="n">max_exclude</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
                        <span class="n">max_pollution_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.8</span><span class="p">,</span> <span class="n">max_length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">PIXIV_TAG_MAX_LENGTH</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -547,7 +547,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2023, narugo1992
+        &copy; Copyright 2025, narugo1992
 
     </p>
   </div>
@@ -577,6 +577,7 @@
                 <dl>
                     <dt>Branches</dt>
                         <dd><a href="../../../../../main/index.html">main</a></dd>
+                        <dd><a href="../../../../../HEAD/index.html">HEAD</a></dd>
                 </dl>
         </div>
     </div>

@@ -162,20 +162,20 @@
     
     
   <h1>Source code for gchar.games.arknights.name</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">transliterate</span> <span class="kn">import</span> <span class="n">translit</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">transliterate</span><span class="w"> </span><span class="kn">import</span> <span class="n">translit</span>
 
-<span class="kn">from</span> <span class="nn">..base</span> <span class="kn">import</span> <span class="n">ChineseName</span> <span class="k">as</span> <span class="n">_GenericChineseName</span>
-<span class="kn">from</span> <span class="nn">..base</span> <span class="kn">import</span> <span class="n">EnglishName</span> <span class="k">as</span> <span class="n">_GenericEnglishName</span>
-<span class="kn">from</span> <span class="nn">..base</span> <span class="kn">import</span> <span class="n">JapaneseName</span> <span class="k">as</span> <span class="n">_GenericJapaneseName</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..base</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChineseName</span> <span class="k">as</span> <span class="n">_GenericChineseName</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..base</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnglishName</span> <span class="k">as</span> <span class="n">_GenericEnglishName</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..base</span><span class="w"> </span><span class="kn">import</span> <span class="n">JapaneseName</span> <span class="k">as</span> <span class="n">_GenericJapaneseName</span>
 
 
-<div class="viewcode-block" id="ChineseName"><a class="viewcode-back" href="../../../../api_doc/games/arknights.html#gchar.games.arknights.ChineseName">[docs]</a><span class="k">class</span> <span class="nc">ChineseName</span><span class="p">(</span><span class="n">_GenericChineseName</span><span class="p">):</span>
+<div class="viewcode-block" id="ChineseName"><a class="viewcode-back" href="../../../../api_doc/games/arknights.html#gchar.games.arknights.ChineseName">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">ChineseName</span><span class="p">(</span><span class="n">_GenericChineseName</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A class for modeling Chinese names of characters in the Arknights game.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_preprocess</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_preprocess</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Preprocess the Chinese name by replacing &#39;・&#39; with &#39;·&#39;.</span>
 
@@ -187,13 +187,13 @@
         <span class="k">return</span> <span class="n">_GenericChineseName</span><span class="o">.</span><span class="n">_preprocess</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;・&#39;</span><span class="p">,</span> <span class="s1">&#39;·&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="ChineseAliasName"><a class="viewcode-back" href="../../../../api_doc/games/arknights.html#gchar.games.arknights.ChineseAliasName">[docs]</a><span class="k">class</span> <span class="nc">ChineseAliasName</span><span class="p">(</span><span class="n">_GenericChineseName</span><span class="p">):</span>
+<div class="viewcode-block" id="ChineseAliasName"><a class="viewcode-back" href="../../../../api_doc/games/arknights.html#gchar.games.arknights.ChineseAliasName">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">ChineseAliasName</span><span class="p">(</span><span class="n">_GenericChineseName</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A class for modeling Chinese alias names of characters in the Arknights game.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_preprocess</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_preprocess</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Preprocess the Chinese alias name by replacing &#39;・&#39; with &#39;·&#39;.</span>
 
@@ -205,19 +205,19 @@
         <span class="k">return</span> <span class="n">_GenericChineseName</span><span class="o">.</span><span class="n">_preprocess</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;・&#39;</span><span class="p">,</span> <span class="s1">&#39;·&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="JapaneseName"><a class="viewcode-back" href="../../../../api_doc/games/arknights.html#gchar.games.arknights.JapaneseName">[docs]</a><span class="k">class</span> <span class="nc">JapaneseName</span><span class="p">(</span><span class="n">_GenericJapaneseName</span><span class="p">):</span>
+<div class="viewcode-block" id="JapaneseName"><a class="viewcode-back" href="../../../../api_doc/games/arknights.html#gchar.games.arknights.JapaneseName">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">JapaneseName</span><span class="p">(</span><span class="n">_GenericJapaneseName</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A class for modeling Japanese names of characters in the Arknights game.</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
 
-<div class="viewcode-block" id="EnglishName"><a class="viewcode-back" href="../../../../api_doc/games/arknights.html#gchar.games.arknights.EnglishName">[docs]</a><span class="k">class</span> <span class="nc">EnglishName</span><span class="p">(</span><span class="n">_GenericEnglishName</span><span class="p">):</span>
+<div class="viewcode-block" id="EnglishName"><a class="viewcode-back" href="../../../../api_doc/games/arknights.html#gchar.games.arknights.EnglishName">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">EnglishName</span><span class="p">(</span><span class="n">_GenericEnglishName</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A class for modeling English names of characters in the Arknights game.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_word_trans</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_word_trans</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Transliterate the English name using the &#39;ru&#39; transliteration scheme.</span>
 
@@ -240,7 +240,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2023, narugo1992
+        &copy; Copyright 2025, narugo1992
 
     </p>
   </div>
@@ -270,6 +270,7 @@
                 <dl>
                     <dt>Branches</dt>
                         <dd><a href="../../../../../main/index.html">main</a></dd>
+                        <dd><a href="../../../../../HEAD/index.html">HEAD</a></dd>
                 </dl>
         </div>
     </div>

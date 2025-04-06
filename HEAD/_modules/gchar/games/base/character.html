@@ -1,0 +1,756 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gchar.games.base.character &mdash; gchar 0.1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> gchar
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/installation/index.html">Installation</a></li>
+</ul>
+<p><span class="caption-text">Best Practice</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../best_practice/supported/index.html">Supported Games And Sites</a></li>
+</ul>
+<p><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_doc/config/index.html">gchar.config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_doc/games/index.html">gchar.games</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_doc/resources/index.html">gchar.resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_doc/utils/index.html">gchar.utils</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">gchar</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>gchar.games.base.character</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+    
+    
+  <h1>Source code for gchar.games.base.character</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">builtins</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">lru_cache</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">chain</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">huggingface_hub</span><span class="w"> </span><span class="kn">import</span> <span class="n">hf_hub_download</span><span class="p">,</span> <span class="n">HfFileSystem</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.name</span><span class="w"> </span><span class="kn">import</span> <span class="n">_BaseName</span><span class="p">,</span> <span class="n">ChineseName</span><span class="p">,</span> <span class="n">EnglishName</span><span class="p">,</span> <span class="n">JapaneseName</span><span class="p">,</span> <span class="n">GenericAliasName</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.property</span><span class="w"> </span><span class="kn">import</span> <span class="n">Gender</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.skin</span><span class="w"> </span><span class="kn">import</span> <span class="n">Skin</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">Comparable</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">yaml</span><span class="w"> </span><span class="kn">import</span> <span class="n">CLoader</span> <span class="k">as</span> <span class="n">Loader</span><span class="p">,</span> <span class="n">CDumper</span> <span class="k">as</span> <span class="n">Dumper</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">yaml</span><span class="w"> </span><span class="kn">import</span> <span class="n">Loader</span><span class="p">,</span> <span class="n">Dumper</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
+
+<span class="n">hf_fs</span> <span class="o">=</span> <span class="n">HfFileSystem</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="Character"><a class="viewcode-back" href="../../../../api_doc/games/base.html#gchar.games.base.Character">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Character</span><span class="p">(</span><span class="n">Comparable</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class for modeling characters in different games.</span>
+
+<span class="sd">    The class provides methods for accessing and managing character attributes, such as name, gender, skins, etc.</span>
+<span class="sd">    It also provides class methods for retrieving and listing characters.</span>
+
+<span class="sd">    Usage:</span>
+<span class="sd">    - Inherit from the gchar.games.base.Character class and implement the required methods to customize the character model.</span>
+
+<span class="sd">    :var __repository__: The repository name for the character data.</span>
+<span class="sd">    :var __game_name__: The name of the game.</span>
+<span class="sd">    :var __official_name__: The official name of the character.</span>
+<span class="sd">    :var __cnname_class__: The class for modeling Chinese character names.</span>
+<span class="sd">    :var __enname_class__: The class for modeling English character names.</span>
+<span class="sd">    :var __jpname_class__: The class for modeling Japanese character names.</span>
+<span class="sd">    :var __alias_name_class__: The optional class for modeling alias names.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__repository__</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;deepghs/game_characters&#39;</span>
+    <span class="n">__skin_repository__</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;deepghs/game_character_skins&#39;</span>
+    <span class="n">__game_name__</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">__official_name__</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">__game_keywords__</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">__pixiv_keyword__</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">__pixiv_suffix__</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">__cnname_class__</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">ChineseName</span><span class="p">]</span> <span class="o">=</span> <span class="n">ChineseName</span>
+    <span class="n">__enname_class__</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">EnglishName</span><span class="p">]</span> <span class="o">=</span> <span class="n">EnglishName</span>
+    <span class="n">__jpname_class__</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">JapaneseName</span><span class="p">]</span> <span class="o">=</span> <span class="n">JapaneseName</span>
+    <span class="n">__alias_name_class__</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">ChineseName</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the index of the character.</span>
+
+<span class="sd">        This method should be implemented by the subclasses.</span>
+
+<span class="sd">        :returns: The index of the character.</span>
+<span class="sd">        :rtype: Any</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>  <span class="c1"># pragma: no cover</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the index of the character.</span>
+
+<span class="sd">        :returns: The index of the character.</span>
+<span class="sd">        :rtype: Any</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_index</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_cnname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the Chinese name of the character.</span>
+
+<span class="sd">        This method should be implemented by the subclasses.</span>
+
+<span class="sd">        :returns: The Chinese name of the character.</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>  <span class="c1"># pragma: no cover</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_cnnames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get additional Chinese names of the character.</span>
+
+<span class="sd">        This method should be implemented by the subclasses.</span>
+
+<span class="sd">        :returns: The additional Chinese names of the character.</span>
+<span class="sd">        :rtype: List[str]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cnname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cnname</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">cnname</span><span class="p">]</span> <span class="k">if</span> <span class="n">cnname</span> <span class="k">else</span> <span class="p">[]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cnname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the Chinese name of the character.</span>
+
+<span class="sd">        :returns: The Chinese name of the character.</span>
+<span class="sd">        :rtype: gchar.games.base.ChineseName</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cnname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cnname</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__cnname_class__</span><span class="p">(</span><span class="n">cnname</span><span class="p">)</span> <span class="k">if</span> <span class="n">cnname</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cnnames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get additional Chinese names of the character.</span>
+
+<span class="sd">        :returns: The additional Chinese names of the character.</span>
+<span class="sd">        :rtype: List[gchar.games.base.ChineseName]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">__cnname_class__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cnnames</span><span class="p">()</span> <span class="k">if</span> <span class="n">name</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span> <span class="k">if</span> <span class="n">name</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_jpname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the Japanese name of the character.</span>
+
+<span class="sd">        This method should be implemented by the subclasses.</span>
+
+<span class="sd">        :returns: The Japanese name of the character.</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>  <span class="c1"># pragma: no cover</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_jpnames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get additional Japanese names of the character.</span>
+
+<span class="sd">        This method should be implemented by the subclasses.</span>
+
+<span class="sd">        :returns: The additional Japanese names of the character.</span>
+<span class="sd">        :rtype: List[str]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">jpname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_jpname</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">jpname</span><span class="p">]</span> <span class="k">if</span> <span class="n">jpname</span> <span class="k">else</span> <span class="p">[]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">jpname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the Japanese name of the character.</span>
+
+<span class="sd">        :returns: The Japanese name of the character.</span>
+<span class="sd">        :rtype: gchar.games.base.JapaneseName</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">jpname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_jpname</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__jpname_class__</span><span class="p">(</span><span class="n">jpname</span><span class="p">)</span> <span class="k">if</span> <span class="n">jpname</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">jpnames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get additional Japanese names of the character.</span>
+
+<span class="sd">        :returns: The additional Japanese names of the character.</span>
+<span class="sd">        :rtype: List[gchar.games.base.JapaneseName]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">__jpname_class__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_jpnames</span><span class="p">()</span> <span class="k">if</span> <span class="n">name</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span> <span class="k">if</span> <span class="n">name</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_enname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the English name of the character.</span>
+
+<span class="sd">        This method should be implemented by the subclasses.</span>
+
+<span class="sd">        :returns: The English name of the character.</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>  <span class="c1"># pragma: no cover</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_ennames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get additional English names of the character.</span>
+
+<span class="sd">        This method should be implemented by the subclasses.</span>
+
+<span class="sd">        :returns: The additional English names of the character.</span>
+<span class="sd">        :rtype: List[str]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">enname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_enname</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">enname</span><span class="p">]</span> <span class="k">if</span> <span class="n">enname</span> <span class="k">else</span> <span class="p">[]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">enname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the English name of the character.</span>
+
+<span class="sd">        :returns: The English name of the character.</span>
+<span class="sd">        :rtype: gchar.games.base.EnglishName</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">enname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_enname</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__enname_class__</span><span class="p">(</span><span class="n">enname</span><span class="p">)</span> <span class="k">if</span> <span class="n">enname</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ennames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get additional English names of the character.</span>
+
+<span class="sd">        :returns: The additional English names of the character.</span>
+<span class="sd">        :rtype: List[gchar.games.base.EnglishName]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">__enname_class__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ennames</span><span class="p">()</span> <span class="k">if</span> <span class="n">name</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span> <span class="k">if</span> <span class="n">name</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_custom_alias_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get custom alias names of the character.</span>
+
+<span class="sd">        This method should be implemented by the subclasses.</span>
+
+<span class="sd">        :returns: The custom alias names of the character.</span>
+<span class="sd">        :rtype: List[str]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_generic_alias_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get generic alias names of the character.</span>
+
+<span class="sd">        This method should be implemented by the subclasses.</span>
+
+<span class="sd">        :returns: The generic alias names of the character.</span>
+<span class="sd">        :rtype: List[str]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_alias_index</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">[])</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">alias_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get all alias names of the character.</span>
+
+<span class="sd">        :returns: The alias names of the character.</span>
+<span class="sd">        :rtype: List[Union[gchar.games.base.ChineseName, gchar.games.base.GenericAliasName]]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__alias_name_class__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_custom_alias_names</span><span class="p">()),</span>
+            <span class="o">*</span><span class="p">(</span><span class="n">GenericAliasName</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generic_alias_names</span><span class="p">()),</span>
+        <span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">_BaseName</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get all names of the character.</span>
+
+<span class="sd">        This method should be implemented by the subclasses.</span>
+
+<span class="sd">        :returns: The names of the character.</span>
+<span class="sd">        :rtype: List[_gchar.games.base.BaseName]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">cnnames</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">ennames</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">jpnames</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get all names of the character as strings.</span>
+
+<span class="sd">        :returns: The names of the character.</span>
+<span class="sd">        :rtype: List[str]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_names</span><span class="p">())))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_gender</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the gender of the character.</span>
+
+<span class="sd">        This method should be implemented by the subclasses.</span>
+
+<span class="sd">        :returns: The gender of the character.</span>
+<span class="sd">        :rtype: Union[str, Gender]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>  <span class="c1"># pragma: no cover</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">gender</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Gender</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the gender of the character.</span>
+
+<span class="sd">        :returns: The gender of the character.</span>
+<span class="sd">        :rtype: Gender</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Gender</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_gender</span><span class="p">())</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_is_extra</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if the character is an extra character.</span>
+
+<span class="sd">        This method should be implemented by the subclasses.</span>
+
+<span class="sd">        :returns: True if the character is an extra character, False otherwise.</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_extra</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if the character is an extra character.</span>
+
+<span class="sd">        :returns: True if the character is an extra character, False otherwise.</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_is_extra</span><span class="p">())</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_skins</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the skins of the character.</span>
+
+<span class="sd">        This method should be implemented by the subclasses.</span>
+
+<span class="sd">        :returns: The skins of the character as a list of tuples containing the skin name and URL.</span>
+<span class="sd">        :rtype: List[Tuple[str, str]]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>  <span class="c1"># pragma: no cover</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">skins</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Skin</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the skins of the character.</span>
+
+<span class="sd">        :returns: The skins of the character as a list of Skin objects.</span>
+<span class="sd">        :rtype: List[Skin]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">Skin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__game_name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_index</span><span class="p">(),</span> <span class="n">name</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">url</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_skins</span><span class="p">()]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_iter_formal_skins</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Skin</span><span class="p">]:</span>
+        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">skins</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">formal_skins</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Skin</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the formal skin of the character.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_iter_formal_skins</span><span class="p">())</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_release_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the release time of the character.</span>
+
+<span class="sd">        This method should be implemented by the subclasses.</span>
+
+<span class="sd">        :returns: The release time of the character as a UNIX timestamp, or None if unknown.</span>
+<span class="sd">        :rtype: Optional[float]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>  <span class="c1"># pragma: no cover</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">release_time</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the release time of the character.</span>
+
+<span class="sd">        :returns: The release time of the character as a UNIX timestamp, or None if unknown.</span>
+<span class="sd">        :rtype: Optional[float]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_release_time</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_order</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the order value for sorting characters.</span>
+
+<span class="sd">        This method should be implemented by the subclasses.</span>
+
+<span class="sd">        :returns: The order value for sorting characters.</span>
+<span class="sd">        :rtype: Any</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_key</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the key value for comparing characters.</span>
+
+<span class="sd">        :returns: The key value for comparing characters.</span>
+<span class="sd">        :rtype: Tuple[Any, Any, Any]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_order</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_index</span><span class="p">(),</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_extra</span><span class="p">()</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compare the character with another character or a name.</span>
+
+<span class="sd">        :param other: The character or name to compare.</span>
+<span class="sd">        :type other: Union[gchar.games.base.Character, str]</span>
+<span class="sd">        :returns: True if the character is equal to the other character or name, False otherwise.</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="o">==</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">index</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">==</span> <span class="n">other</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">chain</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_names</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">alias_names</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="n">other</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+
+            <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compare the character with another character or a name for inequality.</span>
+
+<span class="sd">        :param other: The character or name to compare.</span>
+<span class="sd">        :type other: Union[gchar.games.base.Character, str]</span>
+<span class="sd">        :returns: True if the character is not equal to the other character or name, False otherwise.</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="nd">@lru_cache</span><span class="p">()</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_index</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the index of all characters.</span>
+
+<span class="sd">        :returns: The index of all characters.</span>
+<span class="sd">        :rtype: List[Dict]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">hf_hub_download</span><span class="p">(</span>
+                <span class="n">repo_id</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">__repository__</span><span class="p">,</span>
+                <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">__game_name__</span><span class="si">}</span><span class="s1">/index.json&#39;</span><span class="p">,</span>
+                <span class="n">repo_type</span><span class="o">=</span><span class="s1">&#39;dataset&#39;</span><span class="p">,</span>
+        <span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="nd">@lru_cache</span><span class="p">()</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_alias_index</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the index of alias names for all characters.</span>
+
+<span class="sd">        :returns: The index of alias names for all characters.</span>
+<span class="sd">        :rtype: Dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">hf_fs</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;datasets/</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">__repository__</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">__game_name__</span><span class="si">}</span><span class="s1">/index_alias.yaml&#39;</span><span class="p">):</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">hf_hub_download</span><span class="p">(</span>
+                    <span class="n">repo_id</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">__repository__</span><span class="p">,</span>
+                    <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">__game_name__</span><span class="si">}</span><span class="s1">/index_alias.yaml&#39;</span><span class="p">,</span>
+                    <span class="n">repo_type</span><span class="o">=</span><span class="s1">&#39;dataset&#39;</span><span class="p">,</span>
+            <span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">Loader</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="n">item</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]:</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;alias&#39;</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;alias&#39;</span><span class="p">]</span>
+            <span class="p">}</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{}</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="nd">@lru_cache</span><span class="p">()</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_simple_all</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">contains_extra</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get all characters.</span>
+
+<span class="sd">        :param contains_extra: Whether to include extra characters in the result.</span>
+<span class="sd">        :type contains_extra: bool</span>
+<span class="sd">        :returns: All characters.</span>
+<span class="sd">        :rtype: List[gchar.games.base.Character]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">all_chs</span> <span class="o">=</span> <span class="p">[</span><span class="bp">cls</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_index</span><span class="p">()]</span>
+        <span class="n">chs</span> <span class="o">=</span> <span class="p">[</span><span class="n">ch</span> <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">all_chs</span> <span class="k">if</span> <span class="n">contains_extra</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">ch</span><span class="o">.</span><span class="n">is_extra</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">chs</span>
+
+<div class="viewcode-block" id="Character.all"><a class="viewcode-back" href="../../../../api_doc/games/base.html#gchar.games.base.Character.all">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">all</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">contains_extra</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="nb">sorted</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get all characters.</span>
+
+<span class="sd">        :param contains_extra: Whether to include extra characters in the result.</span>
+<span class="sd">        :type contains_extra: bool</span>
+<span class="sd">        :param sorted: Whether to sort the characters by order.</span>
+<span class="sd">        :type sorted: bool</span>
+<span class="sd">        :returns: All characters.</span>
+<span class="sd">        :rtype: List[gchar.games.base.Character]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">chs</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_simple_all</span><span class="p">(</span><span class="n">contains_extra</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">sorted</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">builtins</span><span class="o">.</span><span class="n">sorted</span><span class="p">(</span><span class="n">chs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">chs</span></div>
+
+<div class="viewcode-block" id="Character.get"><a class="viewcode-back" href="../../../../api_doc/games/base.html#gchar.games.base.Character.get">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a character by name.</span>
+
+<span class="sd">        :param name: The name of the character.</span>
+<span class="sd">        :type name: str</span>
+<span class="sd">        :returns: The character with the given name, or None if not found.</span>
+<span class="sd">        :rtype: Optional[gchar.games.base.Character]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_simple_all</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">item</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">item</span>
+
+        <span class="k">return</span> <span class="kc">None</span></div></div>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_yield_all_characters</span><span class="p">(</span><span class="n">ch</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Character</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">Type</span><span class="p">[</span><span class="n">Character</span><span class="p">]],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Character</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper function to recursively yield all characters.</span>
+
+<span class="sd">    :param ch: The character or list of characters.</span>
+<span class="sd">    :type ch: Union[gchar.games.base.Character, list, tuple, Type[gchar.games.base.Character]]</span>
+<span class="sd">    :returns: An iterator over all characters.</span>
+<span class="sd">    :rtype: Iterator[gchar.games.base.Character]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ch</span><span class="p">,</span> <span class="n">Character</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">ch</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ch</span><span class="p">,</span> <span class="nb">type</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">ch</span><span class="p">,</span> <span class="n">Character</span><span class="p">):</span>
+        <span class="k">yield from</span> <span class="n">ch</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ch</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">ch</span><span class="p">:</span>
+            <span class="k">yield from</span> <span class="n">_yield_all_characters</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="list_all_characters"><a class="viewcode-back" href="../../../../api_doc/games/base.html#gchar.games.base.list_all_characters">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">list_all_characters</span><span class="p">(</span><span class="o">*</span><span class="n">chs</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Character</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">Type</span><span class="p">[</span><span class="n">Character</span><span class="p">]],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Character</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    List all characters.</span>
+
+<span class="sd">    :param chs: The characters or lists of characters.</span>
+<span class="sd">    :type chs: Union[gchar.games.base.Character, list, tuple, Type[gchar.games.base.Character]]</span>
+<span class="sd">    :param contains_extra: Whether to include extra characters in the result.</span>
+<span class="sd">    :type contains_extra: bool</span>
+<span class="sd">    :returns: All characters.</span>
+<span class="sd">    :rtype: List[gchar.games.base.Character]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">_yield_all_characters</span><span class="p">(</span><span class="n">chs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span></div>
+</pre></div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2025, narugo1992
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+    <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: HEAD
+    <span class="fa fa-caret-down"></span>
+  </span>
+        <div class="rst-other-versions">
+                <dl>
+                    <dt>Tags</dt>
+                        <dd><a href="../../../../../v0.1.0/index.html">v0.1.0</a></dd>
+                        <dd><a href="../../../../../v0.1.1/index.html">v0.1.1</a></dd>
+                </dl>
+                <dl>
+                    <dt>Branches</dt>
+                        <dd><a href="../../../../../main/index.html">main</a></dd>
+                        <dd><a href="character.html">HEAD</a></dd>
+                </dl>
+        </div>
+    </div>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

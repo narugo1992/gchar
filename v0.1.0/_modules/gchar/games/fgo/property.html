@@ -158,11 +158,11 @@
     
     
   <h1>Source code for gchar.games.fgo.property</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">IntEnum</span><span class="p">,</span> <span class="n">unique</span><span class="p">,</span> <span class="n">Enum</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">IntEnum</span><span class="p">,</span> <span class="n">unique</span><span class="p">,</span> <span class="n">Enum</span>
 
 
 <div class="viewcode-block" id="Rarity"><a class="viewcode-back" href="../../../../api_doc/games/fgo.html#gchar.games.fgo.Rarity">[docs]</a><span class="nd">@unique</span>
-<span class="k">class</span> <span class="nc">Rarity</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Rarity</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Enum representing the rarity of FGO characters.</span>
 
@@ -182,7 +182,7 @@
     <span class="n">FIVE</span> <span class="o">=</span> <span class="mh">0x5</span>
 
 <div class="viewcode-block" id="Rarity.loads"><a class="viewcode-back" href="../../../../api_doc/games/fgo.html#gchar.games.fgo.Rarity.loads">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">loads</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Rarity&#39;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">loads</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Rarity&#39;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load a rarity from a value.</span>
 
@@ -205,7 +205,7 @@
 
 
 <div class="viewcode-block" id="Clazz"><a class="viewcode-back" href="../../../../api_doc/games/fgo.html#gchar.games.fgo.Clazz">[docs]</a><span class="nd">@unique</span>
-<span class="k">class</span> <span class="nc">Clazz</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Clazz</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Enum representing the class of FGO characters.</span>
 
@@ -240,7 +240,7 @@
     <span class="n">PRETENDER</span> <span class="o">=</span> <span class="mh">0xd</span>
     <span class="n">FOREIGNER</span> <span class="o">=</span> <span class="mh">0xe</span>
 
-    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compare the class with another class.</span>
 
@@ -258,7 +258,7 @@
                 <span class="k">return</span> <span class="kc">False</span>
 
 <div class="viewcode-block" id="Clazz.loads"><a class="viewcode-back" href="../../../../api_doc/games/fgo.html#gchar.games.fgo.Clazz.loads">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">loads</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Clazz&#39;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">loads</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Clazz&#39;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load a class from a value.</span>
 
@@ -290,7 +290,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2023, narugo1992
+        &copy; Copyright 2025, narugo1992
 
     </p>
   </div>
@@ -320,6 +320,7 @@
                 <dl>
                     <dt>Branches</dt>
                         <dd><a href="../../../../../main/index.html">main</a></dd>
+                        <dd><a href="../../../../../HEAD/index.html">HEAD</a></dd>
                 </dl>
         </div>
     </div>

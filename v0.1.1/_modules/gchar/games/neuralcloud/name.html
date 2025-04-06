@@ -162,30 +162,30 @@
     
     
   <h1>Source code for gchar.games.neuralcloud.name</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">re</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 
-<span class="kn">from</span> <span class="nn">unidecode</span> <span class="kn">import</span> <span class="n">unidecode</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">unidecode</span><span class="w"> </span><span class="kn">import</span> <span class="n">unidecode</span>
 
-<span class="kn">from</span> <span class="nn">..base</span> <span class="kn">import</span> <span class="n">ChineseName</span> <span class="k">as</span> <span class="n">_GenericChineseName</span>
-<span class="kn">from</span> <span class="nn">..base</span> <span class="kn">import</span> <span class="n">EnglishName</span> <span class="k">as</span> <span class="n">_GenericEnglishName</span>
-<span class="kn">from</span> <span class="nn">..base</span> <span class="kn">import</span> <span class="n">JapaneseName</span> <span class="k">as</span> <span class="n">_GenericJapaneseName</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..base</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChineseName</span> <span class="k">as</span> <span class="n">_GenericChineseName</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..base</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnglishName</span> <span class="k">as</span> <span class="n">_GenericEnglishName</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..base</span><span class="w"> </span><span class="kn">import</span> <span class="n">JapaneseName</span> <span class="k">as</span> <span class="n">_GenericJapaneseName</span>
 
 
-<div class="viewcode-block" id="ChineseName"><a class="viewcode-back" href="../../../../api_doc/games/neuralcloud.html#gchar.games.neuralcloud.ChineseName">[docs]</a><span class="k">class</span> <span class="nc">ChineseName</span><span class="p">(</span><span class="n">_GenericChineseName</span><span class="p">):</span>
+<div class="viewcode-block" id="ChineseName"><a class="viewcode-back" href="../../../../api_doc/games/neuralcloud.html#gchar.games.neuralcloud.ChineseName">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">ChineseName</span><span class="p">(</span><span class="n">_GenericChineseName</span><span class="p">):</span>
     <span class="k">pass</span></div>
 
 
-<div class="viewcode-block" id="ChineseAliasName"><a class="viewcode-back" href="../../../../api_doc/games/neuralcloud.html#gchar.games.neuralcloud.ChineseAliasName">[docs]</a><span class="k">class</span> <span class="nc">ChineseAliasName</span><span class="p">(</span><span class="n">_GenericChineseName</span><span class="p">):</span>
+<div class="viewcode-block" id="ChineseAliasName"><a class="viewcode-back" href="../../../../api_doc/games/neuralcloud.html#gchar.games.neuralcloud.ChineseAliasName">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">ChineseAliasName</span><span class="p">(</span><span class="n">_GenericChineseName</span><span class="p">):</span>
     <span class="k">pass</span></div>
 
 
-<div class="viewcode-block" id="JapaneseName"><a class="viewcode-back" href="../../../../api_doc/games/neuralcloud.html#gchar.games.neuralcloud.JapaneseName">[docs]</a><span class="k">class</span> <span class="nc">JapaneseName</span><span class="p">(</span><span class="n">_GenericJapaneseName</span><span class="p">):</span>
+<div class="viewcode-block" id="JapaneseName"><a class="viewcode-back" href="../../../../api_doc/games/neuralcloud.html#gchar.games.neuralcloud.JapaneseName">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">JapaneseName</span><span class="p">(</span><span class="n">_GenericJapaneseName</span><span class="p">):</span>
     <span class="k">pass</span></div>
 
 
-<div class="viewcode-block" id="EnglishName"><a class="viewcode-back" href="../../../../api_doc/games/neuralcloud.html#gchar.games.neuralcloud.EnglishName">[docs]</a><span class="k">class</span> <span class="nc">EnglishName</span><span class="p">(</span><span class="n">_GenericEnglishName</span><span class="p">):</span>
+<div class="viewcode-block" id="EnglishName"><a class="viewcode-back" href="../../../../api_doc/games/neuralcloud.html#gchar.games.neuralcloud.EnglishName">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">EnglishName</span><span class="p">(</span><span class="n">_GenericEnglishName</span><span class="p">):</span>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_word_trans</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_word_trans</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">return</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s1">&#39;[a-zA-Z0-9]+&#39;</span><span class="p">,</span> <span class="n">unidecode</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">lower</span><span class="p">())))</span></div>
 </pre></div>
 
@@ -200,7 +200,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2023, narugo1992
+        &copy; Copyright 2025, narugo1992
 
     </p>
   </div>
@@ -230,6 +230,7 @@
                 <dl>
                     <dt>Branches</dt>
                         <dd><a href="../../../../../main/index.html">main</a></dd>
+                        <dd><a href="../../../../../HEAD/index.html">HEAD</a></dd>
                 </dl>
         </div>
     </div>

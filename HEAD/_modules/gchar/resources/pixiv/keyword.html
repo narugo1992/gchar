@@ -1,0 +1,389 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gchar.resources.pixiv.keyword &mdash; gchar 0.1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> gchar
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/installation/index.html">Installation</a></li>
+</ul>
+<p><span class="caption-text">Best Practice</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../best_practice/supported/index.html">Supported Games And Sites</a></li>
+</ul>
+<p><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_doc/config/index.html">gchar.config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_doc/games/index.html">gchar.games</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_doc/resources/index.html">gchar.resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_doc/utils/index.html">gchar.utils</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">gchar</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>gchar.resources.pixiv.keyword</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+    
+    
+  <h1>Source code for gchar.resources.pixiv.keyword</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">lru_cache</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">yaml</span><span class="w"> </span><span class="kn">import</span> <span class="n">CLoader</span> <span class="k">as</span> <span class="n">Loader</span><span class="p">,</span> <span class="n">CDumper</span> <span class="k">as</span> <span class="n">Dumper</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">yaml</span><span class="w"> </span><span class="kn">import</span> <span class="n">Loader</span><span class="p">,</span> <span class="n">Dumper</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">huggingface_hub</span><span class="w"> </span><span class="kn">import</span> <span class="n">hf_hub_download</span><span class="p">,</span> <span class="n">hf_hub_url</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">...games</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_character</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...games.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Character</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_requests_session</span><span class="p">,</span> <span class="n">srequest</span>
+
+
+<span class="nd">@lru_cache</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_load_pixiv_alias_for_game</span><span class="p">(</span><span class="bp">cls</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">Character</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load the Pixiv aliases for a specific game&#39;s character class.</span>
+
+<span class="sd">    :param cls: The character class.</span>
+<span class="sd">    :type cls: Type[Character]</span>
+<span class="sd">    :returns: A dictionary mapping character IDs or names to a list of Pixiv aliases.</span>
+<span class="sd">    :rtype: Dict[Union[int, str], List[str]]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">game_name</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__game_name__</span>
+    <span class="n">resource_url</span> <span class="o">=</span> <span class="n">hf_hub_url</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">__repository__</span><span class="p">,</span>
+        <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">game_name</span><span class="si">}</span><span class="s1">/pixiv_alias.yaml&#39;</span><span class="p">,</span>
+        <span class="n">repo_type</span><span class="o">=</span><span class="s1">&#39;dataset&#39;</span>
+    <span class="p">)</span>
+    <span class="n">session</span> <span class="o">=</span> <span class="n">get_requests_session</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">srequest</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="s1">&#39;HEAD&#39;</span><span class="p">,</span> <span class="n">resource_url</span><span class="p">,</span> <span class="n">raise_for_status</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">ok</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">hf_hub_download</span><span class="p">(</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">__repository__</span><span class="p">,</span>
+                <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">game_name</span><span class="si">}</span><span class="s1">/pixiv_alias.yaml&#39;</span><span class="p">,</span>
+                <span class="n">repo_type</span><span class="o">=</span><span class="s1">&#39;dataset&#39;</span>
+        <span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">Loader</span><span class="p">)</span>
+
+        <span class="n">alias</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;alias&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]:</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;alias&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">alias</span><span class="p">}</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_pixiv_names_file</span><span class="p">(</span><span class="n">names</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parse the Pixiv names file and return a dictionary with character information.</span>
+
+<span class="sd">    :param names: The names data from the Pixiv names file.</span>
+<span class="sd">    :type names: Any</span>
+<span class="sd">    :returns: A dictionary containing character names, counts, pollution ratio, and pollution words.</span>
+<span class="sd">    :rtype: Dict[str, Tuple[int, float, List[Tuple[str, int]]]]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">all_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]:</span> <span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">names</span><span class="p">}</span>
+    <span class="n">all_counts</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_count</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">all_counts</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">all_counts</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">all_dict</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">item</span> <span class="o">=</span> <span class="n">all_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+            <span class="n">cnt</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">ex</span> <span class="ow">in</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;keyword&#39;</span><span class="p">][</span><span class="s1">&#39;excluded&#39;</span><span class="p">]:</span>
+                <span class="n">cnt</span> <span class="o">+=</span> <span class="n">_get_count</span><span class="p">(</span><span class="n">ex</span><span class="p">)</span>
+
+            <span class="n">all_counts</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">cnt</span>
+            <span class="k">return</span> <span class="n">cnt</span>
+
+    <span class="n">retval</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="n">_get_count</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">kwinfo</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;keyword&#39;</span><span class="p">]</span>
+
+        <span class="n">p_total</span> <span class="o">=</span> <span class="n">kwinfo</span><span class="p">[</span><span class="s1">&#39;items&#39;</span><span class="p">]</span>
+        <span class="n">p_polluted</span> <span class="o">=</span> <span class="n">kwinfo</span><span class="p">[</span><span class="s1">&#39;polluted&#39;</span><span class="p">]</span>
+        <span class="n">pollution_ratio</span> <span class="o">=</span> <span class="p">(</span><span class="n">p_polluted</span> <span class="o">/</span> <span class="n">p_total</span><span class="p">)</span> <span class="k">if</span> <span class="n">p_polluted</span> <span class="k">else</span> <span class="mf">0.0</span>
+        <span class="n">pollition_words</span> <span class="o">=</span> <span class="p">[(</span><span class="n">word</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">pcnt</span> <span class="o">/</span> <span class="n">p_total</span> <span class="o">*</span> <span class="n">count</span><span class="p">))</span>
+                           <span class="k">for</span> <span class="n">word</span><span class="p">,</span> <span class="n">pcnt</span> <span class="ow">in</span> <span class="n">kwinfo</span><span class="p">[</span><span class="s1">&#39;pollution&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">pcnt</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">retval</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="n">pollution_ratio</span><span class="p">,</span> <span class="n">pollition_words</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">retval</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_load_pixiv_names_for_game</span><span class="p">(</span><span class="bp">cls</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">Character</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load the Pixiv names for a specific game&#39;s character class.</span>
+
+<span class="sd">    :param cls: The character class.</span>
+<span class="sd">    :type cls: Type[Character]</span>
+<span class="sd">    :returns: A dictionary containing character names, counts, pollution ratio, and pollution words.</span>
+<span class="sd">    :rtype: Dict[str, Tuple[int, float, List[Tuple[str, int]]]]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">game_name</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__game_name__</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">hf_hub_download</span><span class="p">(</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">__repository__</span><span class="p">,</span>
+            <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">game_name</span><span class="si">}</span><span class="s1">/pixiv_names.json&#39;</span><span class="p">,</span>
+            <span class="n">repo_type</span><span class="o">=</span><span class="s1">&#39;dataset&#39;</span>
+    <span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;names&#39;</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">_parse_pixiv_names_file</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
+
+
+<span class="nd">@lru_cache</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_load_pixiv_characters_for_game</span><span class="p">(</span><span class="bp">cls</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">Character</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load the Pixiv character data for a specific game&#39;s character class.</span>
+
+<span class="sd">    :param cls: The character class.</span>
+<span class="sd">    :type cls: Type[Character]</span>
+<span class="sd">    :returns: A dictionary mapping character indices to the number of all illustrations and R18 illustrations.</span>
+<span class="sd">    :rtype: Dict[str, Tuple[int, int]]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">game_name</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__game_name__</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">hf_hub_download</span><span class="p">(</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">__repository__</span><span class="p">,</span>
+            <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">game_name</span><span class="si">}</span><span class="s1">/pixiv_characters.json&#39;</span><span class="p">,</span>
+            <span class="n">repo_type</span><span class="o">=</span><span class="s1">&#39;dataset&#39;</span>
+    <span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">chs</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)[</span><span class="s1">&#39;characters&#39;</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;index&#39;</span><span class="p">]:</span> <span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;illustrations&quot;</span><span class="p">][</span><span class="s2">&quot;all&quot;</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;illustrations&quot;</span><span class="p">][</span><span class="s2">&quot;r18&quot;</span><span class="p">])</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">chs</span><span class="p">}</span>
+
+
+<div class="viewcode-block" id="get_pixiv_posts"><a class="viewcode-back" href="../../../../api_doc/resources/pixiv.html#gchar.resources.pixiv.get_pixiv_posts">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_pixiv_posts</span><span class="p">(</span><span class="n">char</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Character</span><span class="p">],</span> <span class="n">allow_fuzzy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">fuzzy_threshold</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">70</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> \
+        <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the number of Pixiv posts for a given character.</span>
+
+<span class="sd">    :param char: The character name or instance of Character class.</span>
+<span class="sd">    :type char: Union[str, Character]</span>
+<span class="sd">    :param allow_fuzzy: Whether to allow fuzzy matching of character names.</span>
+<span class="sd">    :type allow_fuzzy: bool</span>
+<span class="sd">    :param fuzzy_threshold: The threshold for fuzzy matching.</span>
+<span class="sd">    :type fuzzy_threshold: int</span>
+<span class="sd">    :returns: A tuple containing the number of all illustrations and R18 illustrations, or None if the character is unknown.</span>
+<span class="sd">    :rtype: Optional[Tuple[int, int]]</span>
+<span class="sd">    :raises ValueError: If the character is unknown.</span>
+
+<span class="sd">    Examples::</span>
+<span class="sd">        &gt;&gt;&gt; from gchar.resources.pixiv import get_pixiv_posts</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; get_pixiv_posts(&#39;amiya&#39;)</span>
+<span class="sd">        (14130, 1113)</span>
+<span class="sd">        &gt;&gt;&gt; get_pixiv_posts(&#39;surtr&#39;)</span>
+<span class="sd">        (5579, 787)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">original_char</span> <span class="o">=</span> <span class="n">char</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">char</span><span class="p">,</span> <span class="n">Character</span><span class="p">):</span>
+        <span class="n">char</span> <span class="o">=</span> <span class="n">get_character</span><span class="p">(</span><span class="n">char</span><span class="p">,</span> <span class="n">allow_fuzzy</span><span class="p">,</span> <span class="n">fuzzy_threshold</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">char</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unknown character - </span><span class="si">{</span><span class="n">original_char</span><span class="si">!r}</span><span class="s1">.&#39;</span><span class="p">)</span>
+
+    <span class="n">all_data</span> <span class="o">=</span> <span class="n">_load_pixiv_characters_for_game</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">char</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">all_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">char</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
+</pre></div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2025, narugo1992
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+    <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: HEAD
+    <span class="fa fa-caret-down"></span>
+  </span>
+        <div class="rst-other-versions">
+                <dl>
+                    <dt>Tags</dt>
+                        <dd><a href="../../../../../v0.1.0/index.html">v0.1.0</a></dd>
+                        <dd><a href="../../../../../v0.1.1/index.html">v0.1.1</a></dd>
+                </dl>
+                <dl>
+                    <dt>Branches</dt>
+                        <dd><a href="../../../../../main/index.html">main</a></dd>
+                        <dd><a href="keyword.html">HEAD</a></dd>
+                </dl>
+        </div>
+    </div>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

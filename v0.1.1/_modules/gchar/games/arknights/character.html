@@ -162,12 +162,12 @@
     
     
   <h1>Source code for gchar.games.arknights.character</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">math</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
 
-<span class="kn">from</span> <span class="nn">.name</span> <span class="kn">import</span> <span class="n">EnglishName</span><span class="p">,</span> <span class="n">JapaneseName</span><span class="p">,</span> <span class="n">ChineseName</span><span class="p">,</span> <span class="n">ChineseAliasName</span>
-<span class="kn">from</span> <span class="nn">.property</span> <span class="kn">import</span> <span class="n">Rarity</span><span class="p">,</span> <span class="n">Clazz</span>
-<span class="kn">from</span> <span class="nn">..base</span> <span class="kn">import</span> <span class="n">Character</span> <span class="k">as</span> <span class="n">_BaseCharacter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.name</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnglishName</span><span class="p">,</span> <span class="n">JapaneseName</span><span class="p">,</span> <span class="n">ChineseName</span><span class="p">,</span> <span class="n">ChineseAliasName</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.property</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rarity</span><span class="p">,</span> <span class="n">Clazz</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Character</span> <span class="k">as</span> <span class="n">_BaseCharacter</span>
 
 <span class="n">_KNOWN_DATA_FIELDS</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">&#39;data-adapt&#39;</span><span class="p">,</span> <span class="s1">&#39;data-atk&#39;</span><span class="p">,</span> <span class="s1">&#39;data-birth_place&#39;</span><span class="p">,</span> <span class="s1">&#39;data-block&#39;</span><span class="p">,</span> <span class="s1">&#39;data-cost&#39;</span><span class="p">,</span> <span class="s1">&#39;data-def&#39;</span><span class="p">,</span> <span class="s1">&#39;data-en&#39;</span><span class="p">,</span>
@@ -179,7 +179,7 @@
 <span class="p">]</span>
 
 
-<div class="viewcode-block" id="Character"><a class="viewcode-back" href="../../../../api_doc/games/arknights.html#gchar.games.arknights.Character">[docs]</a><span class="k">class</span> <span class="nc">Character</span><span class="p">(</span><span class="n">_BaseCharacter</span><span class="p">):</span>
+<div class="viewcode-block" id="Character"><a class="viewcode-back" href="../../../../api_doc/games/arknights.html#gchar.games.arknights.Character">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Character</span><span class="p">(</span><span class="n">_BaseCharacter</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A class for modeling characters in the Arknights game.</span>
 
@@ -232,7 +232,7 @@
     <span class="n">__jpname_class__</span> <span class="o">=</span> <span class="n">JapaneseName</span>
     <span class="n">__alias_name_class__</span> <span class="o">=</span> <span class="n">ChineseAliasName</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize a character with the raw data.</span>
 
@@ -244,14 +244,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">__skins</span> <span class="o">=</span> <span class="n">raw_data</span><span class="p">[</span><span class="s1">&#39;skins&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__is_extra</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data-index&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data-id&#39;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_gender</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_gender</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="p">[</span><span class="s1">&#39;data-sex&#39;</span><span class="p">]</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">rarity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Rarity</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rarity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Rarity</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the rarity of the character.</span>
 
@@ -261,7 +261,7 @@
         <span class="k">return</span> <span class="n">Rarity</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="p">[</span><span class="s1">&#39;data-rarity&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">clazz</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Clazz</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">clazz</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Clazz</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the class of the character.</span>
 
@@ -270,43 +270,43 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Clazz</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data-class&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data-profession&#39;</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="nf">_cnname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_cnname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data-cn&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data-zh&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">_enname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_enname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data-en&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">_jpname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_jpname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data-jp&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data-ja&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">_custom_alias_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_custom_alias_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__origin_raw_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;alias&#39;</span><span class="p">,</span> <span class="p">[])</span> <span class="ow">or</span> <span class="p">[])</span>
 
-    <span class="k">def</span> <span class="nf">_skins</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_skins</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
         <span class="k">return</span> <span class="p">[(</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">])</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__skins</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;data-&#39;</span> <span class="o">+</span> <span class="n">item</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">_KNOWN_DATA_FIELDS</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">object</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_is_extra</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_is_extra</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">enname</span> <span class="ow">and</span> <span class="s1">&#39;the&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">enname</span><span class="p">)</span> <span class="ow">or</span> \
             <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">enname</span> <span class="o">==</span> <span class="s1">&#39;amiya&#39;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">cnname</span> <span class="o">!=</span> <span class="s1">&#39;阿米娅&#39;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_order</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_order</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">release_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__origin_raw_data</span><span class="p">[</span><span class="s1">&#39;release&#39;</span><span class="p">]</span>
         <span class="n">_release_time</span> <span class="o">=</span> <span class="n">release_info</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">release_info</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">math</span><span class="o">.</span><span class="n">inf</span>
         <span class="n">_release_index</span> <span class="o">=</span> <span class="n">release_info</span><span class="p">[</span><span class="s1">&#39;index&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">release_info</span><span class="p">[</span><span class="s1">&#39;index&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">math</span><span class="o">.</span><span class="n">inf</span>
         <span class="k">return</span> <span class="n">_release_time</span><span class="p">,</span> <span class="n">_release_index</span>
 
-    <span class="k">def</span> <span class="nf">_release_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_release_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">_release_time</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_order</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">_release_time</span>
 
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&lt;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="si">}</span><span class="s1"> - </span><span class="si">{</span><span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_names</span><span class="p">()))</span><span class="si">}</span><span class="s1">, &#39;</span> \
                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">gender</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rarity</span><span class="si">}{</span><span class="s2">&quot;*&quot;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">rarity</span><span class="si">}</span><span class="s1">&gt;&#39;</span></div>
 </pre></div>
@@ -322,7 +322,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2023, narugo1992
+        &copy; Copyright 2025, narugo1992
 
     </p>
   </div>
@@ -352,6 +352,7 @@
                 <dl>
                     <dt>Branches</dt>
                         <dd><a href="../../../../../main/index.html">main</a></dd>
+                        <dd><a href="../../../../../HEAD/index.html">HEAD</a></dd>
                 </dl>
         </div>
     </div>

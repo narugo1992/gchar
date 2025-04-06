@@ -162,16 +162,16 @@
     
     
   <h1>Source code for gchar.games.nikke.character</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Iterator</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Iterator</span>
 
-<span class="kn">from</span> <span class="nn">.name</span> <span class="kn">import</span> <span class="n">ChineseName</span><span class="p">,</span> <span class="n">JapaneseName</span><span class="p">,</span> <span class="n">KoreanName</span><span class="p">,</span> <span class="n">EnglishName</span>
-<span class="kn">from</span> <span class="nn">.property</span> <span class="kn">import</span> <span class="n">Rarity</span><span class="p">,</span> <span class="n">Clazz</span><span class="p">,</span> <span class="n">Burst</span>
-<span class="kn">from</span> <span class="nn">..base</span> <span class="kn">import</span> <span class="n">Character</span> <span class="k">as</span> <span class="n">_BaseCharacter</span><span class="p">,</span> <span class="n">Gender</span><span class="p">,</span> <span class="n">Skin</span>
-<span class="kn">from</span> <span class="nn">..base.name</span> <span class="kn">import</span> <span class="n">_BaseName</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.name</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChineseName</span><span class="p">,</span> <span class="n">JapaneseName</span><span class="p">,</span> <span class="n">KoreanName</span><span class="p">,</span> <span class="n">EnglishName</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.property</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rarity</span><span class="p">,</span> <span class="n">Clazz</span><span class="p">,</span> <span class="n">Burst</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Character</span> <span class="k">as</span> <span class="n">_BaseCharacter</span><span class="p">,</span> <span class="n">Gender</span><span class="p">,</span> <span class="n">Skin</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..base.name</span><span class="w"> </span><span class="kn">import</span> <span class="n">_BaseName</span>
 
 
-<div class="viewcode-block" id="Character"><a class="viewcode-back" href="../../../../api_doc/games/nikke.html#gchar.games.nikke.Character">[docs]</a><span class="k">class</span> <span class="nc">Character</span><span class="p">(</span><span class="n">_BaseCharacter</span><span class="p">):</span>
+<div class="viewcode-block" id="Character"><a class="viewcode-back" href="../../../../api_doc/games/nikke.html#gchar.games.nikke.Character">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Character</span><span class="p">(</span><span class="n">_BaseCharacter</span><span class="p">):</span>
     <span class="n">__game_name__</span> <span class="o">=</span> <span class="s1">&#39;nikke&#39;</span>
     <span class="n">__official_name__</span> <span class="o">=</span> <span class="s1">&#39;Nikke: Goddess of Victory&#39;</span>
     <span class="n">__game_keywords__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;nikke&#39;</span><span class="p">,</span> <span class="s1">&#39;勝利の女神:NIKKE&#39;</span><span class="p">]</span>
@@ -181,93 +181,93 @@
     <span class="n">__jpname_class__</span> <span class="o">=</span> <span class="n">JapaneseName</span>
     <span class="n">__enname_class__</span> <span class="o">=</span> <span class="n">EnglishName</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_data</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_data</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span> <span class="o">=</span> <span class="n">raw_data</span>
 
-    <span class="k">def</span> <span class="nf">_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[\W_]+&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="p">[</span><span class="s1">&#39;enname&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_cnname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_cnname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="p">[</span><span class="s1">&#39;cnname&#39;</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">_jpname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_jpname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="p">[</span><span class="s1">&#39;jpname&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="p">[</span><span class="s1">&#39;jpname&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">_jpnames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_jpnames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="p">[</span><span class="s1">&#39;jpname&#39;</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">_enname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_enname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="p">[</span><span class="s1">&#39;enname&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="p">[</span><span class="s1">&#39;enname&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">_ennames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_ennames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="p">[</span><span class="s1">&#39;enname&#39;</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">_krname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_krname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="p">[</span><span class="s1">&#39;krname&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="p">[</span><span class="s1">&#39;krname&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">krname</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">KoreanName</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">krname</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">KoreanName</span><span class="p">]:</span>
         <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_krname</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">KoreanName</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">_krnames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_krnames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="p">[</span><span class="s1">&#39;krname&#39;</span><span class="p">]</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">krnames</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">KoreanName</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">krnames</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">KoreanName</span><span class="p">]:</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">KoreanName</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_krnames</span><span class="p">()]</span>
 
-    <span class="k">def</span> <span class="nf">_names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">_BaseName</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">_BaseName</span><span class="p">]:</span>
         <span class="k">return</span> <span class="p">[</span><span class="o">*</span><span class="n">_BaseCharacter</span><span class="o">.</span><span class="n">_names</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">krnames</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">_gender</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_gender</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">Gender</span><span class="o">.</span><span class="n">FEMALE</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">rarity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Rarity</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rarity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Rarity</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Rarity</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="p">[</span><span class="s1">&#39;rarity&#39;</span><span class="p">])</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">clazz</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">clazz</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Clazz</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="p">[</span><span class="s1">&#39;class&#39;</span><span class="p">])</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">weapon_type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">weapon_type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="p">[</span><span class="s1">&#39;weapontype&#39;</span><span class="p">]</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">manufacturer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">manufacturer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="p">[</span><span class="s1">&#39;manufacturer&#39;</span><span class="p">]</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">burst</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">burst</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Burst</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="p">[</span><span class="s1">&#39;burst&#39;</span><span class="p">])</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">code</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">code</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">_skins</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_skins</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
         <span class="k">return</span> <span class="p">[</span>
             <span class="p">(</span><span class="n">skin</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">skin</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">])</span>
             <span class="k">for</span> <span class="n">skin</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="p">[</span><span class="s1">&#39;skins&#39;</span><span class="p">]</span>
         <span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">_iter_formal_skins</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Skin</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_iter_formal_skins</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Skin</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">skin</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">skins</span><span class="p">:</span>
             <span class="k">if</span> <span class="s1">&#39;anim&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skin</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
                 <span class="k">yield</span> <span class="n">skin</span>
 
-    <span class="k">def</span> <span class="nf">_release_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_release_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__raw_data</span><span class="p">[</span><span class="s1">&#39;release&#39;</span><span class="p">][</span><span class="s1">&#39;time&#39;</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">_order</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_order</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_release_time</span><span class="p">()</span> <span class="ow">or</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mi">1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_extra</span><span class="p">()</span> <span class="k">else</span> <span class="mi">0</span>
 
-    <span class="k">def</span> <span class="nf">_is_extra</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_is_extra</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_enname</span><span class="p">()</span> <span class="ow">and</span> <span class="s1">&#39;:&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_enname</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&lt;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_names</span><span class="p">()))</span><span class="si">}</span><span class="s1">, &#39;</span> \
                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rarity</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">(</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rarity</span><span class="p">)</span><span class="si">}{</span><span class="s2">&quot;*&quot;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">rarity</span><span class="si">}</span><span class="s1">), &#39;</span> \
                <span class="sa">f</span><span class="s1">&#39;class: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">clazz</span><span class="si">}</span><span class="s1">, burst: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">burst</span><span class="si">}</span><span class="s1">, weapon_type: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">weapon_type</span><span class="si">}</span><span class="s1">&gt;&#39;</span></div>
@@ -284,7 +284,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2023, narugo1992
+        &copy; Copyright 2025, narugo1992
 
     </p>
   </div>
@@ -314,6 +314,7 @@
                 <dl>
                     <dt>Branches</dt>
                         <dd><a href="character.html">main</a></dd>
+                        <dd><a href="../../../../../HEAD/index.html">HEAD</a></dd>
                 </dl>
         </div>
     </div>
