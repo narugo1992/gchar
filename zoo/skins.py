@@ -52,8 +52,9 @@ class SkinResource(SyncResource):
                     resp_ = srequest(self.session, 'HEAD', skin_.url)
                     ext_ = mimetypes.guess_extension(resp_.headers['Content-Type'])
 
-                filename_ = re.sub(r'\W+', '_', skin_.name).strip('_') + ext_
-                yield 'remote', skin_.url, f'{ch.index}/{filename_}', {'name': skin_.name}
+                if ext_:
+                    filename_ = re.sub(r'\W+', '_', skin_.name).strip('_') + ext_
+                    yield 'remote', skin_.url, f'{ch.index}/{filename_}', {'name': skin_.name}
 
 
 print_version = partial(_origin_print_version, 'gchar')
