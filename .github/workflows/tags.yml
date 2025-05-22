@@ -17,23 +17,24 @@ jobs:
       fail-fast: false
       matrix:
         resource:
-          - 'anime_pictures'
-#          - 'zerochan'  # do not refresh zerochan, it limited the page to 1000
-          - 'danbooru'
-          - 'safebooru'
-          - 'atfbooru'
-          - 'sankaku'
-          - 'rule34'
-          - 'hypnohub'
-          - 'xbooru'
-          - 'konachan'
-          - 'konachan_net'
-          - 'yande'
-#          - 'lolibooru' # do not refresh lolibooru, it has been closed
-          - 'gelbooru'
-          - 'pixiv'
-          - 'pixiv_en'
-          - 'wallhaven'
+          - 'e621'
+#          - 'anime_pictures'
+##          - 'zerochan'  # do not refresh zerochan, it limited the page to 1000
+#          - 'danbooru'
+#          - 'safebooru'
+#          - 'atfbooru'
+#          - 'sankaku'
+#          - 'rule34'
+#          - 'hypnohub'
+#          - 'xbooru'
+#          - 'konachan'
+#          - 'konachan_net'
+#          - 'yande'
+##          - 'lolibooru' # do not refresh lolibooru, it has been closed
+#          - 'gelbooru'
+#          - 'pixiv'
+#          - 'pixiv_en'
+#          - 'wallhaven'
         os:
           - 'ubuntu-latest'
         python-version:
