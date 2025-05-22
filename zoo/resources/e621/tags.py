@@ -86,4 +86,4 @@ class E621TagCrawler(HeaderParallelTagCrawler):
         df['updated_at'] = pd.to_datetime(df['updated_at'])
         return df
 
-    __sqlite_indices__ = ['id', 'name', 'post_count', 'category', "created_at", "updated_at", "is_deprecated"]
+    __sqlite_indices__ = ['id', 'name', 'post_count', 'category', "created_at", "updated_at"]
