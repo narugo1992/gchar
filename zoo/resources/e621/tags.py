@@ -33,7 +33,10 @@ class E621TagCrawler(HeaderParallelTagCrawler):
         })
         resp.raise_for_status()
 
-        return resp.json()
+        data = resp.json()
+        if isinstance(data, dict):
+            data = data['tags']
+        return data
 
     def get_tag_aliases_from_page(self, p, **kwargs) -> List[Tuple[str, str]]:
         name_pattern = kwargs['name_pattern']
@@ -44,9 +47,12 @@ class E621TagCrawler(HeaderParallelTagCrawler):
         })
         resp.raise_for_status()
 
+        data = resp.json()
+        if isinstance(data, dict):
+            data = data["tag_aliases"]
         return [
             (item["antecedent_name"], item["consequent_name"])
-            for item in resp.json()
+            for item in data
         ]
 
     def _get_tag_aliases_json(self, data=None, exist_ids=None,
